@@ -1,5 +1,57 @@
-<div>hallo von raffa</div>
-<div>hallo von gabriele</div>
-<div>von jörg, raffa schreibt was dazu und löcht was</div>
-<div>raffa macht was</div>
-<div>HUNGER habe ich auch</div>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join - Login</title>
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    <script type="module" defer src="main.js"></script>
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <header style="display: flex; justify-content: space-between; align-items: center; padding: 20px;">
+        <div class="logo">
+            <img src="images/join_logo.png" alt="Join Logo" style="height: 50px;">
+        </div>
+        <div class="header-right">
+            <span>Not a Join user?</span>
+            <a href="#" style="margin-left: 10px; text-decoration: none; color: #007bff; font-weight: bold;">Sign up</a>
+        </div>
+    </header>
+
+    <main style="display: flex; justify-content: center; align-items: center; min-height: calc(100vh - 120px);">
+        <div class="login-container" style="text-align: center; padding: 40px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+            <h2 class="login" style="margin-bottom: 30px;">Log in</h2>
+            
+            <form>
+                <div style="margin-bottom: 20px;">
+                    <input type="email" placeholder="Email" style="width: 300px; padding: 12px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px;">
+                </div>
+                <div style="margin-bottom: 30px;">
+                    <input type="password" placeholder="Password" style="width: 300px; padding: 12px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px;">
+                </div>
+                <button type="submit" style="background-color: #007bff; color: white; padding: 12px 25px; border: none; border-radius: 5px; cursor: pointer; font-size: 18px;">Log in</button>
+                <button type="submit" style="background-color: #f8f8f9; color: rgb(11, 11, 11); padding: 12px 25px; border: none; border-radius: 5px; cursor: pointer; font-size: 18px;">Guest log in</button>
+            </form>
+
+        </div>
+    </main>
+
+    <footer style="text-align: center; padding: 20px; background-color: #f8f8f8; border-top: 1px solid #eee;">
+        <a href="#" style="margin: 0 15px; text-decoration: none; color: #555;">Privacy</a>
+        <a href="#" style="margin: 0 15px; text-decoration: none; color: #555;">Policy</a>
+        <a href="#" style="margin: 0 15px; text-decoration: none; color: #555;">Legal notice</a>
+    </footer>
+
+    <script>
+        // Logout-Funktion als Platzhalter
+        function logout() {
+            alert('Du wurdest abgemeldet!');
+            // hier bei Bedarf tatsächliche Logout-Logik einfügen,
+            // z.B. Session löschen und zur Login-Seite weiterleiten
+            window.location.href = 'login.html'; 
+        }
+    </script>
+</body>
+</html>
