@@ -1,0 +1,33 @@
+body {
+    margin: 0;
+}
+header {
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box;
+    padding-left: 300px;
+    position: absolute;
+    width: 100%;
+}
+nav {
+    height: 100vh;
+    width: 250px;
+    background-color: #2A3647;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 64px 0;
+    box-sizing: border-box;
+}
+.join {
+    width: 100px;
+    object-fit: contain;
+}
+.menuOption {
+    display: flex;
+}
+.icon {
+    width: 30px;
+    object-fit: contain;
+}
