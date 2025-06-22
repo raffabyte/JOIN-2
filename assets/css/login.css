@@ -1,0 +1,155 @@
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh; 
+    font-family: sans-serif;
+}
+
+header {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+}
+
+header img {
+    height: 100px;
+    padding-top: 40px;
+    padding-left: 40px;
+}
+
+.header-right a {
+    border: solid;
+    border-radius: 8px;
+    padding: 16px 15px;
+    color: white;
+    text-decoration: none;
+    background-color: #2A3647;
+}
+
+.header-right {
+    display: flex;
+    gap: 35px;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 30px;
+    right:  30px;
+}
+
+.header-right span {
+    color: #000000;
+    font-family: Inter;
+    font-weight: 400;
+    font-size: 20px;
+}
+
+main {
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    /* min-height: calc(100vh - 120px); */
+}
+
+.login-container {
+    text-align: center; 
+    padding: 48px 130px; 
+    border-radius: 30px; 
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+button {
+    margin-top: 30px;
+}
+
+.inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.mail_icon {
+    background-image: url(./assets/img/LogIn/mail.png);
+    background-repeat: no-repeat;
+    background-size: 25px;
+    background-position-x: 380px;
+    background-position-y: 12px;
+}
+.lock_icon {
+    background-image: url(./assets/img/LogIn/lock.png);
+    background-repeat: no-repeat;
+    background-size: 20px;
+    background-position-x: 380px;
+    background-position-y: 9px;
+}
+
+.login-container input {
+    width: 400px; 
+    padding: 12px; 
+    border: 1px solid #ccc; 
+    border-radius: 8px; 
+    font-size: 20px;
+}
+
+.login-container input::placeholder {
+    color: #ccc;
+    padding-left: 20px;
+}
+
+.login-container h2 {
+    font-size: 61px;
+    margin-block-start: 0;
+    margin-block-end: 0;
+    margin-bottom: 30px;
+}
+
+.login-container img {
+    margin-bottom: 30px;
+}
+
+.login-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 35px;
+}
+
+.login-btn {
+    background-color: #2A3647; 
+    color: white; 
+    padding: 15px 24px; 
+    border-radius: 8px; 
+    cursor: pointer; 
+    font-size: 21px; 
+    margin-right: 10px;
+}
+
+.guest-login-btn {
+    background-color: #ffffff; 
+    color: rgb(11, 11, 11); 
+    padding: 15px 24px; 
+    border-radius: 8px; 
+    cursor: pointer; 
+    font-size: 18px;
+}
+
+
+#msgBox {
+    margin-top: 20px; 
+    color: red;
+}
+footer {
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px; 
+    width: 100%;
+}
+
+footer a {
+    margin: 0 15px; 
+    text-decoration: none; 
+    color: #CDCDCD;
+}

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join - Login</title>
+    <link rel="icon" href="../img/images/Capa 2.png" type="image/x-icon">
+    <link rel="stylesheet" href="../css/login.css">
+    <script type="module" defer src="main.js"></script>
+    <script src="login.js" defer></script>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="../img/images/Capa 2.png" alt="Join Logo">
+        </div>
+        <div class="header-right">
+            <span>Not a Join user?</span>
+            <a href="#">Sign up</a>
+        </div>
+    </header> 
+
+    <main>
+        <div class="login-container">
+            <h2 class="mb-30">Log in</h2>
+            <img src="../img/LogIn/Vector 5.png" alt="selec">
+            <!-- <div class="selector"></div> -->
+            <form onsubmit="login(); return false;">
+                <div class="inputs">
+                    <input  type="email" placeholder="Email" id="email" class="mail_icon" required>
+                    <input type="password" placeholder="Password" id="password" class="lock_icon" required >
+                </div>
+                <div class="login-buttons ">
+                    <button class="login-btn" type="submit">Log in</button>
+                    <button class="guest-login-btn" type="button">Guest Log in</button>
+                </div>
+            </form>
+            <div id="msgBox"></div>
+        </div>
+    </main>
+
+    <footer>
+            <a href="#">Privacy</a>
+            <a href="#">Policy</a>
+            <a href="#">Legal notice</a>
+    </footer>
+
+    <script>
+        
+    </script>
+</body>
+</html>
