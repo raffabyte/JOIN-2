@@ -22,6 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     logo.addEventListener('click', () => {
-       window.location.href = 'assets/templates/login.html'; 
+       window.location.href = 'assets/index/login.html'; 
     });
 });
