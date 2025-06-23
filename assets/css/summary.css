@@ -1,13 +1,25 @@
 body {
     margin: 0;
+     font-family: "Inter", sans-serif;
 }
 header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     box-sizing: border-box;
-    padding-left: 300px;
+    padding-left: 250px;
+    padding-right: 40px;
     position: absolute;
-    width: 100%;
+    width: calc(100% - 250px);
+    right: 0;
+    height: 96px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+
+}
+header h3 {
+    font-weight: 400;
+    font-size: 20px;
 }
 nav {
     height: 100vh;
@@ -24,10 +36,88 @@ nav {
     width: 100px;
     object-fit: contain;
 }
+.menu {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 14px;
+}
 .menuOption {
     display: flex;
+    gap: 8px;
+    padding-left: 70px;
+    box-sizing: border-box;
+    align-items: center;
 }
 .icon {
     width: 30px;
-    object-fit: contain;
+    height: 30px;
 }
+.leagalLinks {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    padding-top: 220px;
+    color: #A8A8A8;
+}
+.aktiveNav {
+    color: #FFFFFF;
+}
+.inactiveNav {
+    color: #CDCDCD;
+}
+.summary {
+    width: 100%;
+    background-color: #091931;
+}
+.summary:hover {
+    cursor: pointer;
+}
+.addTask:hover {
+    background-color: rgb(36, 82, 99);
+    cursor: pointer;
+}
+.addTask:hover img,
+.addTask:hover p {
+  transform: scale(1.05);
+}
+.board:hover {
+    background-color: rgb(36, 82, 99);
+    cursor: pointer;
+}
+.board:hover img,
+.board:hover p {
+  transform: scale(1.05);
+}
+.contacts:hover {
+    background-color: rgb(36, 82, 99);
+    cursor: pointer;
+}
+.contacts:hover img,
+.contacts:hover p {
+  transform: scale(1.05);
+}
+.userInfo {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+.question {
+    width: 20px;
+    height: 20px;
+}
+.question:hover {
+    transform: scale(1.2);
+    cursor: pointer;
+}
+.privacyPolicy:hover {
+    transform: scale(1.1);
+    color: rgb(26, 175, 224);
+    cursor: pointer;
+}
+.legalNotice:hover {
+    transform: scale(1.1);
+    color: rgb(26, 175, 224);
+    cursor: pointer;
+}
+
