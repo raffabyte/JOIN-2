@@ -11,3 +11,6 @@ git commit -m "$MESSAGE"
 
 echo "→ git push"
 git push
+
+
+# ./git-auto.sh "Dein Commit-Text" so kann man alles ausführen und nur den Text verändern (wer es wünscht)
