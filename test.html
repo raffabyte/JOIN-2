@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Test Rechteck statt Bild</title>
+  <style>
+    #logo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: red;
+      opacity: 0;
+      transition: opacity 2s ease, top 2s ease, left 2s ease, transform 2s ease;
+    }
+
+    #logo.fade-in {
+      opacity: 1;
+    }
+
+    .moved {
+      top: 20px;
+      left: 20px;
+      transform: translate(0, 0);
+    }
+  </style>
+</head>
+<body>
+  <div id="logo" style="width:100px; height:100px; background:red;"></div>
+  <!-- <div id="logo"></div> -->
+
+  <script>
+    const logo = document.getElementById("logo");
+
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    logo.classList.add("fade-in");
+    console.log("fade-in gesetzt");
+  }, 100);
+});
+
+logo.addEventListener("transitionend", (e) => {
+  console.log("Transition beendet für:", e.propertyName);
+
+  if (e.propertyName === "opacity") {
+    logo.classList.add("moved");
+    console.log("moved Klasse hinzugefügt");
+  } else if (e.propertyName === "top") {
+    console.log("Fertig mit Bewegung");
+    // window.location.href = "login.html";
+  }
+});
+
+
+  </script>
+
+</body>
+</html>
