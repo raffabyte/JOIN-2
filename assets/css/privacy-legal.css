@@ -1,18 +1,7 @@
-body {
-    margin: 0;
-    font-family: "Inter", sans-serif;
-}
 
 header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-sizing: border-box;
-    padding-left: 250px;
-    padding-right: 40px;
-    position: absolute;
-    width: calc(100% - 250px);
-    right: 0;
+    padding: 36px 98px;
+    width: 100%;
     height: 96px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
@@ -22,135 +11,44 @@ header h3 {
     font-size: 20px;
 }
 
-nav {
-    height: 100vh;
-    width: 250px;
-    background-color: #2A3647;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    padding: 64px 0;
-    box-sizing: border-box;
-}
-
-p {
-  color: #A8A8A8;
-}
-
-.join {
-    width: 100px;
-    object-fit: contain;
-}
-
-.menu {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    gap: 14px;
-}
-
-.menuOption {
-    display: flex;
-    gap: 8px;
-    padding-left: 70px;
-    box-sizing: border-box;
-    align-items: center;
-}
-
-.icon {
-    width: 30px;
-    object-fit: contain;
-}
-
 .login-link img {
-  filter: invert(25%) sepia(25%) saturate(0%) brightness(90%);
+    filter: invert(25%) sepia(25%) saturate(0%) brightness(90%);
 }
 
 .login-link {
-  display: flex;
-  align-items: center;        
-  gap: 8px;                    
-  padding-left: 70px;          
-  padding-bottom: 280px;       
-  box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-left: 70px;
+    padding-bottom: 280px;
 }
-
 
 .link-page {
-  color: #A8A8A8;
-  text-decoration: none;
-  font-size: 16px;
+    color: #A8A8A8;
+    text-decoration: none;
+    font-size: 16px;
 }
 
-
-.legalLinks {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.legalLinks a {
-  display: block;
-  text-align: left;
-  width: 100%;
-  padding: 8px 70px; 
-  color: #A8A8A8;
-  text-decoration: none;
-  font-size: 14px;
-  box-sizing: border-box;
-  transition: background-color 0.2s, color 0.2s;
-}
-
-.legalLinks a:hover {
-  background-color: #242727;
-  color: rgb(26, 175, 224);
-  cursor: pointer;
-}
-
-.aktiveNav {
-  color: #FFFFFF;
-}
-
-.inactiveNav {
-  color: #CDCDCD;
+main{
+    justify-content: flex-start;
 }
 
 .privacy-container {
-  position: absolute;
-  top: 96px; 
-  left: 250px; 
-  right: 0;
-  bottom: 0;
-  padding: 40px;
-  overflow-y: auto;
-  background-color: #f9f9f9;
-  box-sizing: border-box;
+    left: 232px;
+    overflow-y: auto;
+    background-color: #f9f9f9;
+    padding: 38px 78px;
 }
 
 h1 {
-  font-size: 2em;
-  margin-bottom: 20px;
+    font-size: 2em;
+    margin-bottom: 20px;
+    margin-top: 28px;
 }
 
 h2 {
-  font-size: 1.3em;
-  margin-top: 30px;
+    font-size: 1.3em;
+    margin-top: 30px;
 }
 
-p {
-  font-size: 1em;
-  line-height: 1.6;
-}
 
-.privacyPolicy:hover {
-    transform: scale(1.1);
-    color: rgb(26, 175, 224);
-    cursor: pointer;
-}
-
-.legalNotice:hover {
-    transform: scale(1.1);
-    color: rgb(26, 175, 224);
-    cursor: pointer;
-}

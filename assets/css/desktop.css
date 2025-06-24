@@ -1,11 +1,4 @@
-body {
-    margin: 0;
-    padding: 0;
-    background-color: white; 
-    min-height: 100vh; 
-    height: 100vh;
-    overflow: hidden;
-}
+
 
 #join-logo {
     position: absolute;
