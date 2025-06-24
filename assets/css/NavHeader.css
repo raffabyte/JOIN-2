@@ -1,5 +1,5 @@
 nav {
-    position: fixed;
+    position: absolute;
     left: 0;
     height: 100vh;
     width: 232px;
@@ -94,7 +94,6 @@ header {
     display: flex;
     flex-direction: column;
     gap: 4px;
-    padding-top: 243px;
 }
 
 .legalLinks a {
@@ -107,6 +106,13 @@ header {
 
 .legalLinks a:hover {
     color: rgb(26, 175, 224);
+}
+
+@media (min-width: 1920px) {
+  nav {
+    left: 50%;
+    transform: translateX(-960px);
+  }
 }
 
 
