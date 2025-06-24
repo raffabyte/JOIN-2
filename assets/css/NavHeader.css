@@ -11,6 +11,18 @@ nav {
     padding: 64px 0;
 }
 
+header {
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 116px;
+    padding-right: 40px;
+    width: 100%;
+    height: 96px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
 .join {
     width: 100px;
     height: auto;
@@ -35,7 +47,7 @@ nav {
 }
 
 .menuOption:hover{
-    transform: scale(1.1);
+    transform: scale(1.05);
 }
 
 .menuOption p{
@@ -62,6 +74,8 @@ nav {
     width: 100%;
     display: flex;
     flex-direction: column;
+    gap: 4px;
+    padding-top: 243px;
 }
 
 .legalLinks a {
