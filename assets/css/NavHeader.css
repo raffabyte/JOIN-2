@@ -47,7 +47,12 @@ header {
 }
 
 .menuOption:hover{
-    transform: scale(1.05);
+    background-color: #2a3d59;
+}
+
+.menuOption:hover img,
+.menuOption:hover p {
+  transform: translateY(-1px);
 }
 
 .menuOption p{
@@ -55,6 +60,20 @@ header {
     font-size: 16px;
     line-height: 1.6;
 }
+
+.aktiveNav {
+    color: #FFFFFF;
+    background: #091932;
+}
+
+.aktiveNav:hover{
+    background-color: #091932;
+}
+.aktiveNav:hover img,
+.aktiveNav:hover p {
+  transform: none;
+}
+
 
 
 .privacyPolicy:hover {
@@ -91,11 +110,3 @@ header {
 }
 
 
-.aktiveNav {
-    color: #FFFFFF;
-    background: #091932;
-}
-
-.aktiveNav:hover{
-    transform: none !important;
-}
