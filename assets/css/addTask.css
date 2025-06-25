@@ -1,41 +1,8 @@
 body {
+  display: block;
   background: #f6f7f9;
   font-family: "Inter", sans-serif;
   margin: 0;
-}
-
-.layout {
-  display: flex;
-}
-
-nav {
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100vh;
-  width: 232px;
-  background-color: #2A3647;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  padding: 64px 0;
-}
-
-.page-container {
-  margin-left: 232px; 
-  width: calc(100% - 232px);
-}
-
-header {
-  z-index: 1;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 40px;
-  height: 96px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  background-color: #f6f7f9;
 }
 
 main {
@@ -55,6 +22,7 @@ h1 {
 }
 
 .task-form {
+  display: block;
   background: transparent;
   border-radius: 0px;
   padding: 0px;
@@ -101,7 +69,8 @@ h1 {
 
 .required-asterisk {
   color: red;
-  margin-left: 2px;
+  margin: 4px;
+  display: inline;
 }
 
 .date-picker {
@@ -220,6 +189,7 @@ h1 {
   justify-content: flex-end;
   gap: 16px;
   margin-top: 32px;
+  width: 100%;
   
 }
 
@@ -235,6 +205,7 @@ h1 {
   cursor: pointer;
   width: auto; 
   min-width: 120px;
+  white-space: nowrap;
 }
 
 .clear-button {
@@ -249,8 +220,19 @@ h1 {
 }
 
 .validation-hint {
-  color: #d9534f;
+  display: inline;
   font-size: 0.875rem;
   margin-top: 8px;
-  display: block;
+  display: inline; 
+   white-space: nowrap;
+}
+
+.form-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 32px;
+  flex-wrap: wrap;
+  width: 100%;
+  flex-wrap: nowrap;
 }
