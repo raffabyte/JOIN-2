@@ -77,15 +77,30 @@ header {
 
 
 .privacyPolicy:hover {
-    transform: scale(1.1);
     color: rgb(26, 175, 224);
     cursor: pointer;
 }
 
+.privacyPolicy:hover span {
+    transform: scale(1.05);
+}
+
 .legalNotice:hover {
-    transform: scale(1.1);
     color: rgb(26, 175, 224);
     cursor: pointer;
+}
+
+.legalNotice:hover span {
+    transform: scale(1.05);
+}
+
+
+span {
+    display: inline-block;
+    width: 100%;
+    font-size: 14px;
+    padding: 0;
+    margin: 0;
 }
 
 
@@ -101,7 +116,6 @@ header {
     padding: 8px 72px;
     font-size: 14px;
     transition: background-color 0.2s, color 0.2s;
-    text-align: left;
 }
 
 .legalLinks a:hover {
