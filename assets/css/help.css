@@ -47,3 +47,7 @@ p{
     font-size: 16px !important;
     font-weight: normal !important;
 }
+
+.align-left{
+    align-items: flex-start;
+}

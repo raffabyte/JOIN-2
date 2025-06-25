@@ -1,70 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>summary</title>
 
     <!-- style  -->
-    <link rel="stylesheet" href="../css/standard-css.css">
-    <link rel="stylesheet" href="../fonts/Inter/font.css">
-    <link rel="stylesheet" href="../css/NavHeader.css">
-    <link rel="stylesheet" href="../css/summary.css">
-
+    <link rel="stylesheet" href="../css/standard-css.css" />
+    <link rel="stylesheet" href="../fonts/Inter/font.css" />
+    <link rel="stylesheet" href="../css/NavHeader.css" />
+    <link rel="stylesheet" href="../css/summary.css" />
 
     <!-- fav-Icon -->
-    <link rel="icon" href="../img/Logo.png" type="image/x-icon">
-
-</head>
-<body>
-<nav>
-    <img class="join" src="../img/fav-icon.png" alt="">
-    <div class="menu">
+    <link rel="icon" href="../img/Logo.png" type="image/x-icon" />
+  </head>
+  <body>
+    <nav>
+      <img class="join" src="../img/fav-icon.png" alt="" />
+      <div class="menu">
         <a href="summary.html" class="flexR aktiveNav menuOption">
-                <img class="icon" src="../img/summary.png" alt="">
-                <p>Summary</p>
-            </a>
-        <a href="add_task.html" class=" menuOption flexR">
-            <img class="icon" src="../img/add-tasks.png" alt="">
-            <p>Add Task</p>
+          <img class="icon" src="../img/summary.png" alt="" />
+          <p>Summary</p>
         </a>
-        <a href="board.html" class=" menuOption flexR">
-            <img class="icon" src="../img/Board.png" alt="">
-            <p>Board</p>
+        <a href="add_task.html" class="menuOption flexR">
+          <img class="icon" src="../img/add-tasks.png" alt="" />
+          <p>Add Task</p>
         </a>
-        <a href="contacts.html" class=" menuOption flexR">
-            <img class="icon" src="../img/contacts.png" alt="">
-            <p>Contacts</p>
+        <a href="board.html" class="menuOption flexR">
+          <img class="icon" src="../img/Board.png" alt="" />
+          <p>Board</p>
         </a>
-    </div>
-    <div class="legalLinks">
+        <a href="contacts.html" class="menuOption flexR">
+          <img class="icon" src="../img/contacts.png" alt="" />
+          <p>Contacts</p>
+        </a>
+      </div>
+      <div class="legalLinks">
         <a href="../index/privacy.html" class="privacyPolicy">Privacy Policy</a>
-        <a href="../index/legal-notice.html" class="legalNotice">Legal notice</a>
-    </div>
-</nav>
-<main class="flexC">
-    <header>
-        <h3>Kanban Project Management Tool</h3>
-        <div class="userInfo">
-            <a href="help.html">
-                <img class="question" src="../img/SummaryUser/help.png" alt=""/>
-            </a>
-            <button>
-                <img src="../img/SummaryUser/User profile initials.png" alt="">
-            </button>
-        </div>
-    </header>
-    <div class="content">
+        <a href="../index/legal-notice.html" class="legalNotice"
+          >Legal notice</a
+        >
+      </div>
+    </nav>
+    <main class="flexC">
+        <header>
+            <h3>Kanban Project Management Tool</h3>
+            <div class="userInfo">
+                <button onclick="toggleMenu()">
+                    <img src="../img/SummaryUser/User profile initials.png" alt="">
+                </button>
+                <div class="flexC not-visible" id="menu">
+                    <a href="../index/legal-notice.html" class="legalNotice">Legal notice</a>
+                    <a href="../index/privacy.html" class="privacyPolicy">Privacy Policy</a>
+                    <a href="login.html">Log Out</a>
+                </div>
+            </div>
+        </header>
+      <div class="content">
         <div class="into">
-            <h1>Join 360</h1>
-            <div class="separater"></div>
-            <h2>Key Metrics at a Glance</h2>
+          <h1>Join 360</h1>
+          <div class="separater"></div>
+          <h2>Key Metrics at a Glance</h2>
         </div>
         <div class="nameAndToDo">
+          <div class="row-grid">
+            <!-- Reihe 1 – 2 Elemente -->
+            <div class="row">
+              <div class="item1">
+                <img class="img1" src="../img/summeryIcons/Frame 59.png" alt="">
+                <div class="d-colum">
+                    <h2 class="nummber">1</h2>
+                    <p class="To-do">To-do</p>
+                </div>
+              </div>
+              <div class="item1">
+                <img class="img1" src="../img/summeryIcons/Frame 59 (1).png" alt="">
+                <div class="d-colum">
+                    <h2 class="nummber">1</h2>
+                    <p class="To-do">Done</p>
+                </div>
+              </div>
+            </div>
 
+            <!-- Reihe 2 – 1 Element (dehnt sich aus) -->
+            <div class="row">
+              <div class="item2">
+                <div class="d-flex">
+                <img class="img1" src="../img/summeryIcons/Frame 59 (2).png" alt="">
+                <div class="d-colum">
+                    <h2 class="nummber">1</h2>
+                    <p class="To-do">Done</p>
+                    </div>
+
+                </div>
+                <div class="separator2"></div>
+                <div class="deadline">
+                    <p class="p-strong">October 16, 2022</p>
+                    <p class="p-normal">Upcoming Deadline</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Reihe 3 – 3 Elemente -->
+            <div class="row">
+              <div class="item3">
+                <h2 class="nummber">5</h2>
+                <p class="To-do">Tasks in Board</p>
+              </div>
+              <div class="item3">
+                <h2 class="nummber">2</h2>
+                <p class="To-do">Tasks In Progress</p>
+              </div>
+              <div class="item3">
+                <h2 class="nummber">2</h2>
+                <p class="To-do">Awaiting Feedback</p>
+              </div>
+            </div>
+          </div>
+          <div class="greetings">
+            <h3 class="greeting">Good morning,</h3>
+            <h2 class="name">Sofia Müller</h2>
+          </div>
         </div>
-    </div>
-</main>
+      </div>
+    </main>
 
-</body>
+    <!-- script  -->
+    <script src="../../main.js"></script>
+
+  </body>
 </html>

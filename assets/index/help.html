@@ -46,7 +46,14 @@
     <header>
         <h3>Kanban Project Management Tool</h3>
         <div class="userInfo">
-            <img src="../img/SummaryUser/User profile initials.png" alt="">
+            <button onclick="toggleMenu()">
+                <img src="../img/SummaryUser/User profile initials.png" alt="">
+            </button>
+            <div class="flexC not-visible" id="menu">
+                <a href="../index/legal-notice.html" class="legalNotice">Legal notice</a>
+                <a href="../index/privacy.html" class="privacyPolicy">Privacy Policy</a>
+                <a href="login.html">Log Out</a>
+            </div>
         </div>
     </header>
     <div class="content">
@@ -104,7 +111,7 @@
                     Join
                 </span> : </p>
 
-            <div class="flexC">
+            <div class="flexC align-left">
                 <div class="flexR info">
                     <p class="number">1.</p>
                     <div class="flexC">
@@ -153,7 +160,7 @@
                     </div>
                 </div>
                 <div class="flexR info">
-                    <p class="number">4.</p>
+                    <p class="number">5.</p>
                     <div class="flexC">
                         <span>Deleting Cards </span>
                         <p> Once a task is completed, you can either move it to the "Done" list or delete it.
@@ -176,6 +183,9 @@
         </div>
     </div>
 </main>
+
+<!-- script  -->
+<script src="../../main.js"></script>
 
 </body>
 </html>
