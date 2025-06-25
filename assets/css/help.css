@@ -1,0 +1,49 @@
+h1 {
+    font-weight: 700;
+    font-size: 61px;
+}
+
+h2{
+    font-size: 27px;
+    font-weight: 700;
+}
+
+.heading{
+    justify-content: space-between;
+}
+
+.pTop-32{
+    padding-top: 32px;
+}
+
+.pBtm-32{
+    padding-bottom: 32px;
+}
+
+p{
+    font-size: 16px;
+}
+
+.info{
+    gap: 32px;
+    align-items: flex-start;
+    margin-top: 24px;
+}
+
+.number{
+    font-size: 27px;
+    font-weight: 700;
+}
+
+.info span {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+
+.blue{
+    color: #29ABE2;
+    display: inline;
+    font-size: 16px !important;
+    font-weight: normal !important;
+}

@@ -23,6 +23,12 @@ header {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
+header h3 {
+    font-weight: 400;
+    font-size: 20px;
+}
+
+
 .join {
     width: 100px;
     height: auto;
@@ -122,11 +128,19 @@ span {
     color: rgb(26, 175, 224);
 }
 
+.content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 110px 96px;
+    background-color: #F6F7F8;
+    flex: 1;
+}
+
 @media (min-width: 1920px) {
   nav {
     left: 50%;
     transform: translateX(-960px);
   }
 }
-
 
