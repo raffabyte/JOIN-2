@@ -7,10 +7,6 @@ main{
     min-height: 100vh;
 }
 
-header h3 {
-    font-weight: 400;
-    font-size: 20px;
-}
 
 .userInfo {
     display: flex;
