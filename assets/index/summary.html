@@ -43,17 +43,19 @@
       </div>
     </nav>
     <main class="flexC">
-      <header>
-        <h3>Kanban Project Management Tool</h3>
-        <div class="userInfo">
-            <a href="help.html">
-                <img class="question" src="../img/SummaryUser/help.png" alt=""/>
-            </a>
-            <button onclick="toggleMenu()">
-                <img src="../img/SummaryUser/User profile initials.png" alt="">
-            </button>
-        </div>
-      </header>
+        <header>
+            <h3>Kanban Project Management Tool</h3>
+            <div class="userInfo">
+                <button onclick="toggleMenu()">
+                    <img src="../img/SummaryUser/User profile initials.png" alt="">
+                </button>
+                <div class="flexC not-visible" id="menu">
+                    <a href="../index/legal-notice.html" class="legalNotice">Legal notice</a>
+                    <a href="../index/privacy.html" class="privacyPolicy">Privacy Policy</a>
+                    <a href="login.html">Log Out</a>
+                </div>
+            </div>
+        </header>
       <div class="content">
         <div class="into">
           <h1>Join 360</h1>
@@ -122,5 +124,9 @@
         </div>
       </div>
     </main>
+
+    <!-- script  -->
+    <script src="../../main.js"></script>
+
   </body>
 </html>
