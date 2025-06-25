@@ -1,5 +1,5 @@
 nav {
-    position: absolute;
+    position: fixed;
     left: 0;
     height: 100vh;
     width: 232px;
