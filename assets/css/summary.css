@@ -25,14 +25,6 @@ header h3 {
     transform: scale(1.2);
 }
 
-.content {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    padding: 110px 96px;
-    background-color: #F6F7F8;
-    flex: 1;
-}
 .into {
     max-height: 76px;
     display: flex;
@@ -43,7 +35,6 @@ header h3 {
 h1 {
     font-weight: 700;
     font-size: 61px;
-    margin: 0;
 }
 h2 {
     font-weight: 400;

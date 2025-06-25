@@ -129,4 +129,11 @@ span {
   }
 }
 
-
+.content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 110px 96px;
+    background-color: #F6F7F8;
+    flex: 1;
+}
