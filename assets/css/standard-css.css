@@ -23,6 +23,7 @@ body{
     max-width: 1920px;
     background: white;
     padding-left: 232px;
+    overflow-x: hidden;
 }
 
 a {
@@ -34,6 +35,7 @@ a {
 button {
     border: none;
     cursor: pointer;
+    background: white;
 }
 
 .flexR{

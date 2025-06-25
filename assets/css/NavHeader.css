@@ -29,6 +29,46 @@ header h3 {
 }
 
 
+#menu{
+    background: #2a3547;
+    border-radius: 20px 0 20px 20px;
+    padding: 8px;
+    width: 150px;
+    height: 158px;
+    align-items: flex-start;
+    justify-content: center;
+    position: absolute;
+    top: 131%;
+    right: 50%;
+    transform: translateX(16%);
+    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 100;
+}
+
+.userInfo{
+    position: relative;
+}
+
+#menu a{
+    padding: 8px 16px;
+    font-size: 16px;
+    text-align: left;
+    color: #cdcdcd;
+    width: 100%;
+}
+
+#menu.not-visible{
+    transform: translateX(200%);
+    pointer-events: none;
+    opacity: 0;
+}
+
+#menu a:hover{
+    background: #2a3d59;
+}
+
 .join {
     width: 100px;
     height: auto;
@@ -142,5 +182,6 @@ span {
     left: 50%;
     transform: translateX(-960px);
   }
+
 }
 
