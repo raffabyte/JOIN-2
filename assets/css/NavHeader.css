@@ -69,16 +69,32 @@ header h3 {
     background: #2a3d59;
 }
 
+
+main{
+    width: 100%;
+    flex: 1;
+    justify-content: flex-start;
+    min-height: 100vh;
+}
+
 .join {
     width: 100px;
     height: auto;
 }
 
-.menu {
-    display: flex;
-    flex-direction: column;
+.login-menu{
+    gap:128px;
     width: 100%;
-    gap: 15px;
+}
+
+.login-link{
+    gap: 8px;
+    padding: 8px 56px;
+    width: 100%;
+}
+
+.login-link:hover{
+    background: #2a3d59;
 }
 
 .icon {
@@ -114,32 +130,29 @@ header h3 {
 
 .aktiveNav:hover{
     background-color: #091932;
+    cursor: default !important;
+    color: white !important;
+    transform: none !important;
+    font-weight: 100 !important;
 }
 .aktiveNav:hover img,
 .aktiveNav:hover p {
   transform: none;
 }
 
-
-
 .privacyPolicy:hover {
     color: rgb(26, 175, 224);
     cursor: pointer;
-}
-
-.privacyPolicy:hover span {
     transform: scale(1.05);
+    font-weight: 900;
 }
 
 .legalNotice:hover {
     color: rgb(26, 175, 224);
     cursor: pointer;
-}
-
-.legalNotice:hover span {
     transform: scale(1.05);
+    font-weight: 900;
 }
-
 
 span {
     display: inline-block;
@@ -159,7 +172,8 @@ span {
 
 .legalLinks a {
     width: 100%;
-    padding: 8px 72px;
+    padding: 8px;
+    text-align: center;
     font-size: 14px;
     transition: background-color 0.2s, color 0.2s;
 }

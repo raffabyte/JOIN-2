@@ -1,13 +1,5 @@
 
 
-main{
-    width: 100%;
-    flex: 1;
-    justify-content: flex-start;
-    min-height: 100vh;
-}
-
-
 .userInfo {
     display: flex;
     align-items: center;
