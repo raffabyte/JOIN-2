@@ -1,17 +1,7 @@
 
 
-.userInfo {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-.question {
-    width: 20px;
-    height: 20px;
-}
-.question:hover {
-    transform: scale(1.2);
-}
+
+
 
 .content {
     display: flex;

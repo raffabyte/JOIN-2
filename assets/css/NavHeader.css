@@ -28,6 +28,15 @@ header h3 {
     font-size: 20px;
 }
 
+.help {
+    height: 32px;
+    width: 32px;
+}
+
+.help:hover {
+    transform: scale(1.1);
+}
+
 .menu {
     display: flex;
     flex-direction: column;
@@ -53,8 +62,11 @@ header h3 {
     z-index: 100;
 }
 
-.userInfo{
+.userInfo {
     position: relative;
+    display: flex;
+    align-items: center;
+    gap: 16px;
 }
 
 #menu a{
@@ -204,4 +216,3 @@ span {
   }
 
 }
-
