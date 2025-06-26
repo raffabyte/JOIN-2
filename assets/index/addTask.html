@@ -3,57 +3,57 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>add task</title>
     <link rel="icon" href="../img/Logo.png" type="image/x-icon">
+
+    <!-- styles  -->
     <link rel="stylesheet" href="../css/standard-css.css">
     <link rel="stylesheet" href="../fonts/Inter/font.css">
     <link rel="stylesheet" href="../css/NavHeader.css">
     <link rel="stylesheet" href="../css/addTask.css">
-    <script src="../../js/addTask.js" defer></script>
+
 </head>
 
 <body>
-    <div class="layout">
-    <nav>
-        <img class="join" src="../img/fav-icon.png" alt="">
-        <div class="menu">
-            <div class="summary">
-                <a href="summary.html" class="flexR menuOption">
-                    <img class="icon" src="../img/summary.png" alt="">
-                    <p>Summary</p>
-                </a>
-            </div>
-
-            <div class="addTask menuOption flexR">
-                <img class="icon" src="../img/add-tasks.png" alt="">
-                <p>Add Task</p>
-            </div>
-
-            <div class="board menuOption flexR">
-                <img class="icon" src="../img/Board.png" alt="">
-                <p>Board</p>
-            </div>
-
-            <div class="contacts menuOption flexR">
-                <img class="icon" src="../img/contacts.png" alt="">
-                <p>Contacts</p>
-            </div>
-        </div>
-
-        <div class="legalLinks">
-            <a href="../index/privacy.html" class="privacyPolicy">Privacy Policy</a>
-            <a href="../index/legal-notice.html" class="legalNotice aktiveNav">Legal notice</a>
-        </div>
-    </nav>
-</div>
+<nav>
+    <img class="join" src="../img/fav-icon.png" alt="">
+    <div class="menu">
+        <a href="summary.html" class="flexR menuOption">
+            <img class="icon" src="../img/summary.png" alt="">
+            <p>Summary</p>
+        </a>
+        <a href="add_task.html" class=" menuOption aktiveNav flexR">
+            <img class="icon" src="../img/add-tasks.png" alt="">
+            <p>Add Task</p>
+        </a>
+        <a href="board.html" class=" menuOption flexR">
+            <img class="icon" src="../img/Board.png" alt="">
+            <p>Board</p>
+        </a>
+        <a href="contacts.html" class=" menuOption flexR">
+            <img class="icon" src="../img/contacts.png" alt="">
+            <p>Contacts</p>
+        </a>
+    </div>
+    <div class="legalLinks">
+        <a href="../index/privacy.html" class="privacyPolicy">Privacy Policy</a>
+        <a href="../index/legal-notice.html" class="legalNotice">Legal notice</a>
+    </div>
+</nav>
 <div class="page-container">
     <header>
         <h3>Kanban Project Management Tool</h3>
         <div class="userInfo">
-            <img class="question" src="../img/SummaryUser/help.png" alt="" />
-            <img src="../img/SummaryUser/User profile initials.png" alt="">
+            <button onclick="toggleMenu()">
+                <img src="../img/SummaryUser/User profile initials.png" alt="">
+            </button>
+            <div class="flexC not-visible" id="menu">
+                <a href="../index/legal-notice.html" class="legalNotice">Legal notice</a>
+                <a href="../index/privacy.html" class="privacyPolicy">Privacy Policy</a>
+                <a href="login.html">Log Out</a>
+            </div>
         </div>
     </header>
 
@@ -78,7 +78,7 @@
                             <input type="date" id="due-date">
                         </div>
                     </div>
-</div>
+                </div>
                     <div class="form-column right-column">
                         <div class="form-group">
                         <label>Priority</label>

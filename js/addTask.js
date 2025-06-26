@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   setupPriorityButtons();
   setupSubtaskAdding();
+  setupFormValidation();
 });
 
 function setupDropdown({
@@ -111,6 +112,94 @@ function closeDropdownOnOutsideClick(dropdown, toggleBtn) {
       dropdown.classList.remove("show");
     }
   });
+}
+
+function setupFormValidation() {
+  const form = document.querySelector(".task-form");
+  const createBtn = document.querySelector(".create-button");
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    resetValidationHints();
+    const valid = validateFormFields();
+
+    if (!valid) return;
+
+    handleFormSubmission(createBtn, form);
+  });
+}
+
+function validateFormFields() {
+  const title = document.getElementById("title");
+  const dueDate = document.getElementById("due-date");
+  const category = document.getElementById("category");
+
+  let isValid = true;
+
+  if (title.value.trim() === "") {
+    markFieldInvalid(title);
+    isValid = false;
+  }
+
+  if (dueDate.value === "") {
+    markFieldInvalid(dueDate);
+    isValid = false;
+  }
+
+  if (!category.value) {
+    markFieldInvalid(category);
+    isValid = false;
+  }
+
+  if (!isValid) showValidationHint();
+  return isValid;
+}
+
+function resetValidationHints() {
+  const title = document.getElementById("title");
+  const dueDate = document.getElementById("due-date");
+  const category = document.getElementById("category");
+
+  [title, dueDate, category].forEach((el) => {
+    el.style.border = "1px solid transparent";
+  });
+
+  const hint = document.querySelector(".validation-hint");
+  hint.style.color = "initial";
+}
+
+function markFieldInvalid(field) {
+  field.style.border = "1px solid red";
+}
+
+function showValidationHint() {
+  const hint = document.querySelector(".validation-hint");
+  hint.style.color = "red";
+}
+
+function handleFormSubmission(button, form) {
+  button.disabled = true;
+  button.textContent = "Creating...";
+
+  setTimeout(() => {
+    button.disabled = false;
+    button.textContent = "Create Task ✔";
+    alert("Task created successfully!");
+    resetForm(form);
+  }, 1000);
+}
+
+function resetForm(form) {
+  form.reset();
+
+  document
+    .querySelectorAll(".priority-btn")
+    .forEach((btn) => btn.classList.remove("selected"));
+
+  document
+    .querySelector(".priority-btn.medium")
+    .classList.add("selected");
 }
 
 function setupPriorityButtons() {
