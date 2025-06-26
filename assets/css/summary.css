@@ -74,6 +74,7 @@ h2 {
     gap: 18px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+
 .img1 {
     width: 69px;
     object-fit: contain;
@@ -163,4 +164,54 @@ font-weight: 400;
     font-weight: 700;
     font-size: 64px;
     color: #29ABE2;
+}
+
+
+.item1:hover {
+    transform: scale(1.07);
+    transition: transform 80ms ease-out;
+    background-color: #2A3647;
+}
+.item1:hover .nummber,
+.item1:hover .To-do {
+    color: white;
+}
+.item2:hover {
+    transform: scale(1.07);
+    transition: transform 80ms ease-out;
+    background-color: #2A3647;
+}
+.item2:hover .p-strong,
+.item2:hover .p-normal,
+.item2:hover .nummber,
+.item2:hover .To-do {
+    color: white;
+}
+.item3:hover {
+    transform: scale(1.07);
+    transition: transform 80ms ease-out;
+    background-color: #2A3647;
+}
+.item3:hover .nummber,
+.item3:hover .To-do {
+    color: white;
+}
+
+.circle-wrapper {
+    display: flex;
+  position: relative;  
+}
+
+.circle {
+  height: 69px;
+  width: 69px;
+}
+
+.icon-circle {
+  position: absolute;       
+  top: 50%;                 
+  left: 50%;             
+  transform: translate(-50%, -50%);  
+  width: 32px;     
+  object-fit: contain;
 }
