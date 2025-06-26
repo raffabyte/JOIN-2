@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>add task</title>
+    <link rel="icon" href="../img/Logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="../css/standard-css.css">
+    <link rel="stylesheet" href="../fonts/Inter/font.css">
+    <link rel="stylesheet" href="../css/NavHeader.css">
+    <link rel="stylesheet" href="../css/addTask.css">
+    <script src="../../js/addTask.js" defer></script>
+</head>
+
+<body>
+    <div class="layout">
+    <nav>
+        <img class="join" src="../img/fav-icon.png" alt="">
+        <div class="menu">
+            <div class="summary">
+                <a href="summary.html" class="flexR menuOption">
+                    <img class="icon" src="../img/summary.png" alt="">
+                    <p>Summary</p>
+                </a>
+            </div>
+
+            <div class="addTask menuOption flexR">
+                <img class="icon" src="../img/add-tasks.png" alt="">
+                <p>Add Task</p>
+            </div>
+
+            <div class="board menuOption flexR">
+                <img class="icon" src="../img/Board.png" alt="">
+                <p>Board</p>
+            </div>
+
+            <div class="contacts menuOption flexR">
+                <img class="icon" src="../img/contacts.png" alt="">
+                <p>Contacts</p>
+            </div>
+        </div>
+
+        <div class="legalLinks">
+            <a href="../index/privacy.html" class="privacyPolicy">Privacy Policy</a>
+            <a href="../index/legal-notice.html" class="legalNotice aktiveNav">Legal notice</a>
+        </div>
+    </nav>
+</div>
+<div class="page-container">
+    <header>
+        <h3>Kanban Project Management Tool</h3>
+        <div class="userInfo">
+            <img class="question" src="../img/SummaryUser/help.png" alt="" />
+            <img src="../img/SummaryUser/User profile initials.png" alt="">
+        </div>
+    </header>
+
+    <main class="flexC">
+        <form class="task-form">
+            <h1>Add Task</h1>
+           <div class="form-columns">
+                <div class="form-column left-column">
+                    <div class="form-group">
+                        <label for="title">Title<span class="required-asterisk">*</span></label>
+                        <input type="text" id="title" placeholder="Enter a title">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea id="description" placeholder="Enter a description"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="due-date">Due Date<span class="required-asterisk">*</span></label>
+                        <div class="date-picker">
+                            <input type="date" id="due-date">
+                        </div>
+                    </div>
+</div>
+                    <div class="form-column right-column">
+                        <div class="form-group">
+                        <label>Priority</label>
+                            <div class="priority-options">
+
+                                <!-- Urgent -->
+                                <button type="button" class="priority-btn" data-priority="urgent">
+                                    <span>Urgent</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" class="lucide lucide-chevrons-up">
+                                        <path d="M17 11L12 6L7 11" />
+                                        <path d="M17 18L12 13L7 18" />
+                                    </svg>
+                                </button>
+
+                                <!-- Medium (Default selected) -->
+                                <button type="button" class="priority-btn selected medium" data-priority="medium">
+                                    <span>Medium</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" class="lucide lucide-equal">
+                                        <line x1="5" y1="9" x2="19" y2="9" />
+                                        <line x1="5" y1="15" x2="19" y2="15" />
+                                    </svg>
+                                </button>
+
+                                <!-- Low -->
+                                <button type="button" class="priority-btn" data-priority="low">
+                                    <span>Low</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" class="lucide lucide-chevrons-down">
+                                        <path d="M7 6L12 11L17 6" />
+                                        <path d="M7 13L12 18L17 13" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="assigned-to">Assigned To</label>
+                            <div class="dropdown" id="assigned-to-dropdown">
+                                <div class="dropdown-selected">Select contacts</div>
+                                <div class="dropdown-options hidden">
+                                    <!-- JS-Content -->
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="category">Category<span class="required-asterisk">*</span></label>
+                            <select id="category">
+                                <option value="" disabled selected>Select task category</option>
+                                <option value="technical">Technical Task</option>
+                                <option value="user-story">User Story</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="subtasks">Subtasks</label>
+                            <div class="subtask-input-wrapper">
+                                <input type="text" id="subtasks" placeholder="Add new subtask" autocomplete="off">
+                                <button type="button" class="add-subtask-inside">+</button>
+                                <ul class="subtask-dropdown hidden">
+                                    <li class="subtask-option">Technical Tasks</li>
+                                    <li class="subtask-option">User Story</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+  <div class="form-footer">
+  <small class="validation-hint">
+    <span class="required-asterisk">*</span>This field is required
+  </small>
+
+  <div class="form-buttons">
+    <button type="reset" class="clear-button">Clear ✖</button>
+    <button type="submit" class="create-button">Create Task ✔</button>
+  </div>
+</div>
+
+</form>
+    </main>
+    </div>
+</body>
+
+</html>
