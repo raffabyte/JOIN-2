@@ -50,3 +50,7 @@ button {
     flex-direction: column;
 }
 
+.displayNone{
+    display: none;
+}
+

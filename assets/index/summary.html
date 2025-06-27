@@ -14,55 +14,11 @@
     <!-- fav-Icon -->
     <link rel="icon" href="../img/Logo.png" type="image/x-icon" />
   </head>
-  <body>
-    <nav>
-      <img class="join" src="../img/fav-icon.png" alt="" />
-      <div class="menu">
-        <a href="summary.html" class="flexR aktiveNav menuOption">
-          <img class="icon" src="../img/summary.png" alt="" />
-          <p>Summary</p>
-        </a>
-        <a href="add_task.html" class="menuOption flexR">
-          <img class="icon" src="../img/add-tasks.png" alt="" />
-          <p>Add Task</p>
-        </a>
-        <a href="board.html" class="menuOption flexR">
-          <img class="icon" src="../img/Board.png" alt="" />
-          <p>Board</p>
-        </a>
-        <a href="contacts.html" class="menuOption flexR">
-          <img class="icon" src="../img/contacts.png" alt="" />
-          <p>Contacts</p>
-        </a>
-      </div>
-      <div class="legalLinks">
-        <a href="../index/privacy.html" class="privacyPolicy">Privacy Policy</a>
-        <a href="../index/legal-notice.html" class="legalNotice"
-          >Legal notice</a
-        >
-      </div>
-    </nav>
+  <body onload="init()">
+    
+<nav id="linkesNavMenu"></nav>
     <main class="flexC">
-      <header>
-        <h3>Kanban Project Management Tool</h3>
-        <div class="userInfo">
-          <a href="help.html">
-            <img class="help" src="../img/SummaryUser/help.png" alt="" />
-          </a>
-          <button onclick="toggleMenu()">
-            <img src="../img/SummaryUser/User profile initials.png" alt="" />
-          </button>
-          <div class="flexC not-visible" id="menu">
-            <a href="../index/legal-notice.html" class="legalNotice"
-              >Legal notice</a
-            >
-            <a href="../index/privacy.html" class="privacyPolicy"
-              >Privacy Policy</a
-            >
-            <a href="login.html">Log Out</a>
-          </div>
-        </div>
-      </header>
+      <header id="header"></header>
       <div class="content">
         <div class="into">
           <h1>Join 360</h1>
@@ -198,7 +154,9 @@
       </div>
     </main>
 
-    <!-- script  -->
-    <script src="../../main.js"></script>
+    <!-- scripts  -->
+<script src="../../js/templates.js"></script>
+<script src="../../main.js"></script>
+
   </body>
 </html>

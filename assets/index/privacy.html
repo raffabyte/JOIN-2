@@ -15,38 +15,11 @@
     <link rel="stylesheet" href="../css/privacy-legal.css">
 
 </head>
-<body>
+<body onload="init()">
 
-<nav>
-    <img class="join" src="../img/fav-icon.png" alt="">
-    <div class="menu">
-        <a href="summary.html" class="flexR menuOption">
-                <img class="icon" src="../img/summary.png" alt="">
-                <p>Summary</p>
-            </a>
-        <a href="add_task.html" class="menuOption flexR">
-            <img class="icon" src="../img/add-tasks.png" alt="">
-            <p>Add Task</p>
-        </a>
-        <a href="board.html" class=" menuOption flexR">
-            <img class="icon" src="../img/Board.png" alt="">
-            <p>Board</p>
-        </a>
-        <a href="contacts.html" class=" menuOption flexR">
-            <img class="icon" src="../img/contacts.png" alt="">
-            <p>Contacts</p>
-        </a>
-    </div>
-    <div class="legalLinks">
-        <a href="../index/privacy.html" class="privacyPolicy aktiveNav">Privacy Policy</a>
-        <a href="../index/legal-notice.html" class="legalNotice">Legal notice</a>
-    </div>
-</nav>
+<nav id="linkesNavMenu"></nav>
 <main class="flexC">
-    <header>
-        <h3>Kanban Project Management Tool</h3>
-
-    </header>
+    <header id="header"></header>
     <div class="privacy-container">
         <h1>Privacy Policy</h1>
 
@@ -81,5 +54,10 @@
         </p>
     </div>
 </main>
+
+<!-- scripts  -->
+<script src="../../js/templates.js"></script>
+<script src="../../main.js"></script>
+
 </body>
 </html>
