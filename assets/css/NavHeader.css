@@ -209,7 +209,7 @@ span {
     flex: 1;
 }
 
-@media (min-width: 1930px) {
+@media (min-width: 1920px) {
   nav {
     left: 50%;
     transform: translateX(-960px);
