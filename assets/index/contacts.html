@@ -1,37 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Contacts</title>
 
     <!-- style  -->
-    <link rel="stylesheet" href="../css/standard-css.css">
-    <link rel="stylesheet" href="../fonts/Inter/font.css">
-    <link rel="stylesheet" href="../css/NavHeader.css">
-    <link rel="stylesheet" href="../css/contacts.css">
-
+    <link rel="stylesheet" href="../css/standard-css.css" />
+    <link rel="stylesheet" href="../fonts/Inter/font.css" />
+    <link rel="stylesheet" href="../css/NavHeader.css" />
+    <link rel="stylesheet" href="../css/contacts.css" />
 
     <!-- fav-Icon -->
-    <link rel="icon" href="../img/Logo.png" type="image/x-icon">
-
-</head>
-<body onload="init()">
-<nav id="linkesNavMenu"></nav>
-<main class="flexC">
-    <header id="header"></header>
-    <div class="content">
-        <div class="contentRow">
-            <div class="contacsList"></div>
-
+    <link rel="icon" href="../img/Logo.png" type="image/x-icon" />
+  </head>
+  <body onload="init()">
+    <nav id="linkesNavMenu"></nav>
+    <main class="flexC">
+      <header id="header"></header>
+      <div class="content">
+        <div class="contacsList">
+          <div class="AddNew">
+            <button class="AddNewButton">
+              <p class="AddNewText">Add new contact</p>
+              <img
+                class="AddNewImg"
+                src="../img/contacts/person_add.png"
+                alt=""
+              />
+            </button>
+          </div>
         </div>
+        <div class="contactsContainer">
+          <div class="into">
+            <h1>Contacts</h1>
+            <div class="separater"></div>
+            <h2>better with a Team</h2>
+          </div>
+        </div>
+      </div>
+    </main>
 
-    </div>
-</main>
-
-<!-- scripts  -->
-<script src="../../main.js"></script>
-<script src="../../js/templates.js"></script>
-
-</body>
+    <!-- scripts  -->
+    <script src="../../main.js"></script>
+    <script src="../../js/templates.js"></script>
+  </body>
 </html>
