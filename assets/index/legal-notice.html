@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Legal notice</title>
 
@@ -17,12 +18,41 @@
 
 
 </head>
-<body onload="init()">
+<body>
 
-
-<nav id="linkesNavMenu"></nav>
+<nav>
+    <img class="join" src="../img/fav-icon.png" alt="">
+    <div class="menu">
+        <a href="summary.html" class="flexR menuOption">
+                <img class="icon" src="../img/summary.png" alt="">
+                <p>Summary</p>
+            </a>
+        <a href="add_task.html" class="menuOption flexR">
+            <img class="icon" src="../img/add-tasks.png" alt="">
+            <p>Add Task</p>
+        </a>
+        <a href="board.html" class=" menuOption flexR">
+            <img class="icon" src="../img/Board.png" alt="">
+            <p>Board</p>
+        </a>
+        <a href="contacts.html" class=" menuOption flexR">
+            <img class="icon" src="../img/contacts.png" alt="">
+            <p>Contacts</p>
+        </a>
+    </div>
+    <div class="legalLinks">
+        <a href="../index/privacy.html" class="privacyPolicy">
+            <span>Privacy Policy</span>
+        </a>
+        <a href="../index/legal-notice.html" class="legalNotice aktiveNav">
+            <span>Legal notice</span>
+        </a>
+    </div>
+</nav>
 <main class="flexC">
-    <header id="header"></header>
+    <header>
+        <h3>Kanban Project Management Tool</h3>
+    </header>
     <div class="privacy-container">
     <h1>Legal Notice</h1>
 
@@ -68,9 +98,6 @@
     </div>
 </main>
 
-<!-- scripts  -->
-<script src="../../js/templates.js"></script>
-<script src="../../main.js"></script>
-
 </body>
+
 </html>

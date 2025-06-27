@@ -1,29 +1,120 @@
-.content {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    padding: 110px 96px;
-    background-color: #F6F7F8;
-    flex: 1;
-}
+
 main{
     justify-content: flex-start;
 }
 
 .privacy-container {
-    left: 232px;
-    overflow-y: auto;
-    background-color: #f9f9f9;
-    padding: 38px 78px;
+  position: relative;
+  margin-left: 96px;
+  margin-top: 110px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  max-width: 1014px;
+  padding: 0;
 }
 
-h1 {
-    font-size: 2em;
-    margin-bottom: 20px;
-    margin-top: 28px;
+.legal-content {
+  margin-left: 96px;
+  width: 100%;
+  max-width: 1014px;
+  display: flex;
+  flex-direction: column;
 }
 
-h2 {
-    font-size: 1.3em;
-    margin-top: 30px;
+.legal-heading {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  width: 371px;
+  height: 73px;
+  margin: 0;
+}
+
+h4.legal-heading {
+  font-size: 42px;
+  font-weight: 700;
+  margin: 0;
+}
+
+h5.section-heading {
+  font-size: 32px;
+  font-weight: 700;
+  margin-top: 40px;
+  margin-bottom: 12px;
+}
+
+h6.subsection-heading {
+  font-size: 24px;
+  font-weight: 600;
+  margin-top: 30px;
+  margin-bottom: 8px;
+}
+
+p {
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.highlight-blue {
+  color: rgb(26, 175, 224);
+  display: inline;
+  font-weight: inherit;
+}
+
+.imprint-heading {
+  width: 346px;
+  height: 32px;
+  font-weight: 700;
+  font-size: 27px;
+  line-height: 120%;
+  letter-spacing: 0;
+  margin: 0;
+}
+
+/* Optional @media */
+
+@media screen and (max-width: 768px) {
+  .privacy-container,
+  .legal-content {
+    margin-left: 16px;
+    margin-right: 16px;
+    width: auto;
+  }
+
+  .legal-heading {
+    font-size: 32px;
+  }
+
+  h5.section-heading {
+    font-size: 24px;
+  }
+
+  h6.subsection-heading {
+    font-size: 20px;
+  }
+
+  p {
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .legal-heading {
+    font-size: 28px;
+  }
+
+  h5.section-heading {
+    font-size: 20px;
+  }
+
+  h6.subsection-heading {
+    font-size: 18px;
+  }
+
+  p {
+    font-size: 13px;
+  }
 }

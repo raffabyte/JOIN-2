@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Legal notice</title>
 
@@ -17,13 +18,27 @@
 
 
 </head>
-<body onload="init()">
+<body>
 
-<nav id="linkesNavMenu"></nav>
+<nav>
+    <div class="login-menu flexC">
+        <img class="join" src="../img/fav-icon.png" alt="">
+        <a href="../index/login.html" class="login-link flexR">
+            <img class="icon" src="../img/LogIn/login-arrow.png" alt="login">
+            <p>Log in</p>
+        </a>
 
+    </div>
+    <div class="legalLinks flexC">
+        <a href="../index/privacy-login.html" class="privacyPolicy ">Privacy Policy</a>
+        <a href="../index/legal-notice-login.html" class="legalNotice aktiveNav">Legal notice</a>
+    </div>
+
+</nav>
 <main class="flexC">
-        <header id="header"></header>
-
+    <header>
+        <h3>Kanban Project Management Tool</h3>
+    </header>
     <div class="privacy-container">
     <h1>Legal Notice</h1>
 
@@ -69,9 +84,6 @@
     </div>
 </main>
 
-<!-- scripts  -->
-<script src="../../js/templates.js"></script>
-<script src="../../main.js"></script>
-
 </body>
+
 </html>
