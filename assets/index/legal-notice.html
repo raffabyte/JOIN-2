@@ -19,41 +19,12 @@
 
 </head>
 
-<body>
+<body onload="init()">
 
-    <nav>
-        <img class="join" src="../img/fav-icon.png" alt="">
-        <div class="menu">
-            <a href="summary.html" class="flexR menuOption">
-                <img class="icon" src="../img/summary.png" alt="">
-                <p>Summary</p>
-            </a>
-            <a href="add_task.html" class="menuOption flexR">
-                <img class="icon" src="../img/add-tasks.png" alt="">
-                <p>Add Task</p>
-            </a>
-            <a href="board.html" class=" menuOption flexR">
-                <img class="icon" src="../img/Board.png" alt="">
-                <p>Board</p>
-            </a>
-            <a href="contacts.html" class=" menuOption flexR">
-                <img class="icon" src="../img/contacts.png" alt="">
-                <p>Contacts</p>
-            </a>
-        </div>
-        <div class="legalLinks">
-            <a href="../index/privacy.html" class="privacyPolicy">
-                <span>Privacy Policy</span>
-            </a>
-            <a href="../index/legal-notice.html" class="legalNotice aktiveNav">
-                <span>Legal notice</span>
-            </a>
-        </div>
-    </nav>
+<nav id="linkesNavMenu"></nav>
     <main class="flexC">
-        <header>
-            <h3>Kanban Project Management Tool</h3>
-        </header>
+        
+    <header id="header"></header>
         <div class="privacy-container">
             <h4 class="legal-heading">Legal Notice</h4>
         </div>
@@ -73,7 +44,7 @@
 
             <h6 class="subsection-heading">Acceptance of terms</h6>
             <p>
-                By accessing and using <span class="highlight-blue">Join</span>(Product), you acknowledge and agree the
+                By accessing and using <span class="highlight-blue">Join</span> (Product), you acknowledge and agree the
                 following terms and conditions, and any policies, guidelines, or amendments theroeto that may be
                 presented
                 to you from time to time. We, the listed students, may update or change the terms and conditions from
@@ -88,7 +59,7 @@
                 intended for extensive
                 personal & business usage. As such, we cannot guarantee consistent availability, reliability, accuracy,
                 or any other aspect of
-                quality regarding this Product. The desing of <span class="highlight-blue">Join</span>is owned by the
+                quality regarding this Product. The desing of <span class="highlight-blue">Join</span> is owned by the
                 <span class="highlight-blue">Developer Akademie GmbH</span>. Unauthorized use, reprocuction,
                 modification,
                 distribution, or replication of the design is strictly prohibited.
@@ -143,6 +114,11 @@
         </div>
         </div>
     </main>
+
+    <!-- scripts  -->
+<script src="../../js/templates.js"></script>
+<script src="../../main.js"></script>
+
 
 </body>
 
