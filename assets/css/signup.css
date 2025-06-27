@@ -40,7 +40,14 @@ header img {
     font-weight: 400;
     font-size: 20px;
 }
-
+.content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 110px 96px;
+    background-color: #F6F7F8;
+    flex: 1;
+}
 main {
     display: flex; 
     justify-content: center; 
