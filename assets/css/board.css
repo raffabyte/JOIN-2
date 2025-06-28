@@ -102,6 +102,21 @@ h1{
     color: #42526E;
 }
 
+.plus{
+    border: 2px solid #2A3647;
+    height: 10px;
+    border-radius: 8px;
+}
+
+.add-button{
+    background: transparent;
+    padding: 3px;
+    border-radius: 8px;
+    border: 2px solid #2A3647;
+
+    position: relative;
+}
+
 
 .add-task-icon{
     width: 24px;
