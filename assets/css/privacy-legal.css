@@ -87,14 +87,6 @@ p span.highlight-blue {
   height: 16px;
 }
 
-.line-contactemail {
-  line-height: 8%;
-}
-
-.line-date {
-  line-height: 8%;
-}
-
 /* Optional @media */
 
 @media screen and (max-width: 768px) {
