@@ -1,6 +1,6 @@
 function onloadFunc() {
     console.log("test");
-    putData("users/user2", {
+    putData("users/Raffa", {
         email: "raffa@hotmail.com",
         password: "raffa1234"
      })
@@ -10,7 +10,7 @@ const BASE_URL = "https://join-475-370cd-default-rtdb.europe-west1.firebasedatab
 
 async function loadData(path="") {
     let response = await fetch(BASE_URL + path +  ".json");
-    return responseToJson = await response.json(); // auf Return umstellen um weiter zu arbeiten
+    return responseToJson = await response.json();
 }
 
 async function postData (path="", data={}) {
@@ -23,15 +23,6 @@ async function postData (path="", data={}) {
     });
     return responseToJson = await response.json();
 }
- 
-
-async function deleteData(path="") {
-    let response = await fetch(BASE_URL + path +  ".json",{
-        method: "DELETE",
-    });
-    return responseToJson = await response.json();
-}
-
 
 async function putData (path="", data={}) {
     let response = await fetch(BASE_URL + path +  ".json",{
@@ -42,4 +33,11 @@ async function putData (path="", data={}) {
         body: JSON.stringify(data)
     });
     return await response.json();
+}
+ 
+async function deleteData(path="") {
+    let response = await fetch(BASE_URL + path +  ".json",{
+        method: "DELETE",
+    });
+    return responseToJson = await response.json();
 }
