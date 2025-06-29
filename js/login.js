@@ -1,3 +1,36 @@
+// function initLogin() {
+//   const form = document.querySelector('form');
+//   const emailInput = document.getElementById('email');
+//   const passwordInput = document.getElementById('password');
+//   const loginButton = document.querySelector('.login-btn');
+//   const messageBox = document.getElementById('msgBox');
+
+//   form.addEventListener('submit', function (e) {
+//     e.preventDefault();
+//     clearMessage();
+
+//     if (!validateLoginForm(emailInput.value, passwordInput.value)) {
+//       showMessage('Bitte geben Sie gültige Login-Daten ein.');
+//       return;
+//     }
+
+//     disableButton(loginButton);
+
+//     // Simulated Login
+//     setTimeout(() => {
+//       const success = fakeLogin(emailInput.value, passwordInput.value);
+
+//       if (!success) {
+//         showMessage('E-Mail oder Passwort ist falsch.');
+//         enableButton(loginButton);
+//         return;
+//       }
+
+//       window.location.href = '../index/summary.html';
+//     }, 1000);
+//   });
+// }
+
 function initLogin() {
   const form = document.querySelector('form');
   const emailInput = document.getElementById('email');
@@ -5,29 +38,28 @@ function initLogin() {
   const loginButton = document.querySelector('.login-btn');
   const messageBox = document.getElementById('msgBox');
 
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    clearMessage();
+  form.addEventListener('submit', async function (e) {
+     e.preventDefault();
+     clearMessage();
 
-    if (!validateLoginForm(emailInput.value, passwordInput.value)) {
-      showMessage('Bitte geben Sie gültige Login-Daten ein.');
-      return;
-    }
+     const email = emailInput.value.trim();
+     const password = passwordInput.value.trim();
 
-    disableButton(loginButton);
-
-    // Simulated Login
-    setTimeout(() => {
-      const success = fakeLogin(emailInput.value, passwordInput.value);
-
-      if (!success) {
-        showMessage('E-Mail oder Passwort ist falsch.');
-        enableButton(loginButton);
+     if (!validateLoginForm(email, password)) {
+        showMessage("Bitte geben Sie gültige Login-Daten ein.");
         return;
-      }
+     }
 
-      window.location.href = '../index/summary.html';
-    }, 1000);
+     disableButton(loginButton);
+
+     const success = await fakeLogin(email, password);
+
+     if (success) {
+        window.location.href = "../index/summary.html";
+     } else {
+        showMessage("E-Mail oder Passwort ist falsch.");
+        enableButton(loginButton);
+     }
   });
 }
 
