@@ -26,7 +26,7 @@ function initLogin() {
         return;
       }
 
-      window.location.href = '../../index.html';
+      window.location.href = '../index/summary.html';
     }, 1000);
   });
 }
@@ -87,8 +87,17 @@ function enableButton(button) {
  * @param {string} password
  * @returns {boolean}
  */
-function fakeLogin(email, password) {
-  return email === 'test@example.com' && password === 'test1234';
-}
 
+async function fakeLogin(email, password) {
+  const response = await fetch(BASE_URL + "users.json");
+  const users = await response.json();
+  
+  for (let userId in users) {
+     const user = users[userId];
+     if (user.email === email && user.password === password) {
+        return true;
+     }
+  }
+  return false;
+}
 window.addEventListener('DOMContentLoaded', initLogin);
