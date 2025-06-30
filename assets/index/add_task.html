@@ -1,118 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Add Task</title>
-  <link rel="icon" href="../img/Logo.png" type="image/x-icon" />
 
-  <!-- Styles -->
-  <link rel="stylesheet" href="../css/standard-css.css" />
-  <link rel="stylesheet" href="../fonts/Inter/font.css" />
-  <link rel="stylesheet" href="../css/NavHeader.css" />
-  <link rel="stylesheet" href="../css/addTask.css" />
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Task</title>
+    <link rel="icon" href="../img/Logo.png" type="image/x-icon" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../css/standard-css.css" />
+    <link rel="stylesheet" href="../fonts/Inter/font.css" />
+    <link rel="stylesheet" href="../css/NavHeader.css" />
+    <link rel="stylesheet" href="../css/addTask.css" />
 </head>
 
 <body onload="init()">
-  <nav id="linkesNavMenu"></nav>
-
-  <div class="page-container">
-    <header id="header"></header>
+    <nav id="linkesNavMenu"></nav>
 
     <main class="flexC">
-      <form class="task-form">
-       <h4>Add Task</h4>
+        <header id="header"></header>
 
-        <div class="form-columns">
-          <!-- Left column -->
-          <div class="form-column left-column">
-            <div class="form-group">
-              <label for="title">Title<span class="required-asterisk">*</span></label>
-              <input type="text" id="title" placeholder="Enter a title" />
-            </div>
+        <div class="content flexC">
+            <form class="task-form">
+                <h4>Add Task</h4>
 
-            <div class="form-group">
-              <label for="description">Description</label>
-              <textarea id="description" placeholder="Enter a description"></textarea>
-            </div>
+                <div class="form-columns">
+                    <!-- Left Column -->
+                    <div class="form-column left-column">
+                        <div class="form-group title-group">
+                            <label for="title">Title<span class="required-asterisk">*</span></label>
+                            <input type="text" id="title" placeholder="Enter a title" />
+                        </div>
 
-            <div class="form-group">
-              <label for="due-date">Due Date<span class="required-asterisk">*</span></label>
-              <div class="date-picker">
-                <input type="date" id="due-date" />
-              </div>
-            </div>
-          </div>
+                        <div class="form-group description-group">
+                            <label for="description">Description</label>
+                            <textarea id="description" placeholder="Enter a description"></textarea>
+                        </div>
 
-          <!-- Right column -->
-          <div class="form-column right-column">
-            <div class="form-group">
-              <label>Priority</label>
-              <div class="priority-options">
-                <button type="button" class="priority-btn" data-priority="urgent">
-                  <span>Urgent</span>
-                  <!-- SVG ... -->
-                </button>
-                <button type="button" class="priority-btn selected medium" data-priority="medium">
-                  <span>Medium</span>
-                  <!-- SVG ... -->
-                </button>
-                <button type="button" class="priority-btn" data-priority="low">
-                  <span>Low</span>
-                  <!-- SVG ... -->
-                </button>
-              </div>
-            </div>
+                        <div class="form-group date-group">
+                            <label for="due-date">Due Date<span class="required-asterisk">*</span></label>
+                            <div class="date-picker">
+                                <input type="date" id="due-date" />
+                            </div>
+                        </div>
+                    </div>
 
-            <div class="form-group">
-              <label for="assigned-to-input">Assigned To</label>
-              <div class="dropdown">
-                <div class="dropdown-input-wrapper">
-                  <input id="assigned-to-input" type="text" placeholder="Select contacts" autocomplete="off" />
-                  <button id="assigned-toggle-btn" type="button" class="dropdown-toggle">▼</button>
+
+                    <!-- Right Column -->
+                    <div class="form-column right-column">
+                        <div class="form-group priority-group">
+                            <label>Priority</label>
+                            <div class="priority-options">
+                                <button type="button" class="priority-btn" data-priority="urgent">
+                                    <span>Urgent</span>
+                                    <!-- SVG optional -->
+                                </button>
+                                <button type="button" class="priority-btn selected medium" data-priority="medium">
+                                    <span>Medium</span>
+                                    <!-- SVG optional -->
+                                </button>
+                                <button type="button" class="priority-btn" data-priority="low">
+                                    <span>Low</span>
+                                    <!-- SVG optional -->
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-group assigned-group">
+                            <label for="assigned-to-input">Assigned To</label>
+                            <div class="dropdown">
+                                <div class="dropdown-input-wrapper">
+                                    <input id="assigned-to-input" type="text" placeholder="Select contacts"
+                                        autocomplete="off" />
+                                    <button id="assigned-toggle-btn" type="button" class="dropdown-toggle">▼</button>
+                                </div>
+                                <ul id="assigned-to-options" class="dropdown-options"></ul>
+                            </div>
+                        </div>
+
+                        <div class="form-group category-group">
+                            <label for="category-input">Category<span class="required-asterisk">*</span></label>
+                            <div class="dropdown">
+                                <div class="dropdown-input-wrapper">
+                                    <input id="category-input" type="text" placeholder="Select task category"
+                                        autocomplete="off" />
+                                    <button id="category-toggle-btn" type="button" class="dropdown-toggle">▼</button>
+                                </div>
+                                <ul id="category-options" class="dropdown-options"></ul>
+                            </div>
+                        </div>
+
+                        <div class="form-group subtasks-group">
+                            <label for="subtasks">Subtasks</label>
+                            <div class="subtask-input-wrapper">
+                                <input type="text" id="subtasks" placeholder="Add new subtask" autocomplete="off" />
+                                <button type="button" class="add-subtask-inside">+</button>
+                                <ul id="subtask-options" class="subtask-dropdown hidden"></ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <ul id="assigned-to-options" class="dropdown-options"></ul>
-              </div>
-            </div>
 
-            <div class="form-group">
-              <label for="category-input">Category<span class="required-asterisk">*</span></label>
-              <div class="dropdown">
-                <div class="dropdown-input-wrapper">
-                  <input id="category-input" type="text" placeholder="Select task category" autocomplete="off" />
-                  <button id="category-toggle-btn" type="button" class="dropdown-toggle">▼</button>
+                <div class="form-footer">
+                    <small class="validation-hint">
+                        <span class="required-asterisk">*</span>This field is required
+                    </small>
+
+                    <div class="form-buttons">
+                        <button type="reset" class="clear-button">Clear ✖</button>
+                        <button type="submit" class="create-button">Create Task ✔</button>
+                    </div>
                 </div>
-                <ul id="category-options" class="dropdown-options"></ul>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="subtasks">Subtasks</label>
-              <div class="subtask-input-wrapper">
-                <input type="text" id="subtasks" placeholder="Add new subtask" autocomplete="off" />
-                <button type="button" class="add-subtask-inside">+</button>
-                <ul id="subtask-options" class="subtask-dropdown hidden"></ul>
-              </div>
-            </div>
-          </div>
+            </form>
         </div>
-
-        <div class="form-footer">
-          <small class="validation-hint">
-            <span class="required-asterisk">*</span>This field is required
-          </small>
-          <div class="form-buttons">
-            <button type="reset" class="clear-button">Clear ✖</button>
-            <button type="submit" class="create-button">Create Task ✔</button>
-          </div>
-        </div>
-      </form>
     </main>
-  </div>
 
-  <!-- Scripts -->
-  <script src="../../js/templates.js"></script>
-  <script src="../../main.js"></script>
-  <script src="../../js/addTask.js"></script>
+    <!-- Scripts -->
+    <script src="../../js/templates.js"></script>
+    <script src="../../main.js"></script>
+    <script src="../../js/addTask.js"></script>
 </body>
+
 </html>
