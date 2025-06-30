@@ -4,16 +4,9 @@ document.addEventListener("DOMContentLoaded", () => {
     toggleBtnId: "assigned-toggle-btn",
     dropdownId: "assigned-to-options",
     options: [
-      "Max Mustermann",
-      "Lara Beispiel",
-      "Franz Kontakt",
-      "Julia Sommer",
-      "Tom Winter",
-      "Ella Meier",
-      "David König",
-      "Nina Berg",
-      "Leo Schmitt",
-      "Sophie Schwarz",
+      "Max Mustermann", "Lara Beispiel", "Franz Kontakt",
+      "Julia Sommer", "Tom Winter", "Ella Meier",
+      "David König", "Nina Berg", "Leo Schmitt", "Sophie Schwarz"
     ],
   });
 
@@ -22,16 +15,9 @@ document.addEventListener("DOMContentLoaded", () => {
     toggleBtnId: "category-toggle-btn",
     dropdownId: "category-options",
     options: [
-      "Technical Task",
-      "User Story",
-      "Bug / Issue",
-      "Design",
-      "Testing / QA",
-      "Meeting / Planning",
-      "Documentation",
-      "Research / Analysis",
-      "Deployment / Release",
-      "Maintenance / Support",
+      "Technical Task", "User Story", "Bug / Issue", "Design",
+      "Testing / QA", "Meeting / Planning", "Documentation",
+      "Research / Analysis", "Deployment / Release", "Maintenance / Support"
     ],
   });
 
@@ -40,13 +26,9 @@ document.addEventListener("DOMContentLoaded", () => {
   setupFormValidation();
 });
 
-function setupDropdown({
-  inputId,
-  toggleBtnId,
-  dropdownId,
-  options,
-  onSelect,
-}) {
+// ----- DROPDOWN HANDLING -----
+
+function setupDropdown({ inputId, toggleBtnId, dropdownId, options, onSelect }) {
   const input = document.getElementById(inputId);
   const toggleBtn = document.getElementById(toggleBtnId);
   const dropdown = document.getElementById(dropdownId);
@@ -114,16 +96,30 @@ function closeDropdownOnOutsideClick(dropdown, toggleBtn) {
   });
 }
 
+// ----- PRIORITY BUTTONS -----
+
+function setupPriorityButtons() {
+  document.querySelectorAll(".priority-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".priority-btn").forEach((b) =>
+        b.classList.remove("selected")
+      );
+      btn.classList.add("selected");
+    });
+  });
+}
+
+// ----- FORM VALIDATION -----
+
 function setupFormValidation() {
   const form = document.querySelector(".task-form");
   const createBtn = document.querySelector(".create-button");
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
-
     resetValidationHints();
-    const valid = validateFormFields();
 
+    const valid = validateFormFields();
     if (!valid) return;
 
     handleFormSubmission(createBtn, form);
@@ -157,11 +153,13 @@ function validateFormFields() {
 }
 
 function resetValidationHints() {
-  const title = document.getElementById("title");
-  const dueDate = document.getElementById("due-date");
-  const category = document.getElementById("category");
+  const fields = [
+    document.getElementById("title"),
+    document.getElementById("due-date"),
+    document.getElementById("category"),
+  ];
 
-  [title, dueDate, category].forEach((el) => {
+  fields.forEach((el) => {
     el.style.border = "1px solid transparent";
   });
 
@@ -202,20 +200,11 @@ function resetForm(form) {
     .classList.add("selected");
 }
 
-function setupPriorityButtons() {
-  document.querySelectorAll(".priority-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      document
-        .querySelectorAll(".priority-btn")
-        .forEach((b) => b.classList.remove("selected"));
-      btn.classList.add("selected");
-    });
-  });
-}
+// ----- SUBTASK HANDLING -----
 
 function setupSubtaskAdding() {
   const input = document.getElementById("subtasks");
-  const dropdown = document.getElementById("subtask-options");
+  const dropdown = document.getElementById("subtask-options"); 
   const addBtn = document.querySelector(".add-subtask-inside");
 
   const list = initializeSubtaskList(input);
@@ -251,39 +240,14 @@ function registerSubtaskEvents(input, dropdown, addBtn, list) {
   });
 }
 
-addBtn.addEventListener("click", () => addSubtask(input, list, dropdown));
-input.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") {
-    e.preventDefault();
-    addSubtask(input, list, dropdown);
-  }
-});
-
 function addSubtask(input, list, dropdown) {
   const value = input.value.trim();
   if (!value) return;
+
   const li = document.createElement("li");
   li.textContent = value;
   list.appendChild(li);
+
   input.value = "";
   dropdown.classList.remove("show");
-}
-
-function registerSubtaskEvents(input, dropdown, addBtn, list) {
-  if (!input || !dropdown || !addBtn || !list) return;
-
-  document.addEventListener("click", (e) => {
-    if (!e.target.closest("#subtask-dropdown")) {
-      dropdown.classList.remove("show");
-    }
-  });
-
-  addBtn.addEventListener("click", () => addSubtask(input, list, dropdown));
-
-  input.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      addSubtask(input, list, dropdown);
-    }
-  });
 }
