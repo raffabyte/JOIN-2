@@ -16,30 +16,19 @@ header img {
     padding-left: 40px;
 }
 
-.header-right a {
-    border: solid;
+.header-right {
     border-radius: 8px;
     padding: 16px 15px;
     color: white;
-    text-decoration: none;
     background-color: #2A3647;
 }
 
-.header-right {
-    display: flex;
-    gap: 35px;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    top: 30px;
-    right:  30px;
-}
-
-.header-right span {
+.header-right p {
     color: #000000;
     font-weight: 400;
     font-size: 20px;
 }
+
 .content {
     display: flex;
     flex-direction: column;
@@ -48,6 +37,7 @@ header img {
     background-color: #F6F7F8;
     flex: 1;
 }
+
 main {
     display: flex; 
     justify-content: center; 
@@ -181,3 +171,22 @@ footer a {
     text-decoration: none; 
     color: #CDCDCD;
 }
+
+#signUpSuccess {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgb(2 2 2 / 24%);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+#text {
+    padding: 2rem;
+    border-radius: 8px;
+    font-size: 1.2rem;
+  }
