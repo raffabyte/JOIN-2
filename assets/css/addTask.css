@@ -1,70 +1,86 @@
-.content {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    padding: 110px 96px;
-    background-color: #F6F7F8;
-    flex: 1;
-}
-main {
+main.flexC {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 40px 20px;
+  align-items: stretch;
+  width: 100%;
+  min-height: 100vh;
   background-color: #f6f7f9;
-  min-height: calc(100vh - 96px);
-  box-sizing: border-box;
 }
 
-h1 {
-  width: 287px;
-  height: 73px;
-  font-size: 42px;
+.content.flexC {
+  padding: 110px 96px 40px 96px;
+}
+
+h4 {
+  font-size: 61px;
   font-weight: 700;
+  width: 278px;
+  height: 73px;
   line-height: 1.2;
-  letter-spacing: 0;
-  margin: 20px 0 24px;
 }
 
 .task-form {
-  display: block;
-  background: transparent;
-  border-radius: 0px;
-  padding: 0px;
-  max-width: 1000px;
-  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: auto;
+  max-width: 1032px;
 }
 
 .form-columns {
   display: flex;
-  justify-content: center;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
   gap: 40px;
-  flex-wrap: wrap;
+  width: auto;
+  margin-top: 40px;
 }
 
-.left-column {
-  width: 440px;
-  height: 376px;
-  margin-top: 40px;   
-  margin-left: 0;     
-}
-
+.left-column,
 .right-column {
   width: 440px;
-  height: auto; 
   display: flex;
   flex-direction: column;
   gap: 24px;
 }
 
-.form-group {
-  margin-bottom: 20px;
+.form-divider {
+  width: 1px;
+  background-color: #d1d1d1;
+  align-self: stretch;
+}
+
+.label-with-asterisk,
+.required-asterisk {
+  display: inline;
+  vertical-align: middle;
+}
+
+.title-group,
+.description-group,
+.date-group,
+.priority-group,
+.assigned-group,
+.category-group,
+.subtasks-group {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .form-group label {
-  display: block;
-  margin-bottom: 4px;
-  font-weight: 500;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 120%;
+  letter-spacing: 0;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .form-group input,
@@ -75,12 +91,51 @@ h1 {
   border: 1px solid #ccc;
   border-radius: 6px;
   font-size: 1rem;
+  box-sizing: border-box;
 }
 
-.required-asterisk {
-  color: red;
-  margin: 4px;
-  display: inline;
+.description-group label {
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 120%;
+  letter-spacing: 0;
+  height: 24px;
+}
+
+#description {
+  height: 120px;
+  border-radius: 10px;
+  padding: 18px 16px;
+  resize: none;
+}
+
+.dropdown-input-wrapper {
+  display: flex;
+  align-items: center;
+  height: 48px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: white;
+  overflow: hidden;
+}
+
+.dropdown-input-wrapper input {
+  flex: 1;
+  padding: 10px 12px;
+  border: none;
+  outline: none;
+  background: transparent;
+}
+
+.dropdown-toggle {
+  width: 40px;
+  border: none;
+  background: transparent;
+  font-size: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
 }
 
 .date-picker {
@@ -91,8 +146,42 @@ h1 {
 
 .date-picker input[type="date"] {
   width: 100%;
-  padding-right: 40px;
+  height: 48px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 16px;
   box-sizing: border-box;
+
+  background-image: url('../img/calendar.png');
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 20px;
+}
+
+.date-picker input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 40px;
+  height: 100%;
+  cursor: pointer;
+}
+
+.date-picker::after {
+  content: "";
+  position: absolute;
+  right: 10px;
+  top: 0;
+  width: 30px;
+  height: 100%;
+  pointer-events: none;
+}
+
+.required-asterisk {
+  color: red;
+  margin-left: 4px;
 }
 
 .priority-options {
@@ -126,11 +215,11 @@ h1 {
 }
 
 .priority-btn.selected[data-priority="urgent"] {
-  background-color: #ff3d00;
+  color: #ff3d00;
 }
 
 .priority-btn.selected[data-priority="low"] {
-  background-color: #4caf50;
+  color: #4caf50;
 }
 
 .priority-btn.selected {
@@ -147,61 +236,6 @@ h1 {
   width: 100%;
 }
 
-.dropdown-input-wrapper {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  overflow: hidden;
-  background-color: white;
-}
-
-.dropdown-input-wrapper input {
-  flex: 1;
-  padding: 10px 12px;
-  border: none;
-  font-size: 1rem;
-  outline: none;
-}
-
-.dropdown-toggle {
-  background-color: #2c3e50;
-  color: white;
-  border: none;
-  padding: 0 12px;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 1.1rem;
-}
-
-.dropdown-toggle:hover,
-.add-subtask-inside:hover {
-  background-color: #1a2a3a;
-}
-
-#assigned-to-input {
-  flex: 1;
-  padding: 10px 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px 0 0 6px;
-  font-size: 1rem;
-}
-
-#assigned-toggle-btn,
-#category-toggle-btn {
-  padding: 10px 12px;
-  background-color: #eee;
-  border: 1px solid #ccc;
-  border-left: none;
-  border-radius: 0 6px 6px 0;
-  cursor: pointer;
-  font-size: 1rem;
-}
-
 .dropdown-options {
   position: absolute;
   top: 100%;
@@ -209,13 +243,10 @@ h1 {
   right: 0;
   background: white;
   border: 1px solid #ccc;
-  z-index: 10;
   max-height: 150px;
   overflow-y: auto;
   display: none;
-  list-style: none;
-  margin: 0;
-  padding: 0;
+  z-index: 10;
 }
 
 .dropdown-options li {
@@ -232,10 +263,8 @@ h1 {
 }
 
 #subtasks {
-  flex: 1;
-  padding: 10px 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px 0 0 6px;
+  width: 100%;
+  padding-right: 40px;
   font-size: 1rem;
   box-sizing: border-box;
 }
@@ -243,6 +272,8 @@ h1 {
 .subtask-input-wrapper {
   position: relative;
   width: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .subtask-input-wrapper input {
@@ -251,36 +282,62 @@ h1 {
   box-sizing: border-box;
 }
 
-.add-subtask-inside {
+.subtask {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 40px;
+  border: none;
+  background: transparent;
+  font-size: 20px;
+  color: #000;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #ccc;
-  border-left: none;
-  border-radius: 0 6px 6px 0;
-  color: white;
-  width: 40px;
-  height: 40px;
-  font-size: 1.2rem;
-  cursor: pointer;
 }
 
-.add-subtask-inside:hover {
-  background-color: #1a2a3a;
+.subtask-dropdown {
+  position: absolute;
+  top: 100%; 
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  display: none; 
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 4px; 
+  max-height: 200px; 
+  overflow-y: auto;
+  box-sizing: border-box;
 }
 
 .subtask-dropdown.show {
   display: block;
 }
+/*
+.subtask-list {
+  margin-top: 8px;
+  list-style: disc inside;
+}*/
+
+.subtask-dropdown li {
+  padding: 12px 16px;
+  cursor: pointer;
+  list-style: none; 
+}
+
+.subtask-dropdown li:hover {
+  background-color: #f0f0f0;
+}
 
 .form-buttons {
   display: flex;
-  flex-direction: row;
   gap: 16px;
-  width: 309px;
   height: 56px;
-  justify-content: flex-end;
-  align-items: center;
 }
 
 .clear-button,
@@ -296,23 +353,26 @@ h1 {
 
 .clear-button {
   background-color: #fff;
-  color: #2C3E50;
-  border: 1px solid #2C3E50;
+  color: #2c3e50;
+  border: 1px solid #2c3e50;
 }
 
 .create-button {
-  background-color: #2C3E50;
+  background-color: #2c3e50;
   color: white;
 }
 
 .validation-hint {
-  width: 170px;
-  height: 27px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
   font-size: 20px;
-  line-height: 1.2; 
-  letter-spacing: 0;
-  color: #000; 
-  display: block;
+  font-weight: 400;
+  line-height: 1.2;
+  height: 56px;
+  color: #000;
+  gap: 4px;
+  white-space: nowrap;
 }
 
 .form-footer {
@@ -320,25 +380,8 @@ h1 {
   justify-content: space-between;
   align-items: center;
   margin-top: 32px;
-  flex-wrap: wrap;
   width: 100%;
+  max-width: 1032px;
   flex-wrap: nowrap;
-}
-
-@media (max-width: 768px) {
-  .form-columns {
-    flex-direction: column;
-    gap: 24px;
-  }
-
-  .left-column,
-  .right-column {
-    max-width: 100%;
-  }
-
-  .form-footer {
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 16px;
-  }
+  padding-left: 0;
 }
