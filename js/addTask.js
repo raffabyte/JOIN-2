@@ -11,16 +11,24 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   setupDropdown({
-    inputId: "category-input",
-    toggleBtnId: "category-toggle-btn",
-    dropdownId: "category-options",
-    options: [
-      "Technical Task", "User Story", "Bug / Issue", "Design",
-      "Testing / QA", "Meeting / Planning", "Documentation",
-      "Research / Analysis", "Deployment / Release", "Maintenance / Support"
-    ],
-  });
+        inputId: "category-input", 
+        toggleBtnId: "category-toggle-btn",
+        dropdownId: "category-options",
+        options: [
+            "Bug / Issue", "Design", "Testing / QA", "Meeting / Planning",
+            "Documentation", "Research / Analysis", "Deployment / Release",
+            "Maintenance / Support"
+        ],
+    });
 
+    setupDropdown({
+    inputId: "subtasks", 
+    toggleBtnId: "add-subtask-inside",
+    dropdownId: "subtask-options",
+    options: [
+        "Technical Task", "User Story"
+    ],
+});
   setupPriorityButtons();
   setupSubtaskAdding();
   setupFormValidation();
