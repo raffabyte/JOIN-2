@@ -259,3 +259,22 @@ function addSubtask(input, list, dropdown) {
   input.value = "";
   dropdown.classList.remove("show");
 }
+
+function registerSubtaskEvents(input, dropdown, addBtn, list) {
+  if (!input || !dropdown || !addBtn || !list) return;
+
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest("#subtask-dropdown")) {
+      dropdown.classList.remove("show");
+    }
+  });
+
+  addBtn.addEventListener("click", () => addSubtask(input, list, dropdown));
+
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      addSubtask(input, list, dropdown);
+    }
+  });
+}

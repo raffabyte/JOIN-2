@@ -71,5 +71,224 @@ h2 {
     font-size: 27px;
     color: #2A3647;
 }
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+.d_none {
+    display: none;
+}
+.overlayContent {
+    display: flex;
+    transform: translateX(100%);
+  transition: transform 0.4s ease;
+}
+.overlay.show .overlayContent {
+  transform: translateX(0);
+}
+.leftSide {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #2A3647;
+    height: 592px;
+    width: 467px;
+    border-top-left-radius: 30px;
+border-bottom-left-radius: 30px;
+padding: 0 48px;
+gap: 12px;
+}
 
+.imgFlex {
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
+}
+.textFlex {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.joinSmall {
+    height: 66px;
+    object-fit: contain;
+}
+.leftSide h1 {
+    color: white;
+    font-size: 61px;
+    font-weight: 700;
+}
+.leftSide p {
+    color: white;
+    font-size: 27px;
+    font-weight: 400;
+}
+.vektorFlex {
+    display: flex;
+    width: 100%;
+}
+.vektor {
+    display: flex;
+    height: 3px;
+    width: 30%;
+    background-color: #29ABE2;
+    border-radius: 6px;
+}
+.rightSide {
+    display: flex;
+    width: 745px;
+    height: 592px;
+    background-color: #FFFFFF;
+    padding: 66px 0 ;
+    border-top-right-radius: 30px;
+border-bottom-right-radius: 30px;
+
+
+}
+.pbContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 250px;
+}
+.pb {
+    width: 120px;
+    height: 120px;
+}
+.flexCC {
+    display: flex;
+    flex-direction: column;
+    max-width: 422px;
+    width: 100%;
+    gap: 54px;
+}
+.closeWrapper {
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+}
+
+.closeContact {
+    width: 32px;
+    height: 32px;
+}
+.closeContact:hover {
+    background-color: lightgray;
+    border-radius: 30px;
+}
+.inputs_div {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+.input {
+    padding: 12px; 
+    border: 1px solid #ccc; 
+    border-radius: 8px; 
+    font-size: 20px;
+}
+.name_icon {
+    background-image: url(../img/SignUp/person.png);
+    background-repeat: no-repeat;
+    background-size: 25px;
+    background-position-x: 380px;
+    background-position-y: 12px;
+}
+
+.mail_icon {
+    background-image: url(../img/SignUp/mail.png);
+    background-repeat: no-repeat;
+    background-size: 25px;
+    background-position-x: 380px;
+    background-position-y: 12px;
+}
+
+.phone_icon {
+    background-image: url(../img/call.png);
+    background-repeat: no-repeat;
+    background-size: 25px;
+    background-position-x: 380px;
+    background-position-y: 12px;
+}
+.login-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 24px;
+}
+
+.create-btn {
+    display: flex;
+    background-color: #2A3647; 
+    color: white; 
+    padding: 15px 24px; 
+    border-radius: 8px; 
+    cursor: pointer; 
+    font-size: 21px; 
+    gap: 4px;
+    height: 56px;
+}
+.create-btn:hover {
+    display: flex;
+    background-color: rgb(26, 175, 224); 
+    color: white; 
+    padding: 15px 24px; 
+    border-radius: 8px; 
+    cursor: pointer; 
+    font-size: 21px; 
+    gap: 4px;
+    height: 56px;
+}
+.cancel-button {
+    display: flex;
+    align-items: center;
+    background-color: white; 
+    color: #2A3647; 
+    border: solid 2px #2A3647;
+    border-radius: 8px; 
+    cursor: pointer; 
+    font-size: 21px; 
+    gap: 4px;
+    height: 56px;
+    padding: 15px 15px; 
+}
+.cancel-button:hover {
+    display: flex;
+    align-items: center;
+    background-color: white; 
+    border: solid 2px rgb(26, 175, 224);
+    border-radius: 8px; 
+    cursor: pointer; 
+    font-size: 21px; 
+    gap: 4px;
+    height: 56px;
+    padding: 15px 15px; 
+}
+form {
+        display: flex;
+    flex-direction: column;
+    gap: 42px;
+}
+.check {
+    width: 24px;
+    height: 24px;
+}
+.createText {
+    font-weight: 700;
+    font-size: 21px;
+}
+.cancelText {
+    font-weight: 400;
+    font-size: 20px;
+    color: #2A3647;
+}
 

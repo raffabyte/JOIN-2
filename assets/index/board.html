@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Board</title>
 
     <!-- style  -->
@@ -16,72 +17,118 @@
     <link rel="icon" href="../img/Logo.png" type="image/x-icon">
 
 </head>
-<body onload="init()">
-<nav id="linkesNavMenu"></nav>
-<main class="flexC">
-    <header id="header"></header>
 
-    <div class="content flexC">
-        <div class="board-heading flexC">
-            <div class="h1-div flexR">
-                <h1>Board</h1>
-                <div class="flexR search-addTask">
-                <div class="search-input">
-                    <input type="search" id="searchInput" placeholder="Find Task">
-                    <button id="searchButton" class="button">
-                        <img src="../img/Bord/search.png" alt="Search" class="search-icon">
+<body onload="init()">
+    <nav id="linkesNavMenu"></nav>
+    <main class="flexC">
+        <header id="header"></header>
+
+        <div class="content flexC">
+            <div class="board-heading flexC">
+                <div class="h1-div flexR">
+                    <h1>Board</h1>
+                    <div class="flexR search-addTask">
+                        <div class="search-input">
+                            <input type="search" id="searchInput" placeholder="Find Task">
+                            <button id="searchButton" class="button">
+                                <img src="../img/Bord/search.png" alt="Search" class="search-icon">
+                        </div>
+                        <button id="addTaskButton" class="add-task-button flexR">
+                            <span>Add Task</span>
+                            <img src="../img/Bord/add.png" alt="">
+                        </button>
+                    </div>
                 </div>
-                <button id="addTaskButton" class="add-task-button flexR">
-                    <span>Add Task</span>
-                    <img src="../img/Bord/add.png" alt="">
-                </button>
+                <div class="board-titles flexR">
+                    <div class="board-title flexR">
+                        <p>To Do</p>
+                        <button class="add-button flexR">
+                            <span class="plus"></span>
+                            <span class="plus-90"></span>
+                        </button>
+                    </div>
+                    <div class="board-title flexR">
+                        <p>In Progress</p>
+                        <button class="add-button flexR">
+                            <span class="plus"></span>
+                            <span class="plus-90"></span>
+                        </button>
+                    </div>
+                    <div class="board-title flexR">
+                        <p>Await Feedback</p>
+                        <button class="add-button flexR">
+                            <span class="plus"></span>
+                            <span class="plus-90"></span>
+                        </button>
+                    </div>
+                    <div class="board-title flexR">
+                        <p>Done</p>
+                    </div>
+                </div>
             </div>
-            </div>
-            <div class="board-titles flexR">
-                <div class="board-title flexR">
-                    <p>To Do</p>
-                    <button>
-                        <img src="../img/Bord/plus.png" alt="Add Task" class="add-task-icon">
-                    </button>
-                </div>
-                <div class="board-title flexR">
-                    <p>In Progress</p>
-                    <button>
-                        <img src="../img/Bord/plus.png" alt="Add Task" class="add-task-icon">
-                    </button>
-                </div>
-                <div class="board-title flexR">
-                    <p>Await Feedback</p>
-                    <button>
-                        <img src="../img/Bord/plus.png" alt="Add Task" class="add-task-icon">
-                    </button>
-                </div>
-                <div class="board-title flexR">
-                    <p>Done</p>
-                </div>
-        </div>
-        </div>
-        <div class="board-bottom flexR">
-            <div class="bord-column">
-                <div class="bord-column-content" id="todoColumn">
+            <div class="board-bottom flexR">
+                <div class="board-column" id="todoColumn">
                     <!-- Tasks will be dynamically added here -->
                     <!-- no tasks card 
                          must be moved to templates afterwordes -->
-                    <div class="no-task-item">
+                    <div class="no-task-item flexR">
                         <p>No Tasks to do</p>
                     </div>
 
                 </div>
-            </div>
-            <div class="bord-column">
-                <div class="bord-column-content" id="inProgressColumn">
+                <div class="board-column" id="inProgressColumn">
                     <!-- Tasks will be dynamically added here -->
-                     <div class="task-card flexC">
+                    <div class="task-card flexC">
                         <div class="task-card-header flexR">
-                            <span id="storyOrTechnical">User Story Or Technical Task</span>  
+                            <span id="userStory">User Story</span>
+                            <span class="displayNone" id="technicalTask">Technical Task</span>
                         </div>
-                            <h3>Task Title</h3>
-                            <p class="task-description" id="taskDescription">This is a description of the task.</p>
+                        <h3>Task Title</h3>
+                        <p class="task-description" id="taskDescription">This is a description of the task.</p>
+                        <div class="subtasks" id="subtasks"></div>
+                        
+                        <div class="task-card-footer flexR">
+                            <div class="task-members" id="taskMembers">
+                                <img src="../img/Bord/member1.png" alt="Member 1">
+                                <img src="../img/Bord/member2.png" alt="Member 2">
+                                <img src="../img/Bord/member3.png" alt="Member 3">
+                                <div class="task-member flexR"> 
+                                    <span id="nameAbbreviation">SM</span> 
+                                </div>
+                            </div>
+                            <img src="../img/Bord/Prio-low.png" alt="priority">
+                        </div>
+                    </div>
+                </div>
+                <div class="board-column" id="awaitFeedbackColumn">
+                    <!-- Tasks will be dynamically added here -->
+                    <div class="task-card flexC">
+                        <div class="task-card-header flexR">
+                            <span class="displayNone" id="userStory">User Story</span>
+                            <span id="technicalTask">Technical Task</span>
+                        </div>
+                        <h3>Task Title</h3>
+                        <p class="task-description" id="taskDescription">This is a description of the task.</p>
+                        <div class="subtasks" id="subtasks"></div>
+                        <div class="task-card-footer flexR">
+                            <div class="task-members" id="taskMembers">
+                                <img src="../img/Bord/member1.png" alt="Member 1">
+                                <img src="../img/Bord/member2.png" alt="Member 2">
+                                <img src="../img/Bord/member3.png" alt="Member 3">
+                            </div>
+                            <img src="../img/Bord/Prio-med.png" alt="priority">
+                        </div>
+                    </div>
+                </div>
+                <div class="board-column" id="doneColumn">
+                    <!-- Tasks will be dynamically added here -->
+                    <div class="task-card flexC">
+                        <div class="task-card-header flexR">
+                            <span class="displayNone" id="userStory">User Story</span>
+                            <span id="technicalTask">Technical Task</span>
+                        </div>
+                        <h3>Task Title</h3>
+                        <p class="task-description" id="taskDescription">This is a description of the task.</p>
                         <div class="task-card-footer flexR">
                             <div class="task-members" id="taskMembers">
                                 <img src="../img/Bord/member1.png" alt="Member 1">
@@ -89,27 +136,19 @@
                                 <img src="../img/Bord/member3.png" alt="Member 3">
                             </div>
                             <img src="../img/Bord/Prio-high.png" alt="priority">
-                     </div>
-                </div>
-            </div>
-            <div class="bord-column">
-                <div class="bord-column-content" id="awaitFeedbackColumn">
-                    <!-- Tasks will be dynamically added here -->
-                </div>
-            </div>
-            <div class="bord-column">
-                <div class="bord-column-content" id="doneColumn">
-                    <!-- Tasks will be dynamically added here -->
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</main>
+        </div>
+    </main>
 
-<!-- scripts  -->
-<script src="../../js/templates.js"></script>
-<script src="../../js/board.js"></script>
-<script src="../../main.js"></script>
+    <!-- scripts  -->
+    <script src="../../js/templates.js"></script>
+    <script src="../../js/board.js"></script>
+    <script src="../../main.js"></script>
 
 </body>
+
 </html>

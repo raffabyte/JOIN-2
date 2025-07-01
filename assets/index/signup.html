@@ -21,14 +21,16 @@
         <div class="logo">
             <a href="./login.html"> <img src="../img/Logo.png" alt="Join Logo">
             </a>
-        
-        </div>
-        <div class="header-right">
-            <a href="#">You Signed Up successfully</a>
         </div>
     </header> 
 
     <main>
+        <div id="signUpSuccess" >
+            <div id="text" >
+                <p class="header-right">You Signed Up successfully</p>
+            </div>
+        </div>
+
         <div class="login-container">
             <a class="arrow-left-line" href="./login.html">
                 <img  src="../img/SignUp/arrow-left-line.png" alt="">
@@ -44,26 +46,23 @@
                 
                 <div class="accept_div">
                     <input type="checkbox" name="accept" id="accept">
-                    <label for="accept">I accept the <a href="#">Privacy policy</a></label>
+                    <label for="accept">I accept the <a href="./privacy-login.html">Privacy policy</a></label>
                 </div>
 
                 </div>
 
                 <div class="login-buttons ">
-                    <button class="login-btn" type="submit">Sign up</button>
+                    <button id="signUpBtn" class="login-btn" type="submit">Sign up</button>
                 </div>
             </form>
         </div>
     </main>
-
+    
     <footer>
-            <a href="#">Privacy</a>
-            <a href="#">Policy</a>
-            <a href="#">Legal notice</a>
+        <a href="./privacy-login.html">Privacy Policy</a>
+        <a href="./legal-notice-login.html">Legal notice</a>
     </footer>
-
-    <script>
-        
-    </script>
+    <script src="../../js/register.js"></script>
+    <script src="../../js/remoteStorage.js"></script>
 </body>
 </html>

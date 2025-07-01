@@ -1,6 +1,5 @@
-
-main{
-    justify-content: flex-start;
+main {
+  justify-content: flex-start;
 }
 
 .privacy-container {
@@ -12,7 +11,6 @@ main{
   gap: 24px;
   width: 100%;
   max-width: 1014px;
-  padding: 0;
 }
 
 .legal-content {
@@ -39,15 +37,18 @@ h4.legal-heading {
 }
 
 h5.section-heading {
-  font-size: 32px;
+  font-size: 27px;
   font-weight: 700;
-  margin-top: 40px;
-  margin-bottom: 12px;
+  line-height: 120%;
+  letter-spacing: 0;
+  margin-bottom: 16px;
 }
 
 h6.subsection-heading {
-  font-size: 24px;
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 120%;
+  letter-spacing: 0;
   margin-top: 30px;
   margin-bottom: 8px;
 }
@@ -64,6 +65,12 @@ p {
   font-weight: inherit;
 }
 
+p span.highlight-blue {
+  display: inline;
+  font-size: 16px;
+  width: auto;
+}
+
 .imprint-heading {
   width: 346px;
   height: 32px;
@@ -72,6 +79,11 @@ p {
   line-height: 120%;
   letter-spacing: 0;
   margin: 0;
+}
+
+.scope-line-break {
+  display: block;
+  height: 16px;
 }
 
 /* Optional @media */
@@ -95,10 +107,6 @@ p {
   h6.subsection-heading {
     font-size: 20px;
   }
-
-  p {
-    font-size: 14px;
-  }
 }
 
 @media screen and (max-width: 480px) {
@@ -112,9 +120,5 @@ p {
 
   h6.subsection-heading {
     font-size: 18px;
-  }
-
-  p {
-    font-size: 13px;
   }
 }
