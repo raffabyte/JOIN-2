@@ -61,7 +61,7 @@
               <div onclick="toggleOverlay()" class="closeWrapper">
                 <img class="closeContact" src="../img/Close.png" alt="">
               </div>
-              <form>
+              <form onsubmit="submitContact(event)">
                 <div class="inputs_div">
                     <input type="text" placeholder="Name" id="name" class="name_icon input" required>
                     <input type="email" placeholder="Email" id="email" class="mail_icon input" required>
@@ -69,7 +69,7 @@
                 </div>
 
                 <div class="login-buttons ">
-                     <button onclick="toggleOverlay()" class="cancel-button" type="submit">
+                     <button onclick="toggleOverlay()" class="cancel-button">
                       <p class="cancelText">Cancel</p>
                     <img class="closeContact" src="../img/Close.png" alt=""></button>
                     <button class="create-btn" type="submit">
