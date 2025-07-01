@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -14,110 +15,110 @@
 </head>
 
 <body onload="init()">
-    <nav id="linkesNavMenu"></nav>
-    <main class="flexC">
+  <nav id="linkesNavMenu"></nav>
+  <main class="flexC">
     <header id="header"></header>
 
-     <div class="content flexC">
-    <form class="task-form">
+    <div class="content flexC">
       <h4>Add Task</h4>
 
-      <div class="form-columns">
-        <!-- Left Column -->
-        <div class="form-column left-column">
-          <div class="form-group title-group">
-            <label for="title">Title<span class="required-asterisk">*</span></label>
-            <input type="text" id="title" placeholder="Enter a title" />
-          </div>
-
-          <div class="form-group description-group">
-            <label for="description">Description</label>
-            <textarea id="description" placeholder="Enter a description"></textarea>
-          </div>
-
-          <div class="form-group date-group">
-            <label for="due-date">Due Date<span class="required-asterisk">*</span></label>
-            <div class="date-picker">
-              <input type="date" id="due-date" />
+  <form class="task-form">
+        <div class="form-columns">
+          <!-- Left Column -->
+          <div class="form-column left-column">
+            <div class="form-group title-group">
+              <label for="title">Title<span class="required-asterisk">*</span></label>
+              <input type="text" id="title" placeholder="Enter a title" />
             </div>
-          </div>
-        </div>
 
-        <!-- Divider -->
-        <div class="form-divider" style="width: 1px; height: auto; background-color: #d1d1d1;"></div>
-
-        <!-- Right Column -->
-        <div class="form-column right-column">
-          <div class="form-group priority-group">
-            <label>Priority</label>
-            <div class="priority-options">
-              <button type="button" class="priority-btn" data-priority="urgent">
-                <span>Urgent</span>
-                <img src="../img/Bord/Prio-high.png" alt="Urgent Icon" class="priority-icon">
-              </button>
-
-              <button type="button" class="priority-btn selected medium" data-priority="medium">
-                <span>Medium</span>
-                <img src="../img/addTaskPage/equal-sign.png" alt="Medium Icon" class="priority-icon">
-              </button>
-
-              <button type="button" class="priority-btn" data-priority="low">
-                <span>Low</span>
-                <img src="../img/Bord/Prio-low.png" alt="Low Icon" class="priority-icon">
-              </button>
+            <div class="form-group description-group">
+              <label for="description">Description</label>
+              <textarea id="description" placeholder="Enter a description"></textarea>
             </div>
-          </div>
 
-          <div class="form-group assigned-group">
-            <label for="assigned-to-input">Assigned To</label>
-            <div class="dropdown">
-              <div class="dropdown-input-wrapper">
-                <input id="assigned-to-input" type="text" placeholder="Select contacts" autocomplete="off" />
-                <button id="assigned-toggle-btn" type="button" class="dropdown-toggle">▼</button>
+            <div class="form-group date-group">
+              <label for="due-date">Due Date<span class="required-asterisk">*</span></label>
+              <div class="date-picker">
+                <input type="date" id="due-date" />
               </div>
-              <ul id="assigned-to-options" class="dropdown-options"></ul>
             </div>
           </div>
 
-          <div class="form-group category-group">
-            <label for="category-input">Category<span class="required-asterisk">*</span></label>
-            <div class="dropdown">
-              <div class="dropdown-input-wrapper">
-                <input id="category-input" type="text" placeholder="Select task category" autocomplete="off" />
-                <button id="category-toggle-btn" type="button" class="dropdown-toggle">▼</button>
+          <!-- Divider -->
+          <div class="form-divider" style="width: 1px; height: auto; background-color: #d1d1d1;"></div>
+
+          <!-- Right Column -->
+          <div class="form-column right-column">
+            <div class="form-group priority-group">
+              <label>Priority</label>
+              <div class="priority-options">
+                <button type="button" class="priority-btn" data-priority="urgent">
+                  <span>Urgent</span>
+                  <img src="../img/Bord/Prio-high.png" alt="Urgent Icon" class="priority-icon">
+                </button>
+
+                <button type="button" class="priority-btn selected medium" data-priority="medium">
+                  <span>Medium</span>
+                  <img src="../img/addTaskPage/equal-sign.png" alt="Medium Icon" class="priority-icon">
+                </button>
+
+                <button type="button" class="priority-btn" data-priority="low">
+                  <span>Low</span>
+                  <img src="../img/Bord/Prio-low.png" alt="Low Icon" class="priority-icon">
+                </button>
               </div>
-              <ul id="category-options" class="dropdown-options"></ul>
             </div>
-          </div>
 
-          <div class="form-group subtasks-group">
-            <label for="subtasks">Subtasks</label>
-            <div class="subtask-input-wrapper">
-              <input type="text" id="subtasks" placeholder="Add new subtask" autocomplete="off" />
-              <button type="button" id="add-subtask-inside" class="subtask">+</button>
-              <ul id="subtask-options" class="subtask-dropdown hidden"></ul>
+            <div class="form-group assigned-group">
+              <label for="assigned-to-input">Assigned To</label>
+              <div class="dropdown">
+                <div class="dropdown-input-wrapper">
+                  <input id="assigned-to-input" type="text" placeholder="Select contacts" autocomplete="off" />
+                  <button id="assigned-toggle-btn" type="button" class="dropdown-toggle">▼</button>
+                </div>
+                <ul id="assigned-to-options" class="dropdown-options"></ul>
+              </div>
             </div>
-          </div>
-        </div>
-      </div>
 
-      <div class="form-footer">
-        <small class="validation-hint">
-          <span class="required-asterisk">*</span>This field is required
-        </small>
+            <div class="form-group category-group">
+              <label for="category-input">Category<span class="required-asterisk">*</span></label>
+              <div class="dropdown">
+                <div class="dropdown-input-wrapper">
+                  <input id="category-input" type="text" placeholder="Select task category" autocomplete="off" />
+                  <button id="category-toggle-btn" type="button" class="dropdown-toggle">▼</button>
+                </div>
+                <ul id="category-options" class="dropdown-options"></ul>
+              </div>
+            </div>
 
-        <div class="form-buttons">
-          <button type="reset" class="clear-button">Clear ✖</button>
-          <button type="submit" class="create-button">Create Task ✔</button>
-        </div>
-      </div>
-    </form>
-    </div>
+            <div class="form-group subtasks-group">
+              <label for="subtasks">Subtasks</label>
+              <div class="subtask-input-wrapper">
+                <input type="text" id="subtasks" placeholder="Add new subtask" autocomplete="off" />
+                <button type="button" id="add-subtask-inside" class="subtask">+</button>
+                <ul id="subtask-options" class="subtask-dropdown hidden"></ul>
+              </div>
+            </div>
+<div class="form-footer-line">
+  <small class="validation-hint">
+    <span class="required-asterisk">*</span>This field is required
+  </small>
+
+  <div class="form-buttons">
+    <button type="reset" class="clear-button">Clear ✖</button>
+    <button type="submit" class="create-button">Create Task ✔</button>
   </div>
+</div>
 
-  <!-- Scripts -->
-  <script src="../../js/templates.js"></script>
-  <script src="../../main.js"></script>
-  <script src="../../js/addTask.js"></script>
+</form>
+</div> 
+</main>
+
+
+    <!-- Scripts -->
+    <script src="../../js/templates.js"></script>
+    <script src="../../main.js"></script>
+    <script src="../../js/addTask.js"></script>
 </body>
+
 </html>
