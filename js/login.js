@@ -120,16 +120,43 @@ function enableButton(button) {
  * @returns {boolean}
  */
 
-async function fakeLogin(email, password) {
-  const response = await fetch(BASE_URL + "users.json");
-  const users = await response.json();
+// async function fakeLogin(email, password) {
+//   const response = await fetch(BASE_URL + "users.json");
+//   const users = await response.json();
   
-  for (let userId in users) {
-     const user = users[userId];
-     if (user.email === email && user.password === password) {
-        return true;
-     }
+//   for (let userId in users) {
+//      const user = users[userId];
+//      if (user.email === email && user.password === password) {
+//         return true;
+//      }
+//   }
+//   return false;
+// }
+
+async function login() {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  try {
+    const users = await loadData("users");
+    let found = false;
+
+    for (let key in users) {
+      const user = users[key];
+      if (user.email === email && user.password === password) {
+        found = true;
+        window.location.href = "../index/summary.html";
+        break;
+      }
+    }
+
+    if (!found) {
+      alert("Email oder Passwort falsch.");
+    }
+  } catch (error) {
+    console.error(error);
+    alert("Fehler beim Login.");
   }
-  return false;
 }
+
 window.addEventListener('DOMContentLoaded', initLogin);
