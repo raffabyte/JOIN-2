@@ -2,8 +2,6 @@ const OVERLAY = document.getElementById('overlay');
 const OVERLAY_CONTENT = document.getElementById('overlayContent');
 
 function addTaskOverlay() {
-   
-
     // Set the overlay content to the add task form
     OVERLAY_CONTENT.innerHTML = addTaskOverlayForm();
     OVERLAY_CONTENT.classList.add('add-task');
@@ -39,3 +37,22 @@ function notContentClickClose(event) {
     }
 }
 
+
+function PriorityHandler(priority) {
+    // Annahme: Es gibt drei Buttons mit den IDs: 'priorityHigh', 'priorityMedium', 'priorityLow'
+    const btnHigh = document.getElementById('priorityHigh');
+    const btnMedium = document.getElementById('priorityMedium');
+    const btnLow = document.getElementById('priorityLow');
+
+    btnHigh.classList.remove('active');
+    btnMedium.classList.remove('active');
+    btnLow.classList.remove('active');
+
+    if (priority === 'high') {
+        btnHigh.classList.add('active');
+    } else if (priority === 'medium') {
+        btnMedium.classList.add('active');
+    } else if (priority === 'low') {
+        btnLow.classList.add('active');
+    }
+}
