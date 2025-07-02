@@ -1,0 +1,207 @@
+
+.overlay-content.add-task{    
+    width: 90vw;
+    max-width: 1116px;
+    height: 90vh;
+    max-height: 870px;
+    overflow-y: auto;
+    background: white;
+    justify-content: center;
+    padding: 64px 74px;
+    border-radius: 30px;
+    box-shadow: 0 0 4px rgba(0,0,0,0.1);
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(100%, -50%);
+    opacity: 0;
+    transition: transform 0.1s ease-in-out, opacity 0.1s ease-in-out;
+    z-index: 200;
+}
+
+.overlay-content.add-task.active {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+}
+
+
+.overlay-bottom{
+    flex: 1;
+    width: 100%;
+}
+
+.overlay-header{
+    width: 100%;
+    justify-content: space-between;
+    position: relative;
+}
+
+h2{
+    font-size: 61px;
+    font-weight: 700;
+    line-height: 120%;
+    padding-bottom: 32px;
+}
+
+.overlay-header button{
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: none;
+    border-radius: 56px;
+}
+
+.overlay-header button:hover{
+    background: #E7E7E7;
+}
+
+.middle-vector{
+    border: #D1D1D1 1px solid;
+    height: 424px;
+}
+
+.task-form-top{
+    align-items: flex-start;
+    justify-content: space-between;
+    width: 100%;
+    flex: 1;
+}
+.task-form-bottom{
+    width: 100%;
+    justify-content: space-between;
+    
+}
+
+#closeOverlayButton{
+    border: 1px solid #2A3647;
+    color: #2A3647;
+    gap: 4px;
+    padding: 16px;
+    border-radius: 10px;
+}
+
+#closeOverlayButton:hover{
+    color:  #29ABE2;
+    border-color: #29ABE2;
+    box-shadow: 0 8px 8px rgba(0, 0, 0, 0.2);
+    transform: scale(1.05);
+}
+
+#closeOverlayButton:hover svg path {
+    stroke: #29ABE2;
+}
+
+.add-task-footer-btns{
+    gap: 16px;
+}
+
+#addTaskButton{
+    border: 1px solid #2A3647;
+    color: white;
+    background: #2A3647;
+    gap: 4px;
+    padding: 16px;
+    border-radius: 10px;
+}
+
+#addTaskButton:hover{
+    background: #29ABE2;
+    border-color: #29ABE2;
+    box-shadow: 0 8px 8px rgba(0, 0, 0, 0.2);
+    transform: scale(1.05);
+}
+
+.task-form-bottom span {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 120%;
+}
+.highlight {
+    color:#FF8190
+}
+
+.inputs{
+    border: 1px solid #D1D1D1;
+    border-radius: 10px;
+    width: 100%;
+    padding: 12px 21px;
+}
+
+textarea.inputs {
+    padding: 18px 16px;
+    height: 100px;
+    resize: none;
+}
+textarea.inputs:focus-visible, input.inputs:focus, #taskAssignee:focus-visible, #taskCategory:focus-visible {
+    border-color: #29ABE2;
+    outline: none;
+}
+
+.inputs::placeholder {
+    color: #D1D1D1;
+    font-size: 20px;
+    font-weight: 400;
+}
+
+.task-form-column{
+    gap: 16px;
+    width: 440px;
+}
+label{
+    text-align: left;
+    width: 100%;
+    font-size: 20px;
+}
+
+.priority-select{
+    width: 100%;
+    gap: 16px;
+    justify-content: center;
+}
+
+.priority-button {
+    padding: 10px 16px;
+    border: 1px solid #D1D1D1;
+    border-radius: 10px;
+    gap:8px;
+    width: 100%;
+    justify-content: center;
+}
+
+.priority-button:hover {
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+    transform: scale(1.05);
+}
+
+.priority-button span {
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 120%;
+}
+
+#taskAssignee, #taskCategory {
+    width: 100%;
+    border: 1px solid #D1D1D1;
+    border-radius: 10px;
+    padding: 12px 40px 12px 16px;
+    appearance: none;
+    background: url('data:image/svg+xml;utf8,<svg width="8" height="5" viewBox="0 0 8 5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.54854 4.3L0.948535 1.7C0.631868 1.38333 0.561035 1.02083 0.736035 0.6125C0.911035 0.204167 1.22354 0 1.67354 0H6.82354C7.27354 0 7.58603 0.204167 7.76103 0.6125C7.93604 1.02083 7.8652 1.38333 7.54853 1.7L4.94854 4.3C4.84854 4.4 4.7402 4.475 4.62354 4.525C4.50687 4.575 4.38187 4.6 4.24854 4.6C4.1152 4.6 3.9902 4.575 3.87354 4.525C3.75687 4.475 3.64854 4.4 3.54854 4.3Z" fill="%232A3647"/></svg>') no-repeat right 16px center/16px 10px;
+}
+
+#taskDueDate {
+    appearance: none;
+    background: url('data:image/svg+xml;utf8,<svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11.5 16C10.8 16 10.2083 15.7583 9.725 15.275C9.24167 14.7917 9 14.2 9 13.5C9 12.8 9.24167 12.2083 9.725 11.725C10.2083 11.2417 10.8 11 11.5 11C12.2 11 12.7917 11.2417 13.275 11.725C13.7583 12.2083 14 12.8 14 13.5C14 14.2 13.7583 14.7917 13.275 15.275C12.7917 15.7583 12.2 16 11.5 16ZM2 20C1.45 20 0.979167 19.8042 0.5875 19.4125C0.195833 19.0208 0 18.55 0 18V4C0 3.45 0.195833 2.97917 0.5875 2.5875C0.979167 2.19583 1.45 2 2 2H3V1C3 0.716667 3.09583 0.479167 3.2875 0.2875C3.47917 0.0958333 3.71667 0 4 0C4.28333 0 4.52083 0.0958333 4.7125 0.2875C4.90417 0.479167 5 0.716667 5 1V2H13V1C13 0.716667 13.0958 0.479167 13.2875 0.2875C13.4792 0.0958333 13.7167 0 14 0C14.2833 0 14.5208 0.0958333 14.7125 0.2875C14.9042 0.479167 15 0.716667 15 1V2H16C16.55 2 17.0208 2.19583 17.4125 2.5875C17.8042 2.97917 18 3.45 18 4V18C18 18.55 17.8042 19.0208 17.4125 19.4125C17.0208 19.8042 16.55 20 16 20H2ZM2 18H16V8H2V18ZM2 6H16V4H2V6Z" fill=\"%232A3647\"/></svg>') no-repeat right 16px center/22px 22px;
+}
+
+#taskAssignee:focus, #taskCategory:focus {
+  background: url('data:image/svg+xml;utf8,<svg width="8" height="5" viewBox="0 0 8 5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.24854 0.7C4.38187 0.7 4.50687 0.725 4.62354 0.775C4.7402 0.825 4.84854 0.9 4.94854 1L7.54853 3.6C7.8652 3.91667 7.93604 4.27917 7.76103 4.6875C7.58603 5.09583 7.27354 5.3 6.82354 5.3H1.67354C1.22354 5.3 0.911035 5.09583 0.736035 4.6875C0.561035 4.27917 0.631868 3.91667 0.948535 3.6L3.54854 1C3.64854 0.9 3.75687 0.825 3.87354 0.775C3.9902 0.725 4.1152 0.7 4.24854 0.7Z" fill=\"%232A3647\"/></svg>') no-repeat right 16px center/16px 10px;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  pointer-events: auto;
+  cursor: pointer;
+}

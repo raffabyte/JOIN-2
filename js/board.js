@@ -33,8 +33,7 @@ function closeOverlay() {
 
 
 
-function closIFOverlay(event) {
-    // Check if the overlay is visible
+function notContentClickClose(event) {
     if (event.target === OVERLAY) {
         closeOverlay();
     }
