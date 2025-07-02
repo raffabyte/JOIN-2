@@ -22,7 +22,7 @@
     <div class="content flexC">
       <h4>Add Task</h4>
 
-  <form class="task-form">
+      <form class="task-form">
         <div class="form-columns">
           <!-- Left Column -->
           <div class="form-column left-column">
@@ -36,17 +36,18 @@
               <textarea id="description" placeholder="Enter a description"></textarea>
             </div>
 
-            <div class="form-group date-group">
-              <label for="due-date">Due Date<span class="required-asterisk">*</span></label>
-              <div class="date-picker">
-                <input type="date" id="due-date" />
-              </div>
-            </div>
+<div class="form-group date-group">
+  <label for="due-date">Due Date<span class="required-asterisk">*</span></label>
+  <div class="date-picker">
+    <input type="text" id="due-date" placeholder="dd/mm/yyyy" />
+    <button type="button" id="calendar-toggle" class="calendar-btn">
+      <img src="../img/addTaskPage/calendar.png" alt="Open calendar" />
+    </button>
+  </div>
+</div>
+
           </div>
-
-          <!-- Divider -->
-          <div class="form-divider" style="width: 1px; height: auto; background-color: #d1d1d1;"></div>
-
+          <div class="form-divider"></div>
           <!-- Right Column -->
           <div class="form-column right-column">
             <div class="form-group priority-group">
@@ -69,56 +70,60 @@
               </div>
             </div>
 
-            <div class="form-group assigned-group">
-              <label for="assigned-to-input">Assigned To</label>
-              <div class="dropdown">
-                <div class="dropdown-input-wrapper">
-                  <input id="assigned-to-input" type="text" placeholder="Select contacts" autocomplete="off" />
-                  <button id="assigned-toggle-btn" type="button" class="dropdown-toggle">▼</button>
-                </div>
-                <ul id="assigned-to-options" class="dropdown-options"></ul>
-              </div>
-            </div>
-
-            <div class="form-group category-group">
-              <label for="category-input">Category<span class="required-asterisk">*</span></label>
-              <div class="dropdown">
-                <div class="dropdown-input-wrapper">
-                  <input id="category-input" type="text" placeholder="Select task category" autocomplete="off" />
-                  <button id="category-toggle-btn" type="button" class="dropdown-toggle">▼</button>
-                </div>
-                <ul id="category-options" class="dropdown-options"></ul>
-              </div>
-            </div>
-
-            <div class="form-group subtasks-group">
-              <label for="subtasks">Subtasks</label>
-              <div class="subtask-input-wrapper">
-                <input type="text" id="subtasks" placeholder="Add new subtask" autocomplete="off" />
-                <button type="button" id="add-subtask-inside" class="subtask">+</button>
-                <ul id="subtask-options" class="subtask-dropdown hidden"></ul>
-              </div>
-            </div>
-<div class="form-footer-line">
-  <small class="validation-hint">
-    <span class="required-asterisk">*</span>This field is required
-  </small>
-
-  <div class="form-buttons">
-    <button type="reset" class="clear-button">Clear ✖</button>
-    <button type="submit" class="create-button">Create Task ✔</button>
+          <div class="form-group assigned-group">
+  <label for="assigned-to-input">Assigned To</label>
+  <div class="dropdown">
+    <div class="dropdown-input-wrapper">
+      <input id="assigned-to-input" type="text" placeholder="Select contacts" />
+      <button id="assigned-toggle-btn" type="button" class="dropdown-toggle">▼</button>
+    </div>
+    <ul id="assigned-to-options" class="dropdown-options"></ul>
   </div>
 </div>
 
-</form>
-</div> 
-</main>
+<div class="form-group category-group">
+  <label for="category-input">Category<span class="required-asterisk">*</span></label>
+  <div class="dropdown">
+    <div class="dropdown-input-wrapper">
+      <input id="category-input" type="text" placeholder="Select task category" />
+      <button id="category-toggle-btn" type="button" class="dropdown-toggle">▼</button>
+    </div>
+    <ul id="category-options" class="dropdown-options"></ul>
+  </div>
+</div>
 
 
-    <!-- Scripts -->
-    <script src="../../js/templates.js"></script>
-    <script src="../../main.js"></script>
-    <script src="../../js/addTask.js"></script>
+            <div class="form-group subtasks-group">
+              <label for="subtasks">Subtasks</label>
+              <input type="text" id="subtasks" placeholder="Add new subtask" />
+              <ul id="subtask-list" class="subtask-list"></ul>
+            </div>
+
+          </div>
+        </div>
+    </div>
+
+    <div class="form-footer">
+  <div class="footer-left">
+    <small class="validation-hint">
+      <span class="required-asterisk">*</span>This field is required
+    </small>
+  </div>
+  <div class="footer-right">
+    <div class="form-buttons">
+      <button type="reset" class="clear-button">Clear ✖</button>
+      <button type="submit" class="create-button">Create Task ✔</button>
+    </div>
+  </div>
+</div>
+    </form>
+    </div>
+  </main>
+
+  <!-- Scripts -->
+  <script src="../../js/templates.js"></script>
+  <script src="../../main.js"></script>
+  <script src="../../js/addTask.js"></script>
 </body>
 
 </html>
