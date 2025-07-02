@@ -39,20 +39,45 @@ function notContentClickClose(event) {
 
 
 function PriorityHandler(priority) {
-    // Annahme: Es gibt drei Buttons mit den IDs: 'priorityHigh', 'priorityMedium', 'priorityLow'
-    const btnHigh = document.getElementById('priorityHigh');
-    const btnMedium = document.getElementById('priorityMedium');
-    const btnLow = document.getElementById('priorityLow');
+    // Hole alle Priority-Buttons per Klasse
+    const buttons = document.querySelectorAll('.priority-button');
+    buttons.forEach(btn => btn.classList.remove('active'));
 
-    btnHigh.classList.remove('active');
-    btnMedium.classList.remove('active');
-    btnLow.classList.remove('active');
+    buttons.forEach(btn => {
+        switch (priority) {
+            case 'high':
+                if (btn.classList.contains('HighPriority')) btn.classList.add('active');
+                break;
+            case 'medium':
+                if (btn.classList.contains('MidPriority')) btn.classList.add('active');
+                break;
+            case 'low':
+                if (btn.classList.contains('LowPriority')) btn.classList.add('active');
+                break;
+        }
+    });
+}
 
-    if (priority === 'high') {
-        btnHigh.classList.add('active');
-    } else if (priority === 'medium') {
-        btnMedium.classList.add('active');
-    } else if (priority === 'low') {
-        btnLow.classList.add('active');
-    }
+function toggleAssigneeOptions() {
+    const  ASSIGNEEOPTIONS = document.getElementById('assigneeOptions');
+    
+    ASSIGNEEOPTIONS.classList.toggle('display-none');
+    ASSIGNEEOPTIONS.classList.toggle('active');
+}
+
+function toggleCategoryOptions() {
+    const CATEGORYOPTIONS = document.getElementById('categoryOptions');
+    
+    CATEGORYOPTIONS.classList.toggle('display-none');
+    CATEGORYOPTIONS.classList.toggle('active');
+}
+
+function selectCategory(category) {
+    const TASKCATEGORY = document.getElementById('taskCategory');
+    const CATEGORYOPTIONS = document.getElementById('categoryOptions');
+
+    TASKCATEGORY.textContent = category;
+    CATEGORYOPTIONS.classList.add('display-none');
+    CATEGORYOPTIONS.classList.remove('active');
+    
 }
