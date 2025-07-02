@@ -173,10 +173,30 @@ label{
     box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
     transform: scale(1.05);
 }
-
+.priority-button.active:hover {
+    box-shadow: none;
+    transform: none;
+    cursor: default;
+}
 .priority-button span {
     font-size: 20px;
     font-weight: 400;
+}
+.priority-button.active{
+    color: white
+}
+.priority-button.active svg path {
+    fill: white;
+}
+
+.HighPriority.active{
+    background: #FF3D00;
+}
+.MidPriority.active{
+    background: #FFA800;
+}
+.LowPriority.active{
+    background: #7AE229;
 }
 
 #taskAssignee, #taskCategory {
