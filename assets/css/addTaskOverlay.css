@@ -39,7 +39,6 @@
 h2{
     font-size: 61px;
     font-weight: 700;
-    line-height: 120%;
     padding-bottom: 32px;
 }
 
@@ -117,7 +116,6 @@ h2{
 .task-form-bottom span {
     font-size: 16px;
     font-weight: 400;
-    line-height: 120%;
 }
 .highlight {
     color:#FF8190
@@ -179,7 +177,6 @@ label{
 .priority-button span {
     font-size: 20px;
     font-weight: 400;
-    line-height: 120%;
 }
 
 #taskAssignee, #taskCategory {
