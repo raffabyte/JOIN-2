@@ -1,22 +1,15 @@
-main {
-  justify-content: flex-start;
-}
-
 .privacy-container {
-  position: relative;
-  margin-left: 96px;
   margin-top: 110px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  padding-bottom: 30px;
   width: 100%;
-  max-width: 1014px;
+  margin-left: 96px;
 }
 
 .legal-content {
-  margin-left: 96px;
   width: 100%;
-  max-width: 1014px;
+  margin-left: 96px;
   display: flex;
   flex-direction: column;
 }
@@ -24,14 +17,14 @@ main {
 .legal-heading {
   display: flex;
   flex-direction: row;
-  gap: 30px;
-  width: 371px;
+  width: 420px;
   height: 73px;
   margin: 0;
+ 
 }
 
 h4.legal-heading {
-  font-size: 42px;
+  font-size: 61px;
   font-weight: 700;
   margin: 0;
 }
@@ -40,7 +33,7 @@ h5.section-heading {
   font-size: 27px;
   font-weight: 700;
   letter-spacing: 0;
-  margin-bottom: 16px;
+  padding-bottom: 16px;
 }
 
 h6.subsection-heading {
@@ -48,12 +41,17 @@ h6.subsection-heading {
   font-weight: 700;
   letter-spacing: 0;
   margin-top: 30px;
-  margin-bottom: 8px;
+  padding-bottom: 8px;
 }
 
 p {
   font-size: 16px;
+<<<<<<< HEAD
   margin-bottom: 16px;
+=======
+  line-height: 120%;
+  padding-bottom: 16px;
+>>>>>>> 64a5bbd (styling erneuert)
 }
 
 .highlight-blue {
