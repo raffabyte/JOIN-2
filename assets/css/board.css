@@ -42,9 +42,6 @@ h1{
 }
 
 #searchInput{
-    border: none;
-    outline: none;
-    height: 100%;
     background: transparent;
 }
 
@@ -64,8 +61,12 @@ h1{
 
 #searchButton{
     background-color: transparent;
-    border-left: #d1d1d1 1px solid;
-    padding-left: 16px;
+    border-radius: 56px;
+    width: 32px;
+    height: 32px;
+}
+#searchButton:hover {
+    background-color: #E7E7E7;
 }
 
 .add-task-button{
