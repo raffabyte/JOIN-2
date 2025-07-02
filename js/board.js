@@ -1,3 +1,4 @@
+
 const OVERLAY = document.getElementById('overlay');
 const OVERLAY_CONTENT = document.getElementById('overlayContent');
 
@@ -81,3 +82,25 @@ function selectCategory(category) {
     CATEGORYOPTIONS.classList.remove('active');
     
 }
+
+// Schließt offene Dropdowns, wenn außerhalb geklickt wird
+document.addEventListener('click', function(event) {
+    const categoryOptions = document.getElementById('categoryOptions');
+    const assigneeOptions = document.getElementById('assigneeOptions');
+
+    // Category-Options schließen, wenn offen und Klick außerhalb
+    if (categoryOptions && categoryOptions.classList.contains('active')) {
+        if (!categoryOptions.contains(event.target) && event.target.id !== 'taskCategory') {
+            categoryOptions.classList.add('display-none');
+            categoryOptions.classList.remove('active');
+        }
+    }
+
+    // Assignee-Options schließen, wenn offen und Klick außerhalb
+    if (assigneeOptions && assigneeOptions.classList.contains('active')) {
+        if (!assigneeOptions.contains(event.target) && event.target.id !== 'taskAssignee') {
+            assigneeOptions.classList.add('display-none');
+            assigneeOptions.classList.remove('active');
+        }
+    }
+});
