@@ -26,7 +26,7 @@ function linkesNav(activePage) {
             <img class="icon" src="../img/summary.png" alt="">
             <p>Summary</p>
         </a>
-        <a href="addTask.html" class="menuOption flexR${activePage === 'add_task' ? ' aktiveNav' : ''}">
+        <a href="add_task.html" class="menuOption flexR${activePage === 'add_task' ? ' aktiveNav' : ''}">
             <img class="icon" src="../img/add-tasks.png" alt="">
             <p>Add Task</p>
         </a>
