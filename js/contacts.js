@@ -106,20 +106,39 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 function renderContacts(data) {
   const container = document.querySelector(".contacsList");
+  const infoContainer = document.getElementById("contactsDetails")
 
   for (const key in data) {
     const contact = data[key];
-    container.innerHTML += `
-      <div onclick="showcontactCardDetails('${key}')" class="contactCard">
+
+    const contactCard = document.createElement("div");
+    contactCard.className = "contactCard";
+    contactCard.innerHTML = `
       <img class="contactImg" src="../img/Profile badge.png" alt="">
       <div>
-        <p class="contactName"> ${contact.name}</p>
-        <p class="contactMail"> ${contact.email}</p>
-        </div>
+        <p class="contactName">${contact.name}</p>
+        <p class="contactMail">${contact.email}</p>
       </div>
     `;
+
+    contactCard.addEventListener("click", () => {
+      // Alle vorherigen deaktivieren
+      const allCards = document.querySelectorAll(".contactCard");
+      allCards.forEach(card => card.classList.remove("activeCard"));
+
+      // Diese hier aktivieren
+      contactCard.classList.add("activeCard");
+      infoContainer.classList.add("showDetails")
+
+      // Details anzeigen
+      showcontactCardDetails(key);
+    });
+
+    // Karte zum Container hinzufügen
+    container.appendChild(contactCard);
   }
 }
+
 
 function showcontactCardDetails(key) {
   const contact = contactsData[key];
@@ -130,7 +149,7 @@ function showcontactCardDetails(key) {
   <img class="BigPB" src="../img/Frame 79.png" alt="" />
   <div class="displayColumn">
     <h2 class="contectName">${contact.name}</h2>
-    <div class="displayFlex1">
+    <div onclick="editContact('${key}')" class="displayFlex1">
       <div class="editContainer">
         <svg width="24" height="24" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg">
 <mask id="mask0_334068_6285" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="33" height="32">
@@ -142,7 +161,7 @@ function showcontactCardDetails(key) {
 </svg>
         <p class="pSmall">Edit</p>
       </div>
-      <div class="DeleteContainer">
+      <div onclick="deleteContact('${key}')" class="DeleteContainer">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 <mask id="mask0_336135_3940" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
 <rect width="24" height="24" fill="#D9D9D9"/>
@@ -172,4 +191,12 @@ function showcontactCardDetails(key) {
   `;
 }
 
+let derPfad = "users/raffael/contacts"
 
+function editContact(key) {
+
+}
+function deleteContact(key) {
+deleteData(derPfad + "/" + key)
+
+}

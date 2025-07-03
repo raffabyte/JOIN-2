@@ -331,6 +331,11 @@ form {
     flex-direction: column;
     padding-top: 90px;
     gap: 21px;
+    transform: translateX(100%);
+  transition: transform 0.4s ease;
+}
+.showDetails {
+    transform: translateX(0);
 }
 .displayColumn {
     display: flex;
@@ -408,4 +413,18 @@ form {
 .phoneInfoSmall {
     font-weight: 400;
     font-size: 16px;
+}
+.activeCard {
+    background-color: #2A3647;
+    border-radius: 16px;
+}
+.activeCard:hover {
+    background-color: #2A3647;
+    border-radius: 16px;
+}
+.activeCard .contactName {
+    color: white;
+}
+.activeCard:hover .contactName {
+    color: white;
 }
