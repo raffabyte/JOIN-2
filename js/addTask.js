@@ -1,240 +1,239 @@
 document.addEventListener("DOMContentLoaded", () => {
-  setupDropdown({
-    inputId: "assigned-to-input",
-    toggleBtnId: "assigned-toggle-btn",
-    dropdownId: "assigned-to-options",
-    options: [
-      "Max Mustermann", "Lara Beispiel", "Franz Kontakt",
-      "Julia Sommer", "Tom Winter", "Ella Meier",
-      "David König", "Nina Berg", "Leo Schmitt", "Sophie Schwarz"
-    ],
-  });
-
-  setupDropdown({
-    inputId: "category-input",
-    toggleBtnId: "category-toggle-btn",
-    dropdownId: "category-options",
-    options: [
-      "Bug / Issue", "Design", "Testing / QA", "Meeting / Planning",
-      "Documentation", "Research / Analysis", "Deployment / Release",
-      "Maintenance / Support"
-    ],
-  });
-
-  setupPriorityButtons();
-  setupFreeSubtaskInput();
-  setupDatePicker();
-  setupFieldValidation();
+    initializeDropdowns();
+    initializePriorityButtons();
+    initializeSubtaskInput();
+    initializeDatePicker();
+    initializeFormValidation();
 });
 
-// ----- DROPDOWNS -----
+function initializeDropdowns() {
+    const contactOptions = [
+        "Max Mustermann", "Lara Beispiel", "Franz Kontakt", "Julia Sommer", "Tom Winter",
+        "Ella Meier", "David König", "Nina Berg", "Leo Schmitt", "Sophie Schwarz"
+    ];
+    const categoryOptions = [
+        "Bug / Issue", "Design", "Testing / QA", "Meeting / Planning",
+        "Documentation", "Research / Analysis", "Deployment / Release", "Maintenance / Support"
+    ];
 
-function setupDropdown({ inputId, toggleBtnId, dropdownId, options, onSelect }) {
-  const input = document.getElementById(inputId);
-  const toggle = document.getElementById(toggleBtnId);
-  const dropdown = document.getElementById(dropdownId);
-
-  input?.addEventListener("focus", () => renderDropdown(dropdown, input, options, onSelect));
-  input?.addEventListener("input", () => renderDropdown(dropdown, input, options, onSelect));
-  toggle?.addEventListener("click", () => toggleDropdown(dropdown, input, options, onSelect));
-
-  document.addEventListener("click", (e) => {
-    if (!dropdown.contains(e.target) && !toggle.contains(e.target)) {
-      dropdown.classList.remove("show");
-    }
-  });
+    setupDropdown('assigned-to-input', 'assigned-toggle-btn', 'assigned-to-options', contactOptions);
+    setupDropdown('category-input', 'category-toggle-btn', 'category-options', categoryOptions);
 }
 
-function renderDropdown(dropdown, input, options, onSelect) {
-  const filtered = options.filter(opt => opt.toLowerCase().includes(input.value.toLowerCase()));
-  dropdown.innerHTML = "";
-  filtered.forEach(opt => {
-    const li = document.createElement("li");
-    li.textContent = opt;
-    li.className = "dropdown-option";
-    li.addEventListener("click", () => {
-      input.value = opt;
-      dropdown.classList.remove("show");
-      if (onSelect) onSelect(opt);
-    });
-    dropdown.appendChild(li);
-  });
-  dropdown.classList.add("show");
-}
+/**
+ * @param {string} inputId 
+ * @param {string} toggleBtnId
+ * @param {string} dropdownId 
+ * @param {string[]} options 
+ */
+function setupDropdown(inputId, toggleBtnId, dropdownId, options) {
+    const input = document.getElementById(inputId);
+    const toggle = document.getElementById(toggleBtnId);
+    const dropdown = document.getElementById(dropdownId);
 
-function toggleDropdown(dropdown, input, options, onSelect) {
-  dropdown.classList.toggle("show");
-  if (dropdown.classList.contains("show")) {
-    renderDropdown(dropdown, input, options, onSelect);
-  }
-}
+    if (!input || !toggle || !dropdown) return;
 
-// ----- PRIORITY -----
+    input.addEventListener("focus", () => renderDropdownOptions(dropdown, input, options));
+    input.addEventListener("input", () => renderDropdownOptions(dropdown, input, options));
 
-function setupPriorityButtons() {
-  document.querySelectorAll(".priority-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      document.querySelectorAll(".priority-btn").forEach(b => b.classList.remove("selected"));
-      btn.classList.add("selected");
-    });
-  });
-}
-
-// ----- SUBTASK -----
-
-function setupFreeSubtaskInput() {
-  const input = document.getElementById("subtasks");
-  const list = document.getElementById("subtask-list");
-
-  input?.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      const value = input.value.trim();
-      if (!value) return;
-      const li = document.createElement("li");
-      li.textContent = value;
-      list.appendChild(li);
-      input.value = "";
-    }
-  });
-}
-
-// ----- DATE PICKER -----
-
-function setupDatePicker() {
-  const dateInput = document.getElementById("due-date");
-  const toggleBtn = document.getElementById("calendar-toggle");
-
-  if (!dateInput || !toggleBtn) return;
-
-  dateInput.addEventListener("focus", () => {
-    dateInput.type = "date";
-    dateInput.showPicker();
-  });
-
-  toggleBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    dateInput.type = "date";
-    dateInput.focus();
-    dateInput.showPicker();
-  });
-
-  document.addEventListener("click", (e) => {
-    if (!e.target.closest(".date-picker")) {
-      dateInput.blur();
-    }
-  });
-
-  dateInput.addEventListener("blur", () => {
-    if (!dateInput.value) dateInput.type = "text";
-  });
-}
-
-// ----- VALIDIERUNG -----
-
-function setupFieldValidation() {
-  const required = ["title", "due-date", "category-input"];
-  const all = ["title", "description", "due-date", "assigned-to-input", "category-input", "subtasks"];
-  const form = document.querySelector(".task-form");
-
-  handleFormSubmission(form, required, showTaskCreatedOverlay);
-  addLiveFieldStyling(all);
-}
-
-function handleFormSubmission(form, requiredFields, onSuccess) {
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    resetValidationHints(requiredFields);
-    const valid = validateRequiredFields(requiredFields);
-    if (valid) onSuccess();
-  });
-}
-
-function validateRequiredFields(ids) {
-  let allValid = true;
-  ids.forEach(id => {
-    const field = document.getElementById(id);
-    if (!field || !field.value.trim()) {
-      showFieldError(field);
-      allValid = false;
-    } else {
-      markFieldValid(field);
-    }
-  });
-  return allValid;
-}
-
-function addLiveFieldStyling(fieldIds) {
-  fieldIds.forEach((id) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    ["input", "change", "blur"].forEach(evt => {
-      el.addEventListener(evt, () => {
-        if (el.value.trim().length > 0) {
-          markFieldValid(el);
+     toggle.addEventListener("click", (e) => {
+        e.stopPropagation(); 
+        const isVisible = dropdown.classList.toggle("show");
+        if (isVisible) {
+            renderDropdownOptions(dropdown, input, options);
         }
-      });
     });
-  });
+
+  document.addEventListener("click", (e) => {
+        if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+            dropdown.classList.remove("show");
+        }
+    });
 }
 
-function markFieldValid(field) {
-  field.classList.remove("input-error");
-  field.classList.add("input-valid");
-
-  const group = field.closest(".form-group");
-  if (!group) return;
-
-  const err = group.querySelector(".field-error");
-  if (err) err.remove();
+function renderDropdownOptions(dropdown, input, options) {
+    const filter = input.value.toLowerCase();
+    const filteredOptions = options.filter(opt => opt.toLowerCase().includes(filter));
+    
+    dropdown.innerHTML = ""; 
+    filteredOptions.forEach(optionText => {
+        const li = document.createElement("li");
+        li.textContent = optionText;
+        li.addEventListener("click", () => {
+            input.value = optionText;
+            dropdown.classList.remove("show");
+            input.dispatchEvent(new Event('change')); 
+        });
+        dropdown.appendChild(li);
+    });
+    dropdown.classList.add("show");
 }
 
-function showFieldError(field) {
-  field.classList.remove("input-valid");
-  field.classList.add("input-error");
+function initializePriorityButtons() {
+    const priorityContainer = document.querySelector(".priority-options");
+    if (!priorityContainer) return;
 
-  const group = field.closest(".form-group");
-  if (!group) return;
+    priorityContainer.addEventListener("click", (e) => {
+        const clickedButton = e.target.closest(".priority-btn");
+        if (!clickedButton) return;
 
-  if (!group.querySelector(".field-error")) {
-    const err = document.createElement("div");
-    err.className = "field-error";
-    err.textContent = "This field is required";
-    group.appendChild(err);
-  }
+        priorityContainer.querySelectorAll(".priority-btn").forEach(btn => btn.classList.remove("selected"));
+        
+        clickedButton.classList.add("selected");
+        const group = priorityContainer.closest('.form-group');
+        removeFieldError(group);
+    });
 }
 
-function removeFieldError(field) {
-  field.classList.remove("input-error", "input-valid");
-  const err = field.closest(".form-group")?.querySelector(".field-error");
-  if (err) err.remove();
+function initializeSubtaskInput() {
+    const input = document.getElementById("subtasks");
+    const list = document.getElementById("subtask-list");
+
+    if (!input || !list) return;
+
+    input.addEventListener("keydown", (e) => {
+        if (e.key !== "Enter" || !input.value.trim()) return;
+        
+        e.preventDefault();
+        addSubtask(input.value.trim(), list);
+        input.value = ""; 
+    });
 }
 
-function resetValidationHints(ids) {
-  ids.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) {
-      removeFieldError(el);
+function addSubtask(text, list) {
+    const li = document.createElement("li");
+    li.textContent = text;
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "✖";
+    deleteBtn.className = "delete-subtask-btn";
+    deleteBtn.type = "button";
+    deleteBtn.onclick = () => li.remove(); 
+
+    li.appendChild(deleteBtn);
+    list.appendChild(li);
+}
+
+function initializeDatePicker() {
+    const dateInput = document.getElementById("due-date");
+    if (!dateInput) return;
+
+    const showPicker = (e) => {
+        e.preventDefault();
+        dateInput.type = "date";
+        setTimeout(() => dateInput.showPicker(), 10); 
+    };
+
+    dateInput.addEventListener("focus", showPicker);
+    document.getElementById("calendar-toggle")?.addEventListener("click", showPicker);
+
+    dateInput.addEventListener("blur", () => {
+        if (!dateInput.value) {
+            dateInput.type = "text";
+        }
+    });
+}
+
+function initializeFormValidation() {
+    const form = document.querySelector(".task-form");
+    if (!form) return;
+
+    const requiredFieldIds = ["title", "due-date", "category-input"];
+    const allFieldIds = ["title", "description", "due-date", "assigned-to-input", "category-input", "subtasks"];
+
+  allFieldIds.forEach(id => {
+        const el = document.getElementById(id);
+        el?.addEventListener("change", () => validateField(el));
+        el?.addEventListener("blur", () => validateField(el));
+    });
+
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        
+        let isFormValid = true;
+
+        requiredFieldIds.forEach(id => {
+            const field = document.getElementById(id);
+            if (!validateField(field)) {
+                isFormValid = false;
+            }
+        });
+        
+        const priorityGroup = document.querySelector('.priority-options');
+        if (!priorityGroup.querySelector('.priority-btn.selected')) {
+            showFieldError(priorityGroup.closest('.form-group'), "Please select a priority.");
+            isFormValid = false;
+        }
+
+        if (isFormValid) {
+            showTaskCreatedOverlay();
+        }
+    });
+
+    form.querySelector('.clear-button')?.addEventListener('click', () => {
+        form.reset();
+        form.querySelectorAll('.input-error, .input-valid').forEach(el => el.classList.remove('input-error', 'input-valid'));
+        form.querySelectorAll('.field-error').forEach(err => err.remove());
+        document.querySelectorAll('.priority-btn.selected').forEach(btn => btn.classList.remove('selected'));
+    });
+}
+
+/**
+ * Validiert ein einzelnes Feld und gibt zurück, ob es gültig ist.
+ * @returns {boolean}
+ */
+function validateField(field) {
+    if (!field) return false;
+    
+    if (field.value.trim()) {
+        markFieldAsValid(field.closest('.form-group'));
+        return true;
+    } else {
+        showFieldError(field.closest('.form-group'));
+        return false;
     }
-  });
 }
 
-// ----- TASK OVERLAY -----
+function showFieldError(formGroup, message = "This field is required.") {
+    if (!formGroup) return;
+    const input = formGroup.querySelector('input, textarea, .priority-options');
+    input?.classList.add("input-error");
+    input?.classList.remove("input-valid");
+
+    if (!formGroup.querySelector(".field-error")) {
+        const errorDiv = document.createElement("div");
+        errorDiv.className = "field-error";
+        errorDiv.textContent = message;
+        formGroup.appendChild(errorDiv);
+    }
+}
+
+function removeFieldError(formGroup) {
+    if (!formGroup) return;
+    formGroup.querySelector(".field-error")?.remove();
+}
+
+function markFieldAsValid(formGroup) {
+    if (!formGroup) return;
+    const input = formGroup.querySelector('input, textarea, .priority-options');
+    input?.classList.remove("input-error");
+    input?.classList.add("input-valid");
+    removeFieldError(formGroup);
+}
 
 function showTaskCreatedOverlay() {
-  const overlay = document.createElement("div");
-  overlay.className = "task-overlay";
-  overlay.innerHTML = `
-    <div class="task-overlay-content">
-      Task added to board
-      <img src="../img/Board.png" alt="Board" />
-    </div>
-  `;
-  document.body.appendChild(overlay);
+    const overlay = document.createElement("div");
+    overlay.className = "task-overlay";
+    overlay.innerHTML = `
+        <span>Task added to board</span>
+        <img src="../img/board_icon.svg" alt="Board Icon" />
+    `;
+    document.body.appendChild(overlay);
+
   setTimeout(() => {
-    overlay.classList.add("visible");
-    setTimeout(() => {
-      window.location.href = "../index/board.html";
-    }, 1500);
-  }, 100);
+        overlay.classList.add("visible");
+        setTimeout(() => {
+            window.location.href = "board.html";
+        }, 1500); 
+    }, 10); 
 }
