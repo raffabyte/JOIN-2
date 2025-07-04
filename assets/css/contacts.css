@@ -323,3 +323,108 @@ form {
     color: #2A3647;
 }
 
+.contactsDetailsContainer {
+    position: absolute;
+}
+.contactsDetails {
+    display: flex;
+    flex-direction: column;
+    padding-top: 90px;
+    gap: 21px;
+    transform: translateX(100%);
+  transition: transform 0.4s ease;
+}
+.showDetails {
+    transform: translateX(0);
+}
+.displayColumn {
+    display: flex;
+    flex-direction: column;
+}
+.displayFlex {
+    display: flex;
+    display: flex
+;
+    align-items: center;
+    gap: 54px;
+}
+.BigPB {
+    height: 120px;
+    width: 120px;
+}
+.contectName {
+    font-weight: 500;
+    font-size: 47px;
+    color: black;
+}
+.displayFlex1 {
+    display: flex;
+    gap: 16px;
+}
+.editContainer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.editContainer:hover {
+    color: rgb(26, 175, 224);
+    cursor: pointer;
+}
+.editContainer:hover svg path {
+    fill: rgb(26, 175, 224);
+}
+.DeleteContainer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.DeleteContainer:hover {
+    color: rgb(26, 175, 224);
+    cursor: pointer;
+}
+.DeleteContainer:hover svg path {
+    fill: rgb(26, 175, 224);
+}
+.pSmall {
+    font-weight: 400;
+    font-size: 16px;
+}
+.contactInformation {
+    font-weight: 400;
+    font-size: 20px;
+    color: black;
+    padding: 25px 0;
+}
+.displayColumn1 {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.strong {
+    font-weight: 700;
+    font-size: 16px;
+    color: black;
+}
+.mailInfoSmall {
+    font-weight: 400;
+    font-size: 16px;
+    color: #007CEE;
+}
+.phoneInfoSmall {
+    font-weight: 400;
+    font-size: 16px;
+}
+.activeCard {
+    background-color: #2A3647;
+    border-radius: 16px;
+}
+.activeCard:hover {
+    background-color: #2A3647;
+    border-radius: 16px;
+}
+.activeCard .contactName {
+    color: white;
+}
+.activeCard:hover .contactName {
+    color: white;
+}
