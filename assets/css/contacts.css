@@ -459,3 +459,35 @@ form {
     height: 2px;
     margin-bottom: 8px;
 }
+
+.contactCircle {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 16px;
+  margin-right: 10px;
+  border: solid 2px white;
+  font-weight: 400;
+  font-size: 14px;
+}
+
+.BigContactCircle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background-color: #29abe2; /* wird vom JS überschrieben */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 32px;
+  border: solid 2px white;
+  font-weight: 500;
+  font-size: 47px;
+}

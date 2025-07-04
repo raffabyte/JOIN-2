@@ -25,16 +25,15 @@ function toggleOverlay() {
 }
 
 function openNewContactForm() {
-  // Formular leeren
   document.getElementById("contactForm").reset();
   document.getElementById("contactKey").value = "";
 
-  // Optional: alte Details ausblenden
- // const details = document.getElementById("contactsDetails");
-//  details.innerHTML = "";
-//  details.classList.remove("showDetails");
+  const avatarContainer = document.getElementById("editAvatarContainer");
+  avatarContainer.innerHTML = `
+    <img class="pb" src="../img/Group 13.png" alt="" />
+  `;
 
-  toggleOverlay(); // Overlay anzeigen
+  toggleOverlay();
 }
 
 const BASE_URL =
@@ -145,7 +144,6 @@ function renderContacts(data) {
   const container = document.getElementById("contactCardsContainer");
   container.innerHTML = "";
 
-  // Kontakte in ein Array mit Keys packen und nach Name sortieren
   const sortedEntries = Object.entries(data).sort((a, b) => {
     return a[1].name.localeCompare(b[1].name);
   });
@@ -155,7 +153,6 @@ function renderContacts(data) {
   for (const [key, contact] of sortedEntries) {
     const firstLetter = contact.name[0].toUpperCase();
 
-    // Wenn sich der Anfangsbuchstabe ändert, eine neue Überschrift einfügen
     if (firstLetter !== currentLetter) {
       currentLetter = firstLetter;
       const letterHeader = document.createElement("div");
@@ -167,10 +164,18 @@ function renderContacts(data) {
       container.appendChild(separatorList);
     }
 
+    const initials = contact.name
+      .split(" ")
+      .map(word => word[0].toUpperCase())
+      .join("")
+      .substring(0, 2);
+
+    const color = generateColorFromString(contact.name);
+
     const contactCard = document.createElement("div");
     contactCard.className = "contactCard";
     contactCard.innerHTML = `
-      <img class="contactImg" src="../img/Profile badge.png" alt="">
+      <div class="contactCircle" style="background-color: ${color};">${initials}</div>
       <div>
         <p class="contactName">${contact.name}</p>
         <p class="contactMail">${contact.email}</p>
@@ -178,8 +183,9 @@ function renderContacts(data) {
     `;
 
     contactCard.addEventListener("click", () => {
-      const allCards = document.querySelectorAll(".contactCard");
-      allCards.forEach(card => card.classList.remove("activeCard"));
+      document.querySelectorAll(".contactCard").forEach(card =>
+        card.classList.remove("activeCard")
+      );
       contactCard.classList.add("activeCard");
       document.getElementById("contactsDetails").classList.add("showDetails");
       showcontactCardDetails(key);
@@ -189,6 +195,19 @@ function renderContacts(data) {
   }
 }
 
+function generateColorFromString(str) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const hue = hash % 360;
+  return `hsl(${hue}, 70%, 50%)`; // HSL-Farbwert für satte, bunte Farben
+}
+
+
+
+
+
 
 
 function showcontactCardDetails(key) {
@@ -197,7 +216,9 @@ function showcontactCardDetails(key) {
   const detailsContainer = document.getElementById("contactsDetails");
   detailsContainer.innerHTML = `
   <div class="displayFlex">
-  <img class="BigPB" src="../img/Frame 79.png" alt="" />
+  <div class="BigContactCircle" style="background-color: ${generateColorFromString(contact.name)};">
+  ${contact.name.split(" ").map(w => w[0].toUpperCase()).join("").substring(0, 2)}
+</div>
   <div class="displayColumn">
     <h2 class="contectName">${contact.name}</h2>
     <div onclick="editContact('${key}')" class="displayFlex1">
@@ -251,6 +272,22 @@ function editContact(key) {
   document.getElementById("name").value = contact.name;
   document.getElementById("email").value = contact.email;
   document.getElementById("phone").value = contact.phone;
+
+  // Initialen und Farbe berechnen
+  const initials = contact.name
+    .split(" ")
+    .map(w => w[0].toUpperCase())
+    .join("")
+    .substring(0, 2);
+  const color = generateColorFromString(contact.name);
+
+  // Avatar-Kreis einfügen
+  const avatarContainer = document.getElementById("editAvatarContainer");
+  avatarContainer.innerHTML = `
+    <div class="BigContactCircle" style="background-color: ${color};">
+      ${initials}
+    </div>
+  `;
 
   toggleOverlay();
 }
