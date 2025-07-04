@@ -24,6 +24,7 @@
     align-items: center;
     gap: 35px;
     padding-left: 24px;
+    flex-shrink: 0;
 }
 .contactCard:hover {
     background-color: lightgray;
@@ -427,4 +428,12 @@ form {
 }
 .activeCard:hover .contactName {
     color: white;
+}
+.contactCardsContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-height: calc(100vh - 197px); /* passt sich dem Viewport an */
+  overflow-y: auto;
 }

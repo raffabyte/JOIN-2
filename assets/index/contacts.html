@@ -21,7 +21,7 @@
       <div class="content">
         <div class="contacsList">
           <div class="AddNew">
-            <button onclick="toggleOverlay()" class="AddNewButton">
+            <button onclick="openNewContactForm()" class="AddNewButton">
               <p class="AddNewText">Add new contact</p>
               <img
                 class="AddNewImg"
@@ -30,6 +30,7 @@
               />
             </button>
           </div>
+          <div id="contactCardsContainer" class="contactCardsContainer"></div>
         </div>
         <div class="contactsContainer">
           <div class="into">
@@ -67,8 +68,9 @@
               <div onclick="toggleOverlay()" class="closeWrapper">
                 <img class="closeContact" src="../img/Close.png" alt="" />
               </div>
-              <form onsubmit="submitContact(event)">
+              <form id="contactForm" onsubmit="submitContact(event)">
                 <div class="inputs_div">
+                  <input type="hidden" id="contactKey" />
                   <input
                     type="text"
                     placeholder="Name"

@@ -1,5 +1,8 @@
 let contactsData = {};
 
+console.log(contactsData);
+
+
 function toggleOverlay() {
   const overlay = document.getElementById("overlay");
   const isVisible = overlay.classList.contains("show");
@@ -19,6 +22,19 @@ function toggleOverlay() {
       overlay.classList.add("show");
     }, 10);
   }
+}
+
+function openNewContactForm() {
+  // Formular leeren
+  document.getElementById("contactForm").reset();
+  document.getElementById("contactKey").value = "";
+
+  // Optional: alte Details ausblenden
+ // const details = document.getElementById("contactsDetails");
+//  details.innerHTML = "";
+//  details.classList.remove("showDetails");
+
+  toggleOverlay(); // Overlay anzeigen
 }
 
 const BASE_URL =
@@ -57,31 +73,50 @@ async function deleteData(path = "") {
   });
   return (responseToJson = await response.json());
 }
-function submitContact(event) {
-  event.preventDefault(); // verhindert Reload
+
+
+
+
+async function submitContact(event) {
+  event.preventDefault();
 
   const name = document.getElementById("name").value.trim();
   const email = document.getElementById("email").value.trim();
   const phone = document.getElementById("phone").value.trim();
+  const contactKey = document.getElementById("contactKey").value.trim();
 
-  if (!name || !email || !phone) {
-    alert("Bitte alle Felder ausfüllen!");
-    return;
+  const contact = { name, email, phone };
+  const basePath = `users/raffael/contacts`;
+
+  if (contactKey) {
+    // Bestehenden Kontakt aktualisieren
+    await fetch(`${BASE_URL}${basePath}/${contactKey}.json`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(contact),
+    });
+
+    await loadDataAfterSave();
+    showcontactCardDetails(contactKey);
+  } else {
+    // Neuen Kontakt anlegen
+    const result = await postData(basePath, contact);
+    const newKey = result.name;
+
+    await loadDataAfterSave();
+    showcontactCardDetails(newKey);
   }
 
-  const contact = {
-    name,
-    email,
-    phone,
-  };
+  await loadDataAfterSave();
+  toggleOverlay();
+}
 
-  // Beispiel-Pfad – du kannst ihn dynamisch machen
-  const path = `users/raffael/contacts`;
 
-  postData(path, contact).then(() => {
-    alert("Kontakt gespeichert!");
-    toggleOverlay();
-  });
+
+async function loadDataAfterSave() {
+  const newContacts = await loadData("users/raffael/contacts");
+  contactsData = newContacts; // optional, wenn du den globalen Zustand behalten willst
+  renderContacts(newContacts);
 }
 
 async function sendContactData(path = "", data = {}) {
@@ -102,11 +137,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     contactsData = contacts; // ⬅️ global speichern
     renderContacts(contacts);
   }
+  console.log(contacts);
+  
 });
 
 function renderContacts(data) {
-  const container = document.querySelector(".contacsList");
+  const container = document.getElementById("contactCardsContainer");
   const infoContainer = document.getElementById("contactsDetails")
+
+  container.innerHTML = "";
 
   for (const key in data) {
     const contact = data[key];
@@ -137,6 +176,7 @@ function renderContacts(data) {
     // Karte zum Container hinzufügen
     container.appendChild(contactCard);
   }
+  
 }
 
 
@@ -161,7 +201,7 @@ function showcontactCardDetails(key) {
 </svg>
         <p class="pSmall">Edit</p>
       </div>
-      <div onclick="deleteContact('${key}')" class="DeleteContainer">
+      <div onclick="event.stopPropagation(); deleteContact('${key}')" class="DeleteContainer">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 <mask id="mask0_336135_3940" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
 <rect width="24" height="24" fill="#D9D9D9"/>
@@ -194,9 +234,18 @@ function showcontactCardDetails(key) {
 let derPfad = "users/raffael/contacts"
 
 function editContact(key) {
+  const contact = contactsData[key];
 
+  document.getElementById("contactKey").value = key;
+  document.getElementById("name").value = contact.name;
+  document.getElementById("email").value = contact.email;
+  document.getElementById("phone").value = contact.phone;
+
+  toggleOverlay();
 }
-function deleteContact(key) {
-deleteData(derPfad + "/" + key)
-
+async function deleteContact(key) {
+  await deleteData(derPfad + "/" + key);
+  document.getElementById("contactsDetails").innerHTML = ""; // ❌ Details leeren
+  document.getElementById("contactsDetails").classList.remove("showDetails"); // ❌ ggf. auch "ausblenden"
+  await loadDataAfterSave();
 }
