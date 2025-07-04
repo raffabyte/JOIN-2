@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initializeSubtaskInput();
     initializeDatePicker();
     initializeFormValidation();
+    initializeActiveStateHandling(); 
 });
 
 function initializeDropdowns() {
@@ -141,11 +142,11 @@ function initializeFormValidation() {
     const requiredFieldIds = ["title", "due-date", "category-input"];
     const allFieldIds = ["title", "description", "due-date", "assigned-to-input", "category-input", "subtasks"];
 
-  allFieldIds.forEach(id => {
-        const el = document.getElementById(id);
-        el?.addEventListener("change", () => validateField(el));
-        el?.addEventListener("blur", () => validateField(el));
-    });
+requiredFieldIds.forEach(id => { 
+    const el = document.getElementById(id);
+    el?.addEventListener("change", () => validateField(el));
+    el?.addEventListener("blur", () => validateField(el));
+});
 
     form.addEventListener("submit", (e) => {
         e.preventDefault();
@@ -157,25 +158,26 @@ function initializeFormValidation() {
             if (!validateField(field)) {
                 isFormValid = false;
             }
-        });
+        });      
         
-        const priorityGroup = document.querySelector('.priority-options');
-        if (!priorityGroup.querySelector('.priority-btn.selected')) {
-            showFieldError(priorityGroup.closest('.form-group'), "Please select a priority.");
-            isFormValid = false;
-        }
+const priorityGroup = document.querySelector('.priority-options');
+if (!priorityGroup.querySelector('.priority-btn.selected')) {
+    isFormValid = false;
+}
 
         if (isFormValid) {
             showTaskCreatedOverlay();
         }
     });
 
-    form.querySelector('.clear-button')?.addEventListener('click', () => {
-        form.reset();
-        form.querySelectorAll('.input-error, .input-valid').forEach(el => el.classList.remove('input-error', 'input-valid'));
-        form.querySelectorAll('.field-error').forEach(err => err.remove());
-        document.querySelectorAll('.priority-btn.selected').forEach(btn => btn.classList.remove('selected'));
-    });
+form.querySelector('.clear-button')?.addEventListener('click', () => {
+  form.reset();
+  form.querySelectorAll('.input-error, .input-valid').forEach(el => el.classList.remove('input-error', 'input-valid'));
+  form.querySelectorAll('.field-error').forEach(err => err.remove());
+  document.querySelectorAll('.priority-btn.selected').forEach(btn => btn.classList.remove('selected'));
+  
+   form.querySelectorAll('.is-active').forEach(el => el.classList.remove('is-active'));
+});
 }
 
 /**
@@ -219,6 +221,28 @@ function markFieldAsValid(formGroup) {
     input?.classList.remove("input-error");
     input?.classList.add("input-valid");
     removeFieldError(formGroup);
+}
+
+function initializeActiveStateHandling() {
+  const fields = document.querySelectorAll(
+    '#title, #description, #due-date, #assigned-to-input, #category-input, #subtasks'
+  );
+
+  fields.forEach(field => {
+    const eventHandler = (event) => {
+      // Bei Dropdowns den Wrapper, ansonsten das Feld selbst ansprechen
+      const elementToStyle = event.target.closest('.dropdown-input-wrapper') || event.target;
+      
+      if (event.target.value.trim() !== '') {
+        elementToStyle.classList.add('is-active');
+      } else {
+        elementToStyle.classList.remove('is-active');
+      }
+    };
+
+    field.addEventListener('input', eventHandler);
+    field.addEventListener('blur', eventHandler);
+  });
 }
 
 function showTaskCreatedOverlay() {
