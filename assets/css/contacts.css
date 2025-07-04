@@ -437,3 +437,25 @@ form {
   max-height: calc(100vh - 197px); /* passt sich dem Viewport an */
   overflow-y: auto;
 }
+
+.letterHeader {
+    display: flex;
+    align-items: center;
+    max-width: 352px;
+  width: 100%;
+  padding-left: 36px;
+  font-size: 20px;
+  font-weight: 400;
+  height: 58px;
+  flex-shrink: 0;
+  color: black;
+}
+
+.separatorList {
+    width: 100%;
+    max-width: 352px;
+    background-color: #D1D1D1;
+    border-radius: 8px;
+    height: 2px;
+    margin-bottom: 8px;
+}

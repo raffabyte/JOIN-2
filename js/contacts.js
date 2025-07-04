@@ -143,12 +143,29 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 function renderContacts(data) {
   const container = document.getElementById("contactCardsContainer");
-  const infoContainer = document.getElementById("contactsDetails")
-
   container.innerHTML = "";
 
-  for (const key in data) {
-    const contact = data[key];
+  // Kontakte in ein Array mit Keys packen und nach Name sortieren
+  const sortedEntries = Object.entries(data).sort((a, b) => {
+    return a[1].name.localeCompare(b[1].name);
+  });
+
+  let currentLetter = null;
+
+  for (const [key, contact] of sortedEntries) {
+    const firstLetter = contact.name[0].toUpperCase();
+
+    // Wenn sich der Anfangsbuchstabe ändert, eine neue Überschrift einfügen
+    if (firstLetter !== currentLetter) {
+      currentLetter = firstLetter;
+      const letterHeader = document.createElement("div");
+      letterHeader.className = "letterHeader";
+      letterHeader.innerText = currentLetter;
+      const separatorList = document.createElement("div");
+      separatorList.className = "separatorList";
+      container.appendChild(letterHeader);
+      container.appendChild(separatorList);
+    }
 
     const contactCard = document.createElement("div");
     contactCard.className = "contactCard";
@@ -161,23 +178,17 @@ function renderContacts(data) {
     `;
 
     contactCard.addEventListener("click", () => {
-      // Alle vorherigen deaktivieren
       const allCards = document.querySelectorAll(".contactCard");
       allCards.forEach(card => card.classList.remove("activeCard"));
-
-      // Diese hier aktivieren
       contactCard.classList.add("activeCard");
-      infoContainer.classList.add("showDetails")
-
-      // Details anzeigen
+      document.getElementById("contactsDetails").classList.add("showDetails");
       showcontactCardDetails(key);
     });
 
-    // Karte zum Container hinzufügen
     container.appendChild(contactCard);
   }
-  
 }
+
 
 
 function showcontactCardDetails(key) {
