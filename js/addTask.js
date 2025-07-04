@@ -13,8 +13,7 @@ function initializeDropdowns() {
         "Ella Meier", "David König", "Nina Berg", "Leo Schmitt", "Sophie Schwarz"
     ];
     const categoryOptions = [
-        "Bug / Issue", "Design", "Testing / QA", "Meeting / Planning",
-        "Documentation", "Research / Analysis", "Deployment / Release", "Maintenance / Support"
+        "Technical Task", "User Story"  
     ];
 
     setupDropdown('assigned-to-input', 'assigned-toggle-btn', 'assigned-to-options', contactOptions);
@@ -59,12 +58,23 @@ function renderDropdownOptions(dropdown, input, options) {
     dropdown.innerHTML = ""; 
     filteredOptions.forEach(optionText => {
         const li = document.createElement("li");
-        li.textContent = optionText;
-        li.addEventListener("click", () => {
-            input.value = optionText;
-            dropdown.classList.remove("show");
-            input.dispatchEvent(new Event('change')); 
-        });
+
+        if (dropdown.id === 'assigned-to-options') {
+            li.innerHTML = `
+                <label>
+                    <span>${optionText}</span>
+                    <input type="checkbox" class="contact-checkbox">
+                </label>
+            `;
+            
+        } else {
+            li.textContent = optionText;
+            li.addEventListener("click", () => {
+                input.value = optionText;
+                dropdown.classList.remove("show");
+                input.dispatchEvent(new Event('change'));
+            });
+        }
         dropdown.appendChild(li);
     });
     dropdown.classList.add("show");
