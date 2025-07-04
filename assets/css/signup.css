@@ -1,8 +1,13 @@
 
 * {
     font-family: 'Inter', sans-serif;
+    box-sizing: content-box;
   }
-
+body {
+    flex-direction: column;
+    padding: 0;
+    background-color: #F6F7F8;
+}
 /*   ---------- Header ---------- */
 header {
     display: flex; 
@@ -42,6 +47,7 @@ main {
     display: flex; 
     justify-content: center; 
     align-items: center; 
+    margin-top: 60px;
     /* min-height: calc(100vh - 120px); */
 }
 
@@ -50,6 +56,7 @@ main {
     padding: 48px 100px; 
     border-radius: 30px; 
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    background-color: white;
 }
 
 button {
