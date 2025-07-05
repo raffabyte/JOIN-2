@@ -1,34 +1,39 @@
-.content {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    padding: 110px 96px;
-    background-color: #F6F7F8;
-    flex: 1;
-}
-
-#join-logo {
+/* Basisstatus: Beide Logos unsichtbar */
+.join-logo-desktop,
+.join-logo-mobile {
     position: absolute;
-    height: 100px;
+    height: 121px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) scale(2);
     opacity: 0;
-    transition: opacity 0.5s ease, top 0.5s ease, left 0.5s ease, transform 0.5s ease;
-}
-  
-#join-logo.fade-in {
-    opacity: 1;
+    visibility: hidden;
+    transition: opacity 0.5s ease, transform 0.5s ease, top 0.5s ease, left 0.5s ease;
 }
 
-#join-logo.moved {
+/* Sichtbar gemachtes Logo */
+.join-logo-desktop.visible,
+.join-logo-mobile.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Nach oben links bewegt */
+.join-logo-desktop.moved,
+.join-logo-mobile.moved {
     top: 40px;
     left: 40px;
-    transform: translate(0, 0) scale(1);
+    transform: translate(0,0) scale(1);
 }
 
-body.loaded #join-logo {
-    top: 0;
-    left: 0;
-    transform: none;
-  }
+/* Mobile Hintergrund */
+@media (max-width: 768px) {
+    body {
+        background: #2A3647 !important;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0 !important;
+        transition: background-color 0.8s ease;
+    }
+}

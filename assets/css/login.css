@@ -1,5 +1,6 @@
 * {
     font-family: 'Inter', sans-serif;
+    box-sizing: content-box;
   }
 .content {
     display: flex;
@@ -10,9 +11,10 @@
     flex: 1;
 }
 body{
-    padding: 0 !important;
-    background: #f6f7f9;
+    padding: 0;
+    background: #F6F7F8;;
     margin: 0;
+    flex-direction: column;
 }
 
 header {
@@ -22,7 +24,8 @@ header {
 }
 
 header img {
-    height: 100px;
+    height: 121px;
+    width: 100px;
     padding-top: 40px;
     padding-left: 40px;
 }
@@ -64,6 +67,7 @@ main {
     border-radius: 30px; 
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     background: white;
+    
 }
 
 button {
@@ -140,6 +144,7 @@ button {
     border-radius: 8px; 
     cursor: pointer; 
     font-size: 18px;
+    border: solid 1px;
 }
 
 
@@ -148,8 +153,6 @@ button {
     color: red;
 }
 footer {
-    position: absolute;
-    bottom: 0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -161,4 +164,42 @@ footer a {
     margin: 0 15px; 
     text-decoration: none; 
     color: #CDCDCD;
+}
+
+@media (max-width: 768px) {
+    header img {
+        height: 78px;
+        width: 64px;
+    }
+    .login-container {
+        padding: 0 20px;
+    }
+    .login-container h2 {
+        font-size: 47px;
+        margin-block-start: 0;
+        margin-block-end: 0;
+        margin-bottom: 30px;
+    }
+    .login-container input {
+        width: 320px; 
+    }
+    .mail_icon {
+        background-position-x: 300px;
+        background-position-y: 12px;
+    }
+    .lock_icon {
+        background-position-x: 300px;
+    }
+    .login-buttons {
+        flex-direction: column;
+        gap: 21px;
+    }
+    .login-btn {
+        width: 150px;
+        margin-right: 0;
+    }
+    .guest-login-btn {
+        margin-top: 0;
+        width: 150px;
+    }
 }
