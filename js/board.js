@@ -1,3 +1,10 @@
+const userKey = localStorage.getItem("loggedInUserKey");
+
+if (!userKey) {
+  // Kein Benutzer eingeloggt → weiterleiten
+  window.location.href = "../../index.html";
+}
+
 
 const OVERLAY = document.getElementById('overlay');
 const OVERLAY_CONTENT = document.getElementById('overlayContent');

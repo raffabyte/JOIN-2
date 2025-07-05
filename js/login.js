@@ -145,6 +145,7 @@ async function login() {
       const user = users[key];
       if (user.email === email && user.password === password) {
         found = true;
+        localStorage.setItem("loggedInUserKey", key);
         window.location.href = "../index/summary.html";
         break;
       }

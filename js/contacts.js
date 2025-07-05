@@ -1,3 +1,13 @@
+const userKey = localStorage.getItem("loggedInUserKey");
+
+if (!userKey) {
+  // Kein Benutzer eingeloggt → weiterleiten
+  window.location.href = "../../index.html";
+}
+
+const basePath = `users/${userKey}/contacts`;
+
+
 let contactsData = {};
 
 console.log(contactsData);
@@ -85,7 +95,6 @@ async function submitContact(event) {
   const contactKey = document.getElementById("contactKey").value.trim();
 
   const contact = { name, email, phone };
-  const basePath = `users/raffael/contacts`;
 
   if (contactKey) {
     // Bestehenden Kontakt aktualisieren
@@ -97,6 +106,8 @@ async function submitContact(event) {
 
     await loadDataAfterSave();
     showcontactCardDetails(contactKey);
+    activateContactCard(contactKey);
+    document.getElementById("contactsDetails").classList.add("showDetails");
   } else {
     // Neuen Kontakt anlegen
     const result = await postData(basePath, contact);
@@ -104,16 +115,17 @@ async function submitContact(event) {
 
     await loadDataAfterSave();
     showcontactCardDetails(newKey);
+    activateContactCard(newKey);
+    document.getElementById("contactsDetails").classList.add("showDetails");
   }
 
-  await loadDataAfterSave();
   toggleOverlay();
 }
 
 
 
 async function loadDataAfterSave() {
-  const newContacts = await loadData("users/raffael/contacts");
+  const newContacts = await loadData(`users/${userKey}/contacts`);
   contactsData = newContacts; // optional, wenn du den globalen Zustand behalten willst
   renderContacts(newContacts);
 }
@@ -130,7 +142,7 @@ async function sendContactData(path = "", data = {}) {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const contacts = await loadData("users/raffael/contacts");
+  const contacts = await loadData(`users/${userKey}/contacts`);
 
   if (contacts) {
     contactsData = contacts; // ⬅️ global speichern
@@ -263,8 +275,6 @@ function showcontactCardDetails(key) {
   `;
 }
 
-let derPfad = "users/raffael/contacts"
-
 function editContact(key) {
   const contact = contactsData[key];
 
@@ -292,8 +302,29 @@ function editContact(key) {
   toggleOverlay();
 }
 async function deleteContact(key) {
-  await deleteData(derPfad + "/" + key);
+  await deleteData(`users/${userKey}/contacts/${key}`);
   document.getElementById("contactsDetails").innerHTML = ""; // ❌ Details leeren
   document.getElementById("contactsDetails").classList.remove("showDetails"); // ❌ ggf. auch "ausblenden"
   await loadDataAfterSave();
+}
+
+function activateContactCard(key) {
+  document.querySelectorAll(".contactCard").forEach(card =>
+    card.classList.remove("activeCard")
+  );
+
+  // Karte mit Name und Mail finden
+  const container = document.getElementById("contactCardsContainer");
+  const cards = container.querySelectorAll(".contactCard");
+
+  for (let card of cards) {
+    const nameText = card.querySelector(".contactName")?.innerText.trim();
+    const emailText = card.querySelector(".contactMail")?.innerText.trim();
+    const contact = contactsData[key];
+
+    if (contact.name === nameText && contact.email === emailText) {
+      card.classList.add("activeCard");
+      break;
+    }
+  }
 }

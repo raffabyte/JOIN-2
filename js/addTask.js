@@ -1,3 +1,11 @@
+const userKey = localStorage.getItem("loggedInUserKey");
+
+if (!userKey) {
+  // Kein Benutzer eingeloggt → weiterleiten
+  window.location.href = "../../index.html";
+}
+
+
 document.addEventListener("DOMContentLoaded", initAddTaskPage);
 
 
