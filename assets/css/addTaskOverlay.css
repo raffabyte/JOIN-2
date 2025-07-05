@@ -44,17 +44,10 @@ h2{
 
 .overlay-header button{
     position: absolute;
-    right: 0;
-    top: 0;
     width: 32px;
     height: 32px;
-    background: transparent;
-    border: none;
-    border-radius: 56px;
-}
-
-.overlay-header button:hover{
-    background: #E7E7E7;
+    right: 0;
+    top: 0;
 }
 
 .middle-vector{
@@ -134,12 +127,12 @@ textarea.inputs {
     height: 100px;
     resize: none;
 }
-textarea.inputs:focus-visible, input.inputs:focus, #taskAssignee:focus-visible, #taskCategory:focus-visible {
+textarea.inputs:focus-visible, input.inputs:focus, #taskAssignee:focus-visible, #taskCategory:focus-visible .inputs:focus, .inputs:focus-within{
     border-color: #29ABE2;
     outline: none;
 }
 
-.inputs::placeholder {
+.inputs::placeholder , .inputs input::placeholder{
     color: #D1D1D1;
     font-size: 20px;
     font-weight: 400;
@@ -316,4 +309,76 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 .category-option:hover {
     background: #E7E7E7;
+}
+
+.input-add-cancel-wrapper{
+    justify-content: space-between;
+}
+#subtasksList{
+    width: 100%;
+    margin-bottom: 8px;
+}
+.subtask-item{
+    width: 100%;
+}
+.subtask{
+    width: 100%;
+    padding: 4px 21px;
+    border-radius: 10px;
+    cursor: pointer;
+    justify-content: space-between;
+}
+
+.subtask:hover {
+    background: #E7E7E7;
+}
+.subtask span {
+    font-size: 16px;
+    font-weight: 400;
+}
+
+#subtasksList{
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+}
+.edit-subtask-input-wrapper{
+    width: 100%;
+    justify-content: space-between;
+    padding: 4px 21px;
+    border-bottom: #29ABE2 1px solid;
+}
+.edit-subtask-input{
+    width: 100%;
+}
+
+.overlay-button{
+    width: 24px;
+    height: 24px;
+    background: transparent;
+    border: none;
+    border-radius: 56px;
+}
+
+.overlay-button:hover{
+    background: #E7E7E7;
+    transform: scale(1.05);
+}
+
+.gap-8 {
+    gap: 8px;
+}
+
+.input-add-cancel-wrapper input{
+    width: 100%;
+}
+
+#subtaskHintMessage{
+    color: #FF8190;
+    font-size: 16px;
+    width: 100%;
+    text-align: left;
+}
+.correct-me:focus-within, .correct-me:focus{
+    border: 1px solid #FF8190;
 }
