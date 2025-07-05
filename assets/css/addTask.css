@@ -364,3 +364,126 @@ input.contact-checkbox:checked::after {
     background-repeat: no-repeat;
     background-position: center;
 }
+
+.subtask-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.subtask-input-container .subtask-icon-group {
+    position: absolute;
+    right: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: white; 
+    padding-left: 5px;
+}
+
+.subtask-input-container img {
+    height: 20px;
+    transition: transform 0.1s ease-in-out;
+}
+
+.subtask-input-container img:hover {
+    transform: scale(1.1);
+}
+
+.icon-divider {
+    color: #d1d1d1;
+    font-size: 20px;
+}
+
+.subtask-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.subtask-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.subtask-list li::before {
+    content: '•';
+    margin-right: 10px;
+    font-size: 20px;
+    color: #2A3647;
+}
+
+.subtask-list li:hover {
+    background-color: #eeeeee;
+}
+
+.subtask-list li .subtask-actions {
+    display: none; 
+    align-items: center;
+    gap: 8px;
+}
+
+.subtask-list li:hover .subtask-actions {
+    display: flex; 
+}
+
+.subtask-list li .subtask-actions img {
+    height: 20px;
+}
+
+.subtask-list li input.edit-subtask-input {
+    flex-grow: 1;
+    border: none;
+    background-color: transparent;
+    font-size: 16px;
+    outline: none;
+    font-family: 'Inter', sans-serif;
+    margin: 0 10px;
+}
+
+.subtask-input-container:hover #subtask-icons-default {
+    display: flex !important;
+}
+
+.subtask-icon-group {
+    position: absolute;
+    right: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: white;
+    padding-left: 5px;
+}
+
+.icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    padding: 4px;
+    transition: all 0.2s ease;
+}
+
+.icon-wrapper:hover {
+    background-color: #D1D1D1;
+    cursor: pointer;
+}
+
+.icon-wrapper img {
+    height: 20px;
+    width: 20px;
+}
+
+.invert-icon img {
+    filter: invert(1);
+}
+
+
