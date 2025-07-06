@@ -200,6 +200,36 @@ span {
 
 
 
+.initials-button {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  width: 56px;
+  height: 56px;
+}
+
+.initials-button img {
+  width: 56px;
+  height: 56px;
+  display: block;
+}
+
+.initials-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #29ABE2;
+  font-weight: bold;
+  font-size: 20px;
+  pointer-events: none;
+}
+
+
 @media (min-width: 1930px) {
   nav {
     left: 50%;

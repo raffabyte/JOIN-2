@@ -5,8 +5,9 @@ function header() {
             <a href="help.html" id="helpLink">
                 <img class="help" src="../img/SummaryUser/help.png" alt="" />
             </a>
-            <button onclick="toggleMenu()" id="userProfile">
-                <img src="../img/SummaryUser/User profile initials.png" alt="">
+            <button onclick="toggleMenu()" id="userProfile" class="initials-button">
+                <img src="../img/Ellipse 3.png" alt="">
+                <span id="userInitials" class="initials-text"></span>
             </button>
             <div class="flexC not-visible" id="menu">
                 <a href="../index/legal-notice.html">Legal notice</a>
@@ -15,6 +16,30 @@ function header() {
             </div>
         </div>
     `
+}
+
+async function setUserInitials() {
+  const initialsEl = document.getElementById("userInitials");
+  if (!initialsEl || !userKey) return;
+
+  try {
+    const response = await fetch(`${BASE_URL}users/${userKey}.json`);
+    const user = await response.json();
+
+    if (user?.name) {
+      const initials = user.name
+        .split(" ")
+        .map(word => word[0].toUpperCase())
+        .slice(0, 2)
+        .join("");
+      initialsEl.innerText = initials;
+    } else {
+      initialsEl.innerText = "?";
+    }
+  } catch (error) {
+    console.error("Fehler beim Laden der Userdaten:", error);
+    initialsEl.innerText = "?";
+  }
 }
 
 function linkesNav(activePage) {
