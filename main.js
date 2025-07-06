@@ -84,3 +84,14 @@ async function init(){
     showHideHelpAndUser();
     await setUserInitials();
 }
+
+function contactIconSpan(name){
+    splitedName = name.split(" ");
+    if (splitedName.length >= 3) {
+        return splitedName[0][0].toUpperCase() + " " + splitedName[2][0].toUpperCase();
+    }else if (splitedName.length === 2) {
+        return splitedName[0][0].toUpperCase() + " " + splitedName[1][0].toUpperCase();
+    }else if (splitedName.length === 1) {
+        return splitedName[0][0].toUpperCase();
+    }
+}

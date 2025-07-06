@@ -87,3 +87,35 @@ function linkesNavLogin(activePage) {
     </div>`
 }
 
+function taskCardTemplate(task) {
+    return `
+        <div class="task-card flexC" id="${task.id}" draggable="true" ondragstart="startDragging(${task.id})">
+            <div class="task-card-header flexR">
+                <span id="userStory">${task.category}</span>
+            </div>
+            <h3>${task.title}</h3>
+            <p class="task-description" id="taskDescription">${task.description}</p>
+            <div class="subtasks" id="subtasks"></div>
+            <div class="task-card-footer flexR">
+                <div class="task-members" id="taskMembers">
+                    ${
+                    Array.isArray(task.assignee)
+                    ? task.assignee.map(name => renderMembers(name)).join(''): ''
+                }
+                </div>
+                <img src="../img/Bord/${task.priority}.png" alt="priority">
+            </div>
+        </div>`;
+}
+
+function noTaskCardTemplate() {
+    return `
+        <div class="no-task-item flexR">
+            <p>No Tasks to do</p>
+        </div>`;
+}
+
+function contactIconSpanTemplate(name) {
+    return `
+    <span class="contact-icon flexR" data-name="${name}">${contactIconSpan(name)}</span>`;
+}

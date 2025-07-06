@@ -267,3 +267,7 @@ span {
     left: 54px;
     z-index: 3;
 }
+
+.space-between {
+    justify-content: space-between;
+}
