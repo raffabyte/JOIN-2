@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="../fonts/Inter/font.css" />
     <link rel="stylesheet" href="../css/NavHeader.css" />
     <link rel="stylesheet" href="../css/addTask.css" />
+    <link rel="stylesheet" href="../css/subtasks.css" />
 </head>
 
 <body onload="init()">
@@ -35,11 +36,14 @@
                         </div>
                         <div class="form-group">
                             <label for="due-date">Due Date<span class="required-asterisk">*</span></label>
-                            <div class="date-picker">
-                                <input type="text" id="due-date" placeholder="dd/mm/yyyy" />
-                                <button type="button" id="calendar-toggle" class="calendar-btn">
-                                    <img src="../img/addTaskPage/calendar.png" alt="Open calendar" />
-                                </button>
+
+                            <div class="field-wrapper">
+                                <div class="date-picker">
+                                    <input type="text" id="due-date" placeholder="dd/mm/yyyy" />
+                                    <button type="button" id="calendar-toggle" class="calendar-btn">
+                                        <img src="../img/addTaskPage/calendar.png" alt="Open calendar" />
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -109,15 +113,19 @@
                         </div>
                         <div class="form-group">
                             <label for="category-input">Category<span class="required-asterisk">*</span></label>
-                            <div class="dropdown">
-                                <div class="dropdown-input-wrapper">
-                                    <input id="category-input" type="text" placeholder="Select task category"
-                                        autocomplete="off" />
-                                    <button id="category-toggle-btn" type="button" class="dropdown-toggle">▼</button>
+                            <div class="field-wrapper">
+                                <div class="dropdown">
+                                    <div class="dropdown-input-wrapper">
+                                        <input id="category-input" type="text" placeholder="Select task category"
+                                            autocomplete="off" />
+                                        <button id="category-toggle-btn" type="button"
+                                            class="dropdown-toggle">▼</button>
+                                    </div>
+                                    <ul id="category-options" class="dropdown-options"></ul>
                                 </div>
-                                <ul id="category-options" class="dropdown-options"></ul>
                             </div>
                         </div>
+
                         <div class="form-group">
                             <label for="subtasks">Subtasks</label>
 
@@ -141,27 +149,28 @@
                                 </div>
                             </div>
 
-                        <ul id="subtask-list" class="subtask-list"></ul>
+                            <ul id="subtask-list" class="subtask-list"></ul>
+                        </div>
                     </div>
                 </div>
-        </div>
-        <div class="form-footer">
-            <div class="footer-left">
-                <small class="validation-hint">
-                    <span class="required-asterisk">*</span>This field is required
-                </small>
-            </div>
-            <div class="footer-right form-buttons flexR">
-                <button type="reset" class="clear-button">Clear ✖</button>
-                <button type="submit" class="create-button">Create Task ✔</button>
-            </div>
-        </div>
+                <div class="form-footer">
+                    <div class="footer-left">
+                        <small class="validation-hint">
+                            <span class="required-asterisk">*</span>This field is required
+                        </small>
+                    </div>
+                    <div class="footer-right form-buttons flexR">
+                        <button type="reset" class="clear-button">Clear ✖</button>
+                        <button type="submit" class="create-button">Create Task ✔</button>
+                    </div>
+                </div>
 
-        </form>
+            </form>
         </div>
     </main>
 
     <script src="../templates/templates.js"></script>
     <script src="../../main.js"></script>
+    <script src="../../js/subtasks.js"></script>
     <script src="../../js/addTask.js"></script>
 </body>

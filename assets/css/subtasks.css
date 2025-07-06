@@ -1,0 +1,153 @@
+.subtask-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.subtask-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.subtask-list li::before {
+    content: '•';
+    margin-right: 10px;
+    font-size: 20px;
+    color: #2A3647;
+}
+
+.subtask-list li:hover {
+    background-color: #eeeeee;
+}
+
+.subtask-list li.editing,
+.subtask-list li:has(input.edit-subtask-input) {
+    background-color: white !important;
+    border-bottom: 2px solid #29ABE2;
+    padding-bottom: 4px;
+    cursor: default;
+}
+
+.subtask-list li .subtask-actions,
+.subtask-list li .subtask-edit-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.subtask-list li:hover .subtask-actions {
+    display: flex;
+}
+
+.icon-divider {
+    color: #d1d1d1;
+    font-size: 20px;
+    margin: 0 4px;
+    user-select: none;
+}
+
+.edit-subtask-input {
+    flex-grow: 1;
+    border: none;
+    background-color: white;
+    padding: 4px 8px;
+    font-size: 14px;
+    width: 100%;
+    height: 24px;
+    outline: none;
+}
+
+.edit-subtask-input:focus {
+    box-shadow: none !important;
+    border-color: transparent !important;
+}
+
+.subtask-edit-actions img,
+.subtask-actions img {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    filter: invert(0.5);
+}
+
+.subtask-edit-actions img:hover,
+.subtask-actions img:hover {
+    background-color: #eeeeee;
+    border-radius: 50%;
+    filter: invert(0.3);
+}
+
+#subtasks {
+    padding-right: 64px; /* Platz für Icons rechts */
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+#subtasks:focus {
+    border: 1px solid #29ABE2 !important;
+    box-shadow: 0 0 3px #29ABE2;
+}
+
+.subtask-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.subtask-input-container:hover #subtask-icons-default {
+    display: flex !important;
+}
+
+#subtask-icons-default {
+    display: flex !important; /* <— DAS muss gesetzt sein */
+}
+
+#subtask-icons-active {
+    display: none;
+}
+
+
+
+
+.subtask-icon-group {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: white;
+    padding-left: 5px;
+}
+
+.icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    padding: 4px;
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+}
+
+.icon-wrapper:hover {
+    background-color: #eeeeee;
+}
+
+
+.invert-icon img {
+    filter: invert(0.5);
+    transition: filter 0.2s ease;
+}
+
+.icon-wrapper:hover .invert-icon img {
+    filter: invert(0.3);
+}
