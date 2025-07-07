@@ -1,7 +1,6 @@
 const userKey = localStorage.getItem("loggedInUserKey");
 
 if (!userKey) {
-  // Kein Benutzer eingeloggt → weiterleiten
   window.location.href = "../../index.html";
 }
 
@@ -326,3 +325,4 @@ function activateContactCard(key) {
     }
   }
 }
+

@@ -161,3 +161,58 @@ async function login() {
 }
 
 window.addEventListener('DOMContentLoaded', initLogin);
+
+
+async function startGuestSession() {
+  const guestId = `guest_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+  const guestData = {
+    name: "Guest",
+    email: `guest_${Date.now()}@example.com`,
+    password: "",
+    guest: true
+  };
+
+  // User speichern
+  await fetch(`${BASE_URL}users/guests/${guestId}.json`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(guestData)
+  });
+
+  // 🔽 Demo-Kontakte hinzufügen
+  await preloadGuestContacts(`guests/${guestId}`);
+
+  // Session merken
+  localStorage.setItem("loggedInUserKey", `guests/${guestId}`);
+  localStorage.setItem("guestMode", "true");
+
+  // Weiterleitung
+  window.location.href = "../index/summary.html";
+}
+
+async function preloadGuestContacts(userPath) {
+  const contactsPath = `users/${userPath}/contacts`;
+
+  for (const contact of demoContacts) {
+    await fetch(`${BASE_URL}${contactsPath}.json`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(contact)
+    });
+  }
+}
+
+const demoContacts = [
+  { name: "Anna Becker", email: "anna@example.com", phone: "123456789" },
+  { name: "Tom Meier", email: "tom@example.com", phone: "987654321" },
+  { name: "Lisa Schmidt", email: "lisa@example.com", phone: "555123456" },
+  { name: "Peter Braun", email: "peter@example.com", phone: "333222111" },
+  { name: "Nina Keller", email: "nina@example.com", phone: "444555666" },
+  { name: "Max Fischer", email: "max@example.com", phone: "666777888" },
+  { name: "Julia König", email: "julia@example.com", phone: "777888999" },
+  { name: "Leon Wagner", email: "leon@example.com", phone: "111222333" },
+  { name: "Emma Roth", email: "emma@example.com", phone: "222333444" },
+  { name: "Paul Weber", email: "paul@example.com", phone: "999000111" }
+];
