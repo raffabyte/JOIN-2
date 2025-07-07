@@ -39,12 +39,19 @@
 
                             <div class="field-wrapper">
                                 <div class="date-picker">
-                                    <input type="text" id="due-date" placeholder="dd/mm/yyyy" />
-                                    <button type="button" id="calendar-toggle" class="calendar-btn">
-                                        <img src="../img/addTaskPage/calendar.png" alt="Open calendar" />
+                                    <input type="date" id="due-date" />
+                                    <button type="button" id="calendar-toggle" class="calendar-btn"
+                                        aria-label="Open calendar">
+                                        <svg class="calendar-icon" width="22" height="22" viewBox="0 0 18 20"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M11.5 16C10.8 16 10.2083 15.7583 9.725 15.275C9.24167 14.7917 9 14.2 9 13.5C9 12.8 9.24167 12.2083 9.725 11.725C10.2083 11.2417 10.8 11 11.5 11C12.2 11 12.7917 11.2417 13.275 11.725C13.7583 12.2083 14 12.8 14 13.5C14 14.2 13.7583 14.7917 13.275 15.275C12.7917 15.7583 12.2 16 11.5 16ZM2 20C1.45 20 0.979167 19.8042 0.5875 19.4125C0.195833 19.0208 0 18.55 0 18V4C0 3.45 0.195833 2.97917 0.5875 2.5875C0.979167 2.19583 1.45 2 2 2H3V1C3 0.716667 3.09583 0.479167 3.2875 0.2875C3.47917 0.0958333 3.71667 0 4 0C4.28333 0 4.52083 0.0958333 4.7125 0.2875C4.90417 0.479167 5 0.716667 5 1V2H13V1C13 0.716667 13.0958 0.479167 13.2875 0.2875C13.4792 0.0958333 13.7167 0 14 0C14.2833 0 14.5208 0.0958333 14.7125 0.2875C14.9042 0.479167 15 0.716667 15 1V2H16C16.55 2 17.0208 2.19583 17.4125 2.5875C17.8042 2.97917 18 3.45 18 4V18C18 18.55 17.8042 19.0208 17.4125 19.4125C17.0208 19.8042 16.55 20 16 20H2ZM2 18H16V8H2V18ZM2 6H16V4H2V6Z"
+                                                fill="#2A3647" />
+                                        </svg>
                                     </button>
                                 </div>
                             </div>
+
                         </div>
                     </div>
 
@@ -106,20 +113,40 @@
                                 <div class="dropdown-input-wrapper">
                                     <input id="assigned-to-input" type="text" placeholder="Select contacts"
                                         autocomplete="off" />
-                                    <button id="assigned-toggle-btn" type="button" class="dropdown-toggle">▼</button>
+                                    <button id="assigned-toggle-btn" type="button" class="dropdown-toggle"
+                                        aria-label="Toggle assigned">
+                                        <svg class="dropdown-arrow" width="16" height="10" viewBox="0 0 8 5"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M3.54854 4.3L0.948535 1.7C0.631868 1.38333 0.561035 1.02083 0.736035 0.6125C0.911035 0.204167 1.22354 0 1.67354 0H6.82354C7.27354 0 7.58603 0.204167 7.76103 0.6125C7.93604 1.02083 7.8652 1.38333 7.54853 1.7L4.94854 4.3C4.84854 4.4 4.7402 4.475 4.62354 4.525C4.50687 4.575 4.38187 4.6 4.24854 4.6C4.1152 4.6 3.9902 4.575 3.87354 4.525C3.75687 4.475 3.64854 4.4 3.54854 4.3Z"
+                                                fill="#2A3647" />
+                                        </svg>
+                                    </button>
+
                                 </div>
                                 <ul id="assigned-to-options" class="dropdown-options"></ul>
+
+
+
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="category-input">Category<span class="required-asterisk">*</span></label>
                             <div class="field-wrapper">
                                 <div class="dropdown">
-                                    <div class="dropdown-input-wrapper">
+                                    <div class="dropdown-input-wrapper no-focus">
                                         <input id="category-input" type="text" placeholder="Select task category"
                                             autocomplete="off" />
-                                        <button id="category-toggle-btn" type="button"
-                                            class="dropdown-toggle">▼</button>
+                                        <button id="category-toggle-btn" type="button" class="dropdown-toggle"
+                                            aria-label="Toggle category">
+                                            <svg class="dropdown-arrow" width="16" height="10" viewBox="0 0 8 5"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M3.54854 4.3L0.948535 1.7C0.631868 1.38333 0.561035 1.02083 0.736035 0.6125C0.911035 0.204167 1.22354 0 1.67354 0H6.82354C7.27354 0 7.58603 0.204167 7.76103 0.6125C7.93604 1.02083 7.8652 1.38333 7.54853 1.7L4.94854 4.3C4.84854 4.4 4.7402 4.475 4.62354 4.525C4.50687 4.575 4.38187 4.6 4.24854 4.6C4.1152 4.6 3.9902 4.575 3.87354 4.525C3.75687 4.475 3.64854 4.4 3.54854 4.3Z"
+                                                    fill="#2A3647" />
+                                            </svg>
+                                        </button>
+
                                     </div>
                                     <ul id="category-options" class="dropdown-options"></ul>
                                 </div>
@@ -130,47 +157,77 @@
                             <label for="subtasks">Subtasks</label>
 
                             <div class="subtask-input-container">
-                                <input type="text" id="subtasks" placeholder="Add new subtask" autocomplete="off" />
+                                <div class="inputs input-add-cancel-wrapper flexR" id="inputBox">
+                                    <input type="text" id="subtasks" placeholder="Add new subtask" autocomplete="off"
+                                        oninput="checkSubtask(this.value.length)" onfocus="showAddCancelBtns()" />
 
-                                <div id="subtask-icons-default" class="subtask-icon-group">
-                                    <div class="icon-wrapper invert-icon">
-                                        <img src="../img/Bord/add.png" alt="Add subtask" />
+                                    <button class="plus-button overlay-button" id="subtaskPlusBtn" type="button"
+                                        onclick="showAddCancelBtns()">
+                                        <svg width="15" height="14" viewBox="0 0 15 14" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M6.24854 8H1.24854C0.965202 8 0.727702 7.90417 0.536035 7.7125C0.344368 7.52083 0.248535 7.28333 0.248535 7C0.248535 6.71667 0.344368 6.47917 0.536035 6.2875C0.727702 6.09583 0.965202 6 1.24854 6H6.24854V1C6.24854 0.716667 6.34437 0.479167 6.53604 0.2875C6.7277 0.0958333 6.9652 0 7.24854 0C7.53187 0 7.76937 0.0958333 7.96104 0.2875C8.1527 0.479167 8.24854 0.716667 8.24854 1V6H13.2485C13.5319 6 13.7694 6.09583 13.961 6.2875C14.1527 6.47917 14.2485 6.71667 14.2485 7C14.2485 7.28333 14.1527 7.52083 13.961 7.7125C13.7694 7.90417 13.5319 8 13.2485 8H8.24854V13C8.24854 13.2833 8.1527 13.5208 7.96104 13.7125C7.76937 13.9042 7.53187 14 7.24854 14C6.9652 14 6.7277 13.9042 6.53604 13.7125C6.34437 13.5208 6.24854 13.2833 6.24854 13V8Z"
+                                                fill="#2A3647" />
+                                        </svg>
+                                    </button>
+
+                                    <div class="add-cancel-btns flexR display-none gap-8" id="addCancelBtns">
+                                        <button class="cancel-subtask-button overlay-button" type="button"
+                                            onclick="cancelSubtask()">
+                                            <svg width="13" height="14" viewBox="0 0 13 14" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M6.24953 7.00008L11.4925 12.2431M1.00653 12.2431L6.24953 7.00008L1.00653 12.2431ZM11.4925 1.75708L6.24853 7.00008L11.4925 1.75708ZM6.24853 7.00008L1.00653 1.75708L6.24853 7.00008Z"
+                                                    stroke="#2A3647" stroke-width="2" stroke-linecap="round"
+                                                    stroke-linejoin="round" />
+                                            </svg>
+                                        </button>
+
+                                        <svg width="2" height="24" viewBox="0 0 2 24" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M1 0V24" stroke="#D1D1D1" />
+                                        </svg>
+
+                                        <button class="add-subtask-button overlay-button" type="button"
+                                            onclick="addSubtask('subtasks')">
+                                            <svg width="16" height="12" viewBox="0 0 16 12" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M5.79911 9.15L14.2741 0.675C14.4741 0.475 14.7116 0.375 14.9866 0.375C15.2616 0.375 15.4991 0.475 15.6991 0.675C15.8991 0.875 15.9991 1.1125 15.9991 1.3875C15.9991 1.6625 15.8991 1.9 15.6991 2.1L6.49911 11.3C6.29911 11.5 6.06578 11.6 5.79911 11.6C5.53245 11.6 5.29911 11.5 5.09911 11.3L0.799113 7C0.599113 6.8 0.50328 6.5625 0.511613 6.2875C0.519946 6.0125 0.624113 5.775 0.824113 5.575C1.02411 5.375 1.26161 5.275 1.53661 5.275C1.81161 5.275 2.04911 5.375 2.24911 5.575L5.79911 9.15Z"
+                                                    fill="#2A3647" />
+                                            </svg>
+                                        </button>
                                     </div>
                                 </div>
-
-                                <div id="subtask-icons-active" class="subtask-icon-group" style="display: none;">
-                                    <div class="icon-wrapper">
-                                        <img src="../img/Close.png" id="subtask-clear-btn" alt="Clear input" />
-                                    </div>
-                                    <span class="icon-divider">|</span>
-                                    <div class="icon-wrapper invert-icon">
-                                        <img src="../img/check.png" id="subtask-confirm-btn" alt="Confirm subtask" />
-                                    </div>
-                                </div>
+                                <ul id="subtask-list" class="subtask-list"></ul>
                             </div>
-
-                            <ul id="subtask-list" class="subtask-list"></ul>
                         </div>
-                    </div>
-                </div>
-                <div class="form-footer">
-                    <div class="footer-left">
-                        <small class="validation-hint">
-                            <span class="required-asterisk">*</span>This field is required
-                        </small>
-                    </div>
-                    <div class="footer-right form-buttons flexR">
-                        <button type="reset" class="clear-button">Clear ✖</button>
-                        <button type="submit" class="create-button">Create Task ✔</button>
-                    </div>
-                </div>
 
-            </form>
+
+                        <ul id="subtask-list" class="subtask-list"></ul>
+                    </div>
+                </div>
+        
+      <div class="form-footer flexR">
+    <div class="footer-left flexR">
+      <small class="validation-hint">
+        <span class="required-asterisk">*</span>This field is required
+      </small>
+    </div>
+
+    <div class="footer-right form-buttons flexR">
+      <button type="reset" class="clear-button">Clear ✖</button>
+      <button type="submit" class="create-button">Create Task ✔</button>
+    </div>
+  </div>
+</form>
+        </div>
         </div>
     </main>
 
     <script src="../templates/templates.js"></script>
     <script src="../../main.js"></script>
-    <script src="../../js/subtasks.js"></script>
+    <script src="../../js/remoteStorage.js"></script>
     <script src="../../js/addTask.js"></script>
+
 </body>

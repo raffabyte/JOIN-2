@@ -69,23 +69,8 @@
     border-color: transparent !important;
 }
 
-.subtask-edit-actions img,
-.subtask-actions img {
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    filter: invert(0.5);
-}
-
-.subtask-edit-actions img:hover,
-.subtask-actions img:hover {
-    background-color: #eeeeee;
-    border-radius: 50%;
-    filter: invert(0.3);
-}
-
 #subtasks {
-    padding-right: 64px; /* Platz für Icons rechts */
+    padding-right: 64px;
     transition: box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
@@ -101,53 +86,52 @@
     width: 100%;
 }
 
-.subtask-input-container:hover #subtask-icons-default {
-    display: flex !important;
+/* Icon-Gruppen */
+
+.input-add-cancel-wrapper {
+    position: relative;
+    width: 100%;
 }
 
-#subtask-icons-default {
-    display: flex !important; /* <— DAS muss gesetzt sein */
-}
-
-#subtask-icons-active {
-    display: none;
-}
-
-
-
-
-.subtask-icon-group {
+.add-cancel-btns {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     position: absolute;
     right: 12px;
     top: 50%;
     transform: translateY(-50%);
-    display: flex;
-    align-items: center;
-    gap: 8px;
     background-color: white;
-    padding-left: 5px;
 }
 
-.icon-wrapper {
+.display-none {
+    display: none !important;
+}
+
+.overlay-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    padding: 4px;
     transition: background-color 0.2s ease;
-    cursor: pointer;
 }
 
-.icon-wrapper:hover {
+.overlay-button svg {
+    width: 20px;
+    height: 20px;
+    pointer-events: none;
+    fill: #2A3647;
+    transition: fill 0.2s ease;
+}
+
+.overlay-button:hover {
     background-color: #eeeeee;
 }
 
-
-.invert-icon img {
-    filter: invert(0.5);
-    transition: filter 0.2s ease;
-}
-
-.icon-wrapper:hover .invert-icon img {
-    filter: invert(0.3);
+.overlay-button:hover svg {
+    fill: #1F2A3D;
 }
