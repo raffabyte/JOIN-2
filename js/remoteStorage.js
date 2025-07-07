@@ -1,9 +1,5 @@
 function onloadFunc() {
-    console.log("test");
-    putData("users/Raffa", {
-        email: "raffa@hotmail.com",
-        password: "raffa1234"
-     })
+    
 }
 
 const BASE_URL = "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/";

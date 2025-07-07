@@ -72,11 +72,26 @@ function addHeader() {
 
     HEADER.innerHTML = header();
 }
-
-function init(){
+const BASE_URL =
+  "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/";
+  
+async function init(){
     // Initialize the header and navigation menu based on the current page
     // This function is called when the page loads
+    
     addHeader();
     linkesNavMenuVersion();
     showHideHelpAndUser();
+    await setUserInitials();
+}
+
+function contactIconSpan(name){
+    splitedName = name.split(" ");
+    if (splitedName.length >= 3) {
+        return splitedName[0][0].toUpperCase() + " " + splitedName[2][0].toUpperCase();
+    }else if (splitedName.length === 2) {
+        return splitedName[0][0].toUpperCase() + " " + splitedName[1][0].toUpperCase();
+    }else if (splitedName.length === 1) {
+        return splitedName[0][0].toUpperCase();
+    }
 }

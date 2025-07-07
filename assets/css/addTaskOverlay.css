@@ -270,6 +270,27 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .assignee-option:hover {
     background: #E7E7E7;
 }
+.selcted-assignee{
+    background: #2A3647;
+    color: white;
+}
+.selcted-assignee:hover {
+    background: #091931;
+    color: white;
+}
+.contact-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 2px solid white;
+    font-size: 12px !important;
+    font-weight: 400;
+    color: white;
+    background: #FF7A00;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 .assignee-option span{
     font-size: 20px;
@@ -368,6 +389,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .gap-8 {
     gap: 8px;
 }
+.gap-16{
+    gap: 16px;
+}
 
 .input-add-cancel-wrapper input{
     width: 100%;
@@ -379,6 +403,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     width: 100%;
     text-align: left;
 }
-.correct-me:focus-within, .correct-me:focus{
-    border: 1px solid #FF8190;
+.correct-me, .correct-me:focus-within, .correct-me:focus{
+    border: 1px solid #FF8190 !important;
 }

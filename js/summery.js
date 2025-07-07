@@ -2,6 +2,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   addHeader();
   linkesNavMenuVersion();
   showHideHelpAndUser();
+  await setUserInitials();
   await init();
 });
 
@@ -12,8 +13,6 @@ if (!userKey) {
   window.location.href = "../../index.html";
 }
 
-const BASE_URL =
-  "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/";
 
 async function loadUserData() {
   const response = await fetch(`${BASE_URL}users/${userKey}.json`);

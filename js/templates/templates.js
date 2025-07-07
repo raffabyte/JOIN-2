@@ -5,8 +5,9 @@ function header() {
             <a href="help.html" id="helpLink">
                 <img class="help" src="../img/SummaryUser/help.png" alt="" />
             </a>
-            <button onclick="toggleMenu()" id="userProfile">
-                <img src="../img/SummaryUser/User profile initials.png" alt="">
+            <button onclick="toggleMenu()" id="userProfile" class="initials-button">
+                <img src="../img/Ellipse 3.png" alt="">
+                <span id="userInitials" class="initials-text"></span>
             </button>
             <div class="flexC not-visible" id="menu">
                 <a href="../index/legal-notice.html">Legal notice</a>
@@ -15,6 +16,30 @@ function header() {
             </div>
         </div>
     `
+}
+
+async function setUserInitials() {
+  const initialsEl = document.getElementById("userInitials");
+  if (!initialsEl || !userKey) return;
+
+  try {
+    const response = await fetch(`${BASE_URL}users/${userKey}.json`);
+    const user = await response.json();
+
+    if (user?.name) {
+      const initials = user.name
+        .split(" ")
+        .map(word => word[0].toUpperCase())
+        .slice(0, 2)
+        .join("");
+      initialsEl.innerText = initials;
+    } else {
+      initialsEl.innerText = "?";
+    }
+  } catch (error) {
+    console.error("Fehler beim Laden der Userdaten:", error);
+    initialsEl.innerText = "?";
+  }
 }
 
 function linkesNav(activePage) {
@@ -62,3 +87,35 @@ function linkesNavLogin(activePage) {
     </div>`
 }
 
+function taskCardTemplate(task) {
+    return `
+        <div class="task-card flexC" id="${task.id}" draggable="true" ondragstart="startDragging(${task.id})">
+            <div class="task-card-header flexR">
+                <span id="userStory">${task.category}</span>
+            </div>
+            <h3>${task.title}</h3>
+            <p class="task-description" id="taskDescription">${task.description}</p>
+            <div class="subtasks" id="subtasks"></div>
+            <div class="task-card-footer flexR">
+                <div class="task-members" id="taskMembers">
+                    ${
+                    Array.isArray(task.assignee)
+                    ? task.assignee.map(name => renderMembers(name)).join(''): ''
+                }
+                </div>
+                <img src="../img/Bord/${task.priority}.png" alt="priority">
+            </div>
+        </div>`;
+}
+
+function noTaskCardTemplate() {
+    return `
+        <div class="no-task-item flexR">
+            <p>No Tasks to do</p>
+        </div>`;
+}
+
+function contactIconSpanTemplate(name) {
+    return `
+    <span class="contact-icon flexR" data-name="${name}">${contactIconSpan(name)}</span>`;
+}

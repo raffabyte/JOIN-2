@@ -10,12 +10,12 @@ function addTaskOverlayForm() {
 
             </button>
             </div>
-            <form id="addTaskForm" class="overlay-bottom flexC" onsubmit="addTask()">
+            <form id="addTaskForm" class="overlay-bottom flexC" onsubmit="addTask(event)">
                 <div class="flexR task-form-top">
                     <div class="flexC task-form-column">
                         <div class="task-form flexC">
                             <label for="taskTitle">Title<span class="highlight">*</span></label>
-                            <input class="inputs" type="text" id="taskTitle" name="taskTitle" placeholder="Enter a title" required>
+                            <input class="inputs requierd-input" type="text" id="taskTitle" name="taskTitle" placeholder="Enter a title" >
                             <span class="required-span display-none">This field is required</span>
                         </div>
 
@@ -26,7 +26,7 @@ function addTaskOverlayForm() {
 
                         <div class="task-form flexC">
                             <label for="taskDueDate">Due date<span class="highlight">*</span></label>
-                            <input class="inputs" type="date" id="taskDueDate" name="taskDueDate" required min="" onfocus="this.min=new Date().toISOString().split('T')[0]">
+                            <input class="inputs requierd-input" type="date" id="taskDueDate" name="taskDueDate" min="" onfocus="this.min=new Date().toISOString().split('T')[0]">
                             <span class="required-span display-none">This field is required</span>
                         </div>
                     </div>
@@ -72,36 +72,30 @@ function addTaskOverlayForm() {
                                 <input  class="inputs" type="text" id="taskAssignee" placeholder="Select Contacts to assign" oninput="searchAssignee(this.value)"
                                         onclick="toggleAssigneeOptions(); event.stopPropagation(); ">
                                 <div id="assigneeOptions" class="assignee-options display-none">
-                                    <div class="assignee-option" onclick="selectAssignee('Unassigned')">
-                                       <span class="assignee-name">Unassigned</span>
+                                    <div class="assignee-option flexR space-between" onclick="selectAssignee(this); highligtSlected(this)">
+                                        <div class="gap-16 flexR">
+                                            <span class="contact-icon">U C</span> 
+                                            <span class="contact-name">Unassigned Contact</span>
+                                        </div>
+                                        <svg class="checkbox" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <rect x="1" y="1" width="16" height="16" rx="3" stroke="#2A3647" stroke-width="2"/>
+                                        </svg>
+                                        <svg class="checkbox-filled display-none" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M20 11V17C20 18.6569 18.6569 20 17 20H7C5.34315 20 4 18.6569 4 17V7C4 5.34315 5.34315 4 7 4H15" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                                            <path d="M8 12L12 16L20 4.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
                                     </div>
-                                    <div class="assignee-option" onclick="selectAssignee('Unassigned')">
-                                       <span class="assignee-name">Unassigned</span>
-                                    </div>
-                                    <div class="assignee-option" onclick="selectAssignee('Unassigned')">
-                                       <span class="assignee-name">Unassigned</span>
-                                    </div>
-                                    <div class="assignee-option" onclick="selectAssignee('Unassigned')">
-                                      <span class="assignee-name">Unassigned</span>
-                                    </div>
-                                    <div class="assignee-option" onclick="selectAssignee('Unassigned')">
-                                       <span class="assignee-name">Unassigned</span>
-                                    </div>
-                                    <div class="assignee-option" onclick="selectAssignee('Unassigned')">
-                                        <span class="assignee-name">Unassigned</span>
-                                    </div>
+                                    
                                 </div>
                             </div>
                             <div class="selected-assignee flexR display-none" id="selectedAssignee">
-                                <img src="../img/Bord/member1.png" alt="Member 1">
-                                <img src="../img/Bord/member2.png" alt="Member 2">
-                                <img src="../img/Bord/member3.png" alt="Member 3">
+                                
                             </div>
                         </div>
                         <div class="task-form flexC">
                             <label for="taskCategory">Category<span class="highlight">*</span></label>
                             <div class="category-options">
-                                <button class="inputs" type="button" id="taskCategory" onclick="toggleCategoryOptions(); event.stopPropagation();" required>Select task category</button>
+                                <button class="inputs requierd-input" type="button" id="taskCategory" onclick="toggleCategoryOptions(); event.stopPropagation();">Select task category</button>
                                 <div class="category-options-list display-none flexC" id="categoryOptions">
                                     <span onclick="selectCategory('User Story');" class="category-option" value="userStory">User Story</span>
                                     <span onclick="selectCategory('Technical Task');" class="category-option" value="technicalTask">Technical Task</span>
@@ -144,7 +138,8 @@ function addTaskOverlayForm() {
                 </div>
                 <div class="flexR task-form-bottom">
                     <span>
-                    <span class="highlight">*</span>This field is required</span>
+                        <span class="highlight">*</span>
+                        This field is required</span>
                     <div class="flexR add-task-footer-btns">
                         <button type="button" id="closeOverlayButton" onclick="closeOverlay()">
                             Cancel

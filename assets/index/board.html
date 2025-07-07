@@ -83,16 +83,11 @@
             </div>
             <div class="board-bottom flexR">
                 <div class="board-column" id="todoColumn">
-                    <!-- Tasks will be dynamically added here -->
-                    <!-- no tasks card 
-                         must be moved to templates afterwordes -->
-                    <div class="no-task-item flexR">
-                        <p>No Tasks to do</p>
-                    </div>
 
                 </div>
-                <div class="board-column" id="inProgressColumn">
-                    <!-- Tasks will be dynamically added here -->
+                <div class="board-column" id="inProgressColumn"
+                ondrop="moveTo('inProgressColumn')" ondragleave="removeHighlight('inProgressColumn')" ondragover="allowDrop(event); highlight('inProgressColumn')">
+                    
                     <div class="task-card flexC">
                         <div class="task-card-header flexR">
                             <span id="userStory">User Story</span>
@@ -117,6 +112,9 @@
                 </div>
                 <div class="board-column" id="awaitFeedbackColumn">
                     <!-- Tasks will be dynamically added here -->
+                    <div class="no-task-item flexR display-none">
+                        <p>No Tasks to do</p>
+                    </div>
                     <div class="task-card flexC">
                         <div class="task-card-header flexR">
                             <span class="display-none" id="userStory">User Story</span>
@@ -137,6 +135,9 @@
                 </div>
                 <div class="board-column" id="doneColumn">
                     <!-- Tasks will be dynamically added here -->
+                    <div class="no-task-item flexR display-none">
+                        <p>No Tasks to do</p>
+                    </div>
                     <div class="task-card flexC">
                         <div class="task-card-header flexR">
                             <span class="display-none" id="userStory">User Story</span>
@@ -160,10 +161,11 @@
     </main>
 
     <!-- scripts  -->
-    <script src="../templates/templates.js"></script>
+    <script src="../../js/templates/addTaskOverlayTemplates.js"></script>
     <script src="../../js/board.js"></script>
     <script src="../../main.js"></script>
-    <script src="../templates/addTaskOverlayTemplates.js"></script>
+    <script src="../../js/templates/templates.js"></script>
+    <script src="../../js/addTaskOverlay.js"></script>
 
 </body>
 

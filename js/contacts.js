@@ -46,9 +46,6 @@ function openNewContactForm() {
   toggleOverlay();
 }
 
-const BASE_URL =
-  "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/";
-
 async function loadData(path = "") {
   let response = await fetch(BASE_URL + path + ".json");
   return (responseToJson = await response.json());
@@ -143,6 +140,7 @@ async function sendContactData(path = "", data = {}) {
 
 document.addEventListener("DOMContentLoaded", async () => {
   const contacts = await loadData(`users/${userKey}/contacts`);
+  await setUserInitials();
 
   if (contacts) {
     contactsData = contacts; // ⬅️ global speichern

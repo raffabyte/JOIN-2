@@ -7,6 +7,8 @@ if (!userKey) {
 
 const OVERLAY = document.getElementById('overlay');
 const OVERLAY_CONTENT = document.getElementById('overlayContent');
+const BASE_URL = 'https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks.json';
+
 
 function addTaskOverlay() {
     // Set the overlay content to the add task form
@@ -49,199 +51,124 @@ function notContentClickClose(event) {
 }
 
 
-function PriorityHandler(priority) {
-    // Hole alle Priority-Buttons per Klasse
-    const buttons = document.querySelectorAll('.priority-button');
-    buttons.forEach(btn => btn.classList.remove('active'));
+let saveTaskData = () => {
+    const TASKTITLE = document.getElementById('taskTitle').value;
+    const TASKDESCRIPTION = document.getElementById('taskDescription').value;
+    const TASKDUEDATE = document.getElementById('taskDueDate').value;
+    const TASKCATEGORY = document.getElementById('taskCategory').textContent;
+    const TASKASSIGNEE = Array.from(document.querySelectorAll('#selectedAssignee .contact-icon')).map(span => span.dataset.name);
+    const PRIORITY_BTN = document.querySelector('.priority-button.active');
+    const PRIORITY = PRIORITY_BTN ? PRIORITY_BTN.classList[PRIORITY_BTN.classList.length - 1] : '';
+    const SUBTASKS = Array.from(document.querySelectorAll('.subtask-text')).map(subtask => subtask.textContent);
+    const RQUIRED_SPAN_HINT = document.querySelectorAll('.required-span');
+    const REQUIRED_INPUTS = document.querySelectorAll('.requierd-input');
 
-    buttons.forEach(btn => {
-        switch (priority) {
-            case 'high':
-                if (btn.classList.contains('HighPriority')) btn.classList.add('active');
-                break;
-            case 'medium':
-                if (btn.classList.contains('MidPriority')) btn.classList.add('active');
-                break;
-            case 'low':
-                if (btn.classList.contains('LowPriority')) btn.classList.add('active');
-                break;
+    let taskData = {
+        title: TASKTITLE,
+        description: TASKDESCRIPTION,
+        dueDate: TASKDUEDATE,
+        category: TASKCATEGORY,
+        assignee: TASKASSIGNEE,
+        priority: PRIORITY,
+        subtasks: SUBTASKS,
+        column: 'todoColumn' // Standardmäßig in der To-Do-Spalte
+    };
+    // Validierung der Eingabedaten
+    if (!TASKTITLE || !TASKDUEDATE || !TASKCATEGORY) {
+        RQUIRED_SPAN_HINT.forEach(span => {
+            span.classList.remove('display-none');
+            REQUIRED_INPUTS.forEach(input => {
+                input.classList.add('correct-me');
+            });
+
+        });
+        return null;
+    } else {
+        return taskData;
+    }
+}
+
+
+function taskDataPush() {
+    const taskData = saveTaskData();
+    if (!taskData) {
+        return;
+    }
+
+    fetch(BASE_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(taskData)
+    })
+}
+
+function updateColumns(tasks) {
+    const todoColumn = document.getElementById('todoColumn');
+    const inProgressColumn = document.getElementById('inProgressColumn');
+    const awaitFeedbackColumn = document.getElementById('awaitFeedbackColumn');
+    const doneColumn = document.getElementById('doneColumn');
+
+    todoColumn.innerHTML = '';
+    inProgressColumn.innerHTML = '';
+    doneColumn.innerHTML = '';
+    awaitFeedbackColumn.innerHTML = '';
+
+    tasks.forEach(task => {
+        let taskCard = taskCardTemplate(task);
+        if (task.column === 'todoColumn') {
+            todoColumn.innerHTML += taskCard;
+        } else if (task.column === 'inProgressColumn') {
+            inProgressColumn.innerHTML += taskCard;
+        } else if (task.column === 'awaitFeedbackColumn') {
+            awaitFeedbackColumn.innerHTML += taskCard;
+        } else if (task.column === 'doneColumn') {
+            doneColumn.innerHTML += taskCard;
+        }
+
+    }
+    );
+}
+function checkEmptyColumn() {
+    const boardColumns = document.querySelectorAll('.board-column');
+    boardColumns.forEach(column => {
+        if (!column.querySelector('.task-card')) {
+            column.innerHTML = noTaskCardTemplate();
         }
     });
 }
 
-function toggleAssigneeOptions() {
-    const  ASSIGNEEOPTIONS = document.getElementById('assigneeOptions');
-    
-    ASSIGNEEOPTIONS.classList.toggle('display-none');
-    ASSIGNEEOPTIONS.classList.toggle('active');
-}
-
-function toggleCategoryOptions() {
-    const CATEGORYOPTIONS = document.getElementById('categoryOptions');
-    
-    CATEGORYOPTIONS.classList.toggle('display-none');
-    CATEGORYOPTIONS.classList.toggle('active');
-}
-
-function selectCategory(category) {
-    const TASKCATEGORY = document.getElementById('taskCategory');
-    const CATEGORYOPTIONS = document.getElementById('categoryOptions');
-
-    TASKCATEGORY.textContent = category;
-    CATEGORYOPTIONS.classList.add('display-none');
-    CATEGORYOPTIONS.classList.remove('active');
-    
-}
-
-
-
-document.addEventListener('click', function(event) {
-    const categoryOptions = document.getElementById('categoryOptions');
-    if (categoryOptions && categoryOptions.classList.contains('active')) {
-        if (!categoryOptions.contains(event.target) && event.target.id !== 'taskCategory') {
-            categoryOptions.classList.add('display-none');
-            categoryOptions.classList.remove('active');
-        }
-    }
-});
-
-document.addEventListener('click' , function(event) {
-
-    const assigneeOptions = document.getElementById('assigneeOptions');
-    if (assigneeOptions && assigneeOptions.classList.contains('active')) {
-        if (!assigneeOptions.contains(event.target) && event.target.id !== 'taskAssignee') {
-            assigneeOptions.classList.add('display-none');
-            assigneeOptions.classList.remove('active');
-        }
-    }
-});
-
-
-document.addEventListener('click', function(event) {
-    const inputFeld = document.getElementById('inputBox');
-    const plusBtn = document.getElementById('subtaskPlusBtn');
-    const addCancelBtns = document.getElementById('addCancelBtns');
-    const  HINT_MESSAGE_DIV = document.getElementById('subtaskHintMessage');
-
-     if (inputFeld && !inputFeld.contains(event.target)) {
-        plusBtn.classList.remove('display-none');
-        addCancelBtns.classList.add('display-none');
-        HINT_MESSAGE_DIV.classList.add('display-none');
-     }
-
-    if (inputFeld && inputFeld.classList.contains('correct-me')) {
-        if (!inputFeld.contains(event.target)) {
-            inputFeld.classList.remove('correct-me');
-        }
-    }
-});
-
-function onEnterAddSubTask(subtaskInput){
-    if (subtaskInput && !subtaskInput._enterListenerAdded) {
-        subtaskInput.addEventListener('keydown', function(event) {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                addSubtask(subtaskInput.id);
-            }
+function updateBoard() {
+    fetch(BASE_URL)
+        .then(response => response.json())
+        .then(data => {
+            const tasks = Object.values(data || {}).map((task, index) => ({
+                ...task,
+                id: index + 1 // Assign a unique ID based on the index
+            }));
+            updateColumns(tasks)
+            checkEmptyColumn();
         });
-        subtaskInput._enterListenerAdded = true;
+}
+
+
+
+function addTask(event) {
+    if (event) event.preventDefault();
+    const taskData = saveTaskData();
+
+    if (!taskData) {
+        return;
     }
+
+    taskDataPush();
+    updateBoard();
+    closeOverlay();
 }
 
-function onEnterEditSubTask(editInput){
-    if (editInput && !editInput._enterListenerAdded) {
-        editInput.addEventListener('keydown', function(event) {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                finalEditditSubtask(editInput);
-            }
-        });
-        editInput._enterListenerAdded = true;
-    }
-}
+function renderMembers() {
+    Array.isArray(task.assignee)
+        ? task.assignee.map(name => contactIconSpanTemplate(name)).join('') : ''
 
-function showAddCancelBtns() {
-    const plusBtn = document.getElementById('subtaskPlusBtn');
-    const addCancelBtns = document.getElementById('addCancelBtns');
-
-    plusBtn.classList.add('display-none');
-    addCancelBtns.classList.remove('display-none');
-}
-
-function cancelSubtask(){
-    const subtaskInput = document.getElementById('subtasks');
-    const plusBtn = document.getElementById('subtaskPlusBtn');
-    const addCancelBtns = document.getElementById('addCancelBtns');
-
-    subtaskInput.value = '';
-    plusBtn.classList.remove('display-none');
-    addCancelBtns.classList.add('display-none');
-}
-
-function addSubtask(subtaskInput){
-    let inputValue = document.getElementById(subtaskInput).value;
-    const  HINT_MESSAGE_DIV = document.getElementById('subtaskHintMessage');
-    const INPUT_FELD = document.getElementById('inputBox');
-    const SUBTASKS_LIST = document.getElementById('subtasksList');
-    
-    checkSubtask(inputValue.length);
-    if(HINT_MESSAGE_DIV.classList.contains('display-none')){
-        SUBTASKS_LIST.classList.remove('display-none');
-        SUBTASKS_LIST.innerHTML += addSubTaskTemplate(inputValue);
-        document.getElementById('subtasks').value = '';
-    }else{
-        INPUT_FELD.classList.add('correct-me');
-    }
-}
-
-function showAlertMessage() {
-    const  HINT_MESSAGE_DIV = document.getElementById('subtaskHintMessage');
-
-    HINT_MESSAGE_DIV.classList.add('display-none');
-}
-
-function checkSubtask(subtaskInput){
-    const  HINT_MESSAGE_DIV = document.getElementById('subtaskHintMessage');
-    const INPUT_FELD = document.getElementById('inputBox');
-
-    if(subtaskInput <= 2){
-        HINT_MESSAGE_DIV.classList.remove('display-none');
-    }else{
-        HINT_MESSAGE_DIV.classList.add('display-none');
-        INPUT_FELD.classList.remove('correct-me');
-    }
-}
-
-function deleteSubtask(subtask){
-    subtask.closest('.subtask-item').remove();
-}
-
-function editSubtask(btn) {
-    let subtask = btn.closest('.subtask-item');
-    let subtaskDisplay = subtask.querySelector('.subtask');
-    let editDiv = subtask.querySelector('.edit-subtask-input-wrapper');
-    let toEditText = subtask.querySelector('.subtask-text').textContent;
-
-    // Toggle Anzeige
-    subtaskDisplay.classList.add('display-none');
-    editDiv.classList.remove('display-none');
-    const editInput = editDiv.querySelector('.edit-subtask-input');
-    editInput.value = toEditText;
-    // Enter-Listener für Edit-Input setzen
-    onEnterEditSubTask(editInput);
-}
-
-
-function finalEditditSubtask(subtask){
-    let subtaskItem = subtask.closest('.subtask-item');
-    let editDiv = subtaskItem.querySelector('.edit-subtask-input-wrapper');
-    let subtaskDisplay = subtaskItem.querySelector('.subtask');
-    let input = editDiv.querySelector('.edit-subtask-input');
-    let newText = input.value;
-
-    // Text aktualisieren
-    subtaskItem.querySelector('.subtask-text').textContent = newText;
-    // Edit-Modus ausblenden, Anzeige wieder einblenden
-    editDiv.classList.add('display-none');
-    subtaskDisplay.classList.remove('display-none');
 }
