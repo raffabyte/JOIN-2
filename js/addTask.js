@@ -1,14 +1,13 @@
-
-
 const userKey = localStorage.getItem("loggedInUserKey");
-
 if (!userKey) {
   window.location.href = "../../index.html";
 }
 
+// Initialisierung nach DOM-Load
 document.addEventListener("DOMContentLoaded", initAddTaskPage);
 
 function initAddTaskPage() {
+  console.log("🚀 initAddTaskPage gestartet");
   initDropdowns();
   initPriorityButtons();
   initSubtaskControls();
@@ -16,25 +15,19 @@ function initAddTaskPage() {
   initFormValidation();
 }
 
+// 🧑‍🤝‍🧑 Nutzer laden (außer aktuell eingeloggtem)
 async function loadAssignableUsers() {
   const userKey = localStorage.getItem("loggedInUserKey");
   if (!userKey) return [];
 
   try {
     const users = await loadData("users");
-    const userList = [];
-
-    for (let key in users) {
-      if (key !== userKey) {
-        const user = users[key];
-        userList.push({
-          name: extractName(user.email),
-          email: user.email,
-        });
-      }
-    }
-
-    return userList;
+    return Object.entries(users)
+      .filter(([key]) => key !== userKey)
+      .map(([, user]) => ({
+        name: extractName(user.email),
+        email: user.email,
+      }));
   } catch (error) {
     console.error("Fehler beim Laden der Nutzer:", error);
     return [];
@@ -55,16 +48,12 @@ function setupDropdown(inputId, optionsId, options, isMultiSelect) {
   const input = document.getElementById(inputId);
   const dropdown = document.getElementById(optionsId);
   const toggleBtnId =
-    inputId === "assigned-to-input"
-      ? "assigned-toggle-btn"
-      : "category-toggle-btn";
+    inputId === "assigned-to-input" ? "assigned-toggle-btn" : "category-toggle-btn";
   const toggle = document.getElementById(toggleBtnId);
 
   if (!input || !dropdown || !toggle) return;
 
-  const render = () =>
-    renderDropdownOptions(dropdown, input, options, isMultiSelect);
-
+  const render = () => renderDropdownOptions(dropdown, input, options, isMultiSelect);
   addDropdownEventListeners(input, toggle, dropdown, render);
   handleOutsideClick(input, dropdown, toggle);
 }
@@ -76,7 +65,6 @@ function addDropdownEventListeners(input, toggle, dropdown, renderFn) {
   toggle.addEventListener("click", (e) => {
     e.stopPropagation();
     const isOpen = dropdown.classList.contains("show");
-
     dropdown.classList.toggle("show", !isOpen);
     toggle.classList.toggle("open", !isOpen);
     if (!isOpen) renderFn();
@@ -85,11 +73,7 @@ function addDropdownEventListeners(input, toggle, dropdown, renderFn) {
 
 function handleOutsideClick(input, dropdown, toggle) {
   document.addEventListener("click", (e) => {
-    if (
-      !input.contains(e.target) &&
-      !dropdown.contains(e.target) &&
-      !toggle.contains(e.target)
-    ) {
+    if (!input.contains(e.target) && !dropdown.contains(e.target) && !toggle.contains(e.target)) {
       dropdown.classList.remove("show");
       toggle.classList.remove("open");
     }
@@ -112,32 +96,32 @@ function renderDropdownOptions(dropdown, input, options, isMultiSelect) {
   dropdown.classList.add("show");
 }
 
-function createDropdownOption(text, isMultiSelect, input, dropdown) {
+function createDropdownOption(option, isMultiSelect, input, dropdown) {
   const li = document.createElement("li");
-  li.innerHTML = getDropdownOptionHTML(text, isMultiSelect);
+  li.innerHTML = getDropdownOptionHTML(option, isMultiSelect);
 
   if (!isMultiSelect) {
     li.addEventListener("click", () => {
-      input.value = text;
+      input.value = option;
       dropdown.classList.remove("show");
     });
   }
+
   return li;
 }
 
 function getDropdownOptionHTML(option, isMultiSelect) {
   if (typeof option === "string") return option;
-
   const initials = getInitials(option.name);
   const color = generateColor(initials);
 
   return `
-        <label class="dropdown-user-option">
-            <span class="user-badge" style="background-color:${color};">${initials}</span>
-            <span class="user-name">${option.name}</span>
-            <input type="checkbox" class="contact-checkbox">
-        </label>
-    `;
+    <label class="dropdown-user-option">
+      <span class="user-badge" style="background-color:${color};">${initials}</span>
+      <span class="user-name">${option.name}</span>
+      <input type="checkbox" class="contact-checkbox">
+    </label>
+  `;
 }
 
 function initPriorityButtons() {
@@ -145,13 +129,13 @@ function initPriorityButtons() {
   if (!container) return;
 
   container.addEventListener("click", (e) => {
-    const clickedButton = e.target.closest(".priority-btn");
-    if (!clickedButton) return;
+    const clicked = e.target.closest(".priority-btn");
+    if (!clicked) return;
 
-    container
-      .querySelectorAll(".priority-btn")
-      .forEach((btn) => btn.classList.remove("selected"));
-    clickedButton.classList.add("selected");
+    container.querySelectorAll(".priority-btn").forEach(btn =>
+      btn.classList.remove("selected")
+    );
+    clicked.classList.add("selected");
   });
 }
 
@@ -159,34 +143,43 @@ function initDatePicker() {
   const dateInput = document.getElementById("due-date");
   const calendarToggle = document.getElementById("calendar-toggle");
 
-  if (!dateInput || !calendarToggle) return;
+  if (!dateInput || !calendarToggle) {
+    console.warn("⚠️ DatePicker Elemente nicht gefunden");
+    return;
+  }
 
   calendarToggle.addEventListener("click", () => {
+    console.log("📅 calendar toggle clicked");
     dateInput.focus();
     dateInput.showPicker?.();
   });
 }
 
+
 function initFormValidation() {
   const form = document.querySelector(".task-form");
   if (!form) return;
 
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const createButton = form.querySelector(".create-button");
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const createButton = form.querySelector('.create-button');
 
-    if (isFormValid(form)) {
-      disableButton(createButton, true);
-      showTaskCreatedOverlay();
-    }
-  });
+  if (isFormValid(form)) {
+    disableButton(createButton, true);
+    showTaskCreatedOverlay();
+  }
+});
+
 }
 
+
 function isFormValid(form) {
+  console.log("✅ Validierung läuft"); // <-- muss vor return stehen!
+
   const requiredIds = ["title", "due-date", "category-input"];
   let isValid = true;
 
-  requiredIds.forEach((id) => {
+  requiredIds.forEach(id => {
     const input = document.getElementById(id);
     if (!validateInput(input)) isValid = false;
   });
@@ -196,10 +189,16 @@ function isFormValid(form) {
   return isValid;
 }
 
-function validateInput(input) {
-  clearFieldError(input);
-  const value = input.value.trim();
 
+function validateInput(input) {
+  if (!input) {
+    console.warn("❗ validateInput: input not found");
+    return false;
+  }
+
+  clearFieldError(input);
+
+  const value = input.value.trim();
   if (!value) {
     showFieldError(input, "This field is required");
     return false;
@@ -207,6 +206,7 @@ function validateInput(input) {
 
   return true;
 }
+
 
 function validatePriority(form) {
   const priorityContainer = form.querySelector(".priority-options");
@@ -216,20 +216,14 @@ function validatePriority(form) {
     priorityContainer.classList.add("input-error");
     return false;
   }
-
   priorityContainer.classList.remove("input-error");
   return true;
 }
 
-function disableButton(button, isDisabled) {
-  button.disabled = isDisabled;
-  button.style.opacity = isDisabled ? "0.7" : "1";
-}
-
 function showFieldError(input, message) {
   input.classList.add("input-error");
-
   let wrapper = input.parentElement;
+
   if (wrapper.classList.contains("dropdown-input-wrapper")) {
     wrapper = wrapper.parentElement.parentElement;
   }
@@ -242,26 +236,27 @@ function showFieldError(input, message) {
   }
 
   errorEl.textContent = message;
-  console.log("Wrapper gefunden für", input.id, "=", wrapper);
-
 }
 
 function clearFieldError(input) {
   input.classList.remove("input-error");
+  const wrapper = input.closest(".form-group") || input.parentElement;
+  const errorEl = wrapper.querySelector(".field-error");
+  if (errorEl) errorEl.remove();
+}
 
-  const errorEl = input.parentElement.querySelector(".field-error");
-  if (errorEl) {
-    errorEl.remove();
-  }
+function disableButton(button, isDisabled) {
+  button.disabled = isDisabled;
+  button.style.opacity = isDisabled ? "0.7" : "1";
 }
 
 function showTaskCreatedOverlay() {
   const overlay = document.createElement("div");
   overlay.className = "task-overlay";
   overlay.innerHTML = `
-        <span>Task added to board</span>
-        <img src="../img/Board.png" alt="Board Icon" class="task-overlay-img">
-    `;
+    <span>Task added to board</span>
+    <img src="../img/Board.png" alt="Board Icon" class="task-overlay-img">
+  `;
   document.body.appendChild(overlay);
 
   setTimeout(() => {
@@ -276,14 +271,14 @@ function extractName(email) {
   const namePart = email.split("@")[0].replace(/[._]/g, " ");
   return namePart
     .split(" ")
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
     .join(" ");
 }
 
 function getInitials(name) {
   return name
     .split(" ")
-    .map((n) => n[0])
+    .map(n => n[0])
     .join("")
     .toUpperCase()
     .slice(0, 2);
@@ -292,16 +287,8 @@ function getInitials(name) {
 function generateColor(initials) {
   const hash = [...initials].reduce((acc, char) => acc + char.charCodeAt(0), 0);
   const colors = [
-    "#FF8A00",
-    "#E200BE",
-    "#6E52FF",
-    "#9327FF",
-    "#00BEE8",
-    "#1FD7C1",
-    "#FF5C00",
-    "#E97200",
+    "#FF8A00", "#E200BE", "#6E52FF", "#9327FF",
+    "#00BEE8", "#1FD7C1", "#FF5C00", "#E97200"
   ];
   return colors[hash % colors.length];
 }
-
-console.log("✅ addTask.js loaded successfully");

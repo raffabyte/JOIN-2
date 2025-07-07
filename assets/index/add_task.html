@@ -28,14 +28,14 @@
                     <div class="form-column left-column">
                         <div class="form-group">
                             <label for="title">Title<span class="required-asterisk">*</span></label>
-                            <input type="text" id="title" required placeholder="Enter a title" />
+                            <input type="text" id="title" placeholder="Enter a title" />
                         </div>
                         <div class="form-group">
                             <label for="description">Description</label>
                             <textarea id="description" placeholder="Enter a description"></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="due-date" type="date" id="due-date" required>Due Date<span class="required-asterisk">*</span></label>
+                            <label>Due Date<span class="required-asterisk">*</span></label>
 
                             <div class="field-wrapper">
                                 <div class="date-picker">
@@ -135,8 +135,8 @@
                             <div class="field-wrapper">
                                 <div class="dropdown">
                                     <div class="dropdown-input-wrapper no-focus">
-                                        <input id="category-input" type="text" id="category-input" requiredplaceholder="Select task category"
-                                            autocomplete="off" />
+                                        <input id="category-input" type="text" placeholder="Select task category" autocomplete="off" />
+
                                         <button id="category-toggle-btn" type="button" class="dropdown-toggle"
                                             aria-label="Toggle category">
                                             <svg class="dropdown-arrow" width="16" height="10" viewBox="0 0 8 5"
@@ -153,16 +153,14 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="subtasks">Subtasks</label>
+                       <div class="form-group">
+  <label for="subtasks">Subtasks</label>
+  <div class="subtask-input-container">
+    <div class="inputs input-add-cancel-wrapper flexR" id="inputBox">
+      <input type="text" id="subtasks" placeholder="Add new subtask" autocomplete="off"
+        oninput="checkSubtask(this.value.length)" onfocus="showAddCancelBtns()" />
 
-                            <div class="subtask-input-container">
-                                <div class="inputs input-add-cancel-wrapper flexR" id="inputBox">
-                                    <input type="text" id="subtasks" placeholder="Add new subtask" autocomplete="off"
-                                        oninput="checkSubtask(this.value.length)" onfocus="showAddCancelBtns()" />
-
-                                    <button class="plus-button overlay-button" id="subtaskPlusBtn" type="button"
-                                        onclick="showAddCancelBtns()">
+      <button class="plus-button overlay-button" id="subtaskPlusBtn" type="button">
                                         <svg width="15" height="14" viewBox="0 0 15 14" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
                                             <path
@@ -171,9 +169,8 @@
                                         </svg>
                                     </button>
 
-                                    <div class="add-cancel-btns flexR display-none gap-8" id="addCancelBtns">
-                                        <button class="cancel-subtask-button overlay-button" type="button"
-                                            onclick="cancelSubtask()">
+                                     <div class="add-cancel-btns flexR display-none gap-8" id="addCancelBtns">
+        <button class="cancel-subtask-button overlay-button" type="button">
                                             <svg width="13" height="14" viewBox="0 0 13 14" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
                                                 <path
@@ -188,8 +185,7 @@
                                             <path d="M1 0V24" stroke="#D1D1D1" />
                                         </svg>
 
-                                        <button class="add-subtask-button overlay-button" type="button"
-                                            onclick="addSubtask('subtasks')">
+                                     <button class="add-subtask-button overlay-button" type="button">
                                             <svg width="16" height="12" viewBox="0 0 16 12" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
                                                 <path
@@ -203,8 +199,6 @@
                             </div>
                         </div>
 
-
-                        <ul id="subtask-list" class="subtask-list"></ul>
                     </div>
                 </div>
         
@@ -229,6 +223,8 @@
     <script src="../../js/templates/templates.js"></script>
     <script src="../../main.js"></script>
     <script src="../../js/remoteStorage.js"></script>
-    <script src="../../js/addTask.js"></script>
+    <script src="../../js/subtasks.js"></script>
+<script src="../../js/addTask.js"></script>
+
 
 </body>

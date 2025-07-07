@@ -1,13 +1,25 @@
 function onloadFunc() {
     
 }
-
+ 
 const BASE_URL = "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/";
+
+/* Servus, ich habe es mal so versucht da es mir die User nicht mehr geladen hat, damit bekomme ich die angemeldeten User in Assigned to wieder angezeigt auf addTask:
+window.BASE_URL = "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/";
+*/
+
 
 async function loadData(path="") {
     let response = await fetch(BASE_URL + path +  ".json");
     return responseToJson = await response.json();
 }
+    
+/*
+async function loadData(path = "") {
+    const response = await fetch(BASE_URL + path + ".json");
+    return await response.json();
+}
+*/
 
 async function postData (path="", data={}) {
     let response = await fetch(BASE_URL + path +  ".json",{
@@ -18,6 +30,8 @@ async function postData (path="", data={}) {
         body: JSON.stringify(data)
     });
     return responseToJson = await response.json();
+   /* return await response.json();*/
+    
 }
 
 async function putData (path="", data={}) {
@@ -36,4 +50,6 @@ async function deleteData(path="") {
         method: "DELETE",
     });
     return responseToJson = await response.json();
+    /*return await response.json();*/
+
 }
