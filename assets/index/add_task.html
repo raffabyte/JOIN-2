@@ -135,7 +135,8 @@
                             <div class="field-wrapper">
                                 <div class="dropdown">
                                     <div class="dropdown-input-wrapper no-focus">
-                                        <input id="category-input" type="text" placeholder="Select task category" autocomplete="off" />
+                                        <input id="category-input" type="text" placeholder="Select task category"
+                                            autocomplete="off" />
 
                                         <button id="category-toggle-btn" type="button" class="dropdown-toggle"
                                             aria-label="Toggle category">
@@ -153,78 +154,89 @@
                             </div>
                         </div>
 
-                       <div class="form-group">
-  <label for="subtasks">Subtasks</label>
-  <div class="subtask-input-container">
-    <div class="inputs input-add-cancel-wrapper flexR" id="inputBox">
-      <input type="text" id="subtasks" placeholder="Add new subtask" autocomplete="off"
-        oninput="checkSubtask(this.value.length)" onfocus="showAddCancelBtns()" />
+                        <div class="form-group">
+                            <label for="subtasks">Subtasks</label>
 
-      <button class="plus-button overlay-button" id="subtaskPlusBtn" type="button">
-                                        <svg width="15" height="14" viewBox="0 0 15 14" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M6.24854 8H1.24854C0.965202 8 0.727702 7.90417 0.536035 7.7125C0.344368 7.52083 0.248535 7.28333 0.248535 7C0.248535 6.71667 0.344368 6.47917 0.536035 6.2875C0.727702 6.09583 0.965202 6 1.24854 6H6.24854V1C6.24854 0.716667 6.34437 0.479167 6.53604 0.2875C6.7277 0.0958333 6.9652 0 7.24854 0C7.53187 0 7.76937 0.0958333 7.96104 0.2875C8.1527 0.479167 8.24854 0.716667 8.24854 1V6H13.2485C13.5319 6 13.7694 6.09583 13.961 6.2875C14.1527 6.47917 14.2485 6.71667 14.2485 7C14.2485 7.28333 14.1527 7.52083 13.961 7.7125C13.7694 7.90417 13.5319 8 13.2485 8H8.24854V13C8.24854 13.2833 8.1527 13.5208 7.96104 13.7125C7.76937 13.9042 7.53187 14 7.24854 14C6.9652 14 6.7277 13.9042 6.53604 13.7125C6.34437 13.5208 6.24854 13.2833 6.24854 13V8Z"
-                                                fill="#2A3647" />
-                                        </svg>
-                                    </button>
+                            <div class="subtask-input-container">
+                                <div class="input-add-cancel-wrapper" id="inputBox">
+                                    <div class="flexR">
+                                        <input type="text" id="subtasks" placeholder="Add new subtask"
+                                            autocomplete="off" oninput="checkSubtask(this.value.length)"
+                                            onfocus="showAddCancelBtns()" />
 
-                                     <div class="add-cancel-btns flexR display-none gap-8" id="addCancelBtns">
-        <button class="cancel-subtask-button overlay-button" type="button">
-                                            <svg width="13" height="14" viewBox="0 0 13 14" fill="none"
+
+                                        <button class="plus-button overlay-button" id="subtaskPlusBtn" type="button">
+                                            <svg width="15" height="14" viewBox="0 0 15 14" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
                                                 <path
-                                                    d="M6.24953 7.00008L11.4925 12.2431M1.00653 12.2431L6.24953 7.00008L1.00653 12.2431ZM11.4925 1.75708L6.24853 7.00008L11.4925 1.75708ZM6.24853 7.00008L1.00653 1.75708L6.24853 7.00008Z"
-                                                    stroke="#2A3647" stroke-width="2" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                            </svg>
-                                        </button>
-
-                                        <svg width="2" height="24" viewBox="0 0 2 24" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M1 0V24" stroke="#D1D1D1" />
-                                        </svg>
-
-                                     <button class="add-subtask-button overlay-button" type="button">
-                                            <svg width="16" height="12" viewBox="0 0 16 12" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M5.79911 9.15L14.2741 0.675C14.4741 0.475 14.7116 0.375 14.9866 0.375C15.2616 0.375 15.4991 0.475 15.6991 0.675C15.8991 0.875 15.9991 1.1125 15.9991 1.3875C15.9991 1.6625 15.8991 1.9 15.6991 2.1L6.49911 11.3C6.29911 11.5 6.06578 11.6 5.79911 11.6C5.53245 11.6 5.29911 11.5 5.09911 11.3L0.799113 7C0.599113 6.8 0.50328 6.5625 0.511613 6.2875C0.519946 6.0125 0.624113 5.775 0.824113 5.575C1.02411 5.375 1.26161 5.275 1.53661 5.275C1.81161 5.275 2.04911 5.375 2.24911 5.575L5.79911 9.15Z"
+                                                    d="M6.24854 8H1.24854C0.965202 8 0.727702 7.90417 0.536035 7.7125C0.344368 7.52083 0.248535 7.28333 0.248535 7C0.248535 6.71667 0.344368 6.47917 0.536035 6.2875C0.727702 6.09583 0.965202 6 1.24854 6H6.24854V1C6.24854 0.716667 6.34437 0.479167 6.53604 0.2875C6.7277 0.0958333 6.9652 0 7.24854 0C7.53187 0 7.76937 0.0958333 7.96104 0.2875C8.1527 0.479167 8.24854 0.716667 8.24854 1V6H13.2485C13.5319 6 13.7694 6.09583 13.961 6.2875C14.1527 6.47917 14.2485 6.71667 14.2485 7C14.2485 7.28333 14.1527 7.52083 13.961 7.7125C13.7694 7.90417 13.5319 8 13.2485 8H8.24854V13C8.24854 13.2833 8.1527 13.5208 7.96104 13.7125C7.76937 13.9042 7.53187 14 7.24854 14C6.9652 14 6.7277 13.9042 6.53604 13.7125C6.34437 13.5208 6.24854 13.2833 6.24854 13V8Z"
                                                     fill="#2A3647" />
                                             </svg>
                                         </button>
+
+
+
+
+                                        <div class="add-cancel-btns flexR display-none gap-8" id="addCancelBtns">
+                                            <button class="cancel-subtask-button overlay-button" type="button"
+                                                onclick="cancelSubtask()">
+                                                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <path
+                                                        d="M7.14434 8.40005L2.24434 13.3C2.061 13.4834 1.82767 13.575 1.54434 13.575C1.261 13.575 1.02767 13.4834 0.844336 13.3C0.661003 13.1167 0.569336 12.8834 0.569336 12.6C0.569336 12.3167 0.661003 12.0834 0.844336 11.9L5.74434 7.00005L0.844336 2.10005C0.661003 1.91672 0.569336 1.68338 0.569336 1.40005C0.569336 1.11672 0.661003 0.883382 0.844336 0.700049C1.02767 0.516715 1.261 0.425049 1.54434 0.425049C1.82767 0.425049 2.061 0.516715 2.24434 0.700049L7.14434 5.60005L12.0443 0.700049C12.2277 0.516715 12.461 0.425049 12.7443 0.425049C13.0277 0.425049 13.261 0.516715 13.4443 0.700049C13.6277 0.883382 13.7193 1.11672 13.7193 1.40005C13.7193 1.68338 13.6277 1.91672 13.4443 2.10005L8.54434 7.00005L13.4443 11.9C13.6277 12.0834 13.7193 12.3167 13.7193 12.6C13.7193 12.8834 13.6277 13.1167 13.4443 13.3C13.261 13.4834 13.0277 13.575 12.7443 13.575C12.461 13.575 12.2277 13.4834 12.0443 13.3L7.14434 8.40005Z"
+                                                        fill="#2A3647" />
+                                                </svg>
+
+                                            </button>
+
+                                            <svg width="2" height="24" viewBox="0 0 2 24" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M1 0V24" stroke="#D1D1D1" />
+                                            </svg>
+
+                                            <button class="add-subtask-button overlay-button" type="button">
+                                                <svg width="16" height="12" viewBox="0 0 16 12" fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <path
+                                                        d="M5.69474 9.15L14.1697 0.675C14.3697 0.475 14.6072 0.375 14.8822 0.375C15.1572 0.375 15.3947 0.475 15.5947 0.675C15.7947 0.875 15.8947 1.1125 15.8947 1.3875C15.8947 1.6625 15.7947 1.9 15.5947 2.1L6.39474 11.3C6.19474 11.5 5.96141 11.6 5.69474 11.6C5.42807 11.6 5.19474 11.5 4.99474 11.3L0.694738 7C0.494738 6.8 0.398905 6.5625 0.407238 6.2875C0.415572 6.0125 0.519738 5.775 0.719738 5.575C0.919738 5.375 1.15724 5.275 1.43224 5.275C1.70724 5.275 1.94474 5.375 2.14474 5.575L5.69474 9.15Z"
+                                                        fill="#2A3647" />
+                                                </svg>
+
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                                 <ul id="subtask-list" class="subtask-list"></ul>
+
                             </div>
                         </div>
 
                     </div>
                 </div>
-        
-      <div class="form-footer flexR">
-    <div class="footer-left flexR">
-      <small class="validation-hint">
-        <span class="required-asterisk">*</span>This field is required
-      </small>
-    </div>
 
-    <div class="footer-right form-buttons flexR">
-      <button type="reset" class="clear-button">Clear ✖</button>
-      <button type="submit" class="create-button">Create Task ✔</button>
-    </div>
-  </div>
-</form>
+                <div class="form-footer flexR">
+                    <div class="footer-left flexR">
+                        <small class="validation-hint">
+                            <span class="required-asterisk">*</span>This field is required
+                        </small>
+                    </div>
+
+                    <div class="footer-right form-buttons flexR">
+                        <button type="reset" class="clear-button">Clear ✖</button>
+                        <button type="submit" class="create-button">Create Task ✔</button>
+                    </div>
+                </div>
+            </form>
         </div>
         </div>
     </main>
 
-    
+
     <script src="../../js/templates/templates.js"></script>
     <script src="../../main.js"></script>
     <script src="../../js/remoteStorage.js"></script>
     <script src="../../js/subtasks.js"></script>
-<script src="../../js/addTask.js"></script>
+    <script src="../../js/addTask.js"></script>
 
 
 </body>
