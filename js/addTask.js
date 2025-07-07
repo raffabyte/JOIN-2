@@ -242,6 +242,8 @@ function showFieldError(input, message) {
   }
 
   errorEl.textContent = message;
+  console.log("Wrapper gefunden für", input.id, "=", wrapper);
+
 }
 
 function clearFieldError(input) {
