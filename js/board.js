@@ -209,6 +209,22 @@ function handlePriority(priority) {
 }
 
 function handleSubtasks(subtasks) {
+    if (!subtasks || subtasks.length === 0) {
+        return '';
+    }
+    
+    const completedSubtasks = subtasks.filter(subtask => subtask.checked === true).length;
+    const totalSubtasks = subtasks.length;
+    const progressPercentage = (completedSubtasks / totalSubtasks) * 100;
+    
+console.log('Subtasks:', subtasks);
+    console.log('Completed:', completedSubtasks, 'Total:', totalSubtasks, 'Percentage:', progressPercentage);
+    
+
+    return handleSubtasksTemplate(progressPercentage, completedSubtasks, totalSubtasks);
+}
+
+function showCheckedSubtasksCount(subtasks) {
     if (Array.isArray(subtasks) && subtasks.length > 0) {
         return `${subtasks.filter(sub => sub.checked).length}/${subtasks.length}`;
     }
