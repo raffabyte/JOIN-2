@@ -22,7 +22,8 @@ header img {
     padding-left: 40px;
 }
 
-.header-right a {
+.header-desktop a,
+.header-mobile a {
     border: solid;
     border-radius: 8px;
     padding: 16px 15px;
@@ -31,7 +32,11 @@ header img {
     background-color: #2A3647;
 }
 
-.header-right {
+.header-desktop a:hover {
+    background-color: #29ABE2;
+}
+
+.header-desktop {
     display: flex;
     gap: 35px;
     justify-content: center;
@@ -41,23 +46,33 @@ header img {
     right: 30px;
 }
 
-.header-right span {
+.header-desktop span,
+.header-mobile span{
     color: #000000;
     font-weight: 400;
     font-size: 20px;
 }
 
+.header-mobile-div {
+    display: none;
+    flex-direction: column;
+    gap: 35px;
+    justify-content: center;
+    align-items: center;
+}
+
 main {
     display: flex; 
+    flex-direction: column;
     justify-content: center; 
     align-items: center;
 }
 
 .login-container {
     margin: 0 auto;
-    width: 100%;
+    width: 80%;
     max-width: 652px;
-    padding: 48px 20px;
+    padding: 20px;
     text-align: center; 
     border-radius: 30px; 
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -102,6 +117,7 @@ button {
     border: 1px solid #ccc; 
     border-radius: 8px; 
     font-size: 20px;
+    cursor: pointer;
 }
 
 .login-container input::placeholder {
@@ -154,7 +170,6 @@ button {
     border: solid 1px;
 }
 
-
 #msgBox {
     margin-top: 20px; 
     color: red;
@@ -174,6 +189,14 @@ footer a {
 }
 
 @media (max-width: 428px) {
+    main {
+        display: block;
+        margin-top: 110px;
+    }
+    header img {
+        height: 77px;
+        width: 64px;
+    }
     .login-container {
         margin: 0 20px;
     }
@@ -196,39 +219,12 @@ footer a {
         flex-direction: column;
         gap: 21px;
     }
+    .header-desktop {
+        display: none;
+    }
+    .header-mobile-div {
+        display: flex;
+        flex-direction: row;
+        margin-top: 77px;
+    }
 }
-
-/* @media (max-width: 768px) {
-    header img {
-        height: 78px;
-        width: 64px;
-    }
-    .login-container {
-        padding: 0 20px;
-    }
-    .login-container h2 {
-        font-size: 47px;
-    }
-    .login-container input {
-        width: 320px; 
-    }
-    .mail_icon {
-        background-position-x: 300px;
-        background-position-y: 12px;
-    }
-    .lock_icon {
-        background-position-x: 300px;
-    }
-    .login-buttons {
-        flex-direction: column;
-        gap: 21px;
-    }
-    .login-btn {
-        width: 150px;
-        margin-right: 0;
-    }
-    .guest-login-btn {
-        margin-top: 0;
-        width: 150px;
-    }
-} */
