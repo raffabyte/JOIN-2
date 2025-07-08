@@ -100,15 +100,17 @@ function taskCardTemplate(task) {
                 <span id="${toCamelCase(task.category)}">${task.category}</span>
             </div>
             <h3>${task.title}</h3>
-            <p class="task-description" id="taskDescription">${task.description}</p>
-            <div class="subtasks flexR ${toggleSubtasksVisibility(task)}" id="subtasks">
+            <p class="task-description ${toggleDescriptionVisibility(task.description)}" id="taskDescription">${task.description}</p>
+            <div class="subtasks flexR ${toggleSubtasksVisibility(task.subtasks)}" id="subtasks">
                 ${handleSubtasks(task.subtasks)}
             </div>
-            <div class="task-card-footer flexR">
-                <div class="task-members" id="taskMembers">
+            <div class="task-card-footer flexR ${toggleCardFooterVisibility(task)}">
+                <div class="task-members flexR ${toggleMembersVisibility(task.assignee)}" id="taskMembers">
                     ${renderMembers(task)}
                 </div>
-                ${handlePriority(task.priority)}
+                <div class="${togglePriorityVisibility(task.priority)} task-priority flexR">
+                    ${handlePriority(task.priority)}
+                </div>
             </div>
         </div>`;
 }

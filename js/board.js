@@ -216,10 +216,6 @@ function handleSubtasks(subtasks) {
     const completedSubtasks = subtasks.filter(subtask => subtask.checked === true).length;
     const totalSubtasks = subtasks.length;
     const progressPercentage = (completedSubtasks / totalSubtasks) * 100;
-    
-console.log('Subtasks:', subtasks);
-    console.log('Completed:', completedSubtasks, 'Total:', totalSubtasks, 'Percentage:', progressPercentage);
-    
 
     return handleSubtasksTemplate(progressPercentage, completedSubtasks, totalSubtasks);
 }
@@ -231,6 +227,21 @@ function showCheckedSubtasksCount(subtasks) {
     return '';
 }
 
-function toggleSubtasksVisibility(task){
-    return `${Array.isArray(task.subtasks) && task.subtasks.length > 0 ? '' : ' display-none'}"`;
+function toggleSubtasksVisibility(subtasks){
+    return `${Array.isArray(subtasks) && subtasks.length > 0 ? '' : ' display-none'}"`;
+}
+
+function togglePriorityVisibility(priority) {
+    return `${priority ? '' : ' display-none'}`;
+}
+
+function toggleMembersVisibility(members) {
+    return `${Array.isArray(members) && members.length > 0 ? '' : ' display-none'}`;
+}
+function toggleCardFooterVisibility(task) {
+    return `${task.assignee || task.priority ? '' : ' display-none'}`;
+}
+
+function toggleDescriptionVisibility(description) {
+    return `${description ? '' : ' display-none'}`;
 }
