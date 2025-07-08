@@ -1,105 +1,107 @@
 .subtask-list {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  margin-top: 8px;
+  font-size: 16px;
 }
 
 .subtask-list li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 12px;
-    font-size: 16px;
-    border-radius: 8px;
-    transition: background-color 0.2s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  transition: background-color 0.2s ease;
+  border-radius: 10px;
+  padding: 0px 12px 0px 22px;
 }
 
+.subtask-actions {
+  display: none !important;
+}
+
+.subtask-list li:hover .subtask-actions {
+  display: flex !important;
+}
+
+
 .subtask-list li::before {
-    content: '•';
-    margin-right: 10px;
-    font-size: 20px;
-    color: #2A3647;
+  content: "•";
+  margin: 0px 12px 0px 8px;
+  color: #2a3647;
 }
 
 .subtask-list li:hover {
-    background-color: #eeeeee;
+  background-color: #eeeeee;
 }
 
 .subtask-list li.editing,
 .subtask-list li:has(input.edit-subtask-input) {
-    background-color: white !important;
-    border-bottom: 2px solid #29ABE2;
-    padding-bottom: 4px;
-    cursor: default;
+  background-color: white !important;
+  width: 100%;
+  justify-content: space-between;
+  padding: 0px 12px 0px 12px;
+  border-bottom: #29abe2 1px solid;
+  font-size: 16px;
+  border-radius: none;
+}
+
+.subtask-list li.editing {
+  background-color: white !important;
+  border-bottom: 1px solid #29abe2;
+  border-radius: 0;
+  padding: 0; 
+  cursor: default;
+}
+
+.subtask-list li.editing::before {
+  content: none;
 }
 
 .subtask-list li .subtask-actions,
 .subtask-list li .subtask-edit-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.subtask-list li:hover .subtask-actions {
-    display: flex;
+  display: flex;
+  align-items: center;
+  padding-left: 44px;
 }
 
 .icon-divider {
-    color: #d1d1d1;
-    font-size: 20px;
-    margin: 0 4px;
-    user-select: none;
+  color: #d1d1d1;
+  font-size: 16px;
+  margin: 0 4px;
+  user-select: none;
 }
 
 .edit-subtask-input {
-    flex-grow: 1;
-    border: none;
-    background-color: white;
-    padding: 4px 8px;
-    font-size: 14px;
-    width: 100%;
-    height: 24px;
-    outline: none;
-}
-
-.edit-subtask-input:focus {
-    box-shadow: none !important;
-    border-color: transparent !important;
-}
-
-
-#subtasks:focus {
-    border: 1px solid #29ABE2 !important;
-    box-shadow: 0 0 3px #29ABE2;
+  flex-grow: 1;
+  background-color: white;
+  font-size: 16px;
+  width: 100%;
+  box-shadow: none !important;
+  border: none !important;
+  outline: none !important;
+  border-radius: 0;
 }
 
 .subtask-input-container {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 4px; 
   width: 100%;
+  box-shadow: none !important;
+  border-color: transparent !important;
 }
-
 
 .input-add-cancel-wrapper {
   position: relative;
   width: 100%;
 }
 
-#subtasks {
-  width: 100%;
-  padding-right: 44px; 
-  height: 48px;
-  border: 1px solid #d1d1d1;
-  border-radius: 10px;
-  padding-left: 16px;
-  font-size: 16px;
-}
-
 .plus-button {
+  display: flex; 
   position: absolute;
   right: 12px;
   top: 50%;
@@ -107,52 +109,45 @@
   background: none;
   border: none;
   padding: 0;
-  display: flex;
   align-items: center;
   justify-content: center;
 }
 
-
-
 .add-cancel-btns {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: white;
+  display: none; 
+  align-items: center;
+  gap: 4px;
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: white;
 }
 
-.display-none {
-    display: none !important;
-}
 
 .overlay-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    transition: background-color 0.2s ease;
+  background: none;
+  border: none;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
 }
 
 .overlay-button svg {
-    width: 20px;
-    height: 20px;
-    pointer-events: none;
-    fill: #2A3647;
-    transition: fill 0.2s ease;
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+  fill: #2a3647;
+  transition: fill 0.2s ease;
 }
 
 .overlay-button:hover {
-    background-color: #eeeeee;
+  background-color: #eeeeee;
 }
 
 .overlay-button:hover svg {
-    fill: #1F2A3D;
+  fill: #1f2a3d;
 }

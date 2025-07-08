@@ -1,4 +1,32 @@
 function initSubtaskControls() {
+  console.log("🛠 initSubtaskControls gestartet");
+
+  waitForElement("#subtasks", () => {
+    const elements = getSubtaskElements();
+    if (!elements) return;
+
+    console.log("📌 Versuche Subtask hinzuzufügen", elements.input.value);
+
+    setupSubtaskEvents(elements);
+    setInitialSubtaskState(elements);
+  });
+}
+
+function waitForElement(selector, callback, timeout = 1000) {
+  const start = performance.now();
+  (function check() {
+    const el = document.querySelector(selector);
+    if (el) {
+      callback();
+    } else if (performance.now() - start < timeout) {
+      requestAnimationFrame(check);
+    } else {
+      console.warn(`❗ Element ${selector} nicht gefunden nach ${timeout}ms`);
+    }
+  })();
+}
+
+function getSubtaskElements() {
   const elements = {
     input: document.getElementById("subtasks"),
     list: document.getElementById("subtask-list"),
@@ -8,49 +36,74 @@ function initSubtaskControls() {
     addCancelBtns: document.getElementById("addCancelBtns"),
   };
 
-  if (
-    !elements.input ||
-    !elements.list ||
-    !elements.clearBtn ||
-    !elements.confirmBtn ||
-    !elements.plusBtn
-  ) {
-    console.warn("❗ Eines der Subtask-Elemente wurde nicht gefunden!");
-    return;
+  for (const [key, el] of Object.entries(elements)) {
+    if (!el) {
+      console.warn(`❗ Element '${key}' nicht gefunden.`);
+      return null;
+    }
   }
 
+  return elements;
+}
+
+function setupSubtaskEvents(elements) {
   addSubtaskEventListeners(elements);
-  elements.plusBtn.addEventListener("click", () => elements.input.focus());
+  elements.plusBtn.addEventListener("click", () => {
+    elements.input.focus();
+  });
+}
+
+function setInitialSubtaskState(elements) {
+  if (elements.input.value.trim() === "") {
+    hideAddCancelBtns(elements);
+  } else {
+    showAddCancelBtns(elements);
+  }
 }
 
 function addSubtaskEventListeners(elements) {
-  elements.input.addEventListener("focus", () => showAddCancelBtns(elements));
-  elements.input.addEventListener("input", () => {
-    if (elements.input.value.trim() === "") hideAddCancelBtns(elements);
+  elements.input.addEventListener("focus", () => {
+    if (elements.input.value.trim() !== "") {
+      showAddCancelBtns(elements);
+    }
   });
+
+  elements.input.addEventListener("input", () => {
+    if (elements.input.value.trim() === "") {
+      hideAddCancelBtns(elements);
+    } else {
+      showAddCancelBtns(elements);
+    }
+  });
+
   elements.input.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
       handleSubtaskAddition(elements);
     }
   });
-  elements.clearBtn.addEventListener("click", () =>
-    clearSubtaskInput(elements)
-  );
-  elements.confirmBtn.addEventListener("click", () =>
-    handleSubtaskAddition(elements)
-  );
+
+  if (elements.clearBtn) {
+    elements.clearBtn.addEventListener("click", () => clearSubtaskInput(elements));
+  }
+
+  if (elements.confirmBtn) {
+    elements.confirmBtn.addEventListener("click", () => handleSubtaskAddition(elements));
+  }
 }
 
 function showAddCancelBtns(elements) {
-  elements.addCancelBtns.classList.remove("display-none");
+  elements.addCancelBtns.style.display = "flex";
+  elements.plusBtn.style.display = "none";
 }
 
 function hideAddCancelBtns(elements) {
-  elements.addCancelBtns.classList.add("display-none");
+  elements.addCancelBtns.style.display = "none";
+  elements.plusBtn.style.display = "flex";
 }
 
 function handleSubtaskAddition(elements) {
+  console.log("📌 Subtask wird hinzugefügt");
   const text = elements.input.value.trim();
   if (!text) return;
 
@@ -71,9 +124,7 @@ function clearSubtaskInput(elements) {
 
 function createAndAppendSubtask(text, list) {
   const li = document.createElement("li");
-  li.innerHTML = `
-        <span class="subtask-text">${text}</span>
-    `;
+  li.innerHTML = `<span class="subtask-text">${text}</span>`;
   const actions = createDefaultActions(li);
   li.appendChild(actions);
   list.appendChild(li);
@@ -81,7 +132,6 @@ function createAndAppendSubtask(text, list) {
 
 function enableSubtaskEditing(li) {
   li.classList.add("editing");
-
   const oldSpan = li.querySelector(".subtask-text");
   const oldActions = li.querySelector(".subtask-actions");
   const currentText = oldSpan.textContent;
@@ -108,12 +158,8 @@ function createEditActions(input, li, oldSpan) {
   const container = document.createElement("div");
   container.className = "subtask-edit-actions";
 
-  const deleteBtn = createSvgButton(deleteSVG, "delete-icon", () =>
-    li.remove()
-  );
-  const checkBtn = createSvgButton(checkSVG, "check-icon", () =>
-    saveSubtaskEdit(input, li, container)
-  );
+  const deleteBtn = createSvgButton(deleteSVG, "delete-icon", () => li.remove());
+  const checkBtn = createSvgButton(checkSVG, "check-icon", () => saveSubtaskEdit(input, li, container));
   const divider = document.createElement("span");
   divider.className = "icon-divider";
   divider.textContent = "|";
@@ -127,7 +173,6 @@ function attachEditInputEvents(input, li, oldSpan, actions) {
     if (e.key === "Enter") saveSubtaskEdit(input, li, actions);
     if (e.key === "Escape") cancelSubtaskEdit(input, li, oldSpan, actions);
   });
-
   input.addEventListener("blur", () => {
     setTimeout(() => {
       if (document.body.contains(input)) {
@@ -163,9 +208,7 @@ function cancelSubtaskEdit(input, li, oldSpan, actionsContainer) {
 function createDefaultActions(li) {
   const container = document.createElement("div");
   container.className = "subtask-actions";
-  const editBtn = createSvgButton(editSVG, "edit-btn", () =>
-    enableSubtaskEditing(li)
-  );
+  const editBtn = createSvgButton(editSVG, "edit-btn", () => enableSubtaskEditing(li));
   const deleteBtn = createSvgButton(deleteSVG, "delete-btn", () => li.remove());
   const divider = document.createElement("span");
   divider.className = "icon-divider";
@@ -183,7 +226,25 @@ function createSvgButton(svgMarkup, className, onClick) {
   return btn;
 }
 
-/* SVGs */
+window.checkSubtask = function (length) {
+  console.log("checkSubtask: input length =", length);
+};
+
+window.showAddCancelBtns = function () {
+  const input = document.getElementById("subtasks");
+  const plusBtn = document.getElementById("subtaskPlusBtn");
+  const btns = document.getElementById("addCancelBtns");
+
+  if (!input || !btns || !plusBtn) return;
+
+  if (input.value.trim() !== "") {
+    btns.style.display = "flex";
+    plusBtn.style.display = "none";
+  }
+};
+
+window.initSubtaskControls = initSubtaskControls;
+
 const editSVG = `
 <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M2.14453 17H3.54453L12.1695 8.375L10.7695 6.975L2.14453 15.6V17ZM16.4445 6.925L12.1945 2.725L13.5945 1.325C13.9779 0.941667 14.4487 0.75 15.007 0.75C15.5654 0.75 16.0362 0.941667 16.4195 1.325L17.8195 2.725C18.2029 3.10833 18.4029 3.57083 18.4195 4.1125C18.4362 4.65417 18.2529 5.11667 17.8695 5.5L16.4445 6.925ZM14.9945 8.4L4.39453 19H0.144531V14.75L10.7445 4.15L14.9945 8.4Z" fill="#2A3647"/>
@@ -202,14 +263,4 @@ const checkSVG = `
 </svg>
 `;
 
-// 🔧 Für oninput="checkSubtask(...)"
-window.checkSubtask = function (length) {
-  // Kann ggf. später mit Logik erweitert werden – aktuell genügt leeres Stub
-  console.log("checkSubtask: input length = ", length);
-};
 
-// 🔧 Für onfocus="showAddCancelBtns()"
-window.showAddCancelBtns = function () {
-  const btns = document.getElementById("addCancelBtns");
-  if (btns) btns.classList.remove("display-none");
-};
