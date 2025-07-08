@@ -458,6 +458,7 @@ form {
     border-radius: 8px;
     height: 2px;
     margin-bottom: 8px;
+    flex-shrink: 0;
 }
 
 .contactCircle {

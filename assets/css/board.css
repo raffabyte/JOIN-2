@@ -8,11 +8,8 @@
 }
 
 .board-heading {
-    position: sticky;
-    left: 232px;
-    right: 0;
-    height: 232px;
     width: 100%;
+    margin-bottom: 8px;
 }
 .content{
     padding:0;
@@ -159,9 +156,11 @@ h1{
 .board-bottom{
     flex: 1;
     width: 100%;
-    padding: 0 64px;
+    padding: 8px 64px 24px 64px;
     gap: 26px;
     justify-content: space-between;
+    max-height: 68vh;
+    overflow-y: auto;
 }
 
 .board-column{
@@ -187,10 +186,23 @@ h1{
     box-shadow: 0 0 10px 3px rgba(0, 0, 0, 8%);
     padding: 16px;
     gap: 24px;
+    margin-bottom: 16px;
 }
 
 .task-card > *:not(:first-child) {
     width: 100%;
+}
+.contact-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 45px;
+    border: 2px solid white;
+    font-size: 12px !important;
+    font-weight: 400;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #technicalTask, #userStory {
@@ -227,6 +239,27 @@ span {
     color: #A8A8A8;
 }
 
+.progress-bar-container{
+    width: 100%;
+    height: 8px;
+    background-color: #E7E7E7;
+    border-radius: 16px;
+}
+.subtasks-progress{
+    width: 100%;
+    justify-content: space-between;
+}
+.progress-text{
+    width: 100%;
+    text-align: right;
+}
+.progress-bar-fill{
+    height: 8px;
+    background-color: #4589FF;
+    border-radius: 16px;
+}
+
+
 .task-card-footer {
     justify-content: space-between;
 }
@@ -236,21 +269,14 @@ span {
     height: 32px;
 }
 
-.task-member {
-    width: 32px;
-    height: 32px;
-    color: white;
-    border-radius: 45px;
-    background: #1FD7C1;
-    border: 2px solid #FFFFFF;
-    justify-content: center;
-    
-}
-
 .task-members > *{
     position: absolute;
     top: 0;
     left: 0;
+    width: 32px;
+    height: 32px;
+    justify-content: center;
+    
 }
 
 .task-members img:nth-child(1) {

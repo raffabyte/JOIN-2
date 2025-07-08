@@ -1,14 +1,13 @@
 const userKey = localStorage.getItem("loggedInUserKey");
 
 if (!userKey) {
-  // Kein Benutzer eingeloggt → weiterleiten
-  window.location.href = "../../index.html";
+    // Kein Benutzer eingeloggt → weiterleiten
+    window.location.href = "../../index.html";
 }
 
 const OVERLAY = document.getElementById('overlay');
 const OVERLAY_CONTENT = document.getElementById('overlayContent');
-const BASE_URL = 'https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks.json';
-
+const TASKS_BASE_URL = "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks.json";
 
 function addTaskOverlay() {
     // Set the overlay content to the add task form
@@ -58,8 +57,11 @@ let saveTaskData = () => {
     const TASKCATEGORY = document.getElementById('taskCategory').textContent;
     const TASKASSIGNEE = Array.from(document.querySelectorAll('#selectedAssignee .contact-icon')).map(span => span.dataset.name);
     const PRIORITY_BTN = document.querySelector('.priority-button.active');
-    const PRIORITY = PRIORITY_BTN ? PRIORITY_BTN.classList[PRIORITY_BTN.classList.length - 1] : '';
-    const SUBTASKS = Array.from(document.querySelectorAll('.subtask-text')).map(subtask => subtask.textContent);
+    const PRIORITY = PRIORITY_BTN ? PRIORITY_BTN.classList[PRIORITY_BTN.classList.length - 2] : '';
+    const SUBTASKS = Array.from(document.querySelectorAll('.subtask-text')).map(subtask => ({
+        value: subtask.textContent,
+        checked: false
+    }));
     const RQUIRED_SPAN_HINT = document.querySelectorAll('.required-span');
     const REQUIRED_INPUTS = document.querySelectorAll('.requierd-input');
 
@@ -89,13 +91,13 @@ let saveTaskData = () => {
 }
 
 
-function taskDataPush() {
+async function taskDataPush() {
     const taskData = saveTaskData();
     if (!taskData) {
-        return;
+        return Promise.reject('No task data');
     }
 
-    fetch(BASE_URL, {
+    return fetch(TASKS_BASE_URL, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -117,14 +119,19 @@ function updateColumns(tasks) {
 
     tasks.forEach(task => {
         let taskCard = taskCardTemplate(task);
-        if (task.column === 'todoColumn') {
-            todoColumn.innerHTML += taskCard;
-        } else if (task.column === 'inProgressColumn') {
-            inProgressColumn.innerHTML += taskCard;
-        } else if (task.column === 'awaitFeedbackColumn') {
-            awaitFeedbackColumn.innerHTML += taskCard;
-        } else if (task.column === 'doneColumn') {
-            doneColumn.innerHTML += taskCard;
+        switch (task.column) {
+            case 'todoColumn':
+                todoColumn.innerHTML += taskCard;
+                break;
+            case 'inProgressColumn':
+                inProgressColumn.innerHTML += taskCard;
+                break;
+            case 'awaitFeedbackColumn':
+                awaitFeedbackColumn.innerHTML += taskCard;
+                break;
+            case 'doneColumn':
+                doneColumn.innerHTML += taskCard;
+                break;
         }
 
     }
@@ -140,7 +147,7 @@ function checkEmptyColumn() {
 }
 
 function updateBoard() {
-    fetch(BASE_URL)
+    fetch(TASKS_BASE_URL)
         .then(response => response.json())
         .then(data => {
             const tasks = Object.values(data || {}).map((task, index) => ({
@@ -162,13 +169,68 @@ function addTask(event) {
         return;
     }
 
-    taskDataPush();
-    updateBoard();
-    closeOverlay();
+    taskDataPush()
+        .then(()=> { 
+            updateBoard();
+            showAddedTaskNotification();
+            setTimeout(() => {
+                closeOverlay();
+            }, 900);  
+        });
 }
 
-function renderMembers() {
-    Array.isArray(task.assignee)
-        ? task.assignee.map(name => contactIconSpanTemplate(name)).join('') : ''
+function showAddedTaskNotification() {
+    const ADDEDTOBOARDMESSAGE = document.getElementById('addedToBoardMessage');
+    ADDEDTOBOARDMESSAGE.classList.remove('display-none');
+}
 
+function renderMembers(task) {
+    return Array.isArray(task.assignee) ? task.assignee.map(name => contactIconSpanTemplate(name)).join('') : ''
+}
+
+function toCamelCase(word) {
+    return (word.charAt(0).toLowerCase() + word.slice(1)).replace(' ', '')
+}
+
+function handlePriority(priority) {
+    switch (priority) {
+        case 'HighPriority':
+            return HighPrioritySvgTemplate();
+            break;
+        case 'MidPriority':
+            return MidPrioritySvgTemplate();
+            break;
+        case 'LowPriority':
+            return LowPrioritySvgTemplate();
+            break;
+        default:
+            return '';
+    }
+}
+
+function handleSubtasks(subtasks) {
+    if (!subtasks || subtasks.length === 0) {
+        return '';
+    }
+    
+    const completedSubtasks = subtasks.filter(subtask => subtask.checked === true).length;
+    const totalSubtasks = subtasks.length;
+    const progressPercentage = (completedSubtasks / totalSubtasks) * 100;
+    
+console.log('Subtasks:', subtasks);
+    console.log('Completed:', completedSubtasks, 'Total:', totalSubtasks, 'Percentage:', progressPercentage);
+    
+
+    return handleSubtasksTemplate(progressPercentage, completedSubtasks, totalSubtasks);
+}
+
+function showCheckedSubtasksCount(subtasks) {
+    if (Array.isArray(subtasks) && subtasks.length > 0) {
+        return `${subtasks.filter(sub => sub.checked).length}/${subtasks.length}`;
+    }
+    return '';
+}
+
+function toggleSubtasksVisibility(task){
+    return `${Array.isArray(task.subtasks) && task.subtasks.length > 0 ? '' : ' display-none'}"`;
 }

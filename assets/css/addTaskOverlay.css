@@ -24,6 +24,23 @@
     opacity: 1;
 }
 
+.added-to-board-message{
+    background: #2A3647;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 16px 32px;
+    justify-content: space-between;
+    border-radius: 20px;
+    width: 326px;
+}
+.added-to-board-message span {
+    color: white;
+    font-size: 20px;
+    font-weight: 400;
+}
+
 
 .overlay-bottom{
     flex: 1;
@@ -278,20 +295,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     background: #091931;
     color: white;
 }
-.contact-icon {
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    border: 2px solid white;
-    font-size: 12px !important;
-    font-weight: 400;
-    color: white;
-    background: #FF7A00;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
 .assignee-option span{
     font-size: 20px;
     font-weight: 400;
