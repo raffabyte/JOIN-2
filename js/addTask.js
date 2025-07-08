@@ -162,10 +162,10 @@ form.addEventListener("submit", (e) => {
   e.preventDefault();
   const createButton = form.querySelector('.create-button');
 
-  if (isFormValid(form)) {
-    disableButton(createButton, true);
-    showTaskCreatedOverlay();
-  }
+ if (isFormValid(form)) {
+  disableButton(createButton, true);
+  saveTaskToFirebase();
+}
 });
 
 }
@@ -289,4 +289,64 @@ function generateColor(initials) {
     "#00BEE8", "#1FD7C1", "#FF5C00", "#E97200"
   ];
   return colors[hash % colors.length];
+}
+
+
+function collectTaskData() {
+  const title = document.getElementById('title').value.trim();
+  const description = document.getElementById('description').value.trim();
+  const dueDate = document.getElementById('due-date').value;
+  const category = document.getElementById('category-input').value.trim();
+  const assignee = Array.from(document.querySelectorAll('.dropdown-user-option input:checked'))
+    .map(input => input.closest('label').querySelector('.user-name').textContent.trim());
+
+  const selectedPriority = document.querySelector('.priority-btn.selected');
+  const priority = selectedPriority ? selectedPriority.dataset.priority : '';
+
+  const subtasks = Array.from(document.querySelectorAll('#subtask-list .subtask-text'))
+    .map(textEl => ({
+      value: textEl.textContent.trim(),
+      checked: false
+    }));
+
+  if (!title || !dueDate || !category) {
+    return null;
+  }
+
+  return {
+    title,
+    description,
+    dueDate,
+    category,
+    assignee,
+    priority,
+    subtasks,
+    column: 'todoColumn' // Standardspalte wie bei Overlay
+  };
+}
+
+async function saveTaskToFirebase() {
+  const task = collectTaskData();
+  if (!task) {
+    alert("Bitte alle Pflichtfelder ausfüllen!");
+    return;
+  }
+
+  try {
+    const response = await fetch("https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks.json", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(task),
+    });
+
+    if (response.ok) {
+      showTaskCreatedOverlay(); // ggf. angepasstes Overlay verwenden
+    } else {
+      throw new Error("Fehler beim Speichern.");
+    }
+  } catch (err) {
+    console.error("❌ Fehler beim Speichern des Tasks:", err);
+  }
 }

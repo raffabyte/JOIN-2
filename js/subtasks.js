@@ -5,8 +5,6 @@ function initSubtaskControls() {
     const elements = getSubtaskElements();
     if (!elements) return;
 
-    console.log("📌 Versuche Subtask hinzuzufügen", elements.input.value);
-
     setupSubtaskEvents(elements);
     setInitialSubtaskState(elements);
   });
@@ -103,7 +101,7 @@ function hideAddCancelBtns(elements) {
 }
 
 function handleSubtaskAddition(elements) {
-  console.log("📌 Subtask wird hinzugefügt");
+  
   const text = elements.input.value.trim();
   if (!text) return;
 
