@@ -3,7 +3,6 @@ if (!userKey) {
   window.location.href = "../../index.html";
 }
 
-// Initialisierung nach DOM-Load
 document.addEventListener("DOMContentLoaded", initAddTaskPage);
 
 function initAddTaskPage() {
@@ -15,7 +14,6 @@ function initAddTaskPage() {
   initFormValidation();
 }
 
-// 🧑‍🤝‍🧑 Nutzer laden (außer aktuell eingeloggtem)
 async function loadAssignableUsers() {
   const userKey = localStorage.getItem("loggedInUserKey");
   if (!userKey) return [];
@@ -174,7 +172,7 @@ form.addEventListener("submit", (e) => {
 
 
 function isFormValid(form) {
-  console.log("✅ Validierung läuft"); // <-- muss vor return stehen!
+  console.log("✅ Validierung läuft"); 
 
   const requiredIds = ["title", "due-date", "category-input"];
   let isValid = true;

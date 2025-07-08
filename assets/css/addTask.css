@@ -1,14 +1,13 @@
 .add-task-content {
   align-items: flex-start;
-  padding: 80px 50px;
-  gap: 32px;
+  padding: 110px 96px;
   width: 100%;
   background-color: #f6f7f8;
 }
 h1 {
   font-size: 61px;
   font-weight: 700;
-  
+  padding-bottom: 42px;
 }
 .task-form {
   display: flex;
@@ -16,7 +15,6 @@ h1 {
   width: 100%;
   max-width: 980px;
   gap: 32px;
-  
 }
 .form-columns {
   gap: 48px;
@@ -28,6 +26,7 @@ h1 {
   gap: 24px;
   flex: 1;
 }
+
 .form-divider {
   width: 1px;
   background-color: #d1d1d1;
@@ -41,9 +40,15 @@ h1 {
 }
 .form-group label,
 .required-asterisk,
-span {
+span,
+p {
   font-size: 20px;
 }
+
+p {
+  padding-top: 52px;
+}
+
 .form-group label {
   font-weight: 400;
 }
@@ -92,7 +97,6 @@ input.input-error,
   width: 100%;
 }
 
-
 .calendar-btn {
   position: absolute;
   top: 50%;
@@ -119,6 +123,7 @@ input.input-error,
   display: flex;
   gap: 16px;
   height: 51px;
+  padding-top: 12px;
 }
 .priority-btn {
   flex: 1;
@@ -205,9 +210,6 @@ input.input-error,
   right: 16px;
   top: 50%;
   transform: translateY(-50%);
-  width: 32px;
-  height: 32px;
-  font-size: 20px;
   background-color: transparent;
   border: none;
   border-radius: 50%;
@@ -220,18 +222,12 @@ input.input-error,
 }
 
 .dropdown-arrow {
-  width: 16px;
-  height: 10px;
   fill: #2a3647;
   transition: none;
 }
 
 .dropdown-toggle.open .dropdown-arrow {
   transform: rotate(180deg);
-}
-
-.dropdown-toggle:hover {
-  background-color: #eeeeee;
 }
 
 .dropdown-options {
@@ -242,7 +238,7 @@ input.input-error,
   max-height: 228px;
   overflow-y: auto;
   scroll-behavior: smooth;
-  padding-bottom: 12px; /* optional Puffer */
+  padding-bottom: 12px;
   position: absolute;
   z-index: 10;
   background-color: white;
@@ -340,6 +336,7 @@ input.contact-checkbox:checked::before {
   top: -4px;
   right: -8px;
 }
+
 input.contact-checkbox:checked::after {
   content: "";
   position: absolute;
@@ -352,18 +349,6 @@ input.contact-checkbox:checked::after {
   transform: translate(-30%, -48%) rotate(45deg);
 }
 
-.form-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: 40px;
-}
-.form-buttons {
-  justify-content: flex-end;
-  gap: 16px;
-  margin-top: auto;
-  padding-top: 24px;
-}
 .clear-button,
 .create-button {
   height: 56px;
@@ -418,21 +403,29 @@ textarea:focus,
 }
 
 .form-footer {
-    display: flex;
-    justify-content: space-between; 
-    align-items: center;
-    margin-top: 40px; 
-    width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding-top: 152px;
+}
+
+.form-buttons {
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: auto;
+  padding-top: 24px;
 }
 
 .footer-left {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
+  margin-top: 40px;
 }
 
 .footer-right {
-    display: flex;
-    gap: 16px;
+  display: flex;
+  gap: 16px;
 }
 
 .task-overlay {
@@ -462,7 +455,6 @@ textarea:focus,
   width: auto;
   padding-left: 18px;
 }
-
 
 .input-error {
   border: 1px solid #ff3d00 !important;
