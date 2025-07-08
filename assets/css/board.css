@@ -267,6 +267,12 @@ span {
 .task-members{
     position: relative;
     height: 32px;
+    width: 100%;
+    justify-content: flex-start;
+}
+.task-priority {
+    width: 100%;
+    justify-content: flex-end;
 }
 
 .task-members > *{
