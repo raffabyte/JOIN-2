@@ -1,11 +1,12 @@
 .add-task-content {
   align-items: flex-start;
-  padding: 110px 96px;
+  padding: 110px 5vw;
   width: 100%;
   background-color: #f6f7f8;
+  box-sizing: border-box;
 }
 h1 {
-  font-size: 61px;
+  font-size: clamp(28px, 4vw, 61px);
   font-weight: 700;
   padding-bottom: 42px;
 }
@@ -15,6 +16,7 @@ h1 {
   width: 100%;
   max-width: 980px;
   gap: 32px;
+   box-sizing: border-box;
 }
 .form-columns {
   gap: 48px;
@@ -42,7 +44,7 @@ h1 {
 .required-asterisk,
 .priorating,
 .priohead {
-  font-size: 20px;
+  font-size: clamp(14px, 1.5vw, 20px);
 }
 
 .priohead {
@@ -64,10 +66,10 @@ input[type="date"],
 textarea {
   width: 100%;
   height: 51px;
-  padding: 12px 21px;
   border: 1px solid #d1d1d1;
   border-radius: 10px;
-  font-size: 20px;
+  font-size: clamp(14px, 1.5vw, 20px);
+  padding: 12px clamp(16px, 2vw, 21px);
   box-sizing: border-box;
   font-family: "Inter", sans-serif;
 }
@@ -199,7 +201,7 @@ input.input-error,
   flex: 1;
   height: 100%;
   padding: 12px 48px 12px 16px;
-  font-size: 20px;
+  font-size: clamp(14px, 1.5vw, 20px);
   background-color: white;
   border: none;
   outline: none;
@@ -310,7 +312,7 @@ input.input-error,
 
 .user-name {
   flex-grow: 1;
-  font-size: 18px;
+  font-size: clamp(14px, 1.5vw, 18px);
   color: #000;
 }
 
@@ -355,7 +357,7 @@ input.contact-checkbox:checked::after {
   padding: 16px;
   gap: 4px;
   border-radius: 10px;
-  font-size: 20px;
+  font-size: clamp(14px, 1.5vw, 20px);
   display: flex;
   align-items: center;
   justify-content: center;
