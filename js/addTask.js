@@ -321,7 +321,7 @@ function collectTaskData() {
     assignee,
     priority,
     subtasks,
-    column: 'todoColumn' // Standardspalte wie bei Overlay
+    column: 'todoColumn' // standard similar to oerlay
   };
 }
 
@@ -342,7 +342,7 @@ async function saveTaskToFirebase() {
     });
 
     if (response.ok) {
-      showTaskCreatedOverlay(); // ggf. angepasstes Overlay verwenden
+      showTaskCreatedOverlay(); // if nec. use a customized overlay
     } else {
       throw new Error("Fehler beim Speichern.");
     }

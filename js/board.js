@@ -67,7 +67,7 @@ let saveTaskDataTo = (columnId) => {
         value: subtask.textContent,
         checked: false
     }));
-    const RQUIRED_SPAN_HINT = document.querySelectorAll('.required-span');
+    const REQUIRED_SPAN_HINT = document.querySelectorAll('.required-span');
     const REQUIRED_INPUTS = document.querySelectorAll('.requierd-input');
 
     let taskData = {
@@ -82,7 +82,7 @@ let saveTaskDataTo = (columnId) => {
     };
     // Validierung der Eingabedaten
     if (!TASKTITLE || !TASKDUEDATE || !TASKCATEGORY) {
-        RQUIRED_SPAN_HINT.forEach(span => {
+        REQUIRED_SPAN_HINT.forEach(span => {
             span.classList.remove('display-none');
             REQUIRED_INPUTS.forEach(input => {
                 input.classList.add('correct-me');
@@ -337,4 +337,54 @@ function showTaskOverlay(task) {
 function formatDate(dateString) {
     const [year, month, day] = dateString.split('-');
     return `${day}/${month}/${year}`;
+}
+
+
+// Search Option 
+const debouncedFilter = debounce(filterTasksLive, 300);
+document.getElementById('searchInput').addEventListener('input', debouncedFilter);
+
+
+function filterTasksLive() {
+  const query = document.getElementById('searchInput').value.trim().toLowerCase();
+  fetch(TASKS_BASE_URL)
+    .then(res => res.json())
+    .then(data => {
+      const tasks = Object.entries(data || {}).map(([id, task]) => ({ ...task, id }));
+      const filtered = filterTasksByQuery(tasks, query);
+      updateColumns(filtered);
+      checkEmptyFiltered(filtered);
+    });
+}
+
+function filterTasksByQuery(tasks, query) {
+  if (!query) return tasks;
+  return tasks.filter(t =>
+    t.title?.toLowerCase().includes(query) ||
+    t.description?.toLowerCase().includes(query)
+  );
+}
+
+function checkEmptyFiltered(tasks) {
+  const colIds = ['todoColumn', 'inProgressColumn', 'awaitFeedbackColumn', 'doneColumn'];
+  colIds.forEach(id => {
+    const match = tasks.filter(t => t.column === id);
+    if (!match.length) document.getElementById(id).innerHTML = noMatchCard();
+  });
+}
+
+function noMatchCard() {
+  return `<div class="no-task-item flexR">Keine Ergebnisse gefunden</div>`;
+}
+
+
+// starts search after 300ms when user stops typing 
+// to conserve resources of firebase connections
+//  and to prevent flickering screen
+function debounce(fn, delay) {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => fn(...args), delay);
+  };
 }

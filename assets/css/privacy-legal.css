@@ -1,114 +1,76 @@
-.privacy-container {
-  margin-top: 110px;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.content {
   display: flex;
   flex-direction: column;
-  padding-bottom: 30px;
   width: 100%;
-  margin-left: 96px;
+  background-color: #f6f7f8;
+  flex: 1;
 }
 
 .legal-content {
-  width: 100%;
-  margin-left: 96px;
-  display: flex;
-  flex-direction: column;
+  padding-left: 5vw;
+  padding-right: 5vw;
+  box-sizing: border-box;
 }
 
 .legal-heading {
-  display: flex;
-  flex-direction: row;
-  width: 420px;
-  height: 73px;
-  margin: 0;
- 
-}
-
-h4.legal-heading {
-  font-size: 61px;
+  font-size: clamp(28px, 4vw, 61px);
   font-weight: 700;
   margin: 0;
+  padding: 110px 5vw 0px;
+  gap: 30px;
 }
 
 h5.section-heading {
-  font-size: 27px;
+  font-size: clamp(18px, 2vw, 27px);
   font-weight: 700;
   letter-spacing: 0;
+  margin-top: 32px;
   padding-bottom: 16px;
 }
 
 h6.subsection-heading {
-  font-size: 20px;
+  font-size: clamp(16px, 1.8vw, 20px);
   font-weight: 700;
   letter-spacing: 0;
   margin-top: 30px;
   padding-bottom: 8px;
 }
 
-p {
+.students,
+.text,
+.emailcontact {
   font-size: 16px;
   line-height: 120%;
   padding-bottom: 16px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .highlight-blue {
   color: rgb(26, 175, 224);
   display: inline;
   font-weight: inherit;
-}
-
-p span.highlight-blue {
-  display: inline;
-  font-size: 16px;
+  font-size: clamp(14px, 1.5vw, 16px);
   width: auto;
 }
 
 .imprint-heading {
-  width: 346px;
-  height: 32px;
+  max-width: 100%;
+  height: auto;
   font-weight: 700;
   font-size: 27px;
   letter-spacing: 0;
   margin: 0;
+  word-break: break-word;
 }
 
 .scope-line-break {
   display: block;
   height: 16px;
-}
-
-/* Optional @media */
-
-@media screen and (max-width: 768px) {
-  .privacy-container,
-  .legal-content {
-    margin-left: 16px;
-    margin-right: 16px;
-    width: auto;
-  }
-
-  .legal-heading {
-    font-size: 32px;
-  }
-
-  h5.section-heading {
-    font-size: 24px;
-  }
-
-  h6.subsection-heading {
-    font-size: 20px;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .legal-heading {
-    font-size: 28px;
-  }
-
-  h5.section-heading {
-    font-size: 20px;
-  }
-
-  h6.subsection-heading {
-    font-size: 18px;
-  }
 }
