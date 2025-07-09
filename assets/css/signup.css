@@ -152,6 +152,7 @@ button {
 }
 .login-btn:hover {
     background-color: #29ABE2;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
 }
 
 .guest-login-btn {
@@ -174,6 +175,9 @@ button {
     color: #29ABE2;
     text-decoration: none;
 }
+.accept_div a:hover {
+    text-decoration: underline;
+}
 
 #msgBox {
     margin-top: 20px; 
@@ -193,6 +197,10 @@ footer a {
     margin: 0 15px; 
     text-decoration: none; 
     color: #CDCDCD;
+}
+footer a:hover {
+    color: #29ABE2;
+    font-weight: bold;
 }
 
 #signUpSuccess {

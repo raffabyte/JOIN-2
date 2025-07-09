@@ -24,16 +24,18 @@ header img {
 
 .header-desktop a,
 .header-mobile a {
-    border: solid;
+    border: 2px solid transparent;
     border-radius: 8px;
-    padding: 16px 15px;
+    padding: 15px 16px;
     color: white;
     text-decoration: none;
     background-color: #2A3647;
+    transform: none;
 }
 
 .header-desktop a:hover {
     background-color: #29ABE2;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
 }
 
 .header-desktop {
@@ -41,9 +43,8 @@ header img {
     gap: 35px;
     justify-content: center;
     align-items: center;
-    position: absolute;
-    top: 30px;
-    right: 30px;
+    padding-top: 67px;
+    padding-right: 122px;
 }
 
 .header-desktop span,
@@ -146,10 +147,12 @@ button {
 }
 .login-btn:hover {
     background-color: #29ABE2;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
 }
 .guest-login-btn:hover {
     border-color: #29ABE2;
     color: #29ABE2;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
 }
 
 .login-btn {
@@ -186,6 +189,10 @@ footer a {
     margin: 0 15px; 
     text-decoration: none; 
     color: #CDCDCD;
+}
+footer a:hover {
+    color: #29ABE2;
+    font-weight: bold;
 }
 
 @media (max-width: 428px) {

@@ -1,36 +1,3 @@
-// function initLogin() {
-//   const form = document.querySelector('form');
-//   const emailInput = document.getElementById('email');
-//   const passwordInput = document.getElementById('password');
-//   const loginButton = document.querySelector('.login-btn');
-//   const messageBox = document.getElementById('msgBox');
-
-//   form.addEventListener('submit', function (e) {
-//     e.preventDefault();
-//     clearMessage();
-
-//     if (!validateLoginForm(emailInput.value, passwordInput.value)) {
-//       showMessage('Bitte geben Sie gültige Login-Daten ein.');
-//       return;
-//     }
-
-//     disableButton(loginButton);
-
-//     // Simulated Login
-//     setTimeout(() => {
-//       const success = fakeLogin(emailInput.value, passwordInput.value);
-
-//       if (!success) {
-//         showMessage('E-Mail oder Passwort ist falsch.');
-//         enableButton(loginButton);
-//         return;
-//       }
-
-//       window.location.href = '../index/summary.html';
-//     }, 1000);
-//   });
-// }
-
 function initLogin() {
   const form = document.querySelector('form');
   const emailInput = document.getElementById('email');
@@ -119,19 +86,6 @@ function enableButton(button) {
  * @param {string} password
  * @returns {boolean}
  */
-
-// async function fakeLogin(email, password) {
-//   const response = await fetch(BASE_URL + "users.json");
-//   const users = await response.json();
-  
-//   for (let userId in users) {
-//      const user = users[userId];
-//      if (user.email === email && user.password === password) {
-//         return true;
-//      }
-//   }
-//   return false;
-// }
 
 async function login() {
   const email = document.getElementById("email").value.trim();
