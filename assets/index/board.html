@@ -38,7 +38,6 @@
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path d="M1 0.5V31.5" stroke="#D1D1D1" />
                             </svg>
-
                             <button id="searchButton" class="button">
                                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
@@ -48,7 +47,7 @@
                                 </svg>
                             </button>
                         </div>
-                        <button onclick="addTaskOverlay()" class="add-task-button flexR">
+                        <button onclick="addTaskOverlay('todoColumn')" class="add-task-button flexR">
                             <span>Add Task</span>
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -64,21 +63,21 @@
                 <div class="board-titles flexR">
                     <div class="board-title flexR">
                         <p>To Do</p>
-                        <button class="add-button flexR">
+                        <button class="add-button flexR" onclick="addTaskOverlay('todoColumn')">
                             <span class="plus"></span>
                             <span class="plus-90"></span>
                         </button>
                     </div>
-                    <div class="board-title flexR">
+                    <div class="board-title flexR" >
                         <p>In Progress</p>
-                        <button class="add-button flexR">
+                        <button class="add-button flexR" onclick="addTaskOverlay('inProgressColumn')">
                             <span class="plus"></span>
                             <span class="plus-90"></span>
                         </button>
                     </div>
                     <div class="board-title flexR">
                         <p>Await Feedback</p>
-                        <button class="add-button flexR">
+                        <button class="add-button flexR" onclick="addTaskOverlay('awaitFeedbackColumn')">
                             <span class="plus"></span>
                             <span class="plus-90"></span>
                         </button>
@@ -90,8 +89,7 @@
             </div>
             <div class="board-bottom flexR">
                 <div class="board-column flexC" id="todoColumn" ondrop="moveTo('todoColumn')"
-                    ondragleave="removeHighlight('todoColumn')"
-                    ondragover="allowDrop(event); highlight('todoColumn');">
+                    ondragleave="removeHighlight('todoColumn')" ondragover="allowDrop(event); highlight('todoColumn');">
                 </div>
                 <div class="board-column flexC" id="inProgressColumn" ondrop="moveTo('inProgressColumn')"
                     ondragleave="removeHighlight('inProgressColumn')"
@@ -104,8 +102,7 @@
                     <!-- Tasks will be dynamically added here -->
                 </div>
                 <div class="board-column flexC" id="doneColumn" ondrop="moveTo('doneColumn')"
-                    ondragleave="removeHighlight('doneColumn')"
-                    ondragover="allowDrop(event); highlight('doneColumn');">
+                    ondragleave="removeHighlight('doneColumn')" ondragover="allowDrop(event); highlight('doneColumn');">
                     <!-- Tasks will be dynamically added here -->
                 </div>
             </div>

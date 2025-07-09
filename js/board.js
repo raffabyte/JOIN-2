@@ -11,9 +11,9 @@ if (!userKey) {
 }
 
 
-function addTaskOverlay() {
+function addTaskOverlay(columnId) {
     // Set the overlay content to the add task form
-    OVERLAY_CONTENT.innerHTML = addTaskOverlayForm();
+    OVERLAY_CONTENT.innerHTML = addTaskOverlayForm(columnId);
     OVERLAY_CONTENT.classList.add('add-task');
 
     // Show the overlay
@@ -55,7 +55,7 @@ function notContentClickClose(event) {
 }
 
 
-let saveTaskData = () => {
+let saveTaskDataTo = (columnId) => {
     const TASKTITLE = document.getElementById('taskTitle').value;
     const TASKDESCRIPTION = document.getElementById('taskDescription').value;
     const TASKDUEDATE = document.getElementById('taskDueDate').value;
@@ -78,7 +78,7 @@ let saveTaskData = () => {
         assignee: TASKASSIGNEE,
         priority: PRIORITY,
         subtasks: SUBTASKS,
-        column: 'todoColumn' // Standardmäßig in der To-Do-Spalte
+        column: columnId
     };
     // Validierung der Eingabedaten
     if (!TASKTITLE || !TASKDUEDATE || !TASKCATEGORY) {
@@ -96,19 +96,15 @@ let saveTaskData = () => {
 }
 
 
-async function taskDataPush() {
-    const taskData = saveTaskData();
-    if (!taskData) {
-        return Promise.reject('No task data');
-    }
-
-    return fetch(TASKS_BASE_URL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(taskData)
-    })
+async function taskDataPush(columnId) {
+  const taskData = saveTaskDataTo(columnId);
+  if (!taskData) return Promise.reject('No task data');
+  
+  return fetch(TASKS_BASE_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(taskData)   // enthält jetzt column: columnId
+  });
 }
 
 function updateColumns(tasks) {
@@ -168,15 +164,15 @@ function updateBoard() {
 }
 
 
-function addTask(event) {
+function addTask(event , columnId) {
     if (event) event.preventDefault();
-    const taskData = saveTaskData();
+    const taskData = saveTaskDataTo(columnId);
 
     if (!taskData) {
         return;
     }
 
-    taskDataPush()
+    taskDataPush(columnId)
         .then(() => {
             updateBoard();
             showAddedTaskNotification();
@@ -208,13 +204,13 @@ function toCamelCase(word) {
 function handlePrioritySvg(priority) {
     switch (priority) {
         case 'HighPriority':
-            return HighPrioritySvgTemplate();
+            return HIGH_PRIORITY_SVG;
             break;
         case 'MidPriority':
-            return MidPrioritySvgTemplate();
+            return MID_PRIORITY_SVG;
             break;
         case 'LowPriority':
-            return LowPrioritySvgTemplate();
+            return LOW_PRIORITY_SVG;
             break;
         default:
             return '';
@@ -330,7 +326,7 @@ function taskOverlay(taskId) {
 
 function showTaskOverlay(task) {
     OVERLAY_CONTENT.innerHTML = taskOverlayTemplate(task);
-    OVERLAY_CONTENT.classList.add('add-task');
+    OVERLAY_CONTENT.classList.add('task-overlay');
     OVERLAY.classList.remove('display-none');
 
     setTimeout(() => {
