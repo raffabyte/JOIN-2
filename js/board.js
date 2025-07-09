@@ -2,6 +2,7 @@ const userKey = localStorage.getItem("loggedInUserKey");
 const OVERLAY = document.getElementById('overlay');
 const OVERLAY_CONTENT = document.getElementById('overlayContent');
 const TASKS_BASE_URL = "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks.json";
+
 let currentDraggedElement;
 
 
@@ -252,23 +253,8 @@ function showCheckedSubtasksCount(subtasks) {
     return '';
 }
 
-function toggleSubtasksVisibility(subtasks) {
-    return `${Array.isArray(subtasks) && subtasks.length > 0 ? '' : ' display-none'}"`;
-}
-
-function togglePriorityVisibility(priority) {
-    return `${priority ? '' : ' display-none'}`;
-}
-
-function toggleMembersVisibility(members) {
-    return `${Array.isArray(members) && members.length > 0 ? '' : ' display-none'}`;
-}
-function toggleCardFooterVisibility(task) {
-    return `${task.assignee || task.priority ? '' : ' display-none'}`;
-}
-
-function toggleDescriptionVisibility(description) {
-    return `${description ? '' : ' display-none'}`;
+function visibilityClass(condition) {
+    return condition ? '' : ' display-none';
 }
 
 function allowDrop(ev) {
@@ -387,4 +373,9 @@ function debounce(fn, delay) {
     clearTimeout(timeout);
     timeout = setTimeout(() => fn(...args), delay);
   };
+}
+function hasFooterData(task) {
+    const hasAssignees = Array.isArray(task.assignee) && task.assignee.length > 0;
+    const hasPriority  = Boolean(task.priority);
+    return hasAssignees || hasPriority;
 }

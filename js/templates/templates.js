@@ -115,15 +115,15 @@ function taskCardTemplate(task) {
                 <span id="${toCamelCase(task.category)}">${task.category}</span>
             </div>
             <h3>${task.title}</h3>
-            <p class="task-description ${toggleDescriptionVisibility(task.description)}" id="taskDescription">${task.description}</p>
-            <div class="subtasks flexR ${toggleSubtasksVisibility(task.subtasks)}" id="subtasks">
+            <p class="task-description ${visibilityClass(task.description)}" id="taskDescription">${task.description}</p>
+            <div class="subtasks flexR ${visibilityClass(Array.isArray(task.subtasks) && task.subtasks.length > 0)}" id="subtasks">
                 ${handleSubtasks(task.subtasks)}
             </div>
-            <div class="task-card-footer flexR ${toggleCardFooterVisibility(task)}">
-                <div class="task-members flexR ${toggleMembersVisibility(task.assignee)}" id="taskMembers">
+            <div class="task-card-footer flexR ${visibilityClass(hasFooterData(task))}">
+                <div class="task-members flexR ${visibilityClass(Array.isArray(task.assignee) && task.assignee.length > 0)}" id="taskMembers">
                     ${renderMembers(task)}
                 </div>
-                <div class="${togglePriorityVisibility(task.priority)} task-priority flexR">
+                <div class="${visibilityClass(task.priority)} task-priority flexR">
                     ${handlePrioritySvg(task.priority)}
                 </div>
             </div>
@@ -176,25 +176,25 @@ function taskOverlayTemplate(task){
                 </button>
             </div>
             <h2>${task.title}</h2>
-            <p>${task.description || ''}</p>
+            <p class="${visibilityClass(task.description)}" id="taskOverlayDescription">${task.description || ''}</p>
             <div class="gap-25 flexR">
                 <p class="task-overlay-headdings">Due Date:</p>
                 ${formatDate(task.dueDate)}
             </div>
-            <div class="flexR gap-25">
+            <div class="flexR gap-25 ${visibilityClass(task.priority)}">
                 <p class="task-overlay-headdings">Priority:</p>
                 <div class="flexR overlay-priority">
                     ${handlePriority(task.priority)} 
                     ${handlePrioritySvg(task.priority)}
                 </div>
             </div>
-            <div class="assignee-container gap-8 flexC">
+            <div class="assignee-container gap-8 flexC ${visibilityClass(task.assignee)}">
                 <p class="task-overlay-headdings">Assignees:</p>
                 <div class="flexC width-100">
                 ${renderMembersWithName(task)}
                 </div>
             </div>
-            <div class="gap-8 flexC subtasks-overlay">   
+            <div class="gap-8 flexC subtasks-overlay ${visibilityClass(task.subtasks)}">   
                 <p class="task-overlay-headdings">Subtasks:</p>
                 <div class="subtasks-overlay-list flexC width-100">
                     ${task.subtasks && task.subtasks.length > 0 ? task.subtasks.map(subtask => `
