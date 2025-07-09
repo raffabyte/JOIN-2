@@ -161,7 +161,7 @@ function memberNameTemplate(name) {
 
 function memberWithNameTemplate(name){
     return `
-        <div class="member-with-name flexR gap-16">
+        <div class="member-with-name width-100 flexR gap-16">
           ${contactIconSpanTemplate(name)}  
           ${memberNameTemplate(name)}
         </div>`;
@@ -177,19 +177,28 @@ function taskOverlayTemplate(task){
             </div>
             <h2>${task.title}</h2>
             <p>${task.description || ''}</p>
-            <p>Due Date: ${formatDate(task.dueDate)}</p>
-            <p>Priority: ${handlePriority(task.priority)} ${handlePrioritySvg(task.priority)}</p>
-            <div class="assignee-container flexC">
-                Assignees: 
-                <div class="flexC">
+            <div class="gap-25 flexR">
+                <p class="task-overlay-headdings">Due Date:</p>
+                ${formatDate(task.dueDate)}
+            </div>
+            <div class="flexR gap-25">
+                <p class="task-overlay-headdings">Priority:</p>
+                <div class="flexR overlay-priority">
+                    ${handlePriority(task.priority)} 
+                    ${handlePrioritySvg(task.priority)}
+                </div>
+            </div>
+            <div class="assignee-container gap-8 flexC">
+                <p class="task-overlay-headdings">Assignees:</p>
+                <div class="flexC width-100">
                 ${renderMembersWithName(task)}
                 </div>
             </div>
-            <div class="subtasks-container"   
-                <p>Subtasks:</p>
-                <div class="subtasks-overlay-list">
+            <div class="gap-8 flexC subtasks-overlay">   
+                <p class="task-overlay-headdings">Subtasks:</p>
+                <div class="subtasks-overlay-list flexC width-100">
                     ${task.subtasks && task.subtasks.length > 0 ? task.subtasks.map(subtask => `
-                        <div class="subtask-item">
+                        <div class="subtask-item width-100 gap-16 flexR">
                             <input type="checkbox" ${subtask.done ? 'checked' : ''} onclick="toggleSubtask('${task.id}', '${subtask.id}')">
                             <span>${subtask.value}</span>
                         </div>
