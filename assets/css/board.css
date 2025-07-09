@@ -304,3 +304,27 @@ span {
 .space-between {
     justify-content: space-between;
 }
+
+.task-overlay {
+    height: auto;
+    width: 525px;
+    background: white;
+    padding: 48px 40px;
+    border-radius: 30px;
+    gap: 24px;
+}
+
+.task-overlay > * {
+    width: 100%;
+    text-align: left;
+    align-items: flex-start;
+    padding: 0;
+}
+
+.task-overlay-footer{
+    justify-content: flex-end;
+}
+
+#addTaskButton svg path{
+    fill: white;
+}
