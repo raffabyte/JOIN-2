@@ -409,3 +409,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .correct-me, .correct-me:focus-within, .correct-me:focus{
     border: 1px solid #FF8190 !important;
 }
+
+#addTaskButton svg path{
+    fill: white;
+}

@@ -1,17 +1,19 @@
 const userKey = localStorage.getItem("loggedInUserKey");
+const OVERLAY = document.getElementById('overlay');
+const OVERLAY_CONTENT = document.getElementById('overlayContent');
+const TASKS_BASE_URL = "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks.json";
+let currentDraggedElement;
+
 
 if (!userKey) {
     // Kein Benutzer eingeloggt → weiterleiten
     window.location.href = "../../index.html";
 }
 
-const OVERLAY = document.getElementById('overlay');
-const OVERLAY_CONTENT = document.getElementById('overlayContent');
-const TASKS_BASE_URL = "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks.json";
 
-function addTaskOverlay() {
+function addTaskOverlay(columnId) {
     // Set the overlay content to the add task form
-    OVERLAY_CONTENT.innerHTML = addTaskOverlayForm();
+    OVERLAY_CONTENT.innerHTML = addTaskOverlayForm(columnId);
     OVERLAY_CONTENT.classList.add('add-task');
 
     // Show the overlay
@@ -20,15 +22,18 @@ function addTaskOverlay() {
     setTimeout(() => {
         // Add animation class to the overlay content
         OVERLAY_CONTENT.classList.add('active');
-        const subtaskInput = document.getElementById('subtasks');
-        onEnterAddSubTask(subtaskInput);
-        document.querySelectorAll('.edit-subtask-input').forEach(editInput => {
-            onEnterEditSubTask(editInput);
-        });
+        initializeSubtaskEventHandlers();
     }, 10);
 }
 
+function initializeSubtaskEventHandlers() {
+    const subtaskInput = document.getElementById('subtasks');
+    onEnterAddSubTask(subtaskInput);
 
+    document.querySelectorAll('.edit-subtask-input').forEach(editInput => {
+        onEnterEditSubTask(editInput);
+    });
+}
 
 function closeOverlay() {
     // Remove animation class
@@ -50,7 +55,7 @@ function notContentClickClose(event) {
 }
 
 
-let saveTaskData = () => {
+let saveTaskDataTo = (columnId) => {
     const TASKTITLE = document.getElementById('taskTitle').value;
     const TASKDESCRIPTION = document.getElementById('taskDescription').value;
     const TASKDUEDATE = document.getElementById('taskDueDate').value;
@@ -73,7 +78,7 @@ let saveTaskData = () => {
         assignee: TASKASSIGNEE,
         priority: PRIORITY,
         subtasks: SUBTASKS,
-        column: 'todoColumn' // Standardmäßig in der To-Do-Spalte
+        column: columnId
     };
     // Validierung der Eingabedaten
     if (!TASKTITLE || !TASKDUEDATE || !TASKCATEGORY) {
@@ -91,52 +96,51 @@ let saveTaskData = () => {
 }
 
 
-async function taskDataPush() {
-    const taskData = saveTaskData();
-    if (!taskData) {
-        return Promise.reject('No task data');
-    }
-
-    return fetch(TASKS_BASE_URL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(taskData)
-    })
+async function taskDataPush(columnId) {
+  const taskData = saveTaskDataTo(columnId);
+  if (!taskData) return Promise.reject('No task data');
+  
+  return fetch(TASKS_BASE_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(taskData)   // enthält jetzt column: columnId
+  });
 }
 
 function updateColumns(tasks) {
-    const todoColumn = document.getElementById('todoColumn');
-    const inProgressColumn = document.getElementById('inProgressColumn');
-    const awaitFeedbackColumn = document.getElementById('awaitFeedbackColumn');
-    const doneColumn = document.getElementById('doneColumn');
+    const COLUMNS = ['todoColumn', 'inProgressColumn', 'awaitFeedbackColumn', 'doneColumn'];
 
-    todoColumn.innerHTML = '';
-    inProgressColumn.innerHTML = '';
-    doneColumn.innerHTML = '';
-    awaitFeedbackColumn.innerHTML = '';
+    // Spalten leeren
+    COLUMNS.forEach(col => document.getElementById(col).innerHTML = '');
 
-    tasks.forEach(task => {
-        let taskCard = taskCardTemplate(task);
-        switch (task.column) {
-            case 'todoColumn':
-                todoColumn.innerHTML += taskCard;
-                break;
-            case 'inProgressColumn':
-                inProgressColumn.innerHTML += taskCard;
-                break;
-            case 'awaitFeedbackColumn':
-                awaitFeedbackColumn.innerHTML += taskCard;
-                break;
-            case 'doneColumn':
-                doneColumn.innerHTML += taskCard;
-                break;
-        }
+    // Tasks gruppieren und sortieren
+    const tasksByColumn = groupAndSortTasks(tasks);
 
-    }
-    );
+    // Tasks rendern
+    COLUMNS.forEach(col => {
+        tasksByColumn[col].forEach(task => {
+            document.getElementById(col).innerHTML += taskCardTemplate(task);
+        });
+    });
 }
+
+function groupAndSortTasks(tasks) {
+    const tasksByColumn = {
+        todoColumn: [], inProgressColumn: [],
+        awaitFeedbackColumn: [], doneColumn: []
+    };
+    // Gruppiere Tasks nach Spalten
+    tasks.forEach(task => {
+        if (tasksByColumn[task.column]) { tasksByColumn[task.column].push(task); }
+    });
+    // Sortiere nach movedAt
+    Object.keys(tasksByColumn).forEach(col => {
+        tasksByColumn[col].sort((a, b) => (a.movedAt || 0) - (b.movedAt || 0));
+    });
+    return tasksByColumn;
+}
+
+
 function checkEmptyColumn() {
     const boardColumns = document.querySelectorAll('.board-column');
     boardColumns.forEach(column => {
@@ -150,32 +154,31 @@ function updateBoard() {
     fetch(TASKS_BASE_URL)
         .then(response => response.json())
         .then(data => {
-            const tasks = Object.values(data || {}).map((task, index) => ({
+            const tasks = Object.entries(data || {}).map(([firebaseKey, task]) => ({
                 ...task,
-                id: index + 1 // Assign a unique ID based on the index
+                id: firebaseKey // Firebase Key als eindeutige ID
             }));
-            updateColumns(tasks)
+            updateColumns(tasks);
             checkEmptyColumn();
         });
 }
 
 
-
-function addTask(event) {
+function addTask(event , columnId) {
     if (event) event.preventDefault();
-    const taskData = saveTaskData();
+    const taskData = saveTaskDataTo(columnId);
 
     if (!taskData) {
         return;
     }
 
-    taskDataPush()
-        .then(()=> { 
+    taskDataPush(columnId)
+        .then(() => {
             updateBoard();
             showAddedTaskNotification();
             setTimeout(() => {
                 closeOverlay();
-            }, 900);  
+            }, 900);
         });
 }
 
@@ -185,23 +188,45 @@ function showAddedTaskNotification() {
 }
 
 function renderMembers(task) {
-    return Array.isArray(task.assignee) ? task.assignee.map(name => contactIconSpanTemplate(name)).join('') : ''
+    return Array.isArray(task.assignee) ?
+        task.assignee.map(name => contactIconSpanTemplate(name)).join('') : ''
+}
+function renderMembersWithName(task) {
+    return Array.isArray(task.assignee) ?
+        task.assignee.map(name => `${memberWithNameTemplate(name)}`).join('') : '';
 }
 
 function toCamelCase(word) {
+    if (!word) return ''; // Fallback für undefined/null
     return (word.charAt(0).toLowerCase() + word.slice(1)).replace(' ', '')
+}
+
+function handlePrioritySvg(priority) {
+    switch (priority) {
+        case 'HighPriority':
+            return HIGH_PRIORITY_SVG;
+            break;
+        case 'MidPriority':
+            return MID_PRIORITY_SVG;
+            break;
+        case 'LowPriority':
+            return LOW_PRIORITY_SVG;
+            break;
+        default:
+            return '';
+    }
 }
 
 function handlePriority(priority) {
     switch (priority) {
         case 'HighPriority':
-            return HighPrioritySvgTemplate();
+            return 'High';
             break;
         case 'MidPriority':
-            return MidPrioritySvgTemplate();
+            return 'Medium';
             break;
         case 'LowPriority':
-            return LowPrioritySvgTemplate();
+            return 'Low';
             break;
         default:
             return '';
@@ -212,7 +237,7 @@ function handleSubtasks(subtasks) {
     if (!subtasks || subtasks.length === 0) {
         return '';
     }
-    
+
     const completedSubtasks = subtasks.filter(subtask => subtask.checked === true).length;
     const totalSubtasks = subtasks.length;
     const progressPercentage = (completedSubtasks / totalSubtasks) * 100;
@@ -227,7 +252,7 @@ function showCheckedSubtasksCount(subtasks) {
     return '';
 }
 
-function toggleSubtasksVisibility(subtasks){
+function toggleSubtasksVisibility(subtasks) {
     return `${Array.isArray(subtasks) && subtasks.length > 0 ? '' : ' display-none'}"`;
 }
 
@@ -244,4 +269,72 @@ function toggleCardFooterVisibility(task) {
 
 function toggleDescriptionVisibility(description) {
     return `${description ? '' : ' display-none'}`;
+}
+
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+function startDragging(id) {
+    currentDraggedElement = id;
+}
+
+function moveTo(column) {
+    // Finde Task mit Firebase Key
+    fetch(TASKS_BASE_URL)
+        .then(response => response.json())
+        .then(data => {
+            const taskEntry = Object.entries(data || {}).find(([key, task]) => key === currentDraggedElement);
+            if (taskEntry) {
+                const [firebaseKey] = taskEntry;
+                // Update Server
+                const taskUrl = `https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks/${firebaseKey}.json`;
+                fetch(taskUrl, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ column: column, movedAt: Date.now() })
+                }).then(() => updateBoard());
+            }
+        });
+}
+
+function highlight(id) {
+    document.getElementById(id).classList.add('drag-area-highlight');
+}
+
+function removeHighlight(id) {
+    document.getElementById(id).classList.remove('drag-area-highlight');
+}
+
+
+function taskOverlay(taskId) {
+    fetch(TASKS_BASE_URL)
+        .then(response => response.json())
+        .then(data => {
+            const taskEntry = Object.entries(data || {}).find(([key, task]) => key === taskId);
+
+            if (taskEntry) {
+                const [firebaseKey, task] = taskEntry;
+                const taskWithId = { ...task, id: firebaseKey };
+                showTaskOverlay(taskWithId);
+            } else {
+                console.error('Task not found:', taskId);
+            }
+        })
+        .catch(error => console.error('Error fetching task:', error));
+}
+
+function showTaskOverlay(task) {
+    OVERLAY_CONTENT.innerHTML = taskOverlayTemplate(task);
+    OVERLAY_CONTENT.classList.add('task-overlay');
+    OVERLAY.classList.remove('display-none');
+
+    setTimeout(() => {
+        OVERLAY_CONTENT.classList.add('active');
+    }, 10);
+}
+
+function formatDate(dateString) {
+    const [year, month, day] = dateString.split('-');
+    return `${day}/${month}/${year}`;
 }

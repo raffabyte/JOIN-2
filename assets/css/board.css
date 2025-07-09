@@ -187,6 +187,7 @@ h1{
     padding: 16px;
     gap: 24px;
     margin-bottom: 16px;
+    cursor: pointer;
 }
 
 .task-card > *:not(:first-child) {
@@ -302,4 +303,82 @@ span {
 
 .space-between {
     justify-content: space-between;
+}
+
+.task-overlay {
+    height: auto;
+    width: 525px;
+    background: white;
+    padding: 48px 40px;
+    border-radius: 30px;
+    gap: 24px;
+}
+
+.task-overlay > * {
+    width: 100%;
+    text-align: left;
+    padding: 0;
+    color: black;
+    font-weight: 400;
+    font-size: 20px;
+}
+.task-overlay h2 {
+    font-size: 61px;
+    font-weight: 700;
+}
+.gap-25{
+    gap: 25px;
+}
+
+.overlay-priority{
+    padding: 4px 18px;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: 400;
+}
+
+.task-overlay-footer{
+    justify-content: flex-end;
+}
+.task-footer-btn:hover{
+    color:#29ABE2;
+    font-weight: 700;
+}
+
+.task-footer-btn:hover svg path{
+    fill: #29ABE2;
+}
+
+.task-overlay-headdings{
+    color: #2A3647;
+    font-size: 20px;
+}
+
+.assignee-container, .subtasks-overlay{
+    align-items: flex-start;
+}
+
+.member-with-name{
+    padding: 7px 16px;
+}
+.member-name-text{
+    font-size: 19px;
+    font-weight: 400;
+}
+
+.width-100{
+    width: 100%;
+}
+
+.subtasks-overlay-list{
+    gap: 4px;
+}
+
+.subtask-item{
+    padding: 6px 16px;;
+}
+
+.subtask-item span{
+    font-size: 16px;
+    font-weight: 400;
 }
