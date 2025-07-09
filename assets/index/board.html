@@ -89,23 +89,23 @@
                 </div>
             </div>
             <div class="board-bottom flexR">
-                <div class="board-column flexC" id="todoColumn" ondrop="moveTo('inProgressColumn')"
-                    ondragleave="removeHighlight('inProgressColumn')"
-                    ondragover="allowDrop(event); highlight('inProgressColumn');">
+                <div class="board-column flexC" id="todoColumn" ondrop="moveTo('todoColumn')"
+                    ondragleave="removeHighlight('todoColumn')"
+                    ondragover="allowDrop(event); highlight('todoColumn');">
                 </div>
                 <div class="board-column flexC" id="inProgressColumn" ondrop="moveTo('inProgressColumn')"
                     ondragleave="removeHighlight('inProgressColumn')"
                     ondragover="allowDrop(event); highlight('inProgressColumn');">
                     <!-- Tasks will be dynamically added here -->
                 </div>
-                <div class="board-column flexC" id="awaitFeedbackColumn" ondrop="moveTo('inProgressColumn')"
-                    ondragleave="removeHighlight('inProgressColumn')"
-                    ondragover="allowDrop(event); highlight('inProgressColumn');">
+                <div class="board-column flexC" id="awaitFeedbackColumn" ondrop="moveTo('awaitFeedbackColumn')"
+                    ondragleave="removeHighlight('awaitFeedbackColumn')"
+                    ondragover="allowDrop(event); highlight('awaitFeedbackColumn');">
                     <!-- Tasks will be dynamically added here -->
                 </div>
-                <div class="board-column flexC" id="doneColumn" ondrop="moveTo('inProgressColumn')"
-                    ondragleave="removeHighlight('inProgressColumn')"
-                    ondragover="allowDrop(event); highlight('inProgressColumn');">
+                <div class="board-column flexC" id="doneColumn" ondrop="moveTo('doneColumn')"
+                    ondragleave="removeHighlight('doneColumn')"
+                    ondragover="allowDrop(event); highlight('doneColumn');">
                     <!-- Tasks will be dynamically added here -->
                 </div>
             </div>

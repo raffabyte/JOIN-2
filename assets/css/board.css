@@ -187,6 +187,7 @@ h1{
     padding: 16px;
     gap: 24px;
     margin-bottom: 16px;
+    cursor: pointer;
 }
 
 .task-card > *:not(:first-child) {

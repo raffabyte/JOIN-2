@@ -95,7 +95,7 @@ function linkesNavLogin(activePage) {
 
 function taskCardTemplate(task) {
     return `
-        <div class="task-card flexC" id="${task.id}" draggable="true" ondragstart="startDragging(${task.id})">
+        <div class="task-card flexC" id="${task.id}" onclick="taskOverlay('${task.id}')" draggable="true" ondragstart="startDragging('${task.id}')">
             <div class="task-card-header flexR">
                 <span id="${toCamelCase(task.category)}">${task.category}</span>
             </div>
@@ -109,7 +109,7 @@ function taskCardTemplate(task) {
                     ${renderMembers(task)}
                 </div>
                 <div class="${togglePriorityVisibility(task.priority)} task-priority flexR">
-                    ${handlePriority(task.priority)}
+                    ${handlePrioritySvg(task.priority)}
                 </div>
             </div>
         </div>`;
@@ -172,4 +172,56 @@ function handleSubtasksTemplate(progress, done, total) {
             <span class="progress-text">${done}/${total} Subtasks</span>
         </div>
     `
+}
+
+function memberNameTemplate(name) {
+    return `<span class="member-name-text">${name}</span>`;
+}
+
+function memberWithNameTemplate(name){
+    return `
+        <div class="member-with-name flexR gap-16">
+          ${contactIconSpanTemplate(name)}  
+          ${memberNameTemplate(name)}
+        </div>`;
+}
+
+function taskOverlayTemplate(task){
+    return `
+        <div class="task-overlay flexC">
+            <div class="task-overlay-header flexR">
+                <span class="task-category" id="${toCamelCase(task.category)}">${task.category}</span>
+                <button class="overlay-button" onclick="closeOverlay()">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M7 8.40005L2.1 13.3C1.91667 13.4834 1.68333 13.575 1.4 13.575C1.11667 13.575 0.883333 13.4834 0.699999 13.3C0.516666 13.1167 0.424999 12.8834 0.424999 12.6C0.424999 12.3167 0.516666 12.0834 0.699999 11.9L5.6 7.00005L0.699999 2.10005C0.516666 1.91672 0.424999 1.68338 0.424999 1.40005C0.424999 1.11672 0.516666 0.883382 0.699999 0.700049C0.883333 0.516715 1.11667 0.425049 1.4 0.425049C1.68333 0.425049 1.91667 0.516715 2.1 0.700049L7 5.60005L11.9 0.700049C12.0833 0.516715 12.3167 0.425049 12.6 0.425049C12.8833 0.425049 13.1167 0.516715 13.3 0.700049C13.4833 0.883382 13.575 1.11672 13.575 1.40005C13.575 1.68338 13.4833 1.91672 13.3 2.10005L8.4 7.00005L13.3 11.9C13.4833 12.0834 13.575 12.3167 13.575 12.6C13.575 12.8834 13.4833 13.1167 13.3 13.3C13.1167 13.4834 12.8833 13.575 12.6 13.575C12.3167 13.575 12.0833 13.4834 11.9 13.3L7 8.40005Z" fill="#2A3647"></path>
+                    </svg>
+                </button>
+            </div>
+            <h2>${task.title}</h2>
+            <div class="task-details">
+                <p>Description: ${task.description || 'No description provided'}</p>
+                <p>Due Date: ${formatDate(task.dueDate)}</p>
+                <p>Priority: ${handlePriority(task.priority)} ${handlePrioritySvg(task.priority)}</p>
+                <div class="assignee-container flexC">
+                    Assignees: 
+                    <div class="flexC">
+                    ${renderMembersWithName(task)}
+                    </div>
+                </div>
+                <div class="subtasks-container">
+                    <p>Subtasks:</p>
+                    <div class="subtasks-overlay-list">
+                        ${task.subtasks && task.subtasks.length > 0 ? task.subtasks.map(subtask => `
+                            <div class="subtask-item">
+                                <input type="checkbox" ${subtask.done ? 'checked' : ''} onclick="toggleSubtask('${task.id}', '${subtask.id}')">
+                                <span>${subtask.value}</span>
+                            </div>
+                        `).join('') : '<p>No subtasks available</p>'}
+                </div>
+            </div>
+            <div class="task-overlay-footer flexR">
+                <button class="overlay-button" onclick="editTask('${task.id}')">Edit Task</button>
+                <button class="overlay-button" onclick="deleteTask('${task.id}')">Delete Task</button>
+            </div>
+        </div>`;
 }
