@@ -40,12 +40,12 @@ h1 {
 }
 .form-group label,
 .required-asterisk,
-span,
-p {
+.priorating,
+.priohead {
   font-size: 20px;
 }
 
-p {
+.priohead {
   padding-top: 52px;
 }
 
