@@ -1,34 +1,34 @@
-function initLogin() {
-  const form = document.querySelector('form');
-  const emailInput = document.getElementById('email');
-  const passwordInput = document.getElementById('password');
-  const loginButton = document.querySelector('.login-btn');
-  const messageBox = document.getElementById('msgBox');
+// function initLogin() {
+//   const form = document.querySelector('form');
+//   const emailInput = document.getElementById('email');
+//   const passwordInput = document.getElementById('password');
+//   const loginButton = document.querySelector('.login-btn');
+//   const messageBox = document.getElementById('msgBox');
 
-  form.addEventListener('submit', async function (e) {
-     e.preventDefault();
-     clearMessage();
+//   form.addEventListener('submit', async function (e) {
+//      e.preventDefault();
+//      clearMessage();
 
-     const email = emailInput.value.trim();
-     const password = passwordInput.value.trim();
+//      const email = emailInput.value.trim();
+//      const password = passwordInput.value.trim();
 
-     if (!validateLoginForm(email, password)) {
-        showMessage("Bitte geben Sie gültige Login-Daten ein.");
-        return;
-     }
+//      if (!validateLoginForm(email, password)) {
+//         showMessage("Bitte geben Sie gültige Login-Daten ein.");
+//         return;
+//      }
 
-     disableButton(loginButton);
+//      disableButton(loginButton);
 
-     const success = await fakeLogin(email, password);
+//      const success = await fakeLogin(email, password);
 
-     if (success) {
-        window.location.href = "../index/summary.html";
-     } else {
-        showMessage("E-Mail oder Passwort ist falsch.");
-        enableButton(loginButton);
-     }
-  });
-}
+//      if (success) {
+//         window.location.href = "../index/summary.html";
+//      } else {
+//         showMessage("E-Mail oder Passwort ist falsch.");
+//         enableButton(loginButton);
+//      }
+//   });
+// }
 
 
 /**
@@ -106,11 +106,11 @@ async function login() {
     }
 
     if (!found) {
-      alert("Email oder Passwort falsch.");
+      showMessage("Email oder Passwort falsch.");
     }
   } catch (error) {
     console.error(error);
-    alert("Fehler beim Login.");
+    showMessage("Fehler beim Login.");
   }
 }
 
