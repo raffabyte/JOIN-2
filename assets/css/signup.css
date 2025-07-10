@@ -15,6 +15,11 @@ header {
     align-items: center;
 }
 
+main {
+    min-height: 0;
+    margin-top: 0;
+}
+
 header img {
     height: 121px;
     width: 100px;
@@ -49,7 +54,6 @@ main {
     display: flex; 
     justify-content: center; 
     align-items: center; 
-    margin-top: 60px;
 }
 
 .login-container {

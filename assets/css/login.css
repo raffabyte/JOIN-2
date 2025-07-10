@@ -2,11 +2,17 @@
     font-family: 'Inter', sans-serif;
     box-sizing: content-box;
   }
-body{
+body {
     padding: 0;
     background: #F6F7F8;;
     margin: 0;
     flex-direction: column;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    
+    height: 100vh;
+    max-height: 1200px;
 }
 
 header {
@@ -43,7 +49,6 @@ header img {
     gap: 35px;
     justify-content: center;
     align-items: center;
-    padding-top: 67px;
     padding-right: 122px;
 }
 
