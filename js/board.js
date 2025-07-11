@@ -111,16 +111,36 @@ async function taskDataPush(columnId) {
 function updateColumns(tasks) {
     const COLUMNS = ['todoColumn', 'inProgressColumn', 'awaitFeedbackColumn', 'doneColumn'];
 
-    // Spalten leeren
-    COLUMNS.forEach(col => document.getElementById(col).innerHTML = '');
+    // Spalten leeren - sowohl Tasks als auch no-task Karten
+    COLUMNS.forEach(col => {
+        const column = document.getElementById(col);
+        // Entferne alle Task-Karten und no-task-item Elemente
+        const elementsToRemove = column.querySelectorAll('.task-card, .no-task-item');
+        elementsToRemove.forEach(element => element.remove());
+    });
 
     // Tasks gruppieren und sortieren
     const tasksByColumn = groupAndSortTasks(tasks);
 
     // Tasks rendern
     COLUMNS.forEach(col => {
+        const column = document.getElementById(col);
+        let dragArea = column.querySelector('.drag-area');
+        
+        // Wenn keine Drag-Area existiert, erstelle eine neue
+        if (!dragArea) {
+            const dragAreaIds = ['toDoDragArea', 'inProgressDragArea', 'awaitingFeedbackDragArea', 'doneDragArea'];
+            const index = COLUMNS.indexOf(col);
+            dragArea = document.createElement('div');
+            dragArea.className = 'drag-area display-none';
+            dragArea.id = dragAreaIds[index];
+            dragArea.style.pointerEvents = 'none';
+            column.appendChild(dragArea);
+        }
+        
         tasksByColumn[col].forEach(task => {
-            document.getElementById(col).innerHTML += taskCardTemplate(task);
+            // Füge Task vor der Drag-Area ein
+            dragArea.insertAdjacentHTML('beforebegin', taskCardTemplate(task));
         });
     });
 }
@@ -146,7 +166,16 @@ function checkEmptyColumn() {
     const boardColumns = document.querySelectorAll('.board-column');
     boardColumns.forEach(column => {
         if (!column.querySelector('.task-card')) {
+            // Speichere die Drag-Area vor dem Überschreiben
+            const dragArea = column.querySelector('.drag-area');
+            
+            // Füge no-task template hinzu
             column.innerHTML = noTaskCardTemplate();
+            
+            // Füge die Drag-Area wieder hinzu, falls sie existierte
+            if (dragArea) {
+                column.appendChild(dragArea);
+            }
         }
     });
 }
@@ -261,35 +290,88 @@ function allowDrop(ev) {
     ev.preventDefault();
 }
 
-function startDragging(id) {
+function startDragging(event, id) {
+    const taskCard = document.getElementById(id);
+    
+    event.dataTransfer.setDragImage(new Image(), 0, 0);
     currentDraggedElement = id;
+    taskCard.classList.add('dragging');
+}
+
+function stopDragging() {
+    if (currentDraggedElement) {
+        const element = document.getElementById(currentDraggedElement);
+        if (element) {
+            element.classList.remove('dragging');
+        }
+    }
 }
 
 function moveTo(column) {
-    // Finde Task mit Firebase Key
+    let element = document.getElementById(currentDraggedElement);
+    if (!element) return;
+    
+    element.classList.remove('dragging');
+    
+    // Verstecke alle Drag-Areas nach dem Drop
+    const allDragAreas = ['toDoDragArea', 'inProgressDragArea', 'awaitingFeedbackDragArea', 'doneDragArea'];
+    allDragAreas.forEach(dragAreaId => {
+        removeHighlight(dragAreaId);
+    });
+    
     fetch(TASKS_BASE_URL)
         .then(response => response.json())
         .then(data => {
-            const taskEntry = Object.entries(data || {}).find(([key, task]) => key === currentDraggedElement);
+            const taskEntry = Object.entries(data || {}).find(([key]) => key === currentDraggedElement);
             if (taskEntry) {
-                const [firebaseKey] = taskEntry;
-                // Update Server
-                const taskUrl = `https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks/${firebaseKey}.json`;
+                const taskUrl = `https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks/${taskEntry[0]}.json`;
                 fetch(taskUrl, {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ column: column, movedAt: Date.now() })
-                }).then(() => updateBoard());
+                }).then(() => { updateBoard(); currentDraggedElement = null; });
             }
         });
 }
 
 function highlight(id) {
-    document.getElementById(id).classList.add('drag-area-highlight');
+    const element = document.getElementById(id);
+    if (element) {
+        element.classList.remove('display-none');
+        
+        // Verstecke no-task-item in der gleichen Spalte
+        const column = element.parentElement;
+        const noTaskItem = column.querySelector('.no-task-item');
+        if (noTaskItem) {
+            noTaskItem.style.display = 'none';
+        }
+        
+        // Setze die Höhe der Drag-Area gleich der Höhe der gezogenen Task
+        if (currentDraggedElement) {
+            const draggedTask = document.getElementById(currentDraggedElement);
+            if (draggedTask) {
+                const taskHeight = draggedTask.offsetHeight;
+                element.style.height = taskHeight + 'px';
+            }
+        }
+    }
 }
 
 function removeHighlight(id) {
-    document.getElementById(id).classList.remove('drag-area-highlight');
+    const element = document.getElementById(id);
+    if (element) {
+        element.classList.add('display-none');
+        
+        // Zeige no-task-item wieder an, falls vorhanden
+        const column = element.parentElement;
+        const noTaskItem = column.querySelector('.no-task-item');
+        if (noTaskItem) {
+            noTaskItem.style.display = '';
+        }
+        
+        // Höhe zurücksetzen
+        element.style.height = '';
+    }
 }
 
 
@@ -353,9 +435,22 @@ function filterTasksByQuery(tasks, query) {
 
 function checkEmptyFiltered(tasks) {
   const colIds = ['todoColumn', 'inProgressColumn', 'awaitFeedbackColumn', 'doneColumn'];
-  colIds.forEach(id => {
+  const dragAreaIds = ['toDoDragArea', 'inProgressDragArea', 'awaitingFeedbackDragArea', 'doneDragArea'];
+  
+  colIds.forEach((id, index) => {
     const match = tasks.filter(t => t.column === id);
-    if (!match.length) document.getElementById(id).innerHTML = noMatchCard();
+    if (!match.length) {
+      const column = document.getElementById(id);
+      const dragArea = column.querySelector('.drag-area');
+      
+      // Füge no-match template hinzu
+      column.innerHTML = noMatchCard();
+      
+      // Füge die Drag-Area wieder hinzu, falls sie existierte
+      if (dragArea) {
+        column.appendChild(dragArea);
+      }
+    }
   });
 }
 

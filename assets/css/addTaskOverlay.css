@@ -413,3 +413,15 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 #addTaskButton svg path{
     fill: white;
 }
+
+
+.delete-edit-btns{
+    visibility: hidden;
+    transition: all 0.1s ease-out;
+    opacity: 0;
+}
+
+.subtask:hover .delete-edit-btns{
+    visibility: visible;
+    opacity: 1;
+}

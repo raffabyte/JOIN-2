@@ -89,21 +89,25 @@
             </div>
             <div class="board-bottom flexR">
                 <div class="board-column flexC" id="todoColumn" ondrop="moveTo('todoColumn')"
-                    ondragleave="removeHighlight('todoColumn')" ondragover="allowDrop(event); highlight('todoColumn');">
+                    ondragleave="removeHighlight('toDoDragArea')" 
+                    ondragover="allowDrop(event); highlight('toDoDragArea');">
+                    <div class="drag-area display-none" id="toDoDragArea" style="pointer-events: none;"></div>
                 </div>
-                <div class="board-column flexC" id="inProgressColumn" ondrop="moveTo('inProgressColumn')"
-                    ondragleave="removeHighlight('inProgressColumn')"
-                    ondragover="allowDrop(event); highlight('inProgressColumn');">
-                    <!-- Tasks will be dynamically added here -->
+                <div class="board-column flexC" id="inProgressColumn" 
+                ondrop="moveTo('inProgressColumn')"
+                    ondragleave="removeHighlight('inProgressDragArea')"
+                    ondragover="allowDrop(event); highlight('inProgressDragArea');">                    <div class="to-do-drag-area"></div>
+                    <div class="drag-area display-none" id="inProgressDragArea" style="pointer-events: none;"></div>
                 </div>
                 <div class="board-column flexC" id="awaitFeedbackColumn" ondrop="moveTo('awaitFeedbackColumn')"
-                    ondragleave="removeHighlight('awaitFeedbackColumn')"
-                    ondragover="allowDrop(event); highlight('awaitFeedbackColumn');">
-                    <!-- Tasks will be dynamically added here -->
+                    ondragleave="removeHighlight('awaitingFeedbackDragArea')"
+                    ondragover="allowDrop(event); highlight('awaitingFeedbackDragArea');">
+                    <div class="drag-area display-none" id="awaitingFeedbackDragArea" style="pointer-events: none;"></div>
                 </div>
                 <div class="board-column flexC" id="doneColumn" ondrop="moveTo('doneColumn')"
-                    ondragleave="removeHighlight('doneColumn')" ondragover="allowDrop(event); highlight('doneColumn');">
-                    <!-- Tasks will be dynamically added here -->
+                    ondragleave="removeHighlight('doneDragArea')" 
+                    ondragover="allowDrop(event); highlight('doneDragArea');">
+                    <div class="drag-area display-none" id="doneDragArea" style="pointer-events: none;"></div>
                 </div>
             </div>
         </div>
@@ -116,7 +120,5 @@
     <script src="../../main.js"></script>
     <script src="../../js/templates/templates.js"></script>
     <script src="../../js/addTaskOverlay.js"></script>
-
 </body>
-
 </html>
