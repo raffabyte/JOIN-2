@@ -360,7 +360,7 @@ function checkEmptyFiltered(tasks) {
 }
 
 function noMatchCard() {
-  return `<div class="no-task-item flexR">Keine Ergebnisse gefunden</div>`;
+  return `<div class="no-task-item flexR">No tasks To do</div>`;
 }
 
 
@@ -373,9 +373,4 @@ function debounce(fn, delay) {
     clearTimeout(timeout);
     timeout = setTimeout(() => fn(...args), delay);
   };
-}
-function hasFooterData(task) {
-    const hasAssignees = Array.isArray(task.assignee) && task.assignee.length > 0;
-    const hasPriority  = Boolean(task.priority);
-    return hasAssignees || hasPriority;
 }

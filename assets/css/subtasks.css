@@ -17,6 +17,7 @@
   transition: background-color 0.2s ease;
   border-radius: 10px;
   padding: 0px 12px 0px 22px;
+  height: 32px;
 }
 
 .subtask-actions {
@@ -26,7 +27,6 @@
 .subtask-list li:hover .subtask-actions {
   display: flex !important;
 }
-
 
 .subtask-list li::before {
   content: "•";
@@ -42,23 +42,18 @@
   font-size: 16px;
 }
 
-.subtask-list li.editing,
-.subtask-list li:has(input.edit-subtask-input) {
-  background-color: white !important;
-  width: 100%;
-  justify-content: space-between;
-  padding: 0px 12px 0px 12px;
-  border-bottom: #29abe2 1px solid;
-  font-size: 14px;
-  border-radius: none;
-}
-
 .subtask-list li.editing {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 32px;
+  padding: 0 12px;
   background-color: white !important;
   border-bottom: 1px solid #29abe2;
   border-radius: 0;
-  padding: 0; 
-  cursor: default;
+  font-size: 16px;
+  box-sizing: border-box;
+  overflow: hidden; 
 }
 
 .subtask-list li.editing::before {
@@ -70,6 +65,7 @@
   display: flex;
   align-items: center;
   padding-left: 44px;
+  height: 32px;
 }
 
 .icon-divider {
@@ -80,14 +76,27 @@
 }
 
 .edit-subtask-input {
-  flex-grow: 1;
-  background-color: white;
   font-size: 16px;
+  height: 100%;
   width: 100%;
-  box-shadow: none !important;
+  padding: 0 6px;
+  margin: 0;
   border: none !important;
   outline: none !important;
-  border-radius: 0;
+  box-shadow: none !important;
+  box-sizing: border-box;
+  line-height: normal;
+  appearance: none;            
+}
+
+/* Optional*/
+.edit-subtask-input:focus {
+  outline: none;
+  box-shadow: none;
+}
+.edit-subtask-input:focus-visible {
+  outline: none;
+  box-shadow: none;
 }
 
 .subtask-input-container {

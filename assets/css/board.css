@@ -66,6 +66,15 @@ h1{
     background-color: #E7E7E7;
 }
 
+.search-icon path {
+  fill: #2a3647;
+  transition: fill 0.15s ease;
+}
+
+#searchButton:active .search-icon path {
+  fill: #29abe2;
+}
+
 .add-task-button{
     gap: 4px;
     padding: 10px 16px;
