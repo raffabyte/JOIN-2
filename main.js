@@ -110,18 +110,6 @@ async function logout() {
   window.location.href = "../../index.html";
 }
 
-window.addEventListener("unload", async () => {
-  const isGuest = localStorage.getItem("guestMode") === "true";
-  const userKey = localStorage.getItem("loggedInUserKey");
-
-  if (isGuest && userKey) {
-    await fetch(`https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/users/${userKey}.json`, {
-      method: "DELETE",
-    });
-    localStorage.clear();
-  }
-});
-
 
 function generateColorFromString(str) {
   let hash = 0;
