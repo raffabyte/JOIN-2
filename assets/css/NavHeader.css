@@ -233,6 +233,9 @@ span {
   pointer-events: none;
 }
 
+.hidden-userinfo {
+    display: none !important;
+}
 
 @media (min-width: 1930px) {
   nav {
