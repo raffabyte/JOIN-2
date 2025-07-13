@@ -211,6 +211,10 @@ span {
   width: 56px;
   height: 56px;
 }
+.initials-button:hover {
+    background-color: #e9e7e7;
+    border-radius: 50px;
+}
 
 .initials-button img {
   width: 56px;
