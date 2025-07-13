@@ -1,122 +1,191 @@
+const emailRegex = /^[a-zA-Z0-9._%+-]+@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
+
+document.addEventListener("DOMContentLoaded", initLogin);
+
 function initLogin() {
-  const form = document.querySelector('form');
-  const emailInput = document.getElementById('email');
-  const passwordInput = document.getElementById('password');
-  const loginButton = document.querySelector('.login-btn');
-  const messageBox = document.getElementById('msgBox');
+  setupPasswordToggleOnIcon();
+  const elements = getLoginElements();
+  setupLiveFeedback(elements);
+  bindLoginHandler(elements);
+}
 
-  form.addEventListener('submit', async function (e) {
-     e.preventDefault();
-     clearMessage();
+// 🔎 DOM-Elemente sammeln
+function getLoginElements() {
+  return {
+    form: document.getElementById("loginForm"),
+    emailInput: document.getElementById("email"),
+    passwordInput: document.getElementById("password"),
+    loginButton: document.querySelector(".login-btn"),
+    msgBox: document.getElementById("msgBox"),
+  };
+}
 
-     const email = emailInput.value.trim();
-     const password = passwordInput.value.trim();
+// 🖐 Eingabe überwachen & Fehler zurücksetzen
+function setupLiveFeedback({ emailInput, passwordInput, msgBox }) {
+  emailInput.addEventListener("input", () => {
+    emailInput.classList.remove("input-error");
+    clearMessage(msgBox);
+  });
 
-     if (!validateLoginForm(email, password)) {
-        showMessage("Bitte geben Sie gültige Login-Daten ein.");
-        return;
-     }
+  passwordInput.addEventListener("input", () => {
+    passwordInput.classList.remove("input-error");
+    clearMessage(msgBox);
+  });
+}
 
-     disableButton(loginButton);
+// 🧠 Login-Event verknüpfen
+function bindLoginHandler({ form, emailInput, passwordInput, loginButton, msgBox }) {
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    clearMessage(msgBox);
 
-     const success = await fakeLogin(email, password);
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
 
-     if (success) {
-        window.location.href = "../index/summary.html";
-     } else {
-        showMessage("E-Mail oder Passwort ist falsch.");
-        enableButton(loginButton);
-     }
+    const isValid = validateInputs(email, password, emailInput, passwordInput, msgBox);
+    if (!isValid) return;
+
+    disableButton(loginButton);
+    const result = await login(email, password);
+
+    if (result.success) {
+      window.location.href = "../index/summary.html";
+    } else {
+      showLoginError(result.error, msgBox, emailInput, passwordInput);
+      enableButton(loginButton);
+    }
+  });
+}
+
+// ✅ Eingabe validieren
+function validateInputs(email, password, emailInput, passwordInput, msgBox) {
+  let valid = true;
+
+  if (!emailRegex.test(email)) {
+    emailInput.classList.add("input-error");
+    valid = false;
+  }
+
+  if (password.length < 4) {
+    passwordInput.classList.add("input-error");
+    valid = false;
+  }
+
+  if (!valid) {
+    showMessage("Bitte geben Sie eine gültige Domain ein.", msgBox);
+  }
+
+  return valid;
+}
+
+// 📢 Fehlermeldung je nach Login-Ergebnis
+function showLoginError(errorCode, msgBox, emailInput, passwordInput) {
+  switch (errorCode) {
+    case "email-not-found":
+      showMessage("E-Mail ist nicht registriert.", msgBox);
+      emailInput.classList.add("input-error");
+      break;
+    case "wrong-password":
+      showMessage("Passwort ist falsch.", msgBox);
+      passwordInput.classList.add("input-error");
+      break;
+    default:
+      showMessage("Fehler beim Login.", msgBox);
+  }
+}
+
+function setupPasswordToggleOnIcon() {
+  const passwordInput = document.getElementById("password");
+
+  // Zustand merken
+  let visible = false;
+
+  // Toggle durch Klick auf rechte Seite
+  passwordInput.addEventListener("click", (e) => {
+    const inputRect = passwordInput.getBoundingClientRect();
+    const clickX = e.clientX;
+  
+    // Klick im rechten Iconbereich?
+    if (clickX > inputRect.right - 40) {
+      // Abbruch wenn Feld leer
+      if (passwordInput.value.length === 0) return;
+  
+      visible = !visible;
+      passwordInput.type = visible ? "text" : "password";
+  
+      passwordInput.classList.remove("lock_icon", "visibility_icon", "visibility_off_icon");
+      passwordInput.classList.add(visible ? "visibility_icon" : "visibility_off_icon");
+  
+      e.preventDefault();
+    }
+  });
+  
+
+  // Beim Eintippen → Icon aktivieren
+  passwordInput.addEventListener("input", () => {
+    if (passwordInput.value.length > 0 && !visible) {
+      passwordInput.classList.remove("lock_icon");
+      passwordInput.classList.add("visibility_off_icon");
+    } else if (passwordInput.value.length === 0) {
+      passwordInput.classList.remove("visibility_icon", "visibility_off_icon");
+      passwordInput.classList.add("lock_icon");
+      passwordInput.type = "password";
+      visible = false;
+    }
   });
 }
 
 
-/**
- * Validates login form fields.
- * @param {string} email
- * @param {string} password
- * @returns {boolean}
- */
-function validateLoginForm(email, password) {
-  return email.includes('@') && password.trim().length >= 4;
-}
 
-
-/**
- * Shows a message to the user.
- * @param {string} msg
- */
-function showMessage(msg) {
-  const box = document.getElementById('msgBox');
-  box.textContent = msg;
-}
-
-
-/**
- * Clears message box.
- */
-function clearMessage() {
-  document.getElementById('msgBox').textContent = '';
-}
-
-
-/**
- * Disables a button element.
- * @param {HTMLElement} button
- */
-function disableButton(button) {
-  button.disabled = true;
-  button.classList.add('loading');
-}
-
-
-/**
- * Enables a button element.
- * @param {HTMLElement} button
- */
-function enableButton(button) {
-  button.disabled = false;
-  button.classList.remove('loading');
-}
-
-
-/**
- * Simulates login logic.
- * @param {string} email
- * @param {string} password
- * @returns {boolean}
- */
-
-async function login() {
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value;
-
+// 🔑 Login gegen Firebase-Datenbank
+async function login(email, password) {
   try {
-    const users = await loadData("users");
-    let found = false;
+    const response = await fetch(`${BASE_URL}users.json`);
+    const users = await response.json();
+
+    let userFound = null;
 
     for (let key in users) {
       const user = users[key];
-      if (user.email === email && user.password === password) {
-        found = true;
-        localStorage.setItem("loggedInUserKey", key);
-        window.location.href = "../index/summary.html";
+      if (user.email === email) {
+        userFound = { key, user };
         break;
       }
     }
 
-    if (!found) {
-      alert("Email oder Passwort falsch.");
-    }
-  } catch (error) {
-    console.error(error);
-    alert("Fehler beim Login.");
+    if (!userFound) return { success: false, error: "email-not-found" };
+    if (userFound.user.password !== password) return { success: false, error: "wrong-password" };
+
+    localStorage.setItem("loggedInUserKey", userFound.key);
+    return { success: true };
+  } catch (err) {
+    console.error("Login-Fehler:", err);
+    return { success: false, error: "server-error" };
   }
 }
 
-window.addEventListener('DOMContentLoaded', initLogin);
+// 🧹 UI-Helfer
+function showMessage(message, box) {
+  box.textContent = message;
+  box.style.color = "red";
+}
 
+function clearMessage(box) {
+  box.textContent = "";
+  box.style.color = "";
+}
 
+function disableButton(button) {
+  button.disabled = true;
+  button.classList.add("loading");
+}
+
+function enableButton(button) {
+  button.disabled = false;
+  button.classList.remove("loading");
+}
+
+// 👤 Gast-Login mit Demo-Daten
 async function startGuestSession() {
   const guestId = `guest_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
   const guestData = {
@@ -126,33 +195,28 @@ async function startGuestSession() {
     guest: true
   };
 
-  // User speichern
   await fetch(`${BASE_URL}users/guests/${guestId}.json`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(guestData)
   });
 
-  // 🔽 Demo-Kontakte hinzufügen
   await preloadGuestContacts(`guests/${guestId}`);
 
-  // Session merken
   localStorage.setItem("loggedInUserKey", `guests/${guestId}`);
   localStorage.setItem("guestMode", "true");
 
-  // Weiterleitung
   window.location.href = "../index/summary.html";
 }
 
+// 📋 Kontakte für Gast erstellen
 async function preloadGuestContacts(userPath) {
   const contactsPath = `users/${userPath}/contacts`;
 
   for (const contact of demoContacts) {
     await fetch(`${BASE_URL}${contactsPath}.json`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(contact)
     });
   }

@@ -15,7 +15,7 @@
 
 
 </head>
-<body onload="onloadFunc()">
+<body>
     <header>
         <div class="logo">
             <a href="/index.html">
@@ -33,18 +33,17 @@
         <div class="login-container">
             <h2 class="mb-30">Log in</h2>
             <img src="../img/LogIn/Selector.png" alt="selector">
-            <form onsubmit="login(); return false;">
+            <form id="loginForm">
                 <div class="inputs">
-                    <input  type="email" placeholder="Email" id="email" class="mail_icon" required>
-                    <input type="password" placeholder="Password" id="password" class="lock_icon" required >
+                  <input type="email" placeholder="Email" id="email" class="mail_icon" required />
+                  <input type="password" placeholder="Password" id="password" class="lock_icon" required />
                 </div>
-                <div class="login-buttons ">
-                    <button class="login-btn" type="submit">Log in</button>
-                    <button class="guest-login-btn" type="button" onclick="startGuestSession()">Guest Log in</button>
+                <div class="login-buttons">
+                  <button class="login-btn" type="submit">Log in</button>
+                  <button class="guest-login-btn" type="button" onclick="startGuestSession()">Guest Log in</button>
                 </div>
-            </form>
-            <div id="msgBox"></div>
-            <a href="../index/summary.html"></a>
+              </form>
+              <div id="msgBox"></div>              
         </div>
         <!---------Header-Mobile----------->
         <div class="header-mobile">
@@ -62,7 +61,7 @@
     </footer>
 
     <!-- script  -->
-    <script type="module" defer src="../../main.js"></script>
+    <!-- <script type="module" defer src="../../main.js"></script> -->
     <script defer src="../../js/login.js"></script>
     <script src="/js/remoteStorage.js" ></script>
 
