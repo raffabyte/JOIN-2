@@ -1,6 +1,6 @@
 /**
  * Testversuch für Logoutverhalten. Prüft beim Seitenaufruf und beim Zurück-Navigieren den Login-Status.
- */
+
 export function checkLoginStatus() {
   const redirectIfNotLoggedIn = () => {
     const userKey = localStorage.getItem("loggedInUserKey");
@@ -22,7 +22,7 @@ export function checkLoginStatus() {
 
 /**
  * Führt Logout beim Schließen des Tabs/Fensters durch (optional).
- */
+
 export function sessionLogout() {
   window.addEventListener("beforeunload", () => {
     localStorage.removeItem("loggedInUserKey");
@@ -32,7 +32,7 @@ export function sessionLogout() {
 
 /**
  * Logout über Dropdown-Menü – NICHT für Gäste löschen!
- */
+
 export async function logoutDropdown() {
   const isGuest = localStorage.getItem("guestMode") === "true";
   const userKey = localStorage.getItem("loggedInUserKey");
@@ -46,3 +46,4 @@ export async function logoutDropdown() {
   localStorage.clear();
   window.location.replace("../login/login.html");
 }
+ */

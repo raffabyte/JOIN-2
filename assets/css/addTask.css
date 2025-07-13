@@ -16,7 +16,7 @@ h1 {
   width: 100%;
   max-width: 980px;
   gap: 32px;
-   box-sizing: border-box;
+  box-sizing: border-box;
 }
 .form-columns {
   gap: 48px;
@@ -97,6 +97,14 @@ input.input-error,
 .date-picker {
   position: relative;
   width: 100%;
+  height: 51px;
+}
+
+#due-date {
+  width: 100%;
+  height: 100%;
+  padding-right: 44px;
+  box-sizing: border-box;
 }
 
 .calendar-btn {
@@ -107,8 +115,10 @@ input.input-error,
   background: transparent;
   border: none;
   padding: 0;
-  cursor: pointer;
-  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
 }
 
 .calendar-icon {
