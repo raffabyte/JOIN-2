@@ -56,7 +56,7 @@ function addTaskOverlayForm(columnId) {
                                 <div id="assigneeOptions" class="assignee-options display-none">
                                     <div class="assignee-option flexR space-between" onclick="selectAssignee(this); highligtSlected(this)">
                                         <div class="gap-16 flexR">
-                                            <span class="contact-icon"  style="background-color: ${generateColorFromString('Unassigned Contact')};" >U C</span> 
+                                            <span class="contact-icon flexR"  style="background-color: ${generateColorFromString('Unassigned Contact')};" >U C</span> 
                                             <span class="contact-name">Unassigned Contact</span>
                                         </div>
                                         ${CHECKBOX_SVG}
@@ -132,7 +132,7 @@ function addSubTaskTemplate(subtaskInput){
                 •
                 <span class="subtask-text">${subtaskInput}</span>
             </div>
-            <div class="gap-8 flexR">
+            <div class="delete-edit-btns gap-8 flexR">
                 <button class="edit-subtask-button overlay-button" type="button" onclick="editSubtask(this)">
                     ${EDIT_SVG}
                 </button>

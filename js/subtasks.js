@@ -1,6 +1,5 @@
 function initSubtaskControls() {
-  console.log("🛠 initSubtaskControls gestartet");
-
+  
   waitForElement("#subtasks", () => {
     const elements = getSubtaskElements();
     if (!elements) return;
@@ -18,11 +17,10 @@ function waitForElement(selector, callback, timeout = 1000) {
       callback();
     } else if (performance.now() - start < timeout) {
       requestAnimationFrame(check);
-    } else {
-      console.warn(`❗ Element ${selector} nicht gefunden nach ${timeout}ms`);
     }
   })();
 }
+
 
 function getSubtaskElements() {
   const elements = {
@@ -34,15 +32,13 @@ function getSubtaskElements() {
     addCancelBtns: document.getElementById("addCancelBtns"),
   };
 
-  for (const [key, el] of Object.entries(elements)) {
-    if (!el) {
-      console.warn(`❗ Element '${key}' nicht gefunden.`);
-      return null;
-    }
+  for (const el of Object.values(elements)) {
+    if (!el) return null;
   }
 
   return elements;
 }
+
 
 function setupSubtaskEvents(elements) {
   addSubtaskEventListeners(elements);

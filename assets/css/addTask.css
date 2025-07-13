@@ -17,9 +17,11 @@ h1 {
   max-width: 980px;
   gap: 32px;
   box-sizing: border-box;
+  box-sizing: border-box;
 }
 .form-columns {
   gap: 48px;
+  align-items: flex-start;
 }
 
 .form-column {
@@ -35,6 +37,7 @@ h1 {
   align-self: stretch;
 }
 .form-group {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -45,10 +48,6 @@ h1 {
 .priorating,
 .priohead {
   font-size: clamp(14px, 1.5vw, 20px);
-}
-
-.priohead {
-  padding-top: 52px;
 }
 
 .form-group label {
@@ -84,6 +83,7 @@ input::placeholder,
 textarea::placeholder {
   color: #d1d1d1;
 }
+
 .date-picker,
 #due-date,
 .field-wrapper,
@@ -202,11 +202,6 @@ input.input-error,
   transition: box-shadow 0.2s ease;
 }
 
-.dropdown-input-wrapper:focus-within {
-  border: 1px solid #29abe2;
-  box-shadow: 0 0 3px #29abe2;
-}
-
 .dropdown-input-wrapper input {
   flex: 1;
   height: 100%;
@@ -217,6 +212,7 @@ input.input-error,
   outline: none;
   color: #000;
 }
+
 .dropdown-toggle {
   position: absolute;
   right: 16px;
@@ -256,8 +252,9 @@ input.input-error,
   background-color: white;
   border-radius: 0 0 10px 10px;
 }
+
 .dropdown-options.show {
-  position: absolute;
+  position: relative;
   top: 100%;
   left: 0;
   right: 0;
@@ -266,8 +263,6 @@ input.input-error,
   z-index: 10;
   max-height: 228px;
   overflow-y: auto;
-  list-style: none;
-  padding: 0px;
   margin-top: 0;
   border-top: none;
   border-radius: 0 0 10px 10px;
@@ -392,11 +387,10 @@ input.contact-checkbox:checked::after {
   background-color: #29abe2;
   box-shadow: 0px 4px 4px 0px #7d8da3;
 }
-.field-error {
-  display: block;
-  margin-top: 4px;
-  font-size: 16px;
-  color: #ff3d00;
+
+.dropdown-input-wrapper:focus-within {
+  border: 1px solid #29abe2;
+  box-shadow: 0 0 3px #29abe2;
 }
 
 input[type="text"]:focus,
@@ -405,6 +399,32 @@ textarea:focus,
 .dropdown-input-wrapper:focus-within,
 .is-active {
   outline: none;
+  border-color: #29abe2 !important;
+  box-shadow: 0 0 3px #29abe2;
+}
+
+input.filled:not(.input-error),
+input[type="date"].filled:not(.input-error),
+textarea.filled:not(.input-error),
+.dropdown-input-wrapper.filled:not(.input-error):not(.no-focus) {
+  border-color: #29abe2 !important;
+  box-shadow: 0 0 3px #29abe2;
+}
+
+input[type="text"]:not(:focus):not(.input-error):not(.filled),
+input[type="date"]:not(:focus):not(.input-error):not(.filled),
+textarea:not(:focus):not(.input-error):not(.filled),
+.dropdown-input-wrapper:not(:focus-within):not(.input-error):not(.filled):not(
+    .no-focus
+  ) {
+  border-color: #d1d1d1 !important;
+  box-shadow: none !important;
+}
+
+input.filled:not(.input-error),
+textarea.filled:not(.input-error),
+input[type="date"].filled:not(.input-error),
+.dropdown-input-wrapper.filled:not(.input-error):not(.no-focus) {
   border-color: #29abe2 !important;
   box-shadow: 0 0 3px #29abe2;
 }

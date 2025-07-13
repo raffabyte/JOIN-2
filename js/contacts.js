@@ -1,23 +1,33 @@
 const userKey = localStorage.getItem("loggedInUserKey");
 
+
 if (!userKey) {
   window.location.href = "../../index.html";
 }
 
+
 const basePath = `users/${userKey}/contacts`;
+
+
+let editingOwnContact = false;
 
 
 let contactsData = {};
 
+
 console.log(contactsData);
+
+
 
 
 function toggleOverlay() {
   const overlay = document.getElementById("overlay");
   const isVisible = overlay.classList.contains("show");
 
+
   if (isVisible) {
     overlay.classList.remove("show");
+
 
     // nach der Slide-Out-Animation: ausblenden
     setTimeout(() => {
@@ -26,6 +36,7 @@ function toggleOverlay() {
   } else {
     overlay.classList.remove("d_none");
 
+
     // kleiner Timeout, um Rendering zu erzwingen
     setTimeout(() => {
       overlay.classList.add("show");
@@ -33,22 +44,27 @@ function toggleOverlay() {
   }
 }
 
+
 function openNewContactForm() {
   document.getElementById("contactForm").reset();
   document.getElementById("contactKey").value = "";
+
 
   const avatarContainer = document.getElementById("editAvatarContainer");
   avatarContainer.innerHTML = `
     <img class="pb" src="../img/Group 13.png" alt="" />
   `;
 
+
   toggleOverlay();
 }
+
 
 async function loadData(path = "") {
   let response = await fetch(BASE_URL + path + ".json");
   return (responseToJson = await response.json());
 }
+
 
 async function postData(path = "", data = {}) {
   let response = await fetch(BASE_URL + path + ".json", {
@@ -61,6 +77,7 @@ async function postData(path = "", data = {}) {
   return (responseToJson = await response.json());
 }
 
+
 async function putData(path = "", data = {}) {
   let response = await fetch(BASE_URL + path + ".json", {
     method: "PUT",
@@ -72,6 +89,7 @@ async function putData(path = "", data = {}) {
   return await response.json();
 }
 
+
 async function deleteData(path = "") {
   let response = await fetch(BASE_URL + path + ".json", {
     method: "DELETE",
@@ -82,15 +100,50 @@ async function deleteData(path = "") {
 
 
 
+
+
+
+
 async function submitContact(event) {
   event.preventDefault();
+
 
   const name = document.getElementById("name").value.trim();
   const email = document.getElementById("email").value.trim();
   const phone = document.getElementById("phone").value.trim();
   const contactKey = document.getElementById("contactKey").value.trim();
 
+
   const contact = { name, email, phone };
+
+
+  if (contactKey === "__own" || editingOwnContact) {
+  // 🧠 Erst bestehende Nutzerdaten laden (inkl. Passwort)
+  const existingUserData = await loadData(`users/${userKey}`);
+
+
+  // 🔧 Bestehendes Objekt erweitern
+  const updatedUser = {
+    ...existingUserData,
+    name,
+    email,
+    phone,
+  };
+
+
+  // ✅ Nur das Gewünschte aktualisieren
+  await putData(`users/${userKey}`, updatedUser);
+
+
+  // Anzeige aktualisieren
+  ownContact = updatedUser;
+  renderOwnContact(ownContact);
+  showOwnContactCardDetails(ownContact);
+  toggleOverlay();
+  editingOwnContact = false;
+  return;
+}
+
 
   if (contactKey) {
     // Bestehenden Kontakt aktualisieren
@@ -99,6 +152,7 @@ async function submitContact(event) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(contact),
     });
+
 
     await loadDataAfterSave();
     showcontactCardDetails(contactKey);
@@ -109,14 +163,19 @@ async function submitContact(event) {
     const result = await postData(basePath, contact);
     const newKey = result.name;
 
+
     await loadDataAfterSave();
     showcontactCardDetails(newKey);
     activateContactCard(newKey);
     document.getElementById("contactsDetails").classList.add("showDetails");
   }
 
+
   toggleOverlay();
 }
+
+
+
 
 
 
@@ -125,6 +184,7 @@ async function loadDataAfterSave() {
   contactsData = newContacts; // optional, wenn du den globalen Zustand behalten willst
   renderContacts(newContacts);
 }
+
 
 async function sendContactData(path = "", data = {}) {
   const response = await fetch(BASE_URL + path + ".json", {
@@ -137,30 +197,129 @@ async function sendContactData(path = "", data = {}) {
   return await response.json();
 }
 
+
 document.addEventListener("DOMContentLoaded", async () => {
   const contacts = await loadData(`users/${userKey}/contacts`);
+  const ownContact = await loadData(`users/${userKey}`);
+
   await setUserInitials();
+ 
+
 
   if (contacts) {
     contactsData = contacts; // ⬅️ global speichern
     renderContacts(contacts);
   }
   console.log(contacts);
-  
+  renderOwnContact(ownContact)
+ 
 });
+
+
+function renderOwnContact(ownContact) {
+     const container = document.getElementById("ownContactArea");
+  container.innerHTML = "";
+
+
+  const contact = ownContact
+
+
+  const initials = contact.name
+      .split(" ")
+      .map(word => word[0].toUpperCase())
+      .join("")
+      .substring(0, 2);
+
+
+ 
+    const color = generateColorFromString(contact.name);
+
+
+    const contactCard = document.createElement("div");
+    contactCard.className = "contactCard";
+    contactCard.innerHTML = `
+      <div class="contactCircle" style="background-color: ${color};">${initials}</div>
+      <div>
+        <p class="contactName">${contact.name}</p>
+      </div>
+    `;
+
+
+    contactCard.addEventListener("click", () => {
+      document.querySelectorAll(".contactCard").forEach(card =>
+        card.classList.remove("activeCard")
+      );
+      contactCard.classList.add("activeCard");
+      document.getElementById("contactsDetails").classList.add("showDetails");
+      showOwnContactCardDetails(contact);
+    });
+
+
+    container.appendChild(contactCard);
+  }
+
+
+function showOwnContactCardDetails(contact) {
+  const detailsContainer = document.getElementById("contactsDetails");
+  detailsContainer.innerHTML = `
+    <div class="displayFlex">
+      <div class="BigContactCircle" style="background-color: ${generateColorFromString(contact.name)};">
+        ${contact.name.split(" ").map(w => w[0].toUpperCase()).join("").substring(0, 2)}
+      </div>
+      <div class="displayColumn">
+        <h2 class="contectName">${contact.name}</h2>
+        <div class="displayFlex1">
+          <div class="editContainer" id="ownEditButton">
+            <svg width="24" height="24" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<mask id="mask0_334068_6285" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="33" height="32">
+<rect x="0.5" width="32" height="32" fill="#D9D9D9"/>
+</mask>
+<g mask="url(#mask0_334068_6285)">
+<path d="M7.16667 25.3332H9.03333L20.5333 13.8332L18.6667 11.9665L7.16667 23.4665V25.3332ZM26.2333 11.8998L20.5667 6.29984L22.4333 4.43317C22.9444 3.92206 23.5722 3.6665 24.3167 3.6665C25.0611 3.6665 25.6889 3.92206 26.2 4.43317L28.0667 6.29984C28.5778 6.81095 28.8444 7.42761 28.8667 8.14984C28.8889 8.87206 28.6444 9.48873 28.1333 9.99984L26.2333 11.8998ZM24.3 13.8665L10.1667 27.9998H4.5V22.3332L18.6333 8.19984L24.3 13.8665Z" fill="#2A3647"/>
+</g>
+</svg>
+            <p class="pSmall">Edit</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="contactInformation">Contact Information</p>
+    <div class="displayColumn1">
+      <p class="strong">Email</p>
+      <p class="mailInfoSmall">${contact.email}</p>
+    </div>
+    <div class="displayColumn1">
+      <p class="strong">Phone</p>
+      <p class="phoneInfoSmall">${contact.phone}</p>
+    </div>
+  `;
+
+
+  // 🧠 Jetzt attach den Event-Listener NACHDEM das HTML gesetzt wurde
+  document.getElementById("ownEditButton").addEventListener("click", () => {
+    editOwnContact(contact);
+  });
+}
+
+
+
 
 function renderContacts(data) {
   const container = document.getElementById("contactCardsContainer");
   container.innerHTML = "";
 
+
   const sortedEntries = Object.entries(data).sort((a, b) => {
     return a[1].name.localeCompare(b[1].name);
   });
 
+
   let currentLetter = null;
+
 
   for (const [key, contact] of sortedEntries) {
     const firstLetter = contact.name[0].toUpperCase();
+
 
     if (firstLetter !== currentLetter) {
       currentLetter = firstLetter;
@@ -173,13 +332,16 @@ function renderContacts(data) {
       container.appendChild(separatorList);
     }
 
+
     const initials = contact.name
       .split(" ")
       .map(word => word[0].toUpperCase())
       .join("")
       .substring(0, 2);
 
+
     const color = generateColorFromString(contact.name);
+
 
     const contactCard = document.createElement("div");
     contactCard.className = "contactCard";
@@ -191,6 +353,7 @@ function renderContacts(data) {
       </div>
     `;
 
+
     contactCard.addEventListener("click", () => {
       document.querySelectorAll(".contactCard").forEach(card =>
         card.classList.remove("activeCard")
@@ -200,12 +363,15 @@ function renderContacts(data) {
       showcontactCardDetails(key);
     });
 
+
     container.appendChild(contactCard);
   }
 }
 
+
 function showcontactCardDetails(key) {
   const contact = contactsData[key];
+
 
   const detailsContainer = document.getElementById("contactsDetails");
   detailsContainer.innerHTML = `
@@ -237,18 +403,22 @@ function showcontactCardDetails(key) {
 </g>
 </svg>
 
+
         <p class="pSmall">Delete</p>
       </div>
     </div>
   </div>
 </div>
 
+
 <p class="contactInformation">Contact Information</p>
+
 
 <div class="displayColumn1">
 <p class="strong">Email</p>
 <p class="mailInfoSmall">${contact.email}</p>
 </div>
+
 
 <div class="displayColumn1">
 <p class="strong">Phone</p>
@@ -257,13 +427,16 @@ function showcontactCardDetails(key) {
   `;
 }
 
-function editContact(key) {
-  const contact = contactsData[key];
 
-  document.getElementById("contactKey").value = key;
+function editOwnContact(contact) {
+  editingOwnContact = true;
+   
+
+
   document.getElementById("name").value = contact.name;
   document.getElementById("email").value = contact.email;
   document.getElementById("phone").value = contact.phone;
+
 
   // Initialen und Farbe berechnen
   const initials = contact.name
@@ -273,6 +446,7 @@ function editContact(key) {
     .substring(0, 2);
   const color = generateColorFromString(contact.name);
 
+
   // Avatar-Kreis einfügen
   const avatarContainer = document.getElementById("editAvatarContainer");
   avatarContainer.innerHTML = `
@@ -280,6 +454,41 @@ function editContact(key) {
       ${initials}
     </div>
   `;
+
+
+  toggleOverlay();
+}
+
+
+
+
+function editContact(key) {
+  const contact = contactsData[key];
+
+
+  document.getElementById("contactKey").value = key;
+  document.getElementById("name").value = contact.name;
+  document.getElementById("email").value = contact.email;
+  document.getElementById("phone").value = contact.phone;
+
+
+  // Initialen und Farbe berechnen
+  const initials = contact.name
+    .split(" ")
+    .map(w => w[0].toUpperCase())
+    .join("")
+    .substring(0, 2);
+  const color = generateColorFromString(contact.name);
+
+
+  // Avatar-Kreis einfügen
+  const avatarContainer = document.getElementById("editAvatarContainer");
+  avatarContainer.innerHTML = `
+    <div class="BigContactCircle" style="background-color: ${color};">
+      ${initials}
+    </div>
+  `;
+
 
   toggleOverlay();
 }
@@ -290,19 +499,23 @@ async function deleteContact(key) {
   await loadDataAfterSave();
 }
 
+
 function activateContactCard(key) {
   document.querySelectorAll(".contactCard").forEach(card =>
     card.classList.remove("activeCard")
   );
 
+
   // Karte mit Name und Mail finden
   const container = document.getElementById("contactCardsContainer");
   const cards = container.querySelectorAll(".contactCard");
+
 
   for (let card of cards) {
     const nameText = card.querySelector(".contactName")?.innerText.trim();
     const emailText = card.querySelector(".contactMail")?.innerText.trim();
     const contact = contactsData[key];
+
 
     if (contact.name === nameText && contact.email === emailText) {
       card.classList.add("activeCard");
@@ -310,4 +523,3 @@ function activateContactCard(key) {
     }
   }
 }
-

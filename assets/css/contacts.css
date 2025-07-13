@@ -52,6 +52,7 @@
     width: 100%;
     height: 101px;
     background-color: white;
+    flex-shrink: 0;
 }
 .AddNewButton {
     display: flex;
@@ -491,4 +492,81 @@ form {
   border: solid 2px white;
   font-weight: 500;
   font-size: 47px;
+}
+
+.ownContactCard {
+    max-width: 352px;
+    height: 78px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding-left: 24px;
+    flex-shrink: 0;
+}
+
+
+
+
+.ownContactArea {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    border-top: solid 2px #7a6e6e;
+    border-bottom: solid 2px #7a6e6e ;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.OwnContactCard {
+    max-width: 352px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    gap: 16px;
+    height: 100%;
+    justify-content: space-between;
+}
+.OwnContactCard:hover {
+    background-color: lightgray;
+    border-radius: 16px;
+    cursor: pointer;
+}
+.ownContactCircleWrapper {
+  position: relative;
+  width: 42px;
+  height: 42px;
+}
+
+
+.ownContactCircleWrapper img {
+  width: 42px;
+  height: 42px;
+  display: block;
+}
+
+
+.initialsOnImage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #29ABE2;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 1;
+  text-align: center;
+  width: 100%;       /* optional */
+  height: 100%;      /* optional */
+  display: flex;     /* 🆕 für perfektes Zentrieren */
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.separatorList1 {
+    width: 400px;
+    background-color: #201f1f;
+    border-radius: 16px;
+    height: 2px;
+    flex-shrink: 0;
 }

@@ -81,6 +81,8 @@ async function signUp() {
 
     const userKey = response.name; // ← Das ist dein eindeutiger Schlüssel
 
+    await preloadContacts(userKey);
+
     // Speichern für spätere Nutzung
     localStorage.setItem("loggedInUserKey", userKey);
     
@@ -99,3 +101,30 @@ async function signUp() {
     alert("Es ist ein Fehler aufgetreten.");
   }
 }
+
+async function preloadContacts(userKey) {
+  const contactsPath = `users/${userKey}/contacts`;
+
+  for (const contact of demoContacts) {
+    await fetch(`${BASE_URL}${contactsPath}.json`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(contact)
+    });
+  }
+}
+
+const demoContacts = [
+  { name: "Anna Becker", email: "anna@example.com", phone: "123456789" },
+  { name: "Tom Meier", email: "tom@example.com", phone: "987654321" },
+  { name: "Lisa Schmidt", email: "lisa@example.com", phone: "555123456" },
+  { name: "Peter Braun", email: "peter@example.com", phone: "333222111" },
+  { name: "Nina Keller", email: "nina@example.com", phone: "444555666" },
+  { name: "Max Fischer", email: "max@example.com", phone: "666777888" },
+  { name: "Julia König", email: "julia@example.com", phone: "777888999" },
+  { name: "Leon Wagner", email: "leon@example.com", phone: "111222333" },
+  { name: "Emma Roth", email: "emma@example.com", phone: "222333444" },
+  { name: "Paul Weber", email: "paul@example.com", phone: "999000111" }
+];
