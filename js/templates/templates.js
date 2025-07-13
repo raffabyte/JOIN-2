@@ -20,13 +20,18 @@ function header() {
         'legal-notice-login.html',
         'privacy-login.html'
     ];
+    const hideHelpLinkPages = [
+        'help.html'
+    ];
     const currentPage = window.location.pathname.split('/').pop();
+
     const hideUserInfo = pagesToHideUserInfo.includes(currentPage);
+    const hideInfoHeader = hideHelpLinkPages.includes(currentPage);
 
     return `
         <h3>Kanban Project Management Tool</h3>
         <div class="userInfo ${hideUserInfo ? 'hidden-userinfo' : ''}">
-            <a href="help.html" id="helpLink">
+            <a href="help.html" id="helpLink" class="${hideInfoHeader ? 'hidden-userinfo' : ''}">
                 <img class="help" src="../img/SummaryUser/help.png" alt="" />
             </a>
             <button onclick="toggleMenu()" id="userProfile" class="initials-button">
@@ -41,6 +46,7 @@ function header() {
         </div>
     `;
 }
+
 
 function linkesNav(activePage) {
   const isGuest = localStorage.getItem("guestMode") === "true";

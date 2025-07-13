@@ -1,4 +1,4 @@
-const userKey = localStorage.getItem("loggedInUserKey");
+
 if (!userKey) {
   window.location.href = "../../index.html";
 }

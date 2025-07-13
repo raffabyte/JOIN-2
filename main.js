@@ -19,6 +19,7 @@ function logout() {
     alert('Du wurdest abgemeldet!');
 }
 
+const userKey = localStorage.getItem("loggedInUserKey");
 
 //Profil menu Toggle function
 
