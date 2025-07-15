@@ -38,7 +38,7 @@ function header() {
                 <img src="../img/Ellipse 3.png" alt="">
                 <span id="userInitials" class="initials-text"></span>
             </button>
-            <div class="flexC" id="menu">
+            <div class="flexC not-visible" id="menu">
                 <a href="../index/legal-notice.html">Legal notice</a>
                 <a href="../index/privacy.html">Privacy Policy</a>
                 <a onclick="logout()" href="login.html">Log Out</a>
