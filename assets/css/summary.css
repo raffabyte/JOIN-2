@@ -159,10 +159,23 @@ font-weight: 400;
     justify-content: center;
 }
 
-.greeting {
+#greetingText,
+#comma {
+  display: inline;
+  vertical-align: baseline;
+}
+
+#greetingText {
     font-weight: 500;
     font-size: 47px;
     color: #2A3647;
+}
+
+#comma {
+    font-weight: 500;
+    font-size: 47px;
+    color: #2A3647;
+    margin-left: 2px;
 }
 
 .name {

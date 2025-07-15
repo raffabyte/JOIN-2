@@ -185,17 +185,50 @@ function checkEmptyColumn() {
 }
 
 function updateBoard() {
-    fetch(TASKS_BASE_URL)
-        .then(response => response.json())
-        .then(data => {
-            const tasks = Object.entries(data || {}).map(([firebaseKey, task]) => ({
-                ...task,
-                id: firebaseKey // Firebase Key als eindeutige ID
-            }));
-            updateColumns(tasks);
-            checkEmptyColumn();
-        });
+  fetch(TASKS_BASE_URL)
+    .then(response => response.json())
+    .then(data => {
+      const tasks = Object.entries(data || {}).map(([firebaseKey, task]) => ({
+        ...task,
+        id: firebaseKey
+      }));
+
+      updateColumns(tasks);
+      checkEmptyColumn();
+
+      // 🧠 Neue Zähllogik für jede Spalte:
+      const countByColumn = {
+        todo: 0,
+        inProgress: 0,
+        awaitFeedback: 0,
+        done: 0
+      };
+
+      tasks.forEach(task => {
+        switch (task.column) {
+          case 'todoColumn':
+            countByColumn.todo++;
+            break;
+          case 'inProgressColumn':
+            countByColumn.inProgress++;
+            break;
+          case 'awaitFeedbackColumn':
+            countByColumn.awaitFeedback++;
+            break;
+          case 'doneColumn':
+            countByColumn.done++;
+            break;
+        }
+      });
+
+      // 🧪 Testweise in Konsole:
+      console.log('Anzahl Tasks:', countByColumn);
+
+      // 📨 Optional: Werte in localStorage speichern, um sie auf der Startseite zu verwenden
+      localStorage.setItem("taskCounts", JSON.stringify(countByColumn));
+    });
 }
+
 
 
 function addTask(event , columnId) {

@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta http-equiv="Cache-Control" content="no-store">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
+    <meta http-equiv="Cache-Control" content="no-store" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
 
     <title>summary</title>
 
@@ -19,8 +19,7 @@
     <link rel="icon" href="../img/Logo.png" type="image/x-icon" />
   </head>
   <body>
-    
-<nav id="linkesNavMenu"></nav>
+    <nav id="linkesNavMenu"></nav>
     <main class="flexC">
       <header id="header"></header>
       <div class="content">
@@ -45,7 +44,8 @@
                   >
                     <circle cx="34.5" cy="35" r="34.5" fill="#2A3647" />
                   </svg>
-                  <svg class="icon-circle"
+                  <svg
+                    class="icon-circle"
                     width="33"
                     height="32"
                     viewBox="0 0 33 32"
@@ -72,7 +72,7 @@
                   </svg>
                 </div>
                 <div class="d-colum">
-                  <h2 class="nummber">1</h2>
+                  <h2 id="ToDo" class="nummber">1</h2>
                   <p class="To-do">To-do</p>
                 </div>
               </a>
@@ -106,7 +106,7 @@
                   </svg>
                 </div>
                 <div class="d-colum">
-                  <h2 class="nummber">1</h2>
+                  <h2 id="Done" class="nummber">1</h2>
                   <p class="To-do">Done</p>
                 </div>
               </a>
@@ -122,7 +122,7 @@
                     alt=""
                   />
                   <div class="d-colum">
-                    <h2 class="nummber">1</h2>
+                    <h2 id="Done" class="nummber">1</h2>
                     <p class="To-do">Done</p>
                   </div>
                 </div>
@@ -137,21 +137,23 @@
             <!-- Reihe 3 – 3 Elemente -->
             <div class="row">
               <a href="board.html" class="item3">
-                <h2 class="nummber">5</h2>
+                <h2 id="tasksinBoard" class="nummber">5</h2>
                 <p class="To-do">Tasks in Board</p>
               </a>
               <a href="board.html" class="item3">
-                <h2 class="nummber">2</h2>
+                <h2 id="tasksInProgress" class="nummber">2</h2>
                 <p class="To-do">Tasks In Progress</p>
               </a>
               <a href="board.html" class="item3">
-                <h2 class="nummber">2</h2>
+                <h2 id="awaitingFeedback" class="nummber">2</h2>
                 <p class="To-do">Awaiting Feedback</p>
               </a>
             </div>
           </div>
           <div class="greetings">
-            <h3 class="greeting" id="greeting">Good morning,</h3>
+            <h3 class="greeting">
+              <span id="greetingText">Good morning</span><span id="comma">,</span>
+            </h3>
             <h2 class="name" id="userName">Sofia Müller</h2>
           </div>
         </div>
@@ -159,9 +161,8 @@
     </main>
 
     <!-- scripts  -->
-<script src="../../js/templates/templates.js"></script>
-<script src="../../main.js"></script>
-<script src="../../js/summery.js"></script>
-
+    <script src="../../js/templates/templates.js"></script>
+    <script src="../../main.js"></script>
+    <script src="../../js/summery.js"></script>
   </body>
 </html>
