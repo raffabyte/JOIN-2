@@ -175,7 +175,6 @@ h1 {
 .board-column {
   width: 100%;
   height: 100%;
-    flex: 1;
 }
 
 .no-task-item {
@@ -402,4 +401,5 @@ span {
     height: 150px;
     width: 100%;
     margin: 16px 0;
+    pointer-events: none;
 }
