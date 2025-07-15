@@ -1,4 +1,4 @@
-const userKey = localStorage.getItem("loggedInUserKey");
+
 const OVERLAY = document.getElementById('overlay');
 const OVERLAY_CONTENT = document.getElementById('overlayContent');
 const TASKS_BASE_URL = "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks.json";

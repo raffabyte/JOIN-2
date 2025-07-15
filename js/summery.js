@@ -6,7 +6,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   await init();
 });
 
-const userKey = localStorage.getItem("loggedInUserKey");
+
 
 if (!userKey) {
   // Kein Benutzer eingeloggt → weiterleiten

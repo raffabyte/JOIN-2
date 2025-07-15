@@ -19,6 +19,7 @@ function logout() {
     alert('Du wurdest abgemeldet!');
 }
 
+const userKey = localStorage.getItem("loggedInUserKey");
 
 //Profil menu Toggle function
 
@@ -83,6 +84,33 @@ async function init(){
     linkesNavMenuVersion();
     showHideHelpAndUser();
     await setUserInitials();
+}
+
+async function setUserInitials() {
+  const initialsEl = document.getElementById("userInitials");
+
+  if (!initialsEl || typeof userKey === 'undefined' || !userKey) return;
+  
+  if (!initialsEl || !userKey) return;
+
+  try {
+    const response = await fetch(`${BASE_URL}users/${userKey}.json`);
+    const user = await response.json();
+
+    if (user?.name) {
+      const initials = user.name
+        .split(" ")
+        .map(word => word[0].toUpperCase())
+        .slice(0, 2)
+        .join("");
+      initialsEl.innerText = initials;
+    } else {
+      initialsEl.innerText = "?";
+    }
+  } catch (error) {
+    console.error("Fehler beim Laden der Userdaten:", error);
+    initialsEl.innerText = "?";
+  }
 }
 
 function contactIconSpan(name){

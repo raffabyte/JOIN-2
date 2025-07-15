@@ -30,13 +30,8 @@
               />
             </button>
           </div>
-          <div id="ownContactArea" class="ownContactArea">
-             
-          </div>
-          <div id="contactCardsContainer" class="contactCardsContainer">
-
-            
-          </div>
+          <div id="ownContactArea" class="ownContactArea"></div>
+          <div id="contactCardsContainer" class="contactCardsContainer"></div>
         </div>
         <div class="contactsContainer">
           <div class="into">
@@ -45,10 +40,7 @@
             <h2>better with a Team</h2>
           </div>
           <div class="contactsDetailsContainer">
-            <div id="contactsDetails" class="contactsDetails">
-
-
-            </div>
+            <div id="contactsDetails" class="contactsDetails"></div>
           </div>
         </div>
       </div>
@@ -68,8 +60,8 @@
           </div>
           <div class="rightSide">
             <div class="pbContainer" id="editAvatarContainer">
-  <!-- Initialen-Kreis wird hier eingefügt -->
-</div>
+              <!-- Initialen-Kreis wird hier eingefügt -->
+            </div>
             <div class="flexCC">
               <div onclick="toggleOverlay()" class="closeWrapper">
                 <img class="closeContact" src="../img/Close.png" alt="" />
@@ -101,13 +93,36 @@
                 </div>
 
                 <div class="login-buttons">
-                  <button onclick="toggleOverlay()" class="cancel-button">
-                    <p class="cancelText">Cancel</p>
-                    <img class="closeContact" src="../img/Close.png" alt="" />
+                  <!-- Cancel/Delete -->
+                  <button id="cancelBtn" type="button" class="cancel-button">
+                    <p id="cancelText" class="cancelText">Cancel</p>
+                    <svg id="cancelIcon"
+                      class="close2"
+                      width="24"
+                      height="25"
+                      viewBox="0 0 24 25"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M12.001 12.5001L17.244 17.7431M6.758 17.7431L12.001 12.5001L6.758 17.7431ZM17.244 7.25708L12 12.5001L17.244 7.25708ZM12 12.5001L6.758 7.25708L12 12.5001Z"
+                        stroke="#2A3647"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
                   </button>
-                  <button class="create-btn" type="submit">
-                    <p class="createText">Create contact</p>
-                    <img class="check" src="../img/check.png" alt="" />
+
+                  <!-- Create/Save -->
+                  <button id="submitBtn" type="submit" class="create-btn">
+                    <p id="submitText" class="createText">Create contact</p>
+                    <img
+                      id="submitIcon"
+                      class="check"
+                      src="../img/check.png"
+                      alt=""
+                    />
                   </button>
                 </div>
               </form>
@@ -123,7 +138,3 @@
     <script src="../../js/contacts.js"></script>
   </body>
 </html>
-
-
-
-

@@ -1,4 +1,4 @@
-const userKey = localStorage.getItem("loggedInUserKey");
+
 
 
 if (!userKey) {
@@ -24,23 +24,24 @@ function toggleOverlay() {
   const overlay = document.getElementById("overlay");
   const isVisible = overlay.classList.contains("show");
 
-
   if (isVisible) {
-    overlay.classList.remove("show");
-
-
-    // nach der Slide-Out-Animation: ausblenden
+    // ❗ 100ms warten, bevor es schließt
     setTimeout(() => {
-      overlay.classList.add("d_none");
-    }, 400); // gleich wie die CSS transition-Dauer
+      overlay.classList.remove("show");
+
+      // ❗ Und 400ms (Übergang) warten, bevor es ausgeblendet wird
+      setTimeout(() => {
+        overlay.classList.add("d_none");
+      }, 400);
+    }, 100);
   } else {
+    // ❗ Zuerst sichtbar machen
     overlay.classList.remove("d_none");
 
-
-    // kleiner Timeout, um Rendering zu erzwingen
+    // ❗ 100ms warten, bevor es reingeschoben wird
     setTimeout(() => {
       overlay.classList.add("show");
-    }, 10);
+    }, 100);
   }
 }
 
@@ -465,14 +466,11 @@ function editOwnContact(contact) {
 function editContact(key) {
   const contact = contactsData[key];
 
-
   document.getElementById("contactKey").value = key;
   document.getElementById("name").value = contact.name;
   document.getElementById("email").value = contact.email;
   document.getElementById("phone").value = contact.phone;
 
-
-  // Initialen und Farbe berechnen
   const initials = contact.name
     .split(" ")
     .map(w => w[0].toUpperCase())
@@ -480,8 +478,6 @@ function editContact(key) {
     .substring(0, 2);
   const color = generateColorFromString(contact.name);
 
-
-  // Avatar-Kreis einfügen
   const avatarContainer = document.getElementById("editAvatarContainer");
   avatarContainer.innerHTML = `
     <div class="BigContactCircle" style="background-color: ${color};">
@@ -489,14 +485,19 @@ function editContact(key) {
     </div>
   `;
 
-
+  setupFormButtons("edit", key); // ⬅️ das ist neu!
   toggleOverlay();
 }
-async function deleteContact(key) {
+
+async function deleteContact(key, closeOverlay = false) {
   await deleteData(`users/${userKey}/contacts/${key}`);
   document.getElementById("contactsDetails").innerHTML = ""; // ❌ Details leeren
   document.getElementById("contactsDetails").classList.remove("showDetails"); // ❌ ggf. auch "ausblenden"
   await loadDataAfterSave();
+
+    if (closeOverlay) {
+    toggleOverlay();
+  }
 }
 
 
@@ -522,4 +523,42 @@ function activateContactCard(key) {
       break;
     }
   }
+}
+
+let currentMode = "create"; // oder 'edit'
+let currentEditKey = null;  // merken, wen man bearbeitet
+
+
+function setupFormButtons(mode, contactKey = null) {
+  currentMode = mode;
+  currentEditKey = contactKey;
+
+  const cancelText = document.getElementById("cancelText");
+  const cancelImg = document.getElementById("cancelIcon")
+  const submitText = document.getElementById("submitText");
+  const submitIcon = document.getElementById("submitIcon");
+  const cancelBtn = document.getElementById("cancelBtn");
+
+  if (mode === "edit") {
+    cancelText.textContent = "Delete";
+    submitText.textContent = "Save";
+    cancelImg.style.display = "none"
+    cancelBtn.onclick = () => deleteContact(contactKey, true); // ⬅️ wichtig
+  } else {
+    cancelText.textContent = "Cancel";
+    submitText.textContent = "Create contact";
+    submitIcon.src = "../img/check.png";
+    cancelBtn.onclick = toggleOverlay;
+  }
+}
+
+function openNewContactForm() {
+  document.getElementById("contactForm").reset();
+  document.getElementById("contactKey").value = "";
+
+  const avatarContainer = document.getElementById("editAvatarContainer");
+  avatarContainer.innerHTML = `<img class="pb" src="../img/Group 13.png" alt="" />`;
+
+  setupFormButtons("create"); // ⬅️ wichtig!
+  toggleOverlay();
 }

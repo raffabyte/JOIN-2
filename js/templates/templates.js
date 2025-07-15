@@ -14,48 +14,39 @@ const BOARD_SVG =`<svg width="31" height="26" viewBox="0 0 31 26" fill="none" xm
 
 
 function header() {
+    const pagesToHideUserInfo = [
+        'legal-notice.html',
+        'privacy.html',
+        'legal-notice-login.html',
+        'privacy-login.html'
+    ];
+    const hideHelpLinkPages = [
+        'help.html'
+    ];
+    const currentPage = window.location.pathname.split('/').pop();
+
+    const hideUserInfo = pagesToHideUserInfo.includes(currentPage);
+    const hideInfoHeader = hideHelpLinkPages.includes(currentPage);
+
     return `
         <h3>Kanban Project Management Tool</h3>
-        <div class="userInfo">
-            <a href="help.html" id="helpLink">
+        <div class="userInfo ${hideUserInfo ? 'hidden-userinfo' : ''}">
+            <a href="help.html" id="helpLink" class="${hideInfoHeader ? 'hidden-userinfo' : ''}">
                 <img class="help" src="../img/SummaryUser/help.png" alt="" />
             </a>
             <button onclick="toggleMenu()" id="userProfile" class="initials-button">
                 <img src="../img/Ellipse 3.png" alt="">
                 <span id="userInitials" class="initials-text"></span>
             </button>
-            <div class="flexC not-visible" id="menu">
+            <div class="flexC" id="menu">
                 <a href="../index/legal-notice.html">Legal notice</a>
                 <a href="../index/privacy.html">Privacy Policy</a>
                 <a onclick="logout()" href="login.html">Log Out</a>
             </div>
         </div>
-    `
+    `;
 }
 
-async function setUserInitials() {
-  const initialsEl = document.getElementById("userInitials");
-  if (!initialsEl || !userKey) return;
-
-  try {
-    const response = await fetch(`${BASE_URL}users/${userKey}.json`);
-    const user = await response.json();
-
-    if (user?.name) {
-      const initials = user.name
-        .split(" ")
-        .map(word => word[0].toUpperCase())
-        .slice(0, 2)
-        .join("");
-      initialsEl.innerText = initials;
-    } else {
-      initialsEl.innerText = "?";
-    }
-  } catch (error) {
-    console.error("Fehler beim Laden der Userdaten:", error);
-    initialsEl.innerText = "?";
-  }
-}
 
 function linkesNav(activePage) {
   const isGuest = localStorage.getItem("guestMode") === "true";
