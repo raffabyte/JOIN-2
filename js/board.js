@@ -1,4 +1,4 @@
-const userKey = localStorage.getItem("loggedInUserKey");
+
 const OVERLAY = document.getElementById('overlay');
 const OVERLAY_CONTENT = document.getElementById('overlayContent');
 const TASKS_BASE_URL = "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks.json";
@@ -104,7 +104,7 @@ async function taskDataPush(columnId) {
   return fetch(TASKS_BASE_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(taskData)   // enthält jetzt column: columnId
+    body: JSON.stringify(taskData)   
   });
 }
 
@@ -284,6 +284,10 @@ function showCheckedSubtasksCount(subtasks) {
 
 function visibilityClass(condition) {
     return condition ? '' : ' display-none';
+}
+
+function hasFooterData(task) {
+    return (Array.isArray(task.assignee) && task.assignee.length > 0) || task.priority;
 }
 
 function allowDrop(ev) {

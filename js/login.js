@@ -3,9 +3,9 @@ const emailRegex = /^[a-zA-Z0-9._%+-]+@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
 document.addEventListener("DOMContentLoaded", initLogin);
 
 function initLogin() {
-  setupPasswordToggleOnIcon();
   const elements = getLoginElements();
   setupLiveFeedback(elements);
+  applyStarMaskToPassword(elements.passwordInput, elements.msgBox);
   bindLoginHandler(elements);
 }
 
@@ -26,7 +26,6 @@ function setupLiveFeedback({ emailInput, passwordInput, msgBox }) {
     emailInput.classList.remove("input-error");
     clearMessage(msgBox);
   });
-
   passwordInput.addEventListener("input", () => {
     passwordInput.classList.remove("input-error");
     clearMessage(msgBox);
@@ -36,25 +35,25 @@ function setupLiveFeedback({ emailInput, passwordInput, msgBox }) {
 // 🧠 Login-Event verknüpfen
 function bindLoginHandler({ form, emailInput, passwordInput, loginButton, msgBox }) {
   form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    clearMessage(msgBox);
+  e.preventDefault();
+  clearMessage(msgBox);
 
-    const email = emailInput.value.trim();
-    const password = passwordInput.value.trim();
+  const email = emailInput.value.trim();
+  const password = passwordInput.getRealPassword().trim();
 
-    const isValid = validateInputs(email, password, emailInput, passwordInput, msgBox);
-    if (!isValid) return;
+  const isValid = validateInputs(email, password, emailInput, passwordInput, msgBox);
+  if (!isValid) return;
 
-    disableButton(loginButton);
-    const result = await login(email, password);
+  disableButton(loginButton);
+  const result = await login(email, password);
 
-    if (result.success) {
-      window.location.href = "../index/summary.html";
-    } else {
-      showLoginError(result.error, msgBox, emailInput, passwordInput);
-      enableButton(loginButton);
-    }
-  });
+  if (result.success) {
+    window.location.href = "../index/summary.html";
+  } else {
+    showLoginError(result.error, msgBox, emailInput, passwordInput);
+    enableButton(loginButton);
+  }
+});
 }
 
 // ✅ Eingabe validieren
@@ -63,16 +62,14 @@ function validateInputs(email, password, emailInput, passwordInput, msgBox) {
 
   if (!emailRegex.test(email)) {
     emailInput.classList.add("input-error");
+    showMessage("Bitte geben Sie eine gültige E-Mail-Adresse ein.", msgBox);
     valid = false;
   }
 
   if (password.length < 4) {
     passwordInput.classList.add("input-error");
+    showMessage("Das Passwort muss mindestens 4 Zeichen lang sein.", msgBox);
     valid = false;
-  }
-
-  if (!valid) {
-    showMessage("Bitte geben Sie eine gültige Domain ein.", msgBox);
   }
 
   return valid;
@@ -94,50 +91,78 @@ function showLoginError(errorCode, msgBox, emailInput, passwordInput) {
   }
 }
 
-function setupPasswordToggleOnIcon() {
-  const passwordInput = document.getElementById("password");
-
-  // Zustand merken
+function applyStarMaskToPassword(passwordInput, msgBox) {
+  let realPassword = "";
   let visible = false;
 
-  // Toggle durch Klick auf rechte Seite
+  passwordInput.getRealPassword = () => realPassword;
+  passwordInput.type = "text";
+
+  passwordInput.addEventListener("beforeinput", (e) => {
+    realPassword = handlePasswordInput(e, realPassword, passwordInput, visible);
+    updatePasswordField(passwordInput, realPassword, visible);
+    updateCursorPosition(passwordInput, visible);
+    updateVisualFeedback(passwordInput, msgBox, realPassword, visible);
+  });
+
   passwordInput.addEventListener("click", (e) => {
-    const inputRect = passwordInput.getBoundingClientRect();
-    const clickX = e.clientX;
-  
-    // Klick im rechten Iconbereich?
-    if (clickX > inputRect.right - 40) {
-      // Abbruch wenn Feld leer
-      if (passwordInput.value.length === 0) return;
-  
+    if (clickedToggleArea(e, passwordInput) && realPassword.length > 0) {
       visible = !visible;
-      passwordInput.type = visible ? "text" : "password";
-  
-      passwordInput.classList.remove("lock_icon", "visibility_icon", "visibility_off_icon");
-      passwordInput.classList.add(visible ? "visibility_icon" : "visibility_off_icon");
-  
-      e.preventDefault();
+      updatePasswordField(passwordInput, realPassword, visible);
+      updateVisualFeedback(passwordInput, msgBox, realPassword, visible);
     }
   });
-  
 
-  // Beim Eintippen → Icon aktivieren
-  passwordInput.addEventListener("input", () => {
-    if (passwordInput.value.length > 0 && !visible) {
-      passwordInput.classList.remove("lock_icon");
-      passwordInput.classList.add("visibility_off_icon");
-    } else if (passwordInput.value.length === 0) {
-      passwordInput.classList.remove("visibility_icon", "visibility_off_icon");
-      passwordInput.classList.add("lock_icon");
-      passwordInput.type = "password";
-      visible = false;
-    }
+  clearMessage(msgBox);
+}
+
+function handlePasswordInput(e, realPassword, input, visible) {
+  const start = input.selectionStart;
+  const end = input.selectionEnd;
+
+  if (e.inputType === "insertText" && e.data) {
+    realPassword = realPassword.slice(0, start) + e.data + realPassword.slice(end);
+  } else if (e.inputType === "deleteContentBackward") {
+    realPassword = realPassword.slice(0, start - 1) + realPassword.slice(end);
+  } else if (e.inputType === "deleteContentForward") {
+    realPassword = realPassword.slice(0, start) + realPassword.slice(end + 1);
+  }
+
+  e.preventDefault(); // verhindert native Anzeige
+  return realPassword;
+}
+
+function updatePasswordField(input, realPassword, visible) {
+  input.value = visible ? realPassword : "*".repeat(realPassword.length);
+}
+
+function updateCursorPosition(input, visible) {
+  requestAnimationFrame(() => {
+    const pos = visible ? input.selectionStart + 1 : input.value.length;
+    input.setSelectionRange(pos, pos);
   });
 }
 
+function updateVisualFeedback(input, msgBox, realPassword, visible) {
+  input.classList.remove("input-error", "lock_icon", "visibility_icon", "visibility_off_icon");
+  clearMessage(msgBox);
 
+  const iconClass = realPassword.length === 0
+    ? "lock_icon"
+    : visible
+    ? "visibility_icon"
+    : "visibility_off_icon";
+
+  input.classList.add(iconClass);
+}
+
+function clickedToggleArea(e, input) {
+  const rect = input.getBoundingClientRect();
+  return e.clientX > rect.right - 40;
+}
 
 // 🔑 Login gegen Firebase-Datenbank
+
 async function login(email, password) {
   try {
     const response = await fetch(`${BASE_URL}users.json`);
