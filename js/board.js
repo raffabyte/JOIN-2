@@ -415,6 +415,7 @@ document.getElementById('searchInput').addEventListener('input', debouncedFilter
 
 function filterTasksLive() {
   const query = document.getElementById('searchInput').value.trim().toLowerCase();
+  if (!query) return updateBoard(); // if searchfield cleared or page reloaded, page origin shown
   fetch(TASKS_BASE_URL)
     .then(res => res.json())
     .then(data => {
@@ -443,10 +444,10 @@ function checkEmptyFiltered(tasks) {
       const column = document.getElementById(id);
       const dragArea = column.querySelector('.drag-area');
       
-      // Füge no-match template hinzu
+      // add no match template
       column.innerHTML = noMatchCard();
       
-      // Füge die Drag-Area wieder hinzu, falls sie existierte
+      // add existing drag area
       if (dragArea) {
         column.appendChild(dragArea);
       }
