@@ -173,6 +173,7 @@ async function submitContact(event) {
 
 
   toggleOverlay();
+  showSuccessOverlay();
 }
 
 
@@ -457,7 +458,8 @@ function editOwnContact(contact) {
   `;
 
 
-  toggleOverlay();
+  setupFormButtons("edit", contact)
+  toggleOverlay()
 }
 
 
@@ -498,6 +500,7 @@ async function deleteContact(key, closeOverlay = false) {
     if (closeOverlay) {
     toggleOverlay();
   }
+  showSuccessOverlay("Kontakt gelöscht!");
 }
 
 
@@ -561,4 +564,23 @@ function openNewContactForm() {
 
   setupFormButtons("create"); // ⬅️ wichtig!
   toggleOverlay();
+}
+
+function showSuccessOverlay(message = "Kontakt erfolgreich gespeichert!") {
+  const successOverlay = document.getElementById("successOverlay");
+  const text = successOverlay.querySelector(".succesText");
+  text.textContent = message;
+
+  successOverlay.classList.remove("d_none");
+
+  setTimeout(() => {
+    successOverlay.classList.add("show");
+  }, 10);
+
+  setTimeout(() => {
+    successOverlay.classList.remove("show");
+    setTimeout(() => {
+      successOverlay.classList.add("d_none");
+    }, 400);
+  }, 1500);
 }
