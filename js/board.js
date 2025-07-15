@@ -1,7 +1,8 @@
-
+/*const userKey = localStorage.getItem("loggedInUserKey");*/
 const OVERLAY = document.getElementById('overlay');
 const OVERLAY_CONTENT = document.getElementById('overlayContent');
 const TASKS_BASE_URL = "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks.json";
+
 
 let currentDraggedElement;
 
@@ -10,8 +11,11 @@ if (!userKey) {
     // Kein Benutzer eingeloggt → weiterleiten
     window.location.href = "../../index.html";
 }
-
-
+/*
+function init() {
+  document.getElementById('searchInput').value = '';
+}
+*/
 function addTaskOverlay(columnId) {
     // Set the overlay content to the add task form
     OVERLAY_CONTENT.innerHTML = addTaskOverlayForm(columnId);
@@ -411,8 +415,7 @@ function formatDate(dateString) {
     return `${day}/${month}/${year}`;
 }
 
-
-// Search Option 
+/* Search Option 
 const debouncedFilter = debounce(filterTasksLive, 300);
 document.getElementById('searchInput').addEventListener('input', debouncedFilter);
 
@@ -474,3 +477,4 @@ function debounce(fn, delay) {
     timeout = setTimeout(() => fn(...args), delay);
   };
 }
+*/
