@@ -4,7 +4,6 @@ const TASKS_BASE_URL = "https://join-475-370cd-default-rtdb.europe-west1.firebas
 
 
 
-
 if (!USERKEY) {
     // Kein Benutzer eingeloggt → weiterleiten
     window.location.href = "../../index.html";

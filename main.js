@@ -1,7 +1,5 @@
-
 const BASE_URL = "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/";
 const USERKEY = localStorage.getItem("loggedInUserKey");
-
 
 
 function login() {
@@ -28,10 +26,13 @@ function logout() {
 
 
 //Profil menu Toggle function
-
-function toggleMenu() {
+const toggleMenu = () => {
     const menu = document.getElementById('menu');
     menu.classList.toggle('not-visible');
+    
+    document.body.onclick = !menu.classList.contains('not-visible') 
+        ? (e) => (!menu.contains(e.target) && !document.getElementById('userProfile').contains(e.target)) && (menu.classList.add('not-visible'), document.body.onclick = null)
+        : null;
 }
 
 
@@ -92,15 +93,12 @@ async function init(){
 
 async function setUserInitials() {
   const initialsEl = document.getElementById("userInitials");
+  const response = await fetch(`${BASE_URL}users/${USERKEY}.json`);
+  const user = await response.json();
 
   if (!initialsEl || typeof USERKEY === 'undefined' || !USERKEY) return;
-  
   if (!initialsEl || !USERKEY) return;
-
-  try {
-    const response = await fetch(`${BASE_URL}users/${USERKEY}.json`);
-    const user = await response.json();
-
+  try {    
     if (user?.name) {
       const initials = contactIconSpan(user.name);
       initialsEl.innerText = initials;
