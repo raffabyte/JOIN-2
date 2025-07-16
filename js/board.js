@@ -78,14 +78,14 @@ let saveTaskDataTo = (columnId) => {
 
 
 async function taskDataPush(columnId) {
-  const taskData = saveTaskDataTo(columnId);
-  if (!taskData) return Promise.reject('No task data');
-  
-  return fetch(TASKS_BASE_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(taskData)   
-  });
+    const taskData = saveTaskDataTo(columnId);
+    if (!taskData) return Promise.reject('No task data');
+
+    return fetch(TASKS_BASE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(taskData)
+    });
 }
 
 function updateColumns(tasks) {
@@ -106,7 +106,7 @@ function updateColumns(tasks) {
     COLUMNS.forEach(col => {
         const column = document.getElementById(col);
         let dragArea = column.querySelector('.drag-area');
-        
+
         // Wenn keine Drag-Area existiert, erstelle eine neue
         if (!dragArea) {
             const dragAreaIds = ['toDoDragArea', 'inProgressDragArea', 'awaitingFeedbackDragArea', 'doneDragArea'];
@@ -117,7 +117,7 @@ function updateColumns(tasks) {
             dragArea.style.pointerEvents = 'none';
             column.appendChild(dragArea);
         }
-        
+
         tasksByColumn[col].forEach(task => {
             // Füge Task vor der Drag-Area ein
             dragArea.insertAdjacentHTML('beforebegin', taskCardTemplate(task));
@@ -148,10 +148,10 @@ function checkEmptyColumn() {
         if (!column.querySelector('.task-card')) {
             // Speichere die Drag-Area vor dem Überschreiben
             const dragArea = column.querySelector('.drag-area');
-            
+
             // Füge no-task template hinzu
             column.innerHTML = noTaskCardTemplate();
-            
+
             // Füge die Drag-Area wieder hinzu, falls sie existierte
             if (dragArea) {
                 column.appendChild(dragArea);
@@ -161,53 +161,53 @@ function checkEmptyColumn() {
 }
 
 function updateBoard() {
-  fetch(TASKS_BASE_URL)
-    .then(response => response.json())
-    .then(data => {
-      const tasks = Object.entries(data || {}).map(([firebaseKey, task]) => ({
-        ...task,
-        id: firebaseKey
-      }));
+    fetch(TASKS_BASE_URL)
+        .then(response => response.json())
+        .then(data => {
+            const tasks = Object.entries(data || {}).map(([firebaseKey, task]) => ({
+                ...task,
+                id: firebaseKey
+            }));
 
-      updateColumns(tasks);
-      checkEmptyColumn();
+            updateColumns(tasks);
+            checkEmptyColumn();
 
-      // 🧠 Neue Zähllogik für jede Spalte:
-      const countByColumn = {
-        todo: 0,
-        inProgress: 0,
-        awaitFeedback: 0,
-        done: 0
-      };
+            // 🧠 Neue Zähllogik für jede Spalte:
+            const countByColumn = {
+                todo: 0,
+                inProgress: 0,
+                awaitFeedback: 0,
+                done: 0
+            };
 
-      tasks.forEach(task => {
-        switch (task.column) {
-          case 'todoColumn':
-            countByColumn.todo++;
-            break;
-          case 'inProgressColumn':
-            countByColumn.inProgress++;
-            break;
-          case 'awaitFeedbackColumn':
-            countByColumn.awaitFeedback++;
-            break;
-          case 'doneColumn':
-            countByColumn.done++;
-            break;
-        }
-      });
+            tasks.forEach(task => {
+                switch (task.column) {
+                    case 'todoColumn':
+                        countByColumn.todo++;
+                        break;
+                    case 'inProgressColumn':
+                        countByColumn.inProgress++;
+                        break;
+                    case 'awaitFeedbackColumn':
+                        countByColumn.awaitFeedback++;
+                        break;
+                    case 'doneColumn':
+                        countByColumn.done++;
+                        break;
+                }
+            });
 
-      // 🧪 Testweise in Konsole:
-      console.log('Anzahl Tasks:', countByColumn);
+            // 🧪 Testweise in Konsole:
+            console.log('Anzahl Tasks:', countByColumn);
 
-      // 📨 Optional: Werte in localStorage speichern, um sie auf der Startseite zu verwenden
-      localStorage.setItem("taskCounts", JSON.stringify(countByColumn));
-    });
+            // 📨 Optional: Werte in localStorage speichern, um sie auf der Startseite zu verwenden
+            localStorage.setItem("taskCounts", JSON.stringify(countByColumn));
+        });
 }
 
 
 
-function addTask(event , columnId) {
+function addTask(event, columnId) {
     if (event) event.preventDefault();
     const taskData = saveTaskDataTo(columnId);
 
@@ -309,7 +309,7 @@ function allowDrop(ev) {
 
 function startDragging(event, id) {
     const taskCard = document.getElementById(id);
-    
+
     event.dataTransfer.setDragImage(new Image(), 0, 0);
     currentDraggedElement = id;
     taskCard.classList.add('dragging');
@@ -327,15 +327,15 @@ function stopDragging() {
 function moveTo(column) {
     let element = document.getElementById(currentDraggedElement);
     if (!element) return;
-    
+
     element.classList.remove('dragging');
-    
+
     // Verstecke alle Drag-Areas nach dem Drop
     const allDragAreas = ['toDoDragArea', 'inProgressDragArea', 'awaitingFeedbackDragArea', 'doneDragArea'];
     allDragAreas.forEach(dragAreaId => {
         removeHighlight(dragAreaId);
     });
-    
+
     fetch(TASKS_BASE_URL)
         .then(response => response.json())
         .then(data => {
@@ -355,14 +355,14 @@ function highlight(id) {
     const element = document.getElementById(id);
     if (element) {
         element.classList.remove('display-none');
-        
+
         // Verstecke no-task-item in der gleichen Spalte
         const column = element.parentElement;
         const noTaskItem = column.querySelector('.no-task-item');
         if (noTaskItem) {
             noTaskItem.style.display = 'none';
         }
-        
+
         // Setze die Höhe der Drag-Area gleich der Höhe der gezogenen Task
         if (currentDraggedElement) {
             const draggedTask = document.getElementById(currentDraggedElement);
@@ -378,14 +378,14 @@ function removeHighlight(id) {
     const element = document.getElementById(id);
     if (element) {
         element.classList.add('display-none');
-        
+
         // Zeige no-task-item wieder an, falls vorhanden
         const column = element.parentElement;
         const noTaskItem = column.querySelector('.no-task-item');
         if (noTaskItem) {
             noTaskItem.style.display = '';
         }
-        
+
         // Höhe zurücksetzen
         element.style.height = '';
     }
@@ -423,6 +423,32 @@ function formatDate(dateString) {
     const [year, month, day] = dateString.split('-');
     return `${day}/${month}/${year}`;
 }
+
+async function updateSubtaskInFirebase(firebaseKey, updatedSubtasks) {
+    await fetch(`https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks/${firebaseKey}.json`, {
+        method: 'PATCH', 
+        headers: { 'Content-Type': 'application/json' }, 
+        body: JSON.stringify({ subtasks: updatedSubtasks })
+    });
+}
+
+
+async function toggleSubtask(taskId, subtaskValue) {
+    try {
+        const data = await (await fetch(TASKS_BASE_URL)).json();
+        const taskEntry = Object.entries(data || {}).find(([key]) => key === taskId);
+        
+        if (!taskEntry) return;
+        const [firebaseKey, task] = taskEntry;
+        const updatedSubtasks = task.subtasks.map(subtask => subtask.value === subtaskValue ? { ...subtask, checked: !subtask.checked } : subtask
+        );
+        
+        await updateSubtaskInFirebase(firebaseKey, updatedSubtasks);
+        showTaskOverlay({ ...task, subtasks: updatedSubtasks, id: firebaseKey }); 
+        updateBoard();
+    } catch (error) { console.error('Error toggling subtask:', error); }
+}
+
 
 /* Search Option 
 const debouncedFilter = debounce(filterTasksLive, 300);
