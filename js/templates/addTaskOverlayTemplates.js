@@ -124,10 +124,14 @@ function addTaskOverlayForm(columnId) {
 }
 
 
-function addSubTaskTemplate(subtaskInput){
+function addSubTaskTemplate(subtaskInput, index = 0){
+    const uniqueId = `subtaskInfos_${index}_${Date.now()}`;
+    const editUniqueId = `editSubtask_${index}_${Date.now()}`;
+    const editInputId = `editSubtaskInput_${index}_${Date.now()}`;
+    
     return`
     <li ondblclick="editSubtask(this)" class="subtask-item flexC">
-        <div class="subtask flexR" id="subtaskInfos">
+        <div class="subtask flexR" id="${uniqueId}">
             <div class="subtask-headdinfg flexR gap-8" >
                 •
                 <span class="subtask-text">${subtaskInput}</span>
@@ -142,8 +146,8 @@ function addSubTaskTemplate(subtaskInput){
                 </button>
             </div>
         </div>
-        <div class="edit-subtask-input-wrapper flexR display-none" id="editSubtask">
-            <input type="text" id="editSubtaskInput" class="edit-subtask-input">
+        <div class="edit-subtask-input-wrapper flexR display-none" id="${editUniqueId}">
+            <input type="text" id="${editInputId}" class="edit-subtask-input">
             <div class="gap-8 flexR">
             <button class="delete-subtask-button overlay-button" type="button" onclick="deleteSubtask(this)">
                 <svg width="16" height="18" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">

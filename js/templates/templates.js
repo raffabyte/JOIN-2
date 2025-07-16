@@ -230,7 +230,7 @@ function taskEditTemplate(task) {
                 <span class="required-span display-none">This field is required</span>
             </div>
             <div class="gap-8 width-100 flexC">
-                <label for="editedTaskPriority">Priority</label>
+                <label for="editedTaskPriority"priority-edit">Priority</p>
                 <div class="flexR priority-select">
                     <button type="button" class="priority-button flexR HighPriority ${task.priority === 'HighPriority' ? 'active' : ''}" 
                             id="editedTaskPriority" onclick="PriorityHandler('high'); event.stopPropagation();">
@@ -287,8 +287,8 @@ function taskEditTemplate(task) {
                     </div>
                 </div>
                 <span id="subtaskHintMessage" class="display-none">Please type a clear subtask</span>
-                <ul class="flexC ${task.subtasks && task.subtasks.length > 0 ? '' : 'display-none'}">
-                    ${task.subtasks && Array.isArray(task.subtasks) ? task.subtasks.map(subtask => addSubTaskTemplate(subtask.value)).join('') : ''}
+                <ul class="flexC width-100 ${task.subtasks && task.subtasks.length > 0 ? '' : 'display-none'}">
+                    ${task.subtasks && Array.isArray(task.subtasks) ? task.subtasks.map((subtask, index) => addSubTaskTemplate(subtask.value, index)).join('') : ''}
                 </ul>
             </div>
         </div>`;
