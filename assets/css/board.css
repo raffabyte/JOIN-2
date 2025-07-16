@@ -37,6 +37,7 @@ h1 {
   border: 1px solid #a8a8a8;
   padding: 8px 16px;
   gap: 10px;
+  background-color: rgba(255, 255, 255, 0.9);
 }
 
 #searchInput {
@@ -182,19 +183,24 @@ h1 {
 }
 
 .no-task-item {
-  border: #a8a8a8 1px dashed;
+  border: 1px dashed #a8a8a8;
   border-radius: 10px;
-  height: 48px;
-  width: 100%;
   background: #e7e7e7;
   color: #a8a8a8;
+  height: 48px;
+  display: flex;
+  align-items: center;
   justify-content: center;
+  font-weight: 400;
+  font-size: 16px;
+  padding: 0 16px;
   box-shadow: 0 0 4px 0px rgba(0, 0, 0, 16%);
+  width: 100%;
 }
 
 .task-card {
   width: 100%;
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 24px;
   box-shadow: 0 0 10px 3px rgba(0, 0, 0, 8%);
   padding: 16px;
@@ -204,8 +210,7 @@ h1 {
   transition: transform 300ms ease-out;
 }
 
-
-.task-card>*:not(:first-child) {
+.task-card > *:not(:first-child) {
   width: 100%;
 }
 
