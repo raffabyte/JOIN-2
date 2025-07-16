@@ -17,7 +17,6 @@ function init() {
 */
 
 function closeOverlay() {
-    // Remove animation class
     OVERLAY_CONTENT.classList.remove('active');
 
     // Hide the overlay after animation
@@ -25,6 +24,7 @@ function closeOverlay() {
         OVERLAY.classList.add('display-none');
         OVERLAY_CONTENT.classList.remove('add-task');
         OVERLAY_CONTENT.innerHTML = '';
+        OVERLAY_CONTENT.classList.remove('add-task', 'edit-task-overlay', 'task-overlay');
     }, 110);
 }
 
@@ -449,6 +449,45 @@ async function toggleSubtask(taskId, subtaskValue) {
     } catch (error) { console.error('Error toggling subtask:', error); }
 }
 
+function deleteTask(taskId){
+    fetch(TASKS_BASE_URL)
+        .then(response => response.json())
+        .then(data => {
+            const taskEntry = Object.entries(data || {}).find(([key]) => key === taskId);
+            if (taskEntry) {
+                const [firebaseKey] = taskEntry;
+                return fetch(`https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks/${firebaseKey}.json`, {
+                    method: 'DELETE'
+                });
+            } else {
+                console.error('Task not found:', taskId);
+            }
+        })
+        .then(() => updateBoard()).then(() => { closeOverlay(); })
+        .catch(error => console.error('Error deleting task:', error));
+}
+
+function showEditTaskOverlay(task) {
+    OVERLAY_CONTENT.classList.remove('task-overlay');
+    OVERLAY_CONTENT.classList.add('edit-task-overlay');
+    OVERLAY_CONTENT.innerHTML = editTaskOverlayTemplate(task);
+}
+
+function editTask(taskId) {
+    fetch(TASKS_BASE_URL)
+        .then(response => response.json())
+        .then(data => {
+            const taskEntry = Object.entries(data || {}).find(([key]) => key === taskId);
+            if (taskEntry) {
+                const [firebaseKey, task] = taskEntry;
+                const taskWithId = { ...task, id: firebaseKey };
+                showEditTaskOverlay(taskWithId);
+            } else {
+                console.error('Task not found:', taskId);
+            }
+        })
+        .catch(error => console.error('Error fetching task:', error));
+}
 
 /* Search Option 
 const debouncedFilter = debounce(filterTasksLive, 300);

@@ -11,18 +11,18 @@ function addTaskOverlayForm(columnId) {
             <form id="addTaskForm" class="overlay-bottom flexC" onsubmit="addTask(event, '${columnId}')">
                 <div class="flexR task-form-top">
                     <div class="flexC task-form-column">
-                        <div class="task-form flexC">
+                        <div class="gap-8 width-100 flexC">
                             <label for="taskTitle">Title<span class="highlight">*</span></label>
                             <input class="inputs requierd-input" type="text" id="taskTitle" name="taskTitle" placeholder="Enter a title" >
                             <span class="required-span display-none">This field is required</span>
                         </div>
 
-                        <div class="task-form flexC">
+                        <div class="gap-8 width-100 flexC">
                             <label for="taskDescription">Description</label>
                             <textarea class="inputs" id="taskDescription" name="taskDescription" placeholder="Enter a description"></textarea>
                         </div>
 
-                        <div class="task-form flexC">
+                        <div class="gap-8 width-100 flexC">
                             <label for="taskDueDate">Due date<span class="highlight">*</span></label>
                             <input class="inputs requierd-input" type="date" id="taskDueDate" name="taskDueDate" min="" onfocus="this.min=new Date().toISOString().split('T')[0]">
                             <span class="required-span display-none">This field is required</span>
@@ -30,7 +30,7 @@ function addTaskOverlayForm(columnId) {
                     </div>
                     <span class="middle-vector"></span>
                     <div class="flexC task-form-column">
-                        <div class="task-form flexC">
+                        <div class="gap-8 width-100 flexC">
                             <label for="taskPriority">Priority</label>
                             <div class="flexR priority-select">
                                 <button type="button" class="priority-button flexR HighPriority" id="taskPriority" onclick="PriorityHandler('high'); event.stopPropagation();">
@@ -48,7 +48,7 @@ function addTaskOverlayForm(columnId) {
                             </div>
                         </div>
 
-                        <div class="flexC task-form">
+                        <div class="flexC gap-8 width-100">
                             <label for="taskAssignee">Assigned To</label>
                             <div class="input-svg-wrapper flexC">
                                 <input  class="inputs" type="text" id="taskAssignee" placeholder="Select Contacts to assign" oninput="searchAssignee(this.value)"
@@ -69,7 +69,7 @@ function addTaskOverlayForm(columnId) {
                                 
                             </div>
                         </div>
-                        <div class="task-form flexC">
+                        <div class="gap-8 width-100 flexC">
                             <label for="taskCategory">Category<span class="highlight">*</span></label>
                             <div class="category-options">
                                 <button class="inputs requierd-input" type="button" id="taskCategory" onclick="toggleCategoryOptions(); event.stopPropagation();">Select task category</button>
@@ -80,7 +80,7 @@ function addTaskOverlayForm(columnId) {
                             </div>
                             <span class="required-span display-none">This field is required</span>
                         </div>
-                        <div class="task-form flexC">
+                        <div class="gap-8 width-100 flexC">
                             <label for="subtasks">Subtasks</label>
                             <div class="inputs input-add-cancel-wrapper flexR" id="inputBox">
                                 <input type="text" id="subtasks" placeholder="add new subtask" oninput="checkSubtask(this.value.length)" onfocus="showAddCancelBtns()">

@@ -210,7 +210,7 @@ h1 {
   transition: transform 300ms ease-out;
 }
 
-.task-card > *:not(:first-child) {
+.task-card>*:not(:first-child) {
   width: 100%;
 }
 
@@ -440,4 +440,41 @@ span {
   width: 100%;
   margin: 16px 0;
   pointer-events: none;
+}
+
+.edit-task-overlay {
+  background: white;
+  border-radius: 40px;
+  padding: 48px 40px;
+  height: 80%;
+  gap: 24px;
+  width: 525px;
+}
+
+.flex-end {
+  justify-content: flex-end;
+}
+
+.submit-edit {
+  gap: 4px;
+  padding: 16px;
+  background: #2A3647;
+  border-radius: 10px;
+  border: 1px solid #2A3647;
+  color: white;
+}
+
+.submit-edit:hover {
+  background: #29abe2;
+  border-color: #29abe2;
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 25%);
+}
+
+.gap-24 {
+  gap: 24px;
+}
+
+.edit-task-div {
+  overflow-y: auto;
+  padding-right: 4px;
 }
