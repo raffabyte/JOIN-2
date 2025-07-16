@@ -230,7 +230,7 @@ function taskEditTemplate(task) {
                 <span class="required-span display-none">This field is required</span>
             </div>
             <div class="gap-8 width-100 flexC">
-                <label for="taskPriority">Priority</label>
+                <label for="editedTaskPriority">Priority</label>
                 <div class="flexR priority-select">
                     <button type="button" class="priority-button flexR HighPriority ${task.priority === 'HighPriority' ? 'active' : ''}" 
                             id="editedTaskPriority" onclick="PriorityHandler('high'); event.stopPropagation();">
@@ -265,14 +265,14 @@ function taskEditTemplate(task) {
                         </div>
                     </div>
                 </div>
-                <div class="selected-assignee flexR ${task.assignee && task.assignee.length > 0 ? '' : display-none}" id="selectedAssignee">
+                <div class="selected-assignee flexR ${task.assignee && task.assignee.length > 0 ? '' : 'display-none'}" id="selectedAssignee">
                 ${task.assignee && task.assignee.length > 0 ? task.assignee.map(name => contactIconSpanTemplate(name)).join('') : ''}
                 </div>
             </div>
             <div class="gap-8 width-100 flexC">
-                <label for="subtasks">Subtasks</label>
+                <label for="editedSubtasks">Subtasks</label>
                 <div class="inputs input-add-cancel-wrapper flexR" id="inputBox">
-                    <input type="text" id="subtasks" placeholder="add new subtask" oninput="checkSubtask(this.value.length)" onfocus="showAddCancelBtns()">
+                    <input type="text" id="editedSubtasks" placeholder="add new subtask" oninput="checkSubtask(this.value.length)" onfocus="showAddCancelBtns()">
                     <button class="plus-button overlay-button" id="subtaskPlusBtn" type="button" onclick="showAddCancelBtns()">
                             ${PLUS_SVG}
                     </button>
@@ -287,7 +287,7 @@ function taskEditTemplate(task) {
                     </div>
                 </div>
                 <span id="subtaskHintMessage" class="display-none">Please type a clear subtask</span>
-                <ul id="subtasksList" class="flexC ${task.subtasks && task.subtasks.length > 0 ? '' : 'display-none'}">
+                <ul class="flexC ${task.subtasks && task.subtasks.length > 0 ? '' : 'display-none'}">
                     ${task.subtasks.map(subtask => addSubTaskTemplate(subtask.value)).join('')}
                 </ul>
             </div>
