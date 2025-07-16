@@ -36,6 +36,7 @@ h1 {
   border: 1px solid #a8a8a8;
   padding: 8px 16px;
   gap: 10px;
+  background-color: rgba(255, 255, 255, 0.9);
 }
 
 #searchInput {
@@ -75,13 +76,13 @@ h1 {
   fill: #29abe2;
 }
 
-.add-task-button{
-    gap: 4px;
-    padding: 10px 16px;
-    background: #2A3647;
-    border-radius: 10px;
-    border: 1px solid #2A3647;
-    color: white;
+.add-task-button {
+  gap: 4px;
+  padding: 10px 16px;
+  background: #2a3647;
+  border-radius: 10px;
+  border: 1px solid #2a3647;
+  color: white;
 }
 .add-task-button:hover {
   background: #29abe2;
@@ -178,41 +179,45 @@ h1 {
 }
 
 .no-task-item {
-  border: #a8a8a8 1px dashed;
+  border: 1px dashed #a8a8a8;
   border-radius: 10px;
-  height: 48px;
-  width: 100%;
   background: #e7e7e7;
   color: #a8a8a8;
+  height: 48px;
+  display: flex;
+  align-items: center;
   justify-content: center;
+  font-weight: 400;
+  font-size: 16px;
+  padding: 0 16px;
   box-shadow: 0 0 4px 0px rgba(0, 0, 0, 16%);
+  width: 100%;
 }
 
 .task-card {
-    width: 100%;
-    background: #FFFFFF;
-    border-radius: 24px;
-    box-shadow: 0 0 10px 3px rgba(0, 0, 0, 8%);
-    padding: 16px;
-    gap: 24px;
-    margin-bottom: 16px;
-    cursor: pointer;
-    transition: transform 300ms ease-out;
+  width: 100%;
+  background: #ffffff;
+  border-radius: 24px;
+  box-shadow: 0 0 10px 3px rgba(0, 0, 0, 8%);
+  padding: 16px;
+  gap: 24px;
+  margin-bottom: 16px;
+  cursor: pointer;
+  transition: transform 300ms ease-out;
 }
-
 
 .task-card > *:not(:first-child) {
   width: 100%;
 }
 .contact-icon {
-    width: 42px;
-    height: 42px;
-    border-radius: 45px;
-    border: 2px solid white;
-    font-size: 12px !important;
-    font-weight: 400;
-    color: white;
-    justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 45px;
+  border: 2px solid white;
+  font-size: 12px !important;
+  font-weight: 400;
+  color: white;
+  justify-content: center;
 }
 
 #technicalTask,
@@ -383,23 +388,23 @@ span {
   gap: 4px;
 }
 
-.subtask-item-overlay{
-    padding: 6px 16px;;
+.subtask-item-overlay {
+  padding: 6px 16px;
 }
 
-.subtask-item-overlay span{
-    font-size: 16px;
-    font-weight: 400;
+.subtask-item-overlay span {
+  font-size: 16px;
+  font-weight: 400;
 }
 .dragging {
-    transform: rotate(5deg);
+  transform: rotate(5deg);
 }
-.drag-area{
-    background: transparent;
-    border: 1px dashed #A8A8A8;
-    border-radius: 30px;
-    height: 150px;
-    width: 100%;
-    margin: 16px 0;
-    pointer-events: none;
+.drag-area {
+  background: transparent;
+  border: 1px dashed #a8a8a8;
+  border-radius: 30px;
+  height: 150px;
+  width: 100%;
+  margin: 16px 0;
+  pointer-events: none;
 }
