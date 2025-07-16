@@ -126,7 +126,7 @@ function addTaskOverlayForm(columnId) {
 
 function addSubTaskTemplate(subtaskInput){
     return`
-    <li class="subtask-item flexC">
+    <li ondblclick="editSubtask(this)" class="subtask-item flexC">
         <div class="subtask flexR" id="subtaskInfos">
             <div class="subtask-headdinfg flexR gap-8" >
                 •
