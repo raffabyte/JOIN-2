@@ -117,14 +117,13 @@ async function preloadContacts(userKey) {
 }
 
 const demoContacts = [
-  { name: "Anna Becker", email: "anna@example.com", phone: "123456789" },
-  { name: "Tom Meier", email: "tom@example.com", phone: "987654321" },
-  { name: "Lisa Schmidt", email: "lisa@example.com", phone: "555123456" },
-  { name: "Peter Braun", email: "peter@example.com", phone: "333222111" },
-  { name: "Nina Keller", email: "nina@example.com", phone: "444555666" },
-  { name: "Max Fischer", email: "max@example.com", phone: "666777888" },
-  { name: "Julia König", email: "julia@example.com", phone: "777888999" },
-  { name: "Leon Wagner", email: "leon@example.com", phone: "111222333" },
-  { name: "Emma Roth", email: "emma@example.com", phone: "222333444" },
-  { name: "Paul Weber", email: "paul@example.com", phone: "999000111" }
+  { name: "Anna Becker", email: "anna@example.com", phone: "123456789", color: "#FF7A00" },
+  { name: "Tom Meier", email: "tom@example.com", phone: "987654321", color: "#9327FF" },
+  { name: "Lisa Schmidt", email: "lisa@example.com", phone: "555123456", color: "#6E52FF" },
+  { name: "Peter Braun", email: "peter@example.com", phone: "333222111", color: "#FC71FF" },
+  { name: "Nina Keller", email: "nina@example.com", phone: "444555666", color: "#FFBB2B" },
+  { name: "Max Fischer", email: "max@example.com", phone: "666777888", color: "#1FD7C1" },
+  { name: "Julia König", email: "julia@example.com", phone: "777888999", color: "#462F8A" },
+  { name: "Leon Wagner", email: "leon@example.com", phone: "111222333", color: "#FF4646" },
+  { name: "Emma Roth", email: "emma@example.com", phone: "222333444", color: "#00BEE8" }
 ];

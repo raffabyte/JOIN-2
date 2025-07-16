@@ -15,8 +15,15 @@ let contactsData = {};
 
 console.log(contactsData);
 
+const predefinedColors = [
+  "#FF7A00", "#9327FF", "#6E52FF", "#FC71FF", "#FFBB2B",
+  "#1FD7C1", "#462F8A", "#FF4646", "#00BEE8"
+];
 
-
+function getRandomColor() {
+  const index = Math.floor(Math.random() * predefinedColors.length);
+  return predefinedColors[index];
+}
 
 function toggleOverlay() {
   const overlay = document.getElementById("overlay");
@@ -112,8 +119,15 @@ async function submitContact(event) {
   const phone = document.getElementById("phone").value.trim();
   const contactKey = document.getElementById("contactKey").value.trim();
 
+  
+  const existingContact = contactsData[contactKey] || {};
+  const contact = {
+    ...existingContact,
+    name,
+    email,
+    phone,
+  };
 
-  const contact = { name, email, phone };
 
 
   if (contactKey === "__own" || editingOwnContact) {
@@ -131,7 +145,7 @@ async function submitContact(event) {
 
 
   // ✅ Nur das Gewünschte aktualisieren
-  await putData(`users/${userKey}`, updatedUser);
+  await putData(`users/${USERKEY}`, updatedUser);
 
 
   // Anzeige aktualisieren
@@ -158,6 +172,8 @@ async function submitContact(event) {
     activateContactCard(contactKey);
     document.getElementById("contactsDetails").classList.add("showDetails");
   } else {
+    const color = getRandomColor();
+const contact = { name, email, phone, color };
     // Neuen Kontakt anlegen
     const result = await postData(basePath, contact);
     const newKey = result.name;
@@ -217,53 +233,64 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
 function renderOwnContact(ownContact) {
-     const container = document.getElementById("ownContactArea");
+  const container = document.getElementById("ownContactArea");
   container.innerHTML = "";
 
-
-  const contact = ownContact
-
+  const contact = ownContact;
 
   const initials = contact.name
-      .split(" ")
-      .map(word => word[0].toUpperCase())
-      .join("")
-      .substring(0, 2);
+    .split(" ")
+    .map(word => word[0].toUpperCase())
+    .join("")
+    .substring(0, 2);
 
+  const color = contact.color;
 
- 
-    const color = generateColorFromString(contact.name);
+  const contactCard = document.createElement("div");
+  contactCard.className = "contactCard";
+  contactCard.innerHTML = `
+    <div class="ownContactCircle" style="background-color: ${color}; border: 2px solid black;">
+      ${initials}
+    </div>
+    <div>
+      <p class="contactName">${contact.name}</p>
+    </div>
+  `;
 
+  contactCard.addEventListener("click", () => {
+    // Alle Cards deaktivieren und Border zurücksetzen
+    document.querySelectorAll(".contactCard").forEach(card => {
+      card.classList.remove("activeCard");
 
-    const contactCard = document.createElement("div");
-    contactCard.className = "contactCard";
-    contactCard.innerHTML = `
-      <div class="contactCircle" style="background-color: ${color};">${initials}</div>
-      <div>
-        <p class="contactName">${contact.name}</p>
-      </div>
-    `;
-
-
-    contactCard.addEventListener("click", () => {
-      document.querySelectorAll(".contactCard").forEach(card =>
-        card.classList.remove("activeCard")
-      );
-      contactCard.classList.add("activeCard");
-      document.getElementById("contactsDetails").classList.add("showDetails");
-      showOwnContactCardDetails(contact);
+      const circle = card.querySelector(".ownContactCircle");
+      if (circle) {
+        circle.style.borderColor = "black";
+      }
     });
 
+    // Diese Karte aktiv machen
+    contactCard.classList.add("activeCard");
 
-    container.appendChild(contactCard);
-  }
+    // Border dieser ownContactCircle auf weiß
+    const ownCircle = contactCard.querySelector(".ownContactCircle");
+    if (ownCircle) {
+      ownCircle.style.borderColor = "white";
+    }
+
+    document.getElementById("contactsDetails").classList.add("showDetails");
+    showOwnContactCardDetails(contact);
+  });
+
+  container.appendChild(contactCard);
+}
+
 
 
 function showOwnContactCardDetails(contact) {
   const detailsContainer = document.getElementById("contactsDetails");
   detailsContainer.innerHTML = `
     <div class="displayFlex">
-      <div class="BigContactCircle" style="background-color: ${generateColorFromString(contact.name)};">
+      <div class="ownBigContactCircle">
         ${contact.name.split(" ").map(w => w[0].toUpperCase()).join("").substring(0, 2)}
       </div>
       <div class="displayColumn">
@@ -340,8 +367,7 @@ function renderContacts(data) {
       .substring(0, 2);
 
 
-    const color = generateColorFromString(contact.name);
-
+    const color = contact.color;
 
     const contactCard = document.createElement("div");
     contactCard.className = "contactCard";
@@ -354,10 +380,18 @@ function renderContacts(data) {
     `;
 
 
-    contactCard.addEventListener("click", () => {
-      document.querySelectorAll(".contactCard").forEach(card =>
-        card.classList.remove("activeCard")
-      );
+   contactCard.addEventListener("click", () => {
+  document.querySelectorAll(".contactCard").forEach(card => {
+    card.classList.remove("activeCard");
+
+    // ✔️ Reset für .ownContactCircle (oder contactCircle, falls du willst)
+    const circle = card.querySelector(".ownContactCircle");
+    if (circle) {
+      circle.style.borderColor = "black";
+    }
+        
+   });
+
       contactCard.classList.add("activeCard");
       document.getElementById("contactsDetails").classList.add("showDetails");
       showcontactCardDetails(key);
@@ -376,7 +410,7 @@ function showcontactCardDetails(key) {
   const detailsContainer = document.getElementById("contactsDetails");
   detailsContainer.innerHTML = `
   <div class="displayFlex">
-  <div class="BigContactCircle" style="background-color: ${generateColorFromString(contact.name)};">
+  <div class="BigContactCircle" <div class="BigContactCircle" style="background-color: ${contact.color};">
   ${contact.name.split(" ").map(w => w[0].toUpperCase()).join("").substring(0, 2)}
 </div>
   <div class="displayColumn">
@@ -450,7 +484,7 @@ function editOwnContact(contact) {
   // Avatar-Kreis einfügen
   const avatarContainer = document.getElementById("editAvatarContainer");
   avatarContainer.innerHTML = `
-    <div class="BigContactCircle" style="background-color: ${color};">
+    <div class="ownBigContactCircle">
       ${initials}
     </div>
   `;
@@ -476,7 +510,8 @@ function editContact(key) {
     .map(w => w[0].toUpperCase())
     .join("")
     .substring(0, 2);
-  const color = generateColorFromString(contact.name);
+
+  const color = contact.color;
 
   const avatarContainer = document.getElementById("editAvatarContainer");
   avatarContainer.innerHTML = `
@@ -582,3 +617,4 @@ function showSuccessOverlay(message = "Kontakt erfolgreich gespeichert!") {
     }, 400);
   }, 1500);
 }
+
