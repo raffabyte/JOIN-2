@@ -86,8 +86,7 @@ h1 {
 .add-task-button:hover {
   background: #29abe2;
   border-color: #29abe2;
-  box-shadow: 0 8px 8px rgba(0, 0, 0, 0.2);
-  transform: scale(1.05);
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 25%);
 }
 
 .add-task-button span {
@@ -385,6 +384,9 @@ span {
 
 .subtask-item-overlay{
     padding: 6px 16px;;
+}
+.subtask-item-overlay:hover {
+    background: #A8A8A8;
 }
 
 .subtask-item-overlay span{

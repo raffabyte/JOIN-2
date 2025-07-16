@@ -60,7 +60,7 @@ function addTaskOverlayForm(columnId) {
                                             <span class="contact-name">Unassigned Contact</span>
                                         </div>
                                         ${CHECKBOX_SVG}
-                                        ${CHECKBOX_FILLED_SVG}
+                                        ${CHECKBOX_FILLED_LIGHT_SVG}
                                     </div>
                                     
                                 </div>
