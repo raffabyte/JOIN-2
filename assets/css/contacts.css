@@ -116,7 +116,7 @@ h2 {
     background-color: rgba(0, 0, 0, 0.2);
 }
 .d_none {
-    display: none;
+    display: none !important;
 }
 .overlayContent {
     display: flex;
@@ -577,3 +577,42 @@ form {
     height: 2px;
     flex-shrink: 0;
 }
+
+
+.success-overlay { 
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    pointer-events: none; /* optional: damit es nichts blockiert */
+
+     transform: translateX(100vw); /* Start außerhalb des Bildschirms */
+  transition: transform 0.4s ease;
+}
+
+.success-overlay.show {
+  transform: translateX(0); /* Fährt rein */
+}
+
+.succesDiv {
+    position: relative;
+    left: 750px;      /* leicht nach unten */
+    top: 700px;     /* leicht nach rechts */
+    background-color: #2A3647;
+    height: 74px;
+    width: 326px;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.succesText {
+    font-size: 20px;
+    font-weight: 400;
+}
+
+

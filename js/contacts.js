@@ -1,12 +1,10 @@
 
-
-
-if (!userKey) {
+if (!USERKEY) {
   window.location.href = "../../index.html";
 }
 
 
-const basePath = `users/${userKey}/contacts`;
+const basePath = `users/${USERKEY}/contacts`;
 
 
 let editingOwnContact = false;
@@ -120,7 +118,7 @@ async function submitContact(event) {
 
   if (contactKey === "__own" || editingOwnContact) {
   // 🧠 Erst bestehende Nutzerdaten laden (inkl. Passwort)
-  const existingUserData = await loadData(`users/${userKey}`);
+  const existingUserData = await loadData(`users/${USERKEY}`);
 
 
   // 🔧 Bestehendes Objekt erweitern
@@ -173,6 +171,7 @@ async function submitContact(event) {
 
 
   toggleOverlay();
+  showSuccessOverlay();
 }
 
 
@@ -181,7 +180,7 @@ async function submitContact(event) {
 
 
 async function loadDataAfterSave() {
-  const newContacts = await loadData(`users/${userKey}/contacts`);
+  const newContacts = await loadData(`users/${USERKEY}/contacts`);
   contactsData = newContacts; // optional, wenn du den globalen Zustand behalten willst
   renderContacts(newContacts);
 }
@@ -200,8 +199,8 @@ async function sendContactData(path = "", data = {}) {
 
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const contacts = await loadData(`users/${userKey}/contacts`);
-  const ownContact = await loadData(`users/${userKey}`);
+  const contacts = await loadData(`users/${USERKEY}/contacts`);
+  const ownContact = await loadData(`users/${USERKEY}`);
 
   await setUserInitials();
  
@@ -457,7 +456,8 @@ function editOwnContact(contact) {
   `;
 
 
-  toggleOverlay();
+  setupFormButtons("edit", contact)
+  toggleOverlay()
 }
 
 
@@ -490,7 +490,7 @@ function editContact(key) {
 }
 
 async function deleteContact(key, closeOverlay = false) {
-  await deleteData(`users/${userKey}/contacts/${key}`);
+  await deleteData(`users/${USERKEY}/contacts/${key}`);
   document.getElementById("contactsDetails").innerHTML = ""; // ❌ Details leeren
   document.getElementById("contactsDetails").classList.remove("showDetails"); // ❌ ggf. auch "ausblenden"
   await loadDataAfterSave();
@@ -498,6 +498,7 @@ async function deleteContact(key, closeOverlay = false) {
     if (closeOverlay) {
     toggleOverlay();
   }
+  showSuccessOverlay("Kontakt gelöscht!");
 }
 
 
@@ -561,4 +562,23 @@ function openNewContactForm() {
 
   setupFormButtons("create"); // ⬅️ wichtig!
   toggleOverlay();
+}
+
+function showSuccessOverlay(message = "Kontakt erfolgreich gespeichert!") {
+  const successOverlay = document.getElementById("successOverlay");
+  const text = successOverlay.querySelector(".succesText");
+  text.textContent = message;
+
+  successOverlay.classList.remove("d_none");
+
+  setTimeout(() => {
+    successOverlay.classList.add("show");
+  }, 10);
+
+  setTimeout(() => {
+    successOverlay.classList.remove("show");
+    setTimeout(() => {
+      successOverlay.classList.add("d_none");
+    }, 400);
+  }, 1500);
 }

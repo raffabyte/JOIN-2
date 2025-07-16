@@ -1,3 +1,7 @@
+const BASE_URL = "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/";
+const USERKEY = localStorage.getItem("loggedInUserKey");
+
+
 function login() {
             const EMAIL = document.getElementById('email').value;
             const PASSWORD = document.getElementById('password').value;
@@ -19,13 +23,16 @@ function logout() {
     alert('Du wurdest abgemeldet!');
 }
 
-const userKey = localStorage.getItem("loggedInUserKey");
+
 
 //Profil menu Toggle function
-
-function toggleMenu() {
+const toggleMenu = () => {
     const menu = document.getElementById('menu');
     menu.classList.toggle('not-visible');
+    
+    document.body.onclick = !menu.classList.contains('not-visible') 
+        ? (e) => (!menu.contains(e.target) && !document.getElementById('userProfile').contains(e.target)) && (menu.classList.add('not-visible'), document.body.onclick = null)
+        : null;
 }
 
 
@@ -68,13 +75,11 @@ function showHideHelpAndUser() {
 
 function addHeader() {
     // This function adds the header to the page
-    // Get the header element by its ID
+   
     const HEADER = document.getElementById('header');
 
     HEADER.innerHTML = header();
 }
-const BASE_URL =
-  "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/";
   
 async function init(){
     // Initialize the header and navigation menu based on the current page
@@ -88,21 +93,14 @@ async function init(){
 
 async function setUserInitials() {
   const initialsEl = document.getElementById("userInitials");
+  const response = await fetch(`${BASE_URL}users/${USERKEY}.json`);
+  const user = await response.json();
 
-  if (!initialsEl || typeof userKey === 'undefined' || !userKey) return;
-  
-  if (!initialsEl || !userKey) return;
-
-  try {
-    const response = await fetch(`${BASE_URL}users/${userKey}.json`);
-    const user = await response.json();
-
+  if (!initialsEl || typeof USERKEY === 'undefined' || !USERKEY) return;
+  if (!initialsEl || !USERKEY) return;
+  try {    
     if (user?.name) {
-      const initials = user.name
-        .split(" ")
-        .map(word => word[0].toUpperCase())
-        .slice(0, 2)
-        .join("");
+      const initials = contactIconSpan(user.name);
       initialsEl.innerText = initials;
     } else {
       initialsEl.innerText = "?";
@@ -116,9 +114,9 @@ async function setUserInitials() {
 function contactIconSpan(name){
     splitedName = name.split(" ");
     if (splitedName.length >= 3) {
-        return splitedName[0][0].toUpperCase() + " " + splitedName[2][0].toUpperCase();
+        return splitedName[0][0].toUpperCase() + splitedName[2][0].toUpperCase();
     }else if (splitedName.length === 2) {
-        return splitedName[0][0].toUpperCase() + " " + splitedName[1][0].toUpperCase();
+        return splitedName[0][0].toUpperCase() + splitedName[1][0].toUpperCase();
     }else if (splitedName.length === 1) {
         return splitedName[0][0].toUpperCase();
     }
@@ -126,10 +124,9 @@ function contactIconSpan(name){
 
 async function logout() {
   const isGuest = localStorage.getItem("guestMode") === "true";
-  const userKey = localStorage.getItem("loggedInUserKey");
 
-  if (isGuest && userKey) {
-    await fetch(`https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/users/${userKey}.json`, {
+  if (isGuest && USERKEY) {
+    await fetch(`https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/users/${USERKEY}.json`, {
       method: "DELETE",
     });
   }

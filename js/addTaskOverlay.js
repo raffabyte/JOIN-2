@@ -1,4 +1,19 @@
 
+function addTaskOverlay(columnId) {
+    // Set the overlay content to the add task form
+    OVERLAY_CONTENT.innerHTML = addTaskOverlayForm(columnId);
+    OVERLAY_CONTENT.classList.add('add-task');
+
+    // Show the overlay
+    OVERLAY.classList.remove('display-none');
+
+    setTimeout(() => {
+        // Add animation class to the overlay content
+        OVERLAY_CONTENT.classList.add('active');
+        initializeSubtaskEventHandlers();
+    }, 10);
+}
+
 function PriorityHandler(priority) {
     // Hole alle Priority-Buttons per Klasse
     const buttons = document.querySelectorAll('.priority-button');
@@ -226,4 +241,14 @@ function finalEditditSubtask(subtask){
     // Edit-Modus ausblenden, Anzeige wieder einblenden
     editDiv.classList.add('display-none');
     subtaskDisplay.classList.remove('display-none');
+}
+
+
+function initializeSubtaskEventHandlers() {
+    const subtaskInput = document.getElementById('subtasks');
+    onEnterAddSubTask(subtaskInput);
+
+    document.querySelectorAll('.edit-subtask-input').forEach(editInput => {
+        onEnterEditSubTask(editInput);
+    });
 }

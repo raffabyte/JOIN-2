@@ -1,5 +1,5 @@
 
-if (!userKey) {
+if (!USERKEY) {
   window.location.href = "../../index.html";
 }
 document.addEventListener("DOMContentLoaded", () => {
@@ -52,12 +52,11 @@ function initAddTaskPage() {
 
 
 async function loadAssignableUsers() {
-  const userKey = localStorage.getItem("loggedInUserKey");
-  if (!userKey) return [];
+  if (!USERKEY) return [];
   try {
     const users = await loadData("users");
     return Object.entries(users)
-      .filter(([key]) => key !== userKey)
+      .filter(([key]) => key !== USERKEY)
       .map(([, user]) => ({
         name: extractName(user.email),
         email: user.email,

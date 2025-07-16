@@ -1,44 +1,20 @@
-/*const userKey = localStorage.getItem("loggedInUserKey");*/
 const OVERLAY = document.getElementById('overlay');
 const OVERLAY_CONTENT = document.getElementById('overlayContent');
 const TASKS_BASE_URL = "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks.json";
 
 
-let currentDraggedElement;
 
-
-if (!userKey) {
+if (!USERKEY) {
     // Kein Benutzer eingeloggt → weiterleiten
     window.location.href = "../../index.html";
 }
+
+let currentDraggedElement;
 /*
 function init() {
   document.getElementById('searchInput').value = '';
 }
 */
-function addTaskOverlay(columnId) {
-    // Set the overlay content to the add task form
-    OVERLAY_CONTENT.innerHTML = addTaskOverlayForm(columnId);
-    OVERLAY_CONTENT.classList.add('add-task');
-
-    // Show the overlay
-    OVERLAY.classList.remove('display-none');
-
-    setTimeout(() => {
-        // Add animation class to the overlay content
-        OVERLAY_CONTENT.classList.add('active');
-        initializeSubtaskEventHandlers();
-    }, 10);
-}
-
-function initializeSubtaskEventHandlers() {
-    const subtaskInput = document.getElementById('subtasks');
-    onEnterAddSubTask(subtaskInput);
-
-    document.querySelectorAll('.edit-subtask-input').forEach(editInput => {
-        onEnterEditSubTask(editInput);
-    });
-}
 
 function closeOverlay() {
     // Remove animation class
@@ -185,17 +161,50 @@ function checkEmptyColumn() {
 }
 
 function updateBoard() {
-    fetch(TASKS_BASE_URL)
-        .then(response => response.json())
-        .then(data => {
-            const tasks = Object.entries(data || {}).map(([firebaseKey, task]) => ({
-                ...task,
-                id: firebaseKey // Firebase Key als eindeutige ID
-            }));
-            updateColumns(tasks);
-            checkEmptyColumn();
-        });
+  fetch(TASKS_BASE_URL)
+    .then(response => response.json())
+    .then(data => {
+      const tasks = Object.entries(data || {}).map(([firebaseKey, task]) => ({
+        ...task,
+        id: firebaseKey
+      }));
+
+      updateColumns(tasks);
+      checkEmptyColumn();
+
+      // 🧠 Neue Zähllogik für jede Spalte:
+      const countByColumn = {
+        todo: 0,
+        inProgress: 0,
+        awaitFeedback: 0,
+        done: 0
+      };
+
+      tasks.forEach(task => {
+        switch (task.column) {
+          case 'todoColumn':
+            countByColumn.todo++;
+            break;
+          case 'inProgressColumn':
+            countByColumn.inProgress++;
+            break;
+          case 'awaitFeedbackColumn':
+            countByColumn.awaitFeedback++;
+            break;
+          case 'doneColumn':
+            countByColumn.done++;
+            break;
+        }
+      });
+
+      // 🧪 Testweise in Konsole:
+      console.log('Anzahl Tasks:', countByColumn);
+
+      // 📨 Optional: Werte in localStorage speichern, um sie auf der Startseite zu verwenden
+      localStorage.setItem("taskCounts", JSON.stringify(countByColumn));
+    });
 }
+
 
 
 function addTask(event , columnId) {
