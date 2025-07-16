@@ -26,8 +26,8 @@
     padding-left: 24px;
     flex-shrink: 0;
 }
-.contactCard:hover {
-    background-color: lightgray;
+.contactCard:hover:not(.activeCard) {
+    background: linear-gradient(to bottom, #f0f0f0, #e4e2e2);
     border-radius: 16px;
     cursor: pointer;
 }
