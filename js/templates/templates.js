@@ -288,7 +288,7 @@ function taskEditTemplate(task) {
                 </div>
                 <span id="subtaskHintMessage" class="display-none">Please type a clear subtask</span>
                 <ul class="flexC ${task.subtasks && task.subtasks.length > 0 ? '' : 'display-none'}">
-                    ${task.subtasks.map(subtask => addSubTaskTemplate(subtask.value)).join('')}
+                    ${task.subtasks && Array.isArray(task.subtasks) ? task.subtasks.map(subtask => addSubTaskTemplate(subtask.value)).join('') : ''}
                 </ul>
             </div>
         </div>`;
