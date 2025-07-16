@@ -7,13 +7,13 @@ window.addEventListener("DOMContentLoaded", async () => {
   renderTaskCounts()
 });
 
-if (!userKey) {
+if (!USERKEY) {
   // Kein Benutzer eingeloggt → weiterleiten
   window.location.href = "../../index.html";
 }
 
 async function loadUserData() {
-  const response = await fetch(`${BASE_URL}users/${userKey}.json`);
+  const response = await fetch(`${BASE_URL}users/${USERKEY}.json`);
   const user = await response.json();
   return user;
 }

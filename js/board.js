@@ -1,44 +1,21 @@
-/*const userKey = localStorage.getItem("loggedInUserKey");*/
 const OVERLAY = document.getElementById('overlay');
 const OVERLAY_CONTENT = document.getElementById('overlayContent');
 const TASKS_BASE_URL = "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks.json";
 
 
-let currentDraggedElement;
 
 
-if (!userKey) {
+if (!USERKEY) {
     // Kein Benutzer eingeloggt → weiterleiten
     window.location.href = "../../index.html";
 }
+
+let currentDraggedElement;
 /*
 function init() {
   document.getElementById('searchInput').value = '';
 }
 */
-function addTaskOverlay(columnId) {
-    // Set the overlay content to the add task form
-    OVERLAY_CONTENT.innerHTML = addTaskOverlayForm(columnId);
-    OVERLAY_CONTENT.classList.add('add-task');
-
-    // Show the overlay
-    OVERLAY.classList.remove('display-none');
-
-    setTimeout(() => {
-        // Add animation class to the overlay content
-        OVERLAY_CONTENT.classList.add('active');
-        initializeSubtaskEventHandlers();
-    }, 10);
-}
-
-function initializeSubtaskEventHandlers() {
-    const subtaskInput = document.getElementById('subtasks');
-    onEnterAddSubTask(subtaskInput);
-
-    document.querySelectorAll('.edit-subtask-input').forEach(editInput => {
-        onEnterEditSubTask(editInput);
-    });
-}
 
 function closeOverlay() {
     // Remove animation class
