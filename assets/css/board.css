@@ -11,6 +11,7 @@
   width: 100%;
   margin-bottom: 8px;
 }
+
 .content {
   padding: 0;
 }
@@ -62,6 +63,7 @@ h1 {
   width: 32px;
   height: 32px;
 }
+
 #searchButton:hover {
   background-color: #e7e7e7;
 }
@@ -75,14 +77,15 @@ h1 {
   fill: #29abe2;
 }
 
-.add-task-button{
-    gap: 4px;
-    padding: 10px 16px;
-    background: #2A3647;
-    border-radius: 10px;
-    border: 1px solid #2A3647;
-    color: white;
+.add-task-button {
+  gap: 4px;
+  padding: 10px 16px;
+  background: #2A3647;
+  border-radius: 10px;
+  border: 1px solid #2A3647;
+  color: white;
 }
+
 .add-task-button:hover {
   background: #29abe2;
   border-color: #29abe2;
@@ -93,6 +96,7 @@ h1 {
   font-size: 21px;
   font-weight: 700;
 }
+
 .add-task-button svg {
   margin-left: 8px;
 }
@@ -130,6 +134,7 @@ h1 {
   color: #29abe2;
   border-color: #29abe2;
 }
+
 .add-button:hover .plus,
 .add-button:hover .plus-90 {
   background: #29abe2;
@@ -188,30 +193,31 @@ h1 {
 }
 
 .task-card {
-    width: 100%;
-    background: #FFFFFF;
-    border-radius: 24px;
-    box-shadow: 0 0 10px 3px rgba(0, 0, 0, 8%);
-    padding: 16px;
-    gap: 24px;
-    margin-bottom: 16px;
-    cursor: pointer;
-    transition: transform 300ms ease-out;
+  width: 100%;
+  background: #FFFFFF;
+  border-radius: 24px;
+  box-shadow: 0 0 10px 3px rgba(0, 0, 0, 8%);
+  padding: 16px;
+  gap: 24px;
+  margin-bottom: 16px;
+  cursor: pointer;
+  transition: transform 300ms ease-out;
 }
 
 
-.task-card > *:not(:first-child) {
+.task-card>*:not(:first-child) {
   width: 100%;
 }
+
 .contact-icon {
-    width: 42px;
-    height: 42px;
-    border-radius: 45px;
-    border: 2px solid white;
-    font-size: 12px !important;
-    font-weight: 400;
-    color: white;
-    justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 45px;
+  border: 2px solid white;
+  font-size: 12px !important;
+  font-weight: 400;
+  color: white;
+  justify-content: center;
 }
 
 #technicalTask,
@@ -230,10 +236,12 @@ h1 {
 #userStory {
   background: #0038ff;
 }
+
 .task-card-header {
   justify-content: flex-start;
   width: 100%;
 }
+
 span {
   width: fit-content;
 }
@@ -255,14 +263,17 @@ span {
   background-color: #e7e7e7;
   border-radius: 16px;
 }
+
 .subtasks-progress {
   width: 100%;
   justify-content: space-between;
 }
+
 .progress-text {
   width: 100%;
   text-align: right;
 }
+
 .progress-bar-fill {
   height: 8px;
   background-color: #4589ff;
@@ -279,12 +290,13 @@ span {
   width: 100%;
   justify-content: flex-start;
 }
+
 .task-priority {
   width: 100%;
   justify-content: flex-end;
 }
 
-.task-members > * {
+.task-members>* {
   position: absolute;
   top: 0;
   left: 0;
@@ -321,7 +333,7 @@ span {
   gap: 24px;
 }
 
-.task-overlay > * {
+.task-overlay>* {
   width: 100%;
   text-align: left;
   padding: 0;
@@ -329,10 +341,12 @@ span {
   font-weight: 400;
   font-size: 20px;
 }
+
 .task-overlay h2 {
   font-size: 61px;
   font-weight: 700;
 }
+
 .gap-25 {
   gap: 25px;
 }
@@ -347,6 +361,7 @@ span {
 .task-overlay-footer {
   justify-content: flex-end;
 }
+
 .task-footer-btn:hover {
   color: #29abe2;
   font-weight: 700;
@@ -369,6 +384,7 @@ span {
 .member-with-name {
   padding: 7px 16px;
 }
+
 .member-name-text {
   font-size: 19px;
   font-weight: 400;
@@ -380,28 +396,43 @@ span {
 
 .subtasks-overlay-list {
   gap: 4px;
+  align-items: flex-start;
 }
 
-.subtask-item-overlay{
-    padding: 6px 16px;;
+.subtask-item-overlay {
+  padding: 6px 16px;
+  border-radius: 8px;
+  cursor: default;
 }
+
+.checkbox {
+  background: transparent;
+  border-radius: 50%;
+}
+
+.checkbox:hover {
+  background: #D1D1D1;
+}
+
 .subtask-item-overlay:hover {
-    background: #A8A8A8;
+  background: #e7e7e7;
 }
 
-.subtask-item-overlay span{
-    font-size: 16px;
-    font-weight: 400;
+.subtask-item-overlay span {
+  font-size: 16px;
+  font-weight: 400;
 }
+
 .dragging {
-    transform: rotate(5deg);
+  transform: rotate(5deg);
 }
-.drag-area{
-    background: transparent;
-    border: 1px dashed #A8A8A8;
-    border-radius: 30px;
-    height: 150px;
-    width: 100%;
-    margin: 16px 0;
-    pointer-events: none;
+
+.drag-area {
+  background: transparent;
+  border: 1px dashed #A8A8A8;
+  border-radius: 30px;
+  height: 150px;
+  width: 100%;
+  margin: 16px 0;
+  pointer-events: none;
 }

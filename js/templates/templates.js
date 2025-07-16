@@ -193,8 +193,8 @@ function taskOverlayTemplate(task){
                 <p class="task-overlay-headdings">Subtasks:</p>
                 <div class="subtasks-overlay-list flexC width-100">
                     ${task.subtasks && task.subtasks.length > 0 ? task.subtasks.map(subtask => `
-                        <div class="subtask-item-overlay width-100 gap-16 flexR">
-                            <button onclick="toggleSubtask('${task.id}', '${subtask.value}')">
+                        <div class="subtask-item-overlay gap-16 flexR">
+                            <button class="checkbox" onclick="toggleSubtask('${task.id}', '${subtask.value}')">
                                 ${subtask.checked ? CHECKBOX_FILLED_DARK_SVG : CHECKBOX_SVG}
                             </button>
                             <span>${subtask.value}</span>
