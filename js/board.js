@@ -2,7 +2,9 @@ const OVERLAY = document.getElementById('overlay');
 const OVERLAY_CONTENT = document.getElementById('overlayContent');
 const TASKS_BASE_URL = "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks.json";
 
-
+// Debug: Prüfe ob USERKEY verfügbar ist
+console.log('Debug - USERKEY:', USERKEY);
+console.log('Debug - typeof USERKEY:', typeof USERKEY);
 
 if (!USERKEY) {
     // Kein Benutzer eingeloggt → weiterleiten
