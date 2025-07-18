@@ -513,6 +513,7 @@ form {
   border: solid 2px white;
   font-weight: 500;
   font-size: 47px;
+  flex-shrink: 0;
 }
 .ownBigContactCircle {
     width: 120px;
@@ -528,6 +529,7 @@ form {
   border: solid 4px black;
   font-weight: 700;
   font-size: 47px;
+  flex-shrink: 0;
 }
 
 .ownContactCard {

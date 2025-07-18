@@ -19,7 +19,7 @@ async function loadUserData() {
 }
 
 async function init() {
-  try {
+  
     const user = await loadUserData();
 
     if (user.guest) {
@@ -31,8 +31,11 @@ async function init() {
   document.getElementById("userName").innerText = formattedName;
 }
 
-    // 2. Begrüßung nach Uhrzeit anzeigen
-    const greetingElement = document.getElementById("greetingText");
+await showCurrentTime();
+}
+
+async function showCurrentTime() {
+  const greetingElement = document.getElementById("greetingText");
     const hour = new Date().getHours();
     let greetingText = "";
 
@@ -47,12 +50,8 @@ async function init() {
     }
 
     greetingElement.innerText = greetingText;
-  } catch (error) {
-    console.error("Fehler beim Laden der Benutzerdaten:", error);
-    document.getElementById("userName").innerText = "Unknown User";
-    document.getElementById("greeting").innerText = "Hello,";
   }
-}
+    
 
 function formatName(name) {
   return name
@@ -63,82 +62,79 @@ function formatName(name) {
 
 async function loadAndRenderTaskCounts() {
   try {
-    const response = await fetch("https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks.json");
-    const data = await response.json();
-
-    const tasks = Object.values(data || {});
-    const countByColumn = {
-      todo: 0,
-      inProgress: 0,
-      awaitFeedback: 0,
-      done: 0
-    };
-
-    let highPriorityCount = 0;
-    let upcomingUrgentDates = [];
-    const today = new Date();
-
-    tasks.forEach(task => {
-      // Spalten zählen
-      switch (task.column) {
-        case "todoColumn":
-          countByColumn.todo++;
-          break;
-        case "inProgressColumn":
-          countByColumn.inProgress++;
-          break;
-        case "awaitFeedbackColumn":
-          countByColumn.awaitFeedback++;
-          break;
-        case "doneColumn":
-          countByColumn.done++;
-          break;
-      }
-
-      // High Priority zählen + Deadline speichern
-      if (task.priority === "HighPriority") {
-        highPriorityCount++;
-
-        if (task.dueDate) {
-          const dueDate = new Date(task.dueDate);
-          if (dueDate >= today) {
-            upcomingUrgentDates.push(dueDate);
-          }
-        }
-      }
-    });
-
-    const totalTasks =
-      countByColumn.todo +
-      countByColumn.inProgress +
-      countByColumn.awaitFeedback +
-      countByColumn.done;
-
-    // 🔢 Zähler aktualisieren
-    document.getElementById("ToDo").innerText = countByColumn.todo;
-    document.getElementById("tasksInProgress").innerText = countByColumn.inProgress;
-    document.getElementById("awaitingFeedback").innerText = countByColumn.awaitFeedback;
-    document.getElementById("Done").innerText = countByColumn.done;
-    document.getElementById("tasksinBoard").innerText = totalTasks;
-    document.getElementById("highPriorityCount").innerText = highPriorityCount;
-
-    // 📅 Nächstes Urgent-Datum anzeigen
-    if (upcomingUrgentDates.length > 0) {
-      const timestamps = upcomingUrgentDates.map(date => date.getTime());
-      const nextUrgentDeadline = new Date(Math.min(...timestamps));
-
-      const formatted = nextUrgentDeadline.toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric"
-      });
-
-      document.getElementById("nextDeadlineDate").innerText = formatted;
-    } else {
-      document.getElementById("nextDeadlineDate").innerText = "No urgent deadlines";
-    }
-
+    const tasks = await fetchTasks();
+    const { countByColumn, highPriorityCount, upcomingUrgentDates } = analyzeTasks(tasks);
+    renderTaskCounts(countByColumn, tasks.length, highPriorityCount);
+    renderNextDeadline(upcomingUrgentDates);
   } catch (error) {
     console.error("Fehler beim Laden der Aufgaben:", error);
   }
+}
+
+async function fetchTasks() {
+  const response = await fetch("https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks.json");
+  const data = await response.json();
+  return Object.values(data || {});
+}
+
+function analyzeTasks(tasks) {
+  const countByColumn = { todo: 0, inProgress: 0, awaitFeedback: 0, done: 0 };
+  const highPriority = { count: 0 };
+  const upcomingUrgentDates = [];
+  const today = new Date();
+
+  tasks.forEach(task => {
+    countColumns(task, countByColumn);
+    processPriority(task, highPriority, upcomingUrgentDates, today);
+  });
+
+  return { countByColumn, highPriorityCount: highPriority.count, upcomingUrgentDates };
+}
+
+function countColumns(task, countByColumn) {
+  switch (task.column) {
+    case "todoColumn": countByColumn.todo++; break;
+    case "inProgressColumn": countByColumn.inProgress++; break;
+    case "awaitFeedbackColumn": countByColumn.awaitFeedback++; break;
+    case "doneColumn": countByColumn.done++; break;
+  }
+}
+
+function processPriority(task, highPriorityRef, datesArr, today) {
+  if (task.priority === "HighPriority") {
+    highPriorityRef.count++;
+    if (task.dueDate) {
+      const dueDate = new Date(task.dueDate);
+      if (!isNaN(dueDate) && dueDate >= today) {
+        datesArr.push(dueDate);
+      }
+    }
+  }
+}
+
+function renderTaskCounts(counts, total, highPriority) {
+  document.getElementById("ToDo").innerText = counts.todo;
+  document.getElementById("tasksInProgress").innerText = counts.inProgress;
+  document.getElementById("awaitingFeedback").innerText = counts.awaitFeedback;
+  document.getElementById("Done").innerText = counts.done;
+  document.getElementById("tasksinBoard").innerText = total;
+  document.getElementById("highPriorityCount").innerText = highPriority;
+}
+
+function renderNextDeadline(dates) {
+  const elem = document.getElementById("nextDeadlineDate");
+
+  if (dates.length === 0) {
+    elem.innerText = "No urgent deadlines";
+    return;
+  }
+
+  const next = new Date(Math.min(...dates.map(date => date.getTime())));
+  const formatted = next.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric"
+  });
+
+  elem.innerText = formatted;
 }

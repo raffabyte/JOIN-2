@@ -144,3 +144,48 @@ function generateColorFromString(str) {
   const hue = hash % 360;
   return `hsl(${hue}, 70%, 50%)`;
 }
+
+
+
+
+
+
+
+async function loadData(path = "") {
+  let response = await fetch(BASE_URL + path + ".json");
+  return (responseToJson = await response.json());
+}
+
+
+async function postData(path = "", data = {}) {
+  let response = await fetch(BASE_URL + path + ".json", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  return (responseToJson = await response.json());
+}
+
+
+async function putData(path = "", data = {}) {
+  let response = await fetch(BASE_URL + path + ".json", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  return await response.json();
+}
+
+
+async function deleteData(path = "") {
+  let response = await fetch(BASE_URL + path + ".json", {
+    method: "DELETE",
+  });
+  return (responseToJson = await response.json());
+}
+
+
