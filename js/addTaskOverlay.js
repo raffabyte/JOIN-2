@@ -14,11 +14,22 @@ function addTaskOverlay(columnId) {
     }, 10);
 }
 
-function PriorityHandler(priority) {
-    // Hole alle Priority-Buttons per Klasse
-    const buttons = document.querySelectorAll('.priority-button');
-    buttons.forEach(btn => btn.classList.remove('active'));
 
+function hideValidationErrors() {
+    document.querySelectorAll('.required-span').forEach(span => span.classList.add('display-none'));
+    document.querySelectorAll('.requierd-input').forEach(input => input.classList.remove('correct-me'));
+}
+
+
+function showValidationErrors() {
+    document.querySelectorAll('.required-span').forEach(span => span.classList.remove('display-none'));
+    document.querySelectorAll('.requierd-input').forEach(input => input.classList.add('correct-me'));
+}
+
+
+function PriorityHandler(priority) {
+    const buttons = document.querySelectorAll('.priority-button, .edit-priority-button');
+    buttons.forEach(btn => btn.classList.remove('active'));
     buttons.forEach(btn => {
         switch (priority) {
             case 'high':
@@ -41,6 +52,7 @@ function toggleAssigneeOptions() {
     ASSIGNEEOPTIONS.classList.toggle('active');
 }
 
+
 function highligtSlected(item) {
     const CHECKBOX = item.querySelector('.checkbox');
     const CHECKBOXFILLED = item.querySelector('.checkbox-filled');
@@ -50,8 +62,10 @@ function highligtSlected(item) {
     CHECKBOXFILLED.classList.toggle('display-none');
 }
 
+
 function toggleAssigneeIcon(assigneeName) {
-    const SELECTEDASSIGNEE = document.getElementById('selectedAssignee');
+    let SELECTEDASSIGNEE = document.getElementById('selectedAssignee') || document.getElementById('editedAssignee');
+    
     let iconSpans = SELECTEDASSIGNEE.querySelectorAll('.contact-icon');
     let found = false;
     iconSpans.forEach(span => {
@@ -65,6 +79,7 @@ function toggleAssigneeIcon(assigneeName) {
         SELECTEDASSIGNEE.innerHTML += contactIconSpanTemplate(assigneeName);
     }
 }
+
 
 function selectAssignee(assignee) {
     let nameSpan = assignee.querySelector('.contact-name');
@@ -167,43 +182,54 @@ function showAddCancelBtns() {
 
 function cancelSubtask(){
     const subtaskInput = document.getElementById('subtasks');
+    const editedSubtaskInput = document.getElementById('editedSubtasks');
     const plusBtn = document.getElementById('subtaskPlusBtn');
     const addCancelBtns = document.getElementById('addCancelBtns');
 
-    subtaskInput.value = '';
+    subtaskInput.value = ''; 
+    editedSubtaskInput.value = '';
     plusBtn.classList.remove('display-none');
     addCancelBtns.classList.add('display-none');
 }
 
-function addSubtask(subtaskInput){
-    let inputValue = document.getElementById(subtaskInput).value;
-    const  HINT_MESSAGE_DIV = document.getElementById('subtaskHintMessage');
-    const INPUT_FELD = document.getElementById('inputBox');
-    const SUBTASKS_LIST = document.getElementById('subtasksList');
+function addSubtask(subtaskInputId){
+    const inputElement = document.getElementById(subtaskInputId);
+    const inputValue = inputElement.value;
+    const hintDiv = document.getElementById('subtaskHintMessage');
+    const subtasksList = document.getElementById(subtaskInputId === 'editedSubtasks' ? 'editedSubtasksList' : 'subtasksList');
     
-    checkSubtask(inputValue.length);
-    if(HINT_MESSAGE_DIV.classList.contains('display-none')){
-        SUBTASKS_LIST.classList.remove('display-none');
-        SUBTASKS_LIST.innerHTML += addSubTaskTemplate(inputValue);
-        document.getElementById('subtasks').value = '';
-    }else{
-        INPUT_FELD.classList.add('correct-me');
-    }
+    checkSubtask(inputValue.length, inputValue, subtasksList);
+    
+    hintDiv.classList.contains('display-none') ?  addSubtaskToList(subtasksList, inputValue, inputElement) : '';
 }
 
-function showAlertMessage() {
-    const  HINT_MESSAGE_DIV = document.getElementById('subtaskHintMessage');
-
-    HINT_MESSAGE_DIV.classList.add('display-none');
+function addSubtaskToList(subtasksList, inputValue, inputElement) {
+    subtasksList.classList.remove('display-none');
+    subtasksList.innerHTML += addSubTaskTemplate(inputValue);
+    inputElement.value = '';
 }
 
-function checkSubtask(subtaskInput){
+function showHideAlertMessage() {
     const  HINT_MESSAGE_DIV = document.getElementById('subtaskHintMessage');
     const INPUT_FELD = document.getElementById('inputBox');
 
-    if(subtaskInput <= 2){
+    HINT_MESSAGE_DIV.classList.toggle('display-none');
+    INPUT_FELD.classList.toggle('correct-me');
+}
+
+function checkSubtask(subtaskLength, inputValue, subtasksList){
+    const HINT_MESSAGE_DIV = document.getElementById('subtaskHintMessage');
+    const INPUT_FELD = document.getElementById('inputBox');
+    const valueExists = subtasksList && Array.from(subtasksList.querySelectorAll('.subtask-text')).map(st => st.textContent.trim()).includes(inputValue.trim());
+    INPUT_FELD.classList.add('correct-me');
+
+    if (subtaskLength <= 2) {
+        HINT_MESSAGE_DIV.textContent = 'Subtask must be at least 3 characters long';
         HINT_MESSAGE_DIV.classList.remove('display-none');
-    }else{
+    } else if (valueExists) {
+        HINT_MESSAGE_DIV.textContent = 'Subtask already exists';
+        HINT_MESSAGE_DIV.classList.remove('display-none');
+    } else {
         HINT_MESSAGE_DIV.classList.add('display-none');
         INPUT_FELD.classList.remove('correct-me');
     }
@@ -219,12 +245,11 @@ function editSubtask(btn) {
     let editDiv = subtask.querySelector('.edit-subtask-input-wrapper');
     let toEditText = subtask.querySelector('.subtask-text').textContent;
 
-    // Toggle Anzeige
     subtaskDisplay.classList.add('display-none');
     editDiv.classList.remove('display-none');
     const editInput = editDiv.querySelector('.edit-subtask-input');
     editInput.value = toEditText;
-    // Enter-Listener für Edit-Input setzen
+
     onEnterEditSubTask(editInput);
 }
 
@@ -245,8 +270,10 @@ function finalEditditSubtask(subtask){
 
 
 function initializeSubtaskEventHandlers() {
-    const subtaskInput = document.getElementById('subtasks');
-    onEnterAddSubTask(subtaskInput);
+    ['subtasks', 'editedSubtasks'].forEach(id => {
+        const input = document.getElementById(id);
+        if (input) onEnterAddSubTask(input);
+    });
 
     document.querySelectorAll('.edit-subtask-input').forEach(editInput => {
         onEnterEditSubTask(editInput);

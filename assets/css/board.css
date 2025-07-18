@@ -476,5 +476,5 @@ span {
 
 .edit-task-div {
   overflow-y: auto;
-  padding-right: 4px;
+  padding:0 4px 16px 0;
 }

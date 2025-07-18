@@ -13,7 +13,7 @@ function addTaskOverlayForm(columnId) {
                     <div class="flexC task-form-column">
                         <div class="gap-8 width-100 flexC">
                             <label for="taskTitle">Title<span class="highlight">*</span></label>
-                            <input class="inputs requierd-input" type="text" id="taskTitle" name="taskTitle" placeholder="Enter a title" >
+                            <input class="inputs requierd-input" oninput="hideValidationErrors()" type="text" id="taskTitle" name="taskTitle" placeholder="Enter a title" >
                             <span class="required-span display-none">This field is required</span>
                         </div>
 
@@ -24,7 +24,7 @@ function addTaskOverlayForm(columnId) {
 
                         <div class="gap-8 width-100 flexC">
                             <label for="taskDueDate">Due date<span class="highlight">*</span></label>
-                            <input class="inputs requierd-input" type="date" id="taskDueDate" name="taskDueDate" min="" onfocus="this.min=new Date().toISOString().split('T')[0]">
+                            <input class="inputs requierd-input" oninput="hideValidationErrors()" type="date" id="taskDueDate" name="taskDueDate" min="" onfocus="this.min=new Date().toISOString().split('T')[0]">
                             <span class="required-span display-none">This field is required</span>
                         </div>
                     </div>
@@ -72,7 +72,7 @@ function addTaskOverlayForm(columnId) {
                         <div class="gap-8 width-100 flexC">
                             <label for="taskCategory">Category<span class="highlight">*</span></label>
                             <div class="category-options">
-                                <button class="inputs requierd-input" type="button" id="taskCategory" onclick="toggleCategoryOptions(); event.stopPropagation();">Select task category</button>
+                                <button class="inputs requierd-input" type="button" id="taskCategory" onclick="toggleCategoryOptions(); event.stopPropagation(); hideValidationErrors()">Select task category</button>
                                 <div class="category-options-list display-none flexC" id="categoryOptions">
                                     <span onclick="selectCategory('User Story');" class="category-option" value="userStory">User Story</span>
                                     <span onclick="selectCategory('Technical Task');" class="category-option" value="technicalTask">Technical Task</span>

@@ -2,26 +2,19 @@ const OVERLAY = document.getElementById('overlay');
 const OVERLAY_CONTENT = document.getElementById('overlayContent');
 const TASKS_BASE_URL = "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks.json";
 
-// Debug: Prüfe ob USERKEY verfügbar ist
-console.log('Debug - USERKEY:', USERKEY);
-console.log('Debug - typeof USERKEY:', typeof USERKEY);
+let currentDraggedElement;
+
 
 if (!USERKEY) {
     // Kein Benutzer eingeloggt → weiterleiten
     window.location.href = "../../index.html";
 }
 
-let currentDraggedElement;
-/*
-function init() {
-  document.getElementById('searchInput').value = '';
-}
-*/
+/* Overlay closing functionality */
 
 function closeOverlay() {
     OVERLAY_CONTENT.classList.remove('active');
 
-    // Hide the overlay after animation
     setTimeout(() => {
         OVERLAY.classList.add('display-none');
         OVERLAY_CONTENT.classList.remove('add-task');
@@ -37,45 +30,33 @@ function notContentClickClose(event) {
     }
 }
 
+/* Saving added tasks to Board */
 
-let saveTaskDataTo = (columnId) => {
-    const TASKTITLE = document.getElementById('taskTitle').value;
-    const TASKDESCRIPTION = document.getElementById('taskDescription').value;
-    const TASKDUEDATE = document.getElementById('taskDueDate').value;
-    const TASKCATEGORY = document.getElementById('taskCategory').textContent;
-    const TASKASSIGNEE = Array.from(document.querySelectorAll('#selectedAssignee .contact-icon')).map(span => span.dataset.name);
+function collectTaskData(columnId) {
     const PRIORITY_BTN = document.querySelector('.priority-button.active');
-    const PRIORITY = PRIORITY_BTN ? PRIORITY_BTN.classList[PRIORITY_BTN.classList.length - 2] : '';
-    const SUBTASKS = Array.from(document.querySelectorAll('.subtask-text')).map(subtask => ({
-        value: subtask.textContent,
-        checked: false
-    }));
-    const REQUIRED_SPAN_HINT = document.querySelectorAll('.required-span');
-    const REQUIRED_INPUTS = document.querySelectorAll('.requierd-input');
-
-    let taskData = {
-        title: TASKTITLE,
-        description: TASKDESCRIPTION,
-        dueDate: TASKDUEDATE,
-        category: TASKCATEGORY,
-        assignee: TASKASSIGNEE,
-        priority: PRIORITY,
-        subtasks: SUBTASKS,
+    return {
+        title: document.getElementById('taskTitle').value,
+        description: document.getElementById('taskDescription').value,
+        dueDate: document.getElementById('taskDueDate').value,
+        category: document.getElementById('taskCategory').textContent,
+        assignee: Array.from(document.querySelectorAll('#selectedAssignee .contact-icon')).map(span => span.dataset.name),
+        priority: PRIORITY_BTN ? PRIORITY_BTN.classList[PRIORITY_BTN.classList.length - 2] : '',
+        subtasks: Array.from(document.querySelectorAll('.subtask-text')).map(subtask => ({
+            value: subtask.textContent,
+            checked: false
+        })),
         column: columnId
     };
-    // Validierung der Eingabedaten
-    if (!TASKTITLE || !TASKDUEDATE || !TASKCATEGORY) {
-        REQUIRED_SPAN_HINT.forEach(span => {
-            span.classList.remove('display-none');
-            REQUIRED_INPUTS.forEach(input => {
-                input.classList.add('correct-me');
-            });
+}
 
-        });
+
+let saveTaskDataTo = (columnId) => {
+    const taskData = collectTaskData(columnId);
+    if (!taskData.title || !taskData.dueDate || !taskData.category) {
+        showValidationErrors();
         return null;
-    } else {
-        return taskData;
     }
+    return taskData;
 }
 
 
@@ -90,42 +71,22 @@ async function taskDataPush(columnId) {
     });
 }
 
-function updateColumns(tasks) {
-    const COLUMNS = ['todoColumn', 'inProgressColumn', 'awaitFeedbackColumn', 'doneColumn'];
 
-    // Spalten leeren - sowohl Tasks als auch no-task Karten
-    COLUMNS.forEach(col => {
-        const column = document.getElementById(col);
-        // Entferne alle Task-Karten und no-task-item Elemente
-        const elementsToRemove = column.querySelectorAll('.task-card, .no-task-item');
-        elementsToRemove.forEach(element => element.remove());
-    });
-
-    // Tasks gruppieren und sortieren
-    const tasksByColumn = groupAndSortTasks(tasks);
-
-    // Tasks rendern
-    COLUMNS.forEach(col => {
-        const column = document.getElementById(col);
-        let dragArea = column.querySelector('.drag-area');
-
-        // Wenn keine Drag-Area existiert, erstelle eine neue
-        if (!dragArea) {
-            const dragAreaIds = ['toDoDragArea', 'inProgressDragArea', 'awaitingFeedbackDragArea', 'doneDragArea'];
-            const index = COLUMNS.indexOf(col);
-            dragArea = document.createElement('div');
-            dragArea.className = 'drag-area display-none';
-            dragArea.id = dragAreaIds[index];
-            dragArea.style.pointerEvents = 'none';
-            column.appendChild(dragArea);
-        }
-
-        tasksByColumn[col].forEach(task => {
-            // Füge Task vor der Drag-Area ein
-            dragArea.insertAdjacentHTML('beforebegin', taskCardTemplate(task));
-        });
-    });
+/**
+ * Konfiguriert Event-Handler für eine Board-Spalte
+ * @param {HTMLElement} column - Das Spalten-Element
+ * @param {string} columnId - Die ID der Spalte
+ * @param {string} dragAreaId - Die ID der Drag-Area
+ */
+function setupColumnEventHandlers(column, columnId, dragAreaId) {
+    column.ondrop = () => moveTo(columnId);
+    column.ondragover = (e) => {
+        allowDrop(e);
+        highlight(dragAreaId);
+    };
+    column.ondragleave = () => removeHighlight(dragAreaId);
 }
+
 
 function groupAndSortTasks(tasks) {
     const tasksByColumn = {
@@ -144,20 +105,24 @@ function groupAndSortTasks(tasks) {
 }
 
 
+function updateColumns(tasks) {
+    const tasksByColumn = groupAndSortTasks(tasks);
+    ['todoColumn', 'inProgressColumn', 'awaitFeedbackColumn', 'doneColumn'].forEach((col, i) => {
+        const column = document.getElementById(col);
+        const dragAreaId = ['toDoDragArea', 'inProgressDragArea', 'awaitingFeedbackDragArea', 'doneDragArea'][i];
+        column.innerHTML = dragAreaTemplate(dragAreaId);
+        setupColumnEventHandlers(column, col, dragAreaId);
+        tasksByColumn[col].forEach(task => document.getElementById(dragAreaId).insertAdjacentHTML('beforebegin', taskCardTemplate(task)));
+    });
+}
+
+
 function checkEmptyColumn() {
     const boardColumns = document.querySelectorAll('.board-column');
     boardColumns.forEach(column => {
         if (!column.querySelector('.task-card')) {
-            // Speichere die Drag-Area vor dem Überschreiben
-            const dragArea = column.querySelector('.drag-area');
-
             // Füge no-task template hinzu
-            column.innerHTML = noTaskCardTemplate();
-
-            // Füge die Drag-Area wieder hinzu, falls sie existierte
-            if (dragArea) {
-                column.appendChild(dragArea);
-            }
+            column.innerHTML += noTaskCardTemplate();
         }
     });
 }
@@ -173,9 +138,13 @@ function updateBoard() {
 
             updateColumns(tasks);
             checkEmptyColumn();
-
-           
         });
+}
+
+
+function showAddedTaskNotification() {
+    const ADDEDTOBOARDMESSAGE = document.getElementById('addedToBoardMessage');
+    ADDEDTOBOARDMESSAGE.classList.remove('display-none');
 }
 
 
@@ -198,24 +167,27 @@ function addTask(event, columnId) {
         });
 }
 
-function showAddedTaskNotification() {
-    const ADDEDTOBOARDMESSAGE = document.getElementById('addedToBoardMessage');
-    ADDEDTOBOARDMESSAGE.classList.remove('display-none');
-}
+
+/* Task-Design in Board functions */
 
 function renderMembers(task) {
     return Array.isArray(task.assignee) ?
         task.assignee.map(name => contactIconSpanTemplate(name)).join('') : ''
 }
+
+
 function renderMembersWithName(task) {
     return Array.isArray(task.assignee) ?
         task.assignee.map(name => `${memberWithNameTemplate(name)}`).join('') : '';
 }
 
+
+
 function toCamelCase(word) {
     if (!word) return ''; // Fallback für undefined/null
     return (word.charAt(0).toLowerCase() + word.slice(1)).replace(' ', '')
 }
+
 
 function handlePrioritySvg(priority) {
     switch (priority) {
@@ -233,21 +205,6 @@ function handlePrioritySvg(priority) {
     }
 }
 
-function handlePriority(priority) {
-    switch (priority) {
-        case 'HighPriority':
-            return 'High';
-            break;
-        case 'MidPriority':
-            return 'Medium';
-            break;
-        case 'LowPriority':
-            return 'Low';
-            break;
-        default:
-            return '';
-    }
-}
 
 function handleSubtasks(subtasks) {
     if (!subtasks || subtasks.length === 0) {
@@ -261,6 +218,7 @@ function handleSubtasks(subtasks) {
     return handleSubtasksTemplate(progressPercentage, completedSubtasks, totalSubtasks);
 }
 
+
 function showCheckedSubtasksCount(subtasks) {
     if (Array.isArray(subtasks) && subtasks.length > 0) {
         return `${subtasks.filter(sub => sub.checked).length}/${subtasks.length}`;
@@ -268,17 +226,24 @@ function showCheckedSubtasksCount(subtasks) {
     return '';
 }
 
+
 function visibilityClass(condition) {
     return condition ? '' : ' display-none';
 }
+
 
 function hasFooterData(task) {
     return (Array.isArray(task.assignee) && task.assignee.length > 0) || task.priority;
 }
 
+
+/* Drag & Drop Functions */
+
+
 function allowDrop(ev) {
     ev.preventDefault();
 }
+
 
 function startDragging(event, id) {
     const taskCard = document.getElementById(id);
@@ -287,6 +252,7 @@ function startDragging(event, id) {
     currentDraggedElement = id;
     taskCard.classList.add('dragging');
 }
+
 
 function stopDragging() {
     if (currentDraggedElement) {
@@ -297,231 +263,52 @@ function stopDragging() {
     }
 }
 
+
 function moveTo(column) {
-    let element = document.getElementById(currentDraggedElement);
+    const element = document.getElementById(currentDraggedElement);
     if (!element) return;
 
     element.classList.remove('dragging');
+    ['toDoDragArea', 'inProgressDragArea', 'awaitingFeedbackDragArea', 'doneDragArea'].forEach(removeHighlight);
 
-    // Verstecke alle Drag-Areas nach dem Drop
-    const allDragAreas = ['toDoDragArea', 'inProgressDragArea', 'awaitingFeedbackDragArea', 'doneDragArea'];
-    allDragAreas.forEach(dragAreaId => {
-        removeHighlight(dragAreaId);
-    });
-
-    fetch(TASKS_BASE_URL)
-        .then(response => response.json())
-        .then(data => {
-            const taskEntry = Object.entries(data || {}).find(([key]) => key === currentDraggedElement);
-            if (taskEntry) {
-                const taskUrl = `https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks/${taskEntry[0]}.json`;
-                fetch(taskUrl, {
-                    method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ column: column, movedAt: Date.now() })
-                }).then(() => { updateBoard(); currentDraggedElement = null; });
-            }
-        });
+    fetch(`https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks/${currentDraggedElement}.json`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ column, movedAt: Date.now() })
+    }).then(() => { updateBoard(); currentDraggedElement = null; });
 }
+
+
+function dragAreaHeight(element) {
+    const draggedTask = document.getElementById(currentDraggedElement);
+
+    if (draggedTask) {
+        const taskHeight = draggedTask.offsetHeight;
+        element.style.height = taskHeight + 'px';
+    }
+}
+
 
 function highlight(id) {
-    const element = document.getElementById(id);
-    if (element) {
-        element.classList.remove('display-none');
+    const DRAG_AREA = document.getElementById(id);
+    const column = DRAG_AREA.parentElement;
+    const noTaskItem = column.querySelector('.no-task-item');
 
-        // Verstecke no-task-item in der gleichen Spalte
-        const column = element.parentElement;
-        const noTaskItem = column.querySelector('.no-task-item');
-        if (noTaskItem) {
-            noTaskItem.style.display = 'none';
-        }
-
-        // Setze die Höhe der Drag-Area gleich der Höhe der gezogenen Task
-        if (currentDraggedElement) {
-            const draggedTask = document.getElementById(currentDraggedElement);
-            if (draggedTask) {
-                const taskHeight = draggedTask.offsetHeight;
-                element.style.height = taskHeight + 'px';
-            }
-        }
+    DRAG_AREA.classList.remove('display-none');
+    if (noTaskItem) {
+        noTaskItem.classList.add('display-none');
     }
+    dragAreaHeight(DRAG_AREA);
 }
+
 
 function removeHighlight(id) {
-    const element = document.getElementById(id);
-    if (element) {
-        element.classList.add('display-none');
+    const DRAG_AREA = document.getElementById(id);
+    const column = DRAG_AREA.parentElement;
+    const noTaskItem = column.querySelector('.no-task-item');
 
-        // Zeige no-task-item wieder an, falls vorhanden
-        const column = element.parentElement;
-        const noTaskItem = column.querySelector('.no-task-item');
-        if (noTaskItem) {
-            noTaskItem.style.display = '';
-        }
-
-        // Höhe zurücksetzen
-        element.style.height = '';
+    DRAG_AREA.classList.add('display-none');
+    if (noTaskItem) {
+        noTaskItem.classList.remove('display-none');
     }
 }
-
-
-function taskOverlay(taskId) {
-    fetch(TASKS_BASE_URL)
-        .then(response => response.json())
-        .then(data => {
-            const taskEntry = Object.entries(data || {}).find(([key, task]) => key === taskId);
-
-            if (taskEntry) {
-                const [firebaseKey, task] = taskEntry;
-                const taskWithId = { ...task, id: firebaseKey };
-                showTaskOverlay(taskWithId);
-            } else {
-                console.error('Task not found:', taskId);
-            }
-        })
-        .catch(error => console.error('Error fetching task:', error));
-}
-
-function showTaskOverlay(task) {
-    OVERLAY_CONTENT.innerHTML = taskOverlayTemplate(task);
-    OVERLAY_CONTENT.classList.add('task-overlay');
-    OVERLAY.classList.remove('display-none');
-
-    setTimeout(() => {
-        OVERLAY_CONTENT.classList.add('active');
-    }, 10);
-}
-
-function formatDate(dateString) {
-    const [year, month, day] = dateString.split('-');
-    return `${day}/${month}/${year}`;
-}
-
-async function updateSubtaskInFirebase(firebaseKey, updatedSubtasks) {
-    await fetch(`https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks/${firebaseKey}.json`, {
-        method: 'PATCH', 
-        headers: { 'Content-Type': 'application/json' }, 
-        body: JSON.stringify({ subtasks: updatedSubtasks })
-    });
-}
-
-
-async function toggleSubtask(taskId, subtaskValue) {
-    try {
-        const data = await (await fetch(TASKS_BASE_URL)).json();
-        const taskEntry = Object.entries(data || {}).find(([key]) => key === taskId);
-        
-        if (!taskEntry) return;
-        const [firebaseKey, task] = taskEntry;
-        const updatedSubtasks = task.subtasks.map(subtask => subtask.value === subtaskValue ? { ...subtask, checked: !subtask.checked } : subtask
-        );
-        
-        await updateSubtaskInFirebase(firebaseKey, updatedSubtasks);
-        showTaskOverlay({ ...task, subtasks: updatedSubtasks, id: firebaseKey }); 
-        updateBoard();
-    } catch (error) { console.error('Error toggling subtask:', error); }
-}
-
-function deleteTask(taskId){
-    fetch(TASKS_BASE_URL)
-        .then(response => response.json())
-        .then(data => {
-            const taskEntry = Object.entries(data || {}).find(([key]) => key === taskId);
-            if (taskEntry) {
-                const [firebaseKey] = taskEntry;
-                return fetch(`https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks/${firebaseKey}.json`, {
-                    method: 'DELETE'
-                });
-            } else {
-                console.error('Task not found:', taskId);
-            }
-        })
-        .then(() => updateBoard()).then(() => { closeOverlay(); })
-        .catch(error => console.error('Error deleting task:', error));
-}
-
-function showEditTaskOverlay(task) {
-    OVERLAY_CONTENT.classList.remove('task-overlay');
-    OVERLAY_CONTENT.classList.add('edit-task-overlay');
-    OVERLAY_CONTENT.innerHTML = editTaskOverlayTemplate(task);
-}
-
-function editTask(taskId) {
-    fetch(TASKS_BASE_URL)
-        .then(response => response.json())
-        .then(data => {
-            const taskEntry = Object.entries(data || {}).find(([key]) => key === taskId);
-            if (taskEntry) {
-                const [firebaseKey, task] = taskEntry;
-                const taskWithId = { ...task, id: firebaseKey };
-                showEditTaskOverlay(taskWithId);
-            } else {
-                console.error('Task not found:', taskId);
-            }
-        })
-        .catch(error => console.error('Error fetching task:', error));
-}
-
-/* Search Option 
-const debouncedFilter = debounce(filterTasksLive, 300);
-document.getElementById('searchInput').addEventListener('input', debouncedFilter);
-
-
-function filterTasksLive() {
-  const query = document.getElementById('searchInput').value.trim().toLowerCase();
-  if (!query) return updateBoard(); // if searchfield cleared or page reloaded, page origin shown
-  fetch(TASKS_BASE_URL)
-    .then(res => res.json())
-    .then(data => {
-      const tasks = Object.entries(data || {}).map(([id, task]) => ({ ...task, id }));
-      const filtered = filterTasksByQuery(tasks, query);
-      updateColumns(filtered);
-      checkEmptyFiltered(filtered);
-    });
-}
-
-function filterTasksByQuery(tasks, query) {
-  if (!query) return tasks;
-  return tasks.filter(t =>
-    t.title?.toLowerCase().includes(query) ||
-    t.description?.toLowerCase().includes(query)
-  );
-}
-
-function checkEmptyFiltered(tasks) {
-  const colIds = ['todoColumn', 'inProgressColumn', 'awaitFeedbackColumn', 'doneColumn'];
-  const dragAreaIds = ['toDoDragArea', 'inProgressDragArea', 'awaitingFeedbackDragArea', 'doneDragArea'];
-  
-  colIds.forEach((id, index) => {
-    const match = tasks.filter(t => t.column === id);
-    if (!match.length) {
-      const column = document.getElementById(id);
-      const dragArea = column.querySelector('.drag-area');
-      
-      // add no match template
-      column.innerHTML = noMatchCard();
-      
-      // add existing drag area
-      if (dragArea) {
-        column.appendChild(dragArea);
-      }
-    }
-  });
-}
-
-function noMatchCard() {
-  return `<div class="no-task-item flexR">No tasks To do</div>`;
-}
-
-
-// starts search after 300ms when user stops typing 
-// to conserve resources of firebase connections
-//  and to prevent flickering screen
-function debounce(fn, delay) {
-  let timeout;
-  return (...args) => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => fn(...args), delay);
-  };
-}
-*/

@@ -87,27 +87,10 @@
                 </div>
             </div>
             <div class="board-bottom flexR">
-                <div class="board-column flexC" id="todoColumn" ondrop="moveTo('todoColumn')"
-                    ondragleave="removeHighlight('toDoDragArea')" 
-                    ondragover="allowDrop(event); highlight('toDoDragArea');">
-                    <div class="drag-area display-none" id="toDoDragArea"></div>
-                </div>
-                <div class="board-column flexC" id="inProgressColumn" 
-                ondrop="moveTo('inProgressColumn')"
-                    ondragleave="removeHighlight('inProgressDragArea')"
-                    ondragover="allowDrop(event); highlight('inProgressDragArea');">
-                    <div class="drag-area display-none" id="inProgressDragArea"></div>
-                </div>
-                <div class="board-column flexC" id="awaitFeedbackColumn" ondrop="moveTo('awaitFeedbackColumn')"
-                    ondragleave="removeHighlight('awaitingFeedbackDragArea')"
-                    ondragover="allowDrop(event); highlight('awaitingFeedbackDragArea');">
-                    <div class="drag-area display-none" id="awaitingFeedbackDragArea"></div>
-                </div>
-                <div class="board-column flexC" id="doneColumn" ondrop="moveTo('doneColumn')"
-                    ondragleave="removeHighlight('doneDragArea')" 
-                    ondragover="allowDrop(event); highlight('doneDragArea');">
-                    <div class="drag-area display-none" id="doneDragArea"></div>
-                </div>
+                <div class="board-column flexC" id="todoColumn"></div>
+                <div class="board-column flexC" id="inProgressColumn"></div>
+                <div class="board-column flexC" id="awaitFeedbackColumn"></div>
+                <div class="board-column flexC" id="doneColumn"></div>
             </div>
         </div>
         </div>

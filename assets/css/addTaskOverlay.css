@@ -183,7 +183,7 @@ label{
     justify-content: center;
 }
 
-.priority-button {
+.priority-button, .edit-priority-button {
     padding: 10px 16px;
     border: 1px solid #D1D1D1;
     border-radius: 10px;
@@ -192,22 +192,22 @@ label{
     justify-content: center;
 }
 
-.priority-button:hover {
+.priority-button:hover , .edit-priority-button:hover{
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 25%);
 }
-.priority-button.active:hover {
+.priority-button.active:hover , .edit-priority-button.active:hover{
     box-shadow: none;
     transform: none;
     cursor: default;
 }
-.priority-button span {
+.priority-button span , .edit-priority-button span {
     font-size: 20px;
     font-weight: 400;
 }
-.priority-button.active{
+.priority-button.active , .edit-priority-button.active {
     color: white
 }
-.priority-button.active svg path {
+.priority-button.active svg path , .edit-priority-button.active svg path {
     fill: white;
 }
 
