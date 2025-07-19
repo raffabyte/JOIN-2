@@ -127,3 +127,24 @@ const demoContacts = [
   { name: "Leon Wagner", email: "leon@example.com", phone: "111222333", color: "#FF4646" },
   { name: "Emma Roth", email: "emma@example.com", phone: "222333444", color: "#00BEE8" }
 ];
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const fieldConfigs = [
+    { inputId: "password", maskId: "password-mask" },
+    { inputId: "password2", maskId: "password2-mask" }
+  ];
+
+  fieldConfigs.forEach(({ inputId, maskId }) => {
+    const input = document.getElementById(inputId);
+    const mask = document.getElementById(maskId);
+
+    if (input && mask) {
+      input.addEventListener("input", () => {
+        mask.textContent = "*".repeat(input.value.length);
+      });
+    }
+  });
+});
+
+
