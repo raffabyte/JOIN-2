@@ -7,6 +7,7 @@ let editingOwnContact = false;
 let contactsData = {};
 let currentMode = "create";
 let currentEditKey = null;
+let activeContactKey = null;
 
 const predefinedColors = [
   "#FF7A00",
@@ -127,6 +128,7 @@ const { name, email, phone } = formData
 
   renderOwnContact(updatedUser);
   showOwnContactCardDetails(updatedUser);
+  activateContactCard("ownContact");
   toggleOverlay();
   editingOwnContact = false;
 }
@@ -200,6 +202,7 @@ function createOwnContactCard(contact) {
   const initials = getInitials(contact.name);
   const card = document.createElement("div");
   card.className = "contactCard";
+  card.setAttribute("data-key", "ownContact");
   card.innerHTML = getOwnContactCardHtml(contact, initials);
   return card;
 }
@@ -276,9 +279,12 @@ function createContactCard(key, contact) {
   const initials = getInitials(contact.name);
   const card = document.createElement("div");
   card.className = "contactCard";
+  card.setAttribute("data-key", key);
+
   card.innerHTML = getContendCardHtml(contact, initials, contact.color);
 
   card.addEventListener("click", () => {
+    activeContactKey = key;
     deactivateAllContactCards();
     activateContactCard(card);
     showContactDetails(key);
@@ -298,10 +304,17 @@ function deactivateAllContactCards() {
   });
 }
 
-function activateContactCard(card) {
+function activateContactCard(keyOrElement) {
+  let card = keyOrElement;
+
+  if (typeof card === "string") {
+    card = document.querySelector(`.contactCard[data-key="${card}"]`);
+    if (!card) return;
+  }
+
   card.classList.add("activeCard");
 
-  const circle = card.querySelector(".ownContactCircle"); // oder .contactCircle?
+  const circle = card.querySelector(".contactCircle") || card.querySelector(".ownContactCircle");
   if (circle) {
     circle.style.borderColor = "white";
   }
