@@ -89,23 +89,31 @@ function toggleOverlay() {
 async function submitContact(event) {
   event.preventDefault();
 
-  const name = document.getElementById("name").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const phone = document.getElementById("phone").value.trim();
-  const contactKey = document.getElementById("contactKey").value.trim();
+  const formData = getFormData();
 
   if (editingOwnContact) {
-    await updateOwnUserContact({ name, email, phone });
+    await updateOwnUserContact(formData);
     return;
   }
 
-  await saveOrUpdateContact({ name, email, phone, contactKey });
+  await saveOrUpdateContact(formData);
 
   toggleOverlay();
   showSuccessOverlay();
 }
 
-async function updateOwnUserContact({ name, email, phone }) {
+function getFormData() {
+  return {
+    name: document.getElementById("name").value.trim(),
+    email: document.getElementById("email").value.trim(),
+    phone: document.getElementById("phone").value.trim(),
+    contactKey: document.getElementById("contactKey").value.trim()
+  };
+}
+
+async function updateOwnUserContact(formData) {
+const { name, email, phone } = formData
+
   const existingUserData = await loadData(`users/${USERKEY}`);
 
   const updatedUser = {
@@ -123,11 +131,13 @@ async function updateOwnUserContact({ name, email, phone }) {
   editingOwnContact = false;
 }
 
-async function saveOrUpdateContact({ name, email, phone, contactKey }) {
+async function saveOrUpdateContact(formData) {
+  const { name, email, phone, contactKey } = formData;
+
   if (contactKey) {
-    await updateContact(name, email, phone, contactKey)
+    await updateContact(name, email, phone, contactKey);
   } else {
-    await createNewContact(name, email, phone, contactKey);
+    await createNewContact(name, email, phone);
   }
 }
 async function updateContact(name, email, phone, contactKey) {
@@ -212,15 +222,6 @@ function deactivateAllContactCards() {
       circle.style.borderColor = "black";
     }
   });
-}
-
-function activateContactCard(card) {
-  card.classList.add("activeCard");
-
-  const circle = card.querySelector(".ownContactCircle");
-  if (circle) {
-    circle.style.borderColor = "white";
-  }
 }
 
 function showOwnContactCardDetails(contact) {
@@ -344,13 +345,21 @@ function editOwnContact(contact) {
 function editContact(key) {
   const contact = contactsData[key];
 
+  prefillFormWithContactData(contact, key);
+  renderEditAvatar(contact);
+  setupFormButtons("edit", key);
+  toggleOverlay();
+}
+
+function prefillFormWithContactData(contact, key) {
   document.getElementById("contactKey").value = key;
   document.getElementById("name").value = contact.name;
   document.getElementById("email").value = contact.email;
   document.getElementById("phone").value = contact.phone;
+}
 
-  const initials = getInitials(contact.name)
-
+function renderEditAvatar(contact) {
+  const initials = getInitials(contact.name);
   const color = contact.color;
 
   const avatarContainer = document.getElementById("editAvatarContainer");
@@ -359,9 +368,6 @@ function editContact(key) {
       ${initials}
     </div>
   `;
-
-  setupFormButtons("edit", key); // ⬅️ das ist neu!
-  toggleOverlay();
 }
 
 async function deleteContact(key, closeOverlay = false) {
@@ -384,16 +390,3 @@ async function loadDataAfterSave() {
   renderContacts(newContacts);
 }
 
-function getRandomColor() {
-  const index = Math.floor(Math.random() * predefinedColors.length);
-  return predefinedColors[index];
-}
-
-function getInitials(name) {
-  if (!name) return "";
-  return name
-    .split(" ")
-    .map(word => word[0]?.toUpperCase() || "")
-    .join("")
-    .substring(0, 2);
-}
