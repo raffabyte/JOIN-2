@@ -83,7 +83,7 @@ function addTaskOverlayForm(columnId) {
                         <div class="gap-8 width-100 flexC">
                             <label for="subtasks">Subtasks</label>
                             <div class="inputs input-add-cancel-wrapper flexR" id="inputBox">
-                                <input type="text" id="subtasks" placeholder="add new subtask" oninput="checkSubtask(this.value.length)" onfocus="showAddCancelBtns()">
+                                <input type="text" id="subtasks" placeholder="add new subtask" oninput="checkSubtask(this.value.length)" onfocus="showAddCancelBtns()" onkeydown="onEnterAddSubTask(event, 'subtasks')">
                                 <button class="plus-button overlay-button" id="subtaskPlusBtn" type="button" onclick="showAddCancelBtns()">
                                         ${PLUS_SVG}
                                 </button>
@@ -147,7 +147,7 @@ function addSubTaskTemplate(subtaskInput, index = 0){
             </div>
         </div>
         <div class="edit-subtask-input-wrapper flexR display-none" id="${editUniqueId}">
-            <input type="text" id="${editInputId}" class="edit-subtask-input">
+            <input type="text" id="${editInputId}" class="edit-subtask-input" onkeydown="onEnterEditSubTask(event, this)">
             <div class="gap-8 flexR">
             <button class="delete-subtask-button overlay-button" type="button" onclick="deleteSubtask(this)">
                 <svg width="16" height="18" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">

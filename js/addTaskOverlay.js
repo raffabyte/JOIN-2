@@ -7,10 +7,12 @@ function addTaskOverlay(columnId) {
     // Show the overlay
     OVERLAY.classList.remove('display-none');
 
+    // Add click handler to overlay for outside clicks
+    OVERLAY.onclick = handleOutsideClick;
+
     setTimeout(() => {
         // Add animation class to the overlay content
         OVERLAY_CONTENT.classList.add('active');
-        initializeSubtaskEventHandlers();
     }, 10);
 }
 
@@ -107,7 +109,8 @@ function selectCategory(category) {
 
 
 
-document.addEventListener('click', function(event) {
+function handleOutsideClick(event) {
+    // Category Options schließen
     const categoryOptions = document.getElementById('categoryOptions');
     if (categoryOptions && categoryOptions.classList.contains('active')) {
         if (!categoryOptions.contains(event.target) && event.target.id !== 'taskCategory') {
@@ -115,10 +118,8 @@ document.addEventListener('click', function(event) {
             categoryOptions.classList.remove('active');
         }
     }
-});
 
-document.addEventListener('click' , function(event) {
-
+    // Assignee Options schließen
     const assigneeOptions = document.getElementById('assigneeOptions');
     if (assigneeOptions && assigneeOptions.classList.contains('active')) {
         if (!assigneeOptions.contains(event.target) && event.target.id !== 'taskAssignee') {
@@ -126,49 +127,37 @@ document.addEventListener('click' , function(event) {
             assigneeOptions.classList.remove('active');
         }
     }
-});
 
-
-document.addEventListener('click', function(event) {
+    // Subtask Input zurücksetzen
     const inputFeld = document.getElementById('inputBox');
     const plusBtn = document.getElementById('subtaskPlusBtn');
     const addCancelBtns = document.getElementById('addCancelBtns');
-    const  HINT_MESSAGE_DIV = document.getElementById('subtaskHintMessage');
+    const HINT_MESSAGE_DIV = document.getElementById('subtaskHintMessage');
 
-     if (inputFeld && !inputFeld.contains(event.target)) {
+    if (inputFeld && !inputFeld.contains(event.target)) {
         plusBtn.classList.remove('display-none');
         addCancelBtns.classList.add('display-none');
         HINT_MESSAGE_DIV.classList.add('display-none');
-     }
+    }
 
     if (inputFeld && inputFeld.classList.contains('correct-me')) {
         if (!inputFeld.contains(event.target)) {
             inputFeld.classList.remove('correct-me');
         }
     }
-});
+}
 
-function onEnterAddSubTask(subtaskInput){
-    if (subtaskInput && !subtaskInput._enterListenerAdded) {
-        subtaskInput.addEventListener('keydown', function(event) {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                addSubtask(subtaskInput.id);
-            }
-        });
-        subtaskInput._enterListenerAdded = true;
+function onEnterAddSubTask(event, inputId){
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        addSubtask(inputId);
     }
 }
 
-function onEnterEditSubTask(editInput){
-    if (editInput && !editInput._enterListenerAdded) {
-        editInput.addEventListener('keydown', function(event) {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                finalEditditSubtask(editInput);
-            }
-        });
-        editInput._enterListenerAdded = true;
+function onEnterEditSubTask(event, editInput){
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        finalEditditSubtask(editInput);
     }
 }
 
@@ -266,16 +255,4 @@ function finalEditditSubtask(subtask){
     // Edit-Modus ausblenden, Anzeige wieder einblenden
     editDiv.classList.add('display-none');
     subtaskDisplay.classList.remove('display-none');
-}
-
-
-function initializeSubtaskEventHandlers() {
-    ['subtasks', 'editedSubtasks'].forEach(id => {
-        const input = document.getElementById(id);
-        if (input) onEnterAddSubTask(input);
-    });
-
-    document.querySelectorAll('.edit-subtask-input').forEach(editInput => {
-        onEnterEditSubTask(editInput);
-    });
 }

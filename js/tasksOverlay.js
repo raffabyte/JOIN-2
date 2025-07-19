@@ -92,17 +92,18 @@ function deleteTask(taskId) {
 }
 
 function showEditTaskOverlay(task) {
+    const TASK_EDIT_FORM = document.getElementById('taskEditForm');
+    const TASK_INFOS = document.getElementById('taskOverlayContent');
+    
     // Speichere die aktuelle Task für späteren Zugriff
     window.currentEditingTask = task;
 
-    OVERLAY_CONTENT.classList.remove('task-overlay');
-    OVERLAY_CONTENT.classList.add('edit-task-overlay');
-    OVERLAY_CONTENT.innerHTML = editTaskOverlayTemplate(task);
+    TASK_EDIT_FORM.classList.remove('display-none');
+    TASK_INFOS.classList.add('display-none');
 
-    // Initialisiere Event Handler für Subtasks
-    setTimeout(() => {
-        initializeSubtaskEventHandlers();
-    }, 10);
+
+    initializeSubtaskEventHandlers();
+   
 }
 
 function editTask(taskId) {

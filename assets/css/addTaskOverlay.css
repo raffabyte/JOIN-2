@@ -9,18 +9,15 @@
     padding: 64px 74px;
     border-radius: 30px;
     box-shadow: 0 0 4px rgba(0,0,0,0.1);
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(100%, -50%);
+    transform: translateX(100%);
     opacity: 0;
-    transition: transform 0.1s ease-in-out, opacity 0.1s ease-in-out;
+    transition: all 0.1s ease-in-out;
     z-index: 200;
     scrollbar-width: none;
 }
 
-.overlay-content.add-task.active {
-    transform: translate(-50%, -50%);
+.overlay-content.active {
+    transform: translateX(0%);
     opacity: 1;
 }
 

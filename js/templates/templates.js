@@ -173,6 +173,7 @@ function memberWithNameTemplate(name){
 
 function taskOverlayTemplate(task){
     return `
+        <div class="flexC gap-24 task-overlay-content" id="taskOverlayContent">
             <div class="space-between flexR">
                 <span class="task-category" id="${toCamelCase(task.category)}">${task.category}</span>
                 <button class="overlay-button" onclick="closeOverlay()">
@@ -211,18 +212,19 @@ function taskOverlayTemplate(task){
                     `).join('') : '<p>No subtasks available</p>'}
                 </div>
             </div>
-            </div>
-            <div class="task-overlay-footer gap-8 flexR">
+        </div>
+        <div class="task-overlay-footer gap-8 flexR">
                 <button class="task-footer-btn gap-8 flexR" onclick="deleteTask('${task.id}')">${DELETE_SVG} Delete</button>
                 ${SEPARATOR_SVG}
                 <button class="task-footer-btn gap-8 flexR" onclick="editTask('${task.id}')">${EDIT_SVG} Edit</button>
-            </div>
+        </div>
+        ${editTaskOverlayTemplate(task)}
         `;
 }
 
 function taskEditTemplate(task) {
     return `
-        <div class="flexC width-100 gap-24">
+        <div class="flexC width-100 gap-24 display-none">
             <div class="gap-8 width-100 flexC">
                 <label for="editedTaskTitle">Title</label>
                 <input class="inputs requierd-input" type="text" id="editedTaskTitle" value="${task.title}" placeholder="Enter a title" >
@@ -280,7 +282,7 @@ function taskEditTemplate(task) {
             <div class="gap-8 width-100 flexC">
                 <label for="editedSubtasks">Subtasks</label>
                 <div class="inputs input-add-cancel-wrapper flexR" id="inputBox">
-                    <input type="text" id="editedSubtasks" placeholder="add new subtask" oninput="checkSubtask(this.value.length)" onfocus="showAddCancelBtns()">
+                    <input type="text" id="editedSubtasks" placeholder="add new subtask" oninput="checkSubtask(this.value.length)" onfocus="showAddCancelBtns()" onkeydown="onEnterAddSubTask(event, 'editedSubtasks')">
                     <button class="plus-button overlay-button" id="subtaskPlusBtn" type="button" onclick="showAddCancelBtns()">
                             ${PLUS_SVG}
                     </button>
@@ -304,7 +306,7 @@ function taskEditTemplate(task) {
 
 function editTaskOverlayTemplate(task) {
     return `
-        <div class="flexR width-100 flex-end" data-task-id="${task.id}">
+        <div class="flexR width-100 flex-end" id="taskEditOverlayForm">
             <button class="overlay-button" onclick="closeOverlay()">
                     ${CLOSE_CANCEL_SVG}
             </button>
