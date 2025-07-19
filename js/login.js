@@ -98,11 +98,27 @@ function applyStarMaskToPassword(passwordInput, msgBox) {
   passwordInput.getRealPassword = () => realPassword;
   passwordInput.type = "text";
 
+  // Fallback bei Autovervollständigung oder Copy-Paste
+  if (passwordInput.value.length > 0) {
+    realPassword = passwordInput.value;
+    updatePasswordField(passwordInput, realPassword, visible);
+    updateVisualFeedback(passwordInput, msgBox, realPassword, visible);
+  }
+
   passwordInput.addEventListener("beforeinput", (e) => {
     realPassword = handlePasswordInput(e, realPassword, passwordInput, visible);
     updatePasswordField(passwordInput, realPassword, visible);
     updateCursorPosition(passwordInput, visible);
     updateVisualFeedback(passwordInput, msgBox, realPassword, visible);
+  });
+
+  // 🔁 Fallback bei Copy/Paste, Autofill oder Änderungen nachträglich
+  passwordInput.addEventListener("input", () => {
+    if (passwordInput.value !== "*".repeat(realPassword.length)) {
+      realPassword = passwordInput.value;
+      updatePasswordField(passwordInput, realPassword, visible);
+      updateVisualFeedback(passwordInput, msgBox, realPassword, visible);
+    }
   });
 
   passwordInput.addEventListener("click", (e) => {
@@ -115,6 +131,7 @@ function applyStarMaskToPassword(passwordInput, msgBox) {
 
   clearMessage(msgBox);
 }
+
 
 function handlePasswordInput(e, realPassword, input, visible) {
   const start = input.selectionStart;

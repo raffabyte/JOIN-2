@@ -95,30 +95,38 @@ button {
 }
 
 .mail_icon {
-    background-image: url(../img/LogIn/mail.png);
+    background-image: url(../img/LogIn/mail.png) !important;
     background-repeat: no-repeat;
     background-size: 25px;
     background-position: right 10px center;
 }
 .lock_icon {
-    background-image: url(../img/LogIn/lock.png);
+    background-image: url(../img/LogIn/lock.png) !important;
     background-repeat: no-repeat;
     background-size: 20px;
     background-position: right 10px center;
 }
 .visibility_icon {
-    background-image: url("../img/LogIn/visibility.png");
+    background-image: url("../img/LogIn/visibility.png") !important;
     background-repeat: no-repeat;
     background-size: 20px;
     background-position: right 10px center;
   }
   
   .visibility_off_icon {
-    background-image: url("../img/LogIn/visibility_off.png");
+    background-image: url("../img/LogIn/visibility_off.png") !important;
     background-repeat: no-repeat;
     background-size: 20px;
     background-position: right 10px center;
-  }
+}
+input:-webkit-autofill,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:hover {
+    -webkit-box-shadow: 0 0 0px 1000px white inset;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+  
 
 .login-container form {
     width: 100%;
