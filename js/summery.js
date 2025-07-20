@@ -1,25 +1,26 @@
-window.addEventListener("DOMContentLoaded", async () => {
-  addHeader();
-  linkesNavMenuVersion();
-  showHideHelpAndUser();
-  await setUserInitials();
-  await init();
-  await loadAndRenderTaskCounts(); // 👈 Hier neu
-});
-
 if (!USERKEY) {
   // Kein Benutzer eingeloggt → weiterleiten
   window.location.href = "../../index.html";
 }
 
+async function init() {
+  await loadAndRenderTaskCounts();
+}
+
+/**
+ * Lädt die Benutzerdaten aus Firebase.
+ * @returns {Promise<Object>} Das Benutzerobjekt.
+ */
 async function loadUserData() {
   const response = await fetch(`${BASE_URL}users/${USERKEY}.json`);
   const user = await response.json();
   return user;
 }
 
+/**
+ * Initialisiert Begrüßung und Benutzername im Dashboard.
+ */
 async function init() {
-  
     const user = await loadUserData();
 
     if (user.guest) {
@@ -34,6 +35,9 @@ async function init() {
 await showCurrentTime();
 }
 
+/**
+ * Zeigt die aktuelle Tageszeit-gerechte Begrüßung ("Good morning", etc.).
+ */
 async function showCurrentTime() {
   const greetingElement = document.getElementById("greetingText");
     const hour = new Date().getHours();
@@ -52,7 +56,13 @@ async function showCurrentTime() {
     greetingElement.innerText = greetingText;
   }
     
-
+/**
+ * Formatiert einen Namen auf Groß-/Kleinschreibung.
+ * z. B. "max mustermann" → "Max Mustermann"
+ * 
+ * @param {string} name - Der Name des Benutzers.
+ * @returns {string} Formatierter Name.
+ */
 function formatName(name) {
   return name
     .split(" ")
@@ -60,6 +70,9 @@ function formatName(name) {
     .join(" ");
 }
 
+/**
+ * Lädt alle Aufgaben aus Firebase und rendert Statistiken.
+ */
 async function loadAndRenderTaskCounts() {
   try {
     const tasks = await fetchTasks();
@@ -71,12 +84,26 @@ async function loadAndRenderTaskCounts() {
   }
 }
 
+/**
+ * Holt Aufgaben aus der Firebase-Datenbank.
+ * @returns {Promise<Object[]>} Liste aller Aufgaben.
+ */
 async function fetchTasks() {
   const response = await fetch("https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks.json");
   const data = await response.json();
   return Object.values(data || {});
 }
 
+/**
+ * Analysiert Aufgaben nach Status und Priorität.
+ *
+ * @param {Object[]} tasks - Alle geladenen Aufgaben.
+ * @returns {{
+ *   countByColumn: {todo: number, inProgress: number, awaitFeedback: number, done: number},
+ *   highPriorityCount: number,
+ *   upcomingUrgentDates: Date[]
+ * }}
+ */
 function analyzeTasks(tasks) {
   const countByColumn = { todo: 0, inProgress: 0, awaitFeedback: 0, done: 0 };
   const highPriority = { count: 0 };
@@ -91,6 +118,12 @@ function analyzeTasks(tasks) {
   return { countByColumn, highPriorityCount: highPriority.count, upcomingUrgentDates };
 }
 
+/**
+ * Erhöht den Zähler im passenden Aufgabenstatus.
+ *
+ * @param {Object} task - Eine Aufgabe.
+ * @param {{todo: number, inProgress: number, awaitFeedback: number, done: number}} countByColumn
+ */
 function countColumns(task, countByColumn) {
   switch (task.column) {
     case "todoColumn": countByColumn.todo++; break;
@@ -100,6 +133,14 @@ function countColumns(task, countByColumn) {
   }
 }
 
+/**
+ * Zählt hochpriorisierte Aufgaben und prüft auf bevorstehende Fälligkeiten.
+ *
+ * @param {Object} task - Eine Aufgabe.
+ * @param {{count: number}} highPriorityRef - Referenzobjekt zum Hochzählen.
+ * @param {Date[]} datesArr - Liste mit bevorstehenden Fälligkeitsdaten.
+ * @param {Date} today - Das heutige Datum.
+ */
 function processPriority(task, highPriorityRef, datesArr, today) {
   if (task.priority === "HighPriority") {
     highPriorityRef.count++;
@@ -112,6 +153,13 @@ function processPriority(task, highPriorityRef, datesArr, today) {
   }
 }
 
+/**
+ * Rendert alle Aufgabenstatistiken im Dashboard.
+ *
+ * @param {{todo: number, inProgress: number, awaitFeedback: number, done: number}} counts
+ * @param {number} total - Gesamtanzahl der Aufgaben.
+ * @param {number} highPriority - Anzahl hochpriorisierter Aufgaben.
+ */
 function renderTaskCounts(counts, total, highPriority) {
   document.getElementById("ToDo").innerText = counts.todo;
   document.getElementById("tasksInProgress").innerText = counts.inProgress;
@@ -121,6 +169,11 @@ function renderTaskCounts(counts, total, highPriority) {
   document.getElementById("highPriorityCount").innerText = highPriority;
 }
 
+/**
+ * Zeigt das nächste Fälligkeitsdatum (wenn vorhanden) im Dashboard an.
+ *
+ * @param {Date[]} dates - Liste aller bevorstehenden Deadlines.
+ */
 function renderNextDeadline(dates) {
   const elem = document.getElementById("nextDeadlineDate");
 
