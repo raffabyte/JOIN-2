@@ -1,6 +1,9 @@
+const USERKEY = localStorage.getItem("userKey");
+
 if (!USERKEY) {
   window.location.href = "../../index.html";
 }
+
 document.addEventListener("DOMContentLoaded", () => {
   initAddTaskPage();
   initFilledFieldTracking(); 
