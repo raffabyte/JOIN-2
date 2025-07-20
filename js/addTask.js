@@ -1,4 +1,3 @@
-
 if (!USERKEY) {
   window.location.href = "../../index.html";
 }
@@ -6,7 +5,6 @@ document.addEventListener("DOMContentLoaded", () => {
   initAddTaskPage();
   initFilledFieldTracking(); 
 });
-
 
 function initFilledFieldTracking() {
   const fieldIds = ["title", "due-date", "description"];
@@ -16,7 +14,6 @@ function initFilledFieldTracking() {
   });
   initCategoryFieldTracking();
 }
-
 
 function handleInputFilledState(input) {
   input.addEventListener("input", () => {
@@ -28,7 +25,6 @@ function handleInputFilledState(input) {
     }
   });
 }
-
 
 function initCategoryFieldTracking() {
   const categoryInput = document.getElementById("category-input");
@@ -57,11 +53,17 @@ async function loadAssignableUsers() {
     const users = await loadData("users");
     return Object.entries(users)
       .filter(([key]) => key !== USERKEY)
-      .map(([, user]) => ({
-        name: extractName(user.email),
-        email: user.email,
-      }));
-  } catch (error) {
+      .map(([, user]) => {
+  if (!user || !user.email) {
+    console.warn("Ungültiger Nutzer:", user);
+    return { name: "Unbekannt", email: "" };
+  }
+  return {
+    name: extractName(user.email),
+    email: user.email,
+  };
+});
+} catch (error) {
     console.error("Fehler beim Laden der Nutzer:", error);
     return [];
   }
@@ -140,7 +142,6 @@ function createDropdownOption(option, isMultiSelect, input, dropdown) {
   return li;
 }
 
-
 function getDropdownOptionHTML(option, isMultiSelect) {
   if (typeof option === "string") return option;
   const initials = getInitials(option.name);
@@ -153,7 +154,6 @@ function getDropdownOptionHTML(option, isMultiSelect) {
     </label>
   `;
 }
-
 
 function initPriorityButtons() {
   const container = document.querySelector(".priority-options");
@@ -168,7 +168,6 @@ function initPriorityButtons() {
   });
 }
 
-
 function initDatePicker() {
   const dateInput = document.getElementById("due-date");
   const calendarToggle = document.getElementById("calendar-toggle");
@@ -180,14 +179,12 @@ function initDatePicker() {
   });
 }
 
-
 function initFormValidation() {
   const form = document.querySelector(".task-form");
   if (!form) return;
   initSubmitHandler(form);
   initClearButton(form);
 }
-
 
 function initSubmitHandler(form) {
   form.addEventListener("submit", (e) => {
@@ -200,7 +197,6 @@ function initSubmitHandler(form) {
   });
 }
 
-
 function initClearButton(form) {
   const clearBtn = form.querySelector(".clear-button");
   if (!clearBtn) return;
@@ -211,11 +207,9 @@ function initClearButton(form) {
   });
 }
 
-
 function resetFilledStates() {
   document.querySelectorAll(".filled").forEach(el => el.classList.remove("filled"));
 }
-
 
 function clearValidationErrors() {
   const ids = ["title", "due-date", "category-input"];
@@ -225,14 +219,12 @@ function clearValidationErrors() {
   });
 }
 
-
 function clearSubtasks() {
   const list = document.getElementById("subtask-list");
   if (list) list.innerHTML = "";
   const elements = getSubtaskElements?.();
   if (elements) hideAddCancelBtns(elements);
 }
-
 
 function isFormValid(form) {
   const requiredIds = ["title", "due-date", "category-input"];
@@ -244,7 +236,6 @@ function isFormValid(form) {
   if (!validatePriority(form)) isValid = false;
   return isValid;
 }
-
 
 function validateInput(input) {
   if (!input) {
@@ -259,8 +250,6 @@ function validateInput(input) {
   return true;
 }
 
-
-
 function validatePriority(form) {
   const priorityContainer = form.querySelector(".priority-options");
   const selected = form.querySelector(".priority-btn.selected");
@@ -271,7 +260,6 @@ function validatePriority(form) {
   priorityContainer.classList.remove("input-error");
   return true;
 }
-
 
 function showFieldError(input, message) {
   input.classList.add("input-error");
@@ -288,7 +276,6 @@ function showFieldError(input, message) {
   errorEl.textContent = message;
 }
 
-
 function clearFieldError(input) {
   input.classList.remove("input-error");
   const wrapper = input.closest(".form-group");
@@ -299,12 +286,10 @@ function clearFieldError(input) {
   if (errorEl) errorEl.remove();
 }
 
-
 function disableButton(button, isDisabled) {
   button.disabled = isDisabled;
   button.style.opacity = isDisabled ? "0.7" : "1";
 }
-
 
 function showTaskCreatedOverlay() {
   const overlay = document.createElement("div");
@@ -323,7 +308,6 @@ function showTaskCreatedOverlay() {
   }, 10);
 }
 
-
 function extractName(email) {
   const namePart = email.split("@")[0].replace(/[._]/g, " ");
   return namePart
@@ -331,7 +315,6 @@ function extractName(email) {
     .map(w => w.charAt(0).toUpperCase() + w.slice(1))
     .join(" ");
 }
-
 
 function getInitials(name) {
   return name
@@ -342,7 +325,6 @@ function getInitials(name) {
     .slice(0, 2);
 }
 
-
 function generateColor(initials) {
   const hash = [...initials].reduce((acc, char) => acc + char.charCodeAt(0), 0);
   const colors = [
@@ -351,7 +333,6 @@ function generateColor(initials) {
   ];
   return colors[hash % colors.length];
 }
-
 
 function collectTaskData() {
   const title = getInputValue("title");
@@ -374,12 +355,10 @@ function collectTaskData() {
   };
 }
 
-
 function getInputValue(id) {
   const input = document.getElementById(id);
   return input ? input.value.trim() : "";
 }
-
 
 function getSelectedAssignees() {
   const checkboxes = document.querySelectorAll(".dropdown-user-option input:checked");
@@ -388,12 +367,10 @@ function getSelectedAssignees() {
   );
 }
 
-
 function getSelectedPriority() {
   const selected = document.querySelector(".priority-btn.selected");
   return selected ? selected.dataset.priority : "";
 }
-
 
 function getSubtaskData() {
   const subtasks = document.querySelectorAll("#subtask-list .subtask-text");
@@ -402,7 +379,6 @@ function getSubtaskData() {
     checked: false
   }));
 }
-
 
 async function saveTaskToFirebase() {
   const task = collectTaskData();
@@ -417,7 +393,6 @@ async function saveTaskToFirebase() {
     alert("Fehler beim Speichern der Aufgabe.");
   }
 }
-
 
 async function sendTaskToServer(task) {
   return await fetch("https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks.json", {
