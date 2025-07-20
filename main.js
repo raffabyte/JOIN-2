@@ -1,6 +1,9 @@
-const BASE_URL = "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/";
-const USERKEY = localStorage.getItem("loggedInUserKey");
-
+/* passende Deklarierung einmal in main.js; in allen anderen js kann dann das verwendet werden: // remoteStorage.js, addTask.js usw.
+const BASE_URL = window.BASE_URL;
+const USERKEY = window.USERKEY;
+*/
+window.BASE_URL = "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/";
+window.USERKEY = localStorage.getItem("loggedInUserKey");
 
 function login() {
             const EMAIL = document.getElementById('email').value;

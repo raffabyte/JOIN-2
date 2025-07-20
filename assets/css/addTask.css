@@ -5,11 +5,13 @@
   background-color: #f6f7f8;
   box-sizing: border-box;
 }
+
 h1 {
   font-size: clamp(28px, 4vw, 61px);
   font-weight: 700;
   padding-bottom: 42px;
 }
+
 .task-form {
   display: flex;
   flex-direction: column;
@@ -17,8 +19,8 @@ h1 {
   max-width: 980px;
   gap: 32px;
   box-sizing: border-box;
-  box-sizing: border-box;
 }
+
 .form-columns {
   gap: 48px;
   align-items: flex-start;
@@ -36,6 +38,7 @@ h1 {
   background-color: #d1d1d1;
   align-self: stretch;
 }
+
 .form-group {
   position: relative;
   display: flex;
@@ -43,6 +46,7 @@ h1 {
   gap: 8px;
   width: 100%;
 }
+
 .form-group label,
 .required-asterisk,
 .priorating,
@@ -53,12 +57,14 @@ h1 {
 .form-group label {
   font-weight: 400;
 }
+
 .required-asterisk {
   color: #ff8190;
   display: inline;
   width: auto;
   padding: 0 4px;
 }
+
 input[type="text"],
 input[type="search"],
 input[type="date"],
@@ -72,13 +78,16 @@ textarea {
   box-sizing: border-box;
   font-family: "Inter", sans-serif;
 }
+
 textarea {
   min-height: 120px;
   resize: vertical;
 }
+
 input[type="date"]::-webkit-calendar-picker-indicator {
   display: none;
 }
+
 input::placeholder,
 textarea::placeholder {
   color: #d1d1d1;
@@ -137,6 +146,7 @@ input.input-error,
   height: 51px;
   padding-top: 12px;
 }
+
 .priority-btn {
   flex: 1;
   display: flex;
@@ -150,38 +160,49 @@ input.input-error,
   font-weight: 400;
   transition: all 0.1s ease-in-out;
 }
+
 .priority-icon {
   height: 20px;
   width: 20px;
 }
+
 .priority-btn span {
   color: #2a3647;
 }
+
 .priority-btn[data-priority="urgent"] svg {
   color: #ff3d00;
 }
+
 .priority-btn[data-priority="medium"] svg {
   color: #ffa800;
 }
+
 .priority-btn[data-priority="low"] svg {
   color: #7ae229;
 }
+
 .priority-btn.selected span,
 .priority-btn.selected svg {
   color: white;
 }
+
 .priority-btn.selected {
   border-color: transparent;
 }
+
 .priority-btn[data-priority="urgent"].selected {
   background-color: #ff3d00;
 }
+
 .priority-btn[data-priority="medium"].selected {
   background-color: #ffa800;
 }
+
 .priority-btn[data-priority="low"].selected {
   background-color: #7ae229;
 }
+
 .priority-btn:not(.selected):hover {
   box-shadow: 0px 4px 4px 0px #00000040;
 }
@@ -294,34 +315,7 @@ input.input-error,
   height: 12px;
 }
 
-.dropdown-user-option {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-  padding: 4px 0;
-}
-
-.user-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  font-size: 12px;
-  color: white;
-  flex-shrink: 0;
-  line-height: 1;
-}
-
-.user-name {
-  flex-grow: 1;
-  font-size: clamp(14px, 1.5vw, 18px);
-  color: #000;
-}
-
-input.contact-checkbox {
+  .contact-checkbox {
   appearance: none !important;
   -webkit-appearance: none !important;
   aspect-ratio: 1 / 1;
@@ -334,7 +328,7 @@ input.contact-checkbox {
   margin-right: 24px;
 }
 
-input.contact-checkbox:checked::before {
+.contact-checkbox:checked::before {
   content: "";
   position: absolute;
   background-color: white;
@@ -344,7 +338,7 @@ input.contact-checkbox:checked::before {
   right: -8px;
 }
 
-input.contact-checkbox:checked::after {
+.contact-checkbox:checked::after {
   content: "";
   position: absolute;
   left: 52%;
@@ -367,26 +361,31 @@ input.contact-checkbox:checked::after {
   align-items: center;
   justify-content: center;
 }
+
 .clear-button {
   width: 126px;
   background-color: white;
   color: #2a3647;
   border: 1px solid;
 }
+
 .create-button {
   width: 214px;
   background-color: #2a3647;
   color: white;
   border: none;
 }
+
 .clear-button:hover {
   box-shadow: 0px 4px 4px 0px #7d8da3;
   border: 1px solid #29abe2;
 }
+
 .create-button:hover {
   background-color: #29abe2;
   box-shadow: 0px 4px 4px 0px #7d8da3;
 }
+
 
 .dropdown-input-wrapper:focus-within {
   border: 1px solid #29abe2;
@@ -458,34 +457,6 @@ input[type="date"].filled:not(.input-error),
 .footer-right {
   display: flex;
   gap: 16px;
-}
-
-.task-overlay {
-  position: fixed;
-  bottom: -100px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #2a3647;
-  color: white;
-  font-size: 20px;
-  padding: 16px 32px;
-  border-radius: 8px;
-  opacity: 0;
-  z-index: 9999;
-  transition: bottom 0.5s ease, opacity 0.5s ease;
-  display: flex;
-  align-items: center;
-  pointer-events: none;
-}
-.task-overlay.visible {
-  bottom: 50%;
-  opacity: 1;
-  transform: translate(-50%, 50%);
-}
-.task-overlay-img {
-  height: 28px;
-  width: auto;
-  padding-left: 18px;
 }
 
 .input-error {
