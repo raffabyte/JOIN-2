@@ -127,8 +127,8 @@ function editedTask() {
         dueDate: document.getElementById('editedTaskDueDate').value,
         assignee: Array.from(document.querySelectorAll('#editedAssignee .contact-icon')).map(span => span.dataset.name),
         priority: PRIORITY_BTN ? PRIORITY_BTN.classList[PRIORITY_BTN.classList.length - 2] : '',
-        subtasks: Array.from(document.querySelectorAll('.subtask-text')).map((subtask, index) => ({
-            value: subtask.textContent,
+        subtasks: Array.from(document.querySelectorAll('#editedSubtasksList .subtask-text')).map((subtask, index) => ({
+            value: subtask.textContent.trim(),
             checked: window.currentEditingTask?.subtasks?.[index]?.checked || false
         }))
     };
@@ -143,22 +143,22 @@ async function updateTaskInFirebase(taskId, updatedTaskData) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(updatedTaskData)
         });
-        return response.json();
+        return await response.json();
     } catch (error) {
         console.error('Error updating task:', error);
+        throw error;
     }
 }
 
 
 function submitEdit() {
     const editedTaskData = editedTask();
-    const taskId = document.querySelector('[data-task-id]')?.dataset.taskId;
-    const updatedTask = { ...window.currentEditingTask, ...editedTaskData, id: taskId };
+    const taskId = window.currentEditingTask.id;
 
     updateTaskInFirebase(taskId, editedTaskData)
         .then(() => {
             updateBoard();
-            showTaskOverlay(updatedTask);
+            taskOverlay(taskId);
         })
         .catch(error => {
             console.error('Failed to update task:', error);

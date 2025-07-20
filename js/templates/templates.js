@@ -72,7 +72,7 @@ function linkesNav(activePage) {
           <img class="icon" src="../img/summary.png" alt="">
           <p>Summary</p>
         </a>
-        <a href="addTask.html" class="menuOption flexR${activePage === 'add_task' ? ' aktiveNav' : ''}">
+        <a href="addTask.html" class="menuOption flexR${activePage === 'addTask' ? ' aktiveNav' : ''}">
           <img class="icon" src="../img/add-tasks.png" alt="">
           <p>Add Task</p>
         </a>
@@ -111,11 +111,11 @@ function linkesNavLogin(activePage) {
 
 function taskCardTemplate(task) {
     return `
-        <div class="task-card flexC" id="${task.id}" 
+        <div class="task-card width-100 flexC" id="${task.id}" 
               onclick="taskOverlay('${task.id}')" 
               draggable="true" ondragstart="startDragging(event, '${task.id}')"
               ondragend="stopDragging(event, '${task.id}')">
-            <div class="task-card-header flexR">
+            <div class="task-card-header width-100 flexR">
                 <span id="${toCamelCase(task.category)}">${task.category}</span>
             </div>
             <h3>${task.title}</h3>
@@ -123,11 +123,11 @@ function taskCardTemplate(task) {
             <div class="subtasks flexR ${visibilityClass(Array.isArray(task.subtasks) && task.subtasks.length > 0)}" id="subtasks">
                 ${handleSubtasks(task.subtasks)}
             </div>
-            <div class="task-card-footer flexR ${visibilityClass(hasFooterData(task))}">
-                <div class="task-members flexR ${visibilityClass(Array.isArray(task.assignee) && task.assignee.length > 0)}" id="taskMembers">
+            <div class="space-between flexR ${visibilityClass(hasFooterData(task))}">
+                <div class="task-members width-100 flexR ${visibilityClass(Array.isArray(task.assignee) && task.assignee.length > 0)}" id="taskMembers">
                     ${renderMembers(task)}
                 </div>
-                <div class="${visibilityClass(task.priority)} task-priority flexR">
+                <div class="${visibilityClass(task.priority)} task-priority width-100 flexR">
                     ${handlePrioritySvg(task.priority)}
                 </div>
             </div>
@@ -150,8 +150,8 @@ function contactIconSpanTemplate(name) {
 
 function handleSubtasksTemplate(progress, done, total) {
   return `
-        <div class="subtasks-progress flexR">
-            <div class="progress-bar-container">
+        <div class="width-100 space-between flexR">
+            <div class="progress-bar-container width-100">
                 <div class="progress-bar-fill" style="width: ${progress}%;"></div>
             </div>
             <span class="progress-text">${done}/${total} Subtasks</span>
@@ -173,7 +173,7 @@ function memberWithNameTemplate(name){
 
 function taskOverlayTemplate(task){
     return `
-        <div class="flexC gap-24 task-overlay-content width-100" id="taskOverlayContent">
+        <div class="flexC gap-24 task-overlay-content width-100" id="taskOverlayContent" data-task-id="${task.id}">
             <div class="space-between flexR">
                 <span class="task-category" id="${toCamelCase(task.category)}">${task.category}</span>
                 <button class="overlay-button" onclick="closeOverlay()">
@@ -228,46 +228,46 @@ function taskEditTemplate(task) {
     return `
         <div class="flexC width-100 gap-24">
             <div class="gap-8 width-100 flexC">
-                <label for="editedTaskTitle">Title</label>
-                <input class="inputs requierd-input" type="text" id="editedTaskTitle" value="${task.title}" placeholder="Enter a title" >
-                <span class="required-span display-none">This field is required</span>
+                <label class="width-100" for="editedTaskTitle">Title</label>
+                <input class="inputs change-onfoucus requierd-input" type="text" id="editedTaskTitle" value="${task.title}" placeholder="Enter a title" >
+                <span class="required-span width-100 display-none">This field is required</span>
             </div>
             <div class="gap-8 width-100 flexC">
-                <label for="editedTaskDescription">Description</label>
-                <textarea class="inputs" id="editedTaskDescription" name="taskDescription" placeholder="Enter Task description">${task.description || ''}</textarea>
+                <label class="width-100" for="editedTaskDescription">Description</label>
+                <textarea class="inputs change-onfoucus" id="editedTaskDescription" name="taskDescription" placeholder="Enter Task description">${task.description || ''}</textarea>
             </div>
             <div class="gap-8 width-100 flexC">
-                <label for="editedTaskDueDate">Due date<span class="highlight">*</span></label>
-                <input class="inputs requierd-input" value="${task.dueDate ? task.dueDate.split('T')[0] : ''}" type="date" id="editedTaskDueDate" name="taskDueDate" min="" onfocus="this.min=new Date().toISOString().split('T')[0]">
-                <span class="required-span display-none">This field is required</span>
+                <label class="width-100" for="editedTaskDueDate">Due date<span class="highlight">*</span></label>
+                <input class="inputs change-onfoucus requierd-input" value="${task.dueDate ? task.dueDate.split('T')[0] : ''}" type="date" id="editedTaskDueDate" name="taskDueDate" min="" onfocus="this.min=new Date().toISOString().split('T')[0]">
+                <span class="required-span width-100 display-none">This field is required</span>
             </div>
             <div class="gap-8 width-100 flexC">
-                <label for="editedTaskPriority"priority-edit">Priority</p>
-                <div class="flexR priority-select">
-                    <button type="button" class="edit-priority-button flexR HighPriority ${task.priority === 'HighPriority' ? 'active' : ''}" 
-                            id="editedTaskPriority" onclick="PriorityHandler('high'); event.stopPropagation();">
+                <label class="width-100">Priority</label>
+                <div class="flexR priority-select width-100 gap-16">
+                    <button type="button" class="edit-priority-button gap-8 width-100 flexR HighPriority ${task.priority === 'HighPriority' ? 'active' : ''}" 
+                            onclick="PriorityHandler('high'); event.stopPropagation();">
                         <span class="priority-text">Urgent</span>
                         ${HIGH_PRIORITY_SVG}
                     </button>
-                    <button type="button" class="edit-priority-button flexR MidPriority ${task.priority === 'MidPriority' ? 'active' : ''}" 
-                            id="editedTaskPriority" onclick="PriorityHandler('medium'); event.stopPropagation();">
+                    <button type="button" class="edit-priority-button gap-8 width-100 flexR MidPriority ${task.priority === 'MidPriority' ? 'active' : ''}" 
+                            onclick="PriorityHandler('medium'); event.stopPropagation();">
                         <span class="priority-text">Medium</span>
                         ${MID_PRIORITY_SVG}
                     </button>
-                    <button type="button" class="edit-priority-button flexR LowPriority ${task.priority === 'LowPriority' ? 'active' : ''}" 
-                            id="editedTaskPriority" onclick="PriorityHandler('low'); event.stopPropagation();">
+                    <button type="button" class="edit-priority-button gap-8 width-100 flexR LowPriority ${task.priority === 'LowPriority' ? 'active' : ''}" 
+                            onclick="PriorityHandler('low'); event.stopPropagation();">
                         <span class="priority-text">Low</span>
                         ${LOW_PRIORITY_SVG}
                     </button>
                 </div>
             </div>
             <div class="flexC gap-8 width-100">
-                <label for="editedTaskAssignee">Assigned To</label>
-                <div class="input-svg-wrapper flexC">
-                    <input  class="inputs" type="text" id="editedTaskAssignee" placeholder="Select Contacts to assign" oninput="searchAssignee(this.value)"
+                <label class="width-100" for="editedTaskAssignee">Assigned To</label>
+                <div class="input-svg-wrapper width-100 flexC">
+                    <input  class="inputs change-onfoucus" type="text" id="editedTaskAssignee" placeholder="Select Contacts to assign" oninput="searchAssignee(this.value)"
                             onclick="toggleAssigneeOptions(); event.stopPropagation(); ">
-                    <div id="assigneeOptions" class="assignee-options display-none">
-                        <div class="assignee-option flexR space-between" onclick="selectAssignee(this); highligtSlected(this)">
+                    <div id="assigneeOptions" class="assignee-options width-100 display-none">
+                        <div class="assignee-option width-100 flexR space-between" onclick="selectAssignee(this); highligtSlected(this)">
                             <div class="gap-16 flexR">
                                 <span class="contact-icon flexR"  style="background-color: ${getRandomColor('Unassigned Contact')};" >U C</span> 
                                 <span class="contact-name">Unassigned Contact</span>
@@ -277,13 +277,13 @@ function taskEditTemplate(task) {
                         </div>
                     </div>
                 </div>
-                <div class="selected-assignee flexR ${task.assignee && task.assignee.length > 0 ? '' : 'display-none'}" id="editedAssignee">
+                <div class="selected-assignee width-100 gap-8 flexR ${task.assignee && task.assignee.length > 0 ? '' : 'display-none'}" id="editedAssignee">
                 ${task.assignee && task.assignee.length > 0 ? task.assignee.map(name => contactIconSpanTemplate(name)).join('') : ''}
                 </div>
             </div>
             <div class="gap-8 width-100 flexC">
-                <label for="editedSubtasks">Subtasks</label>
-                <div class="inputs input-add-cancel-wrapper flexR" id="inputBox">
+                <label class="width-100" for="editedSubtasks">Subtasks</label>
+                <div class="inputs change-onfoucus space-between flexR" id="inputBox">
                     <input type="text" id="editedSubtasks" placeholder="add new subtask" oninput="checkSubtask(this.value.length)" onfocus="showAddCancelBtns()" onkeydown="onEnterAddSubTask(event, 'editedSubtasks')">
                     <button class="plus-button overlay-button" id="subtaskPlusBtn" type="button" onclick="showAddCancelBtns()">
                             ${PLUS_SVG}
@@ -298,7 +298,7 @@ function taskEditTemplate(task) {
                         </button>
                     </div>
                 </div>
-                <span id="subtaskHintMessage" class="display-none">Please type a clear subtask</span>
+                <span id="subtaskHintMessage" class="width-100 display-none">Please type a clear subtask</span>
                 <ul class="flexC width-100 ${task.subtasks && task.subtasks.length > 0 ? '' : 'display-none'}" id="editedSubtasksList">
                     ${task.subtasks && Array.isArray(task.subtasks) ? task.subtasks.map((subtask, index) => addSubTaskTemplate(subtask.value, index)).join('') : ''}
                 </ul>
@@ -318,7 +318,7 @@ function editTaskOverlayTemplate(task) {
             ${taskEditTemplate(task)}
         </div>
         <div class="flexR width-100 flex-end">
-            <button class="submit-edit" onclick="submitEdit()">
+            <button class="submit-edit btn-shadow" onclick="submitEdit()">
                 Ok
                 ${SUBMIT_LIGHT_SVG}
             </button>

@@ -24,10 +24,8 @@ function closeOverlay() {
 }
 
 
-function notContentClickClose(event) {
-    if (event.target === OVERLAY) {
-        closeOverlay();
-    }
+function handleOverlayClicks(event) {
+    event.target === OVERLAY ? closeOverlay() : handleOutsideClick(event);
 }
 
 /* Saving added tasks to Board */

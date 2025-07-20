@@ -1,47 +1,47 @@
 
 function addTaskOverlayForm(columnId) {
     return `
-            <div class="overlay-header flexR">
+            <div class="overlay-header flexR width-100 space-between">
             <h2>Add Task</h2>
             <button class="overlay-button" onclick="closeOverlay()">
             ${CLOSE_CANCEL_SVG}
 
             </button>
             </div>
-            <form id="addTaskForm" class="overlay-bottom flexC" onsubmit="addTask(event, '${columnId}')">
-                <div class="flexR task-form-top">
+            <form id="addTaskForm" class="overlay-bottom width-100 flexC" onsubmit="addTask(event, '${columnId}')">
+                <div class="flexR task-form-top width-100 space-between">
                     <div class="flexC task-form-column">
                         <div class="gap-8 width-100 flexC">
-                            <label for="taskTitle">Title<span class="highlight">*</span></label>
-                            <input class="inputs requierd-input" oninput="hideValidationErrors()" type="text" id="taskTitle" name="taskTitle" placeholder="Enter a title" >
-                            <span class="required-span display-none">This field is required</span>
+                            <label class="width-100" for="taskTitle">Title<span class="highlight">*</span></label>
+                            <input class="inputs requierd-input change-onfoucus" oninput="hideValidationErrors()" type="text" id="taskTitle" name="taskTitle" placeholder="Enter a title" >
+                            <span class="required-span width-100 display-none">This field is required</span>
                         </div>
 
                         <div class="gap-8 width-100 flexC">
-                            <label for="taskDescription">Description</label>
-                            <textarea class="inputs" id="taskDescription" name="taskDescription" placeholder="Enter a description"></textarea>
+                            <label class="width-100" for="taskDescription">Description</label>
+                            <textarea class="inputs change-onfoucus" id="taskDescription" name="taskDescription" placeholder="Enter a description"></textarea>
                         </div>
 
                         <div class="gap-8 width-100 flexC">
-                            <label for="taskDueDate">Due date<span class="highlight">*</span></label>
-                            <input class="inputs requierd-input" oninput="hideValidationErrors()" type="date" id="taskDueDate" name="taskDueDate" min="" onfocus="this.min=new Date().toISOString().split('T')[0]">
-                            <span class="required-span display-none">This field is required</span>
+                            <label class="width-100" for="taskDueDate">Due date<span class="highlight">*</span></label>
+                            <input class="inputs requierd-input change-onfoucus" oninput="hideValidationErrors()" type="date" id="taskDueDate" name="taskDueDate" min="" onfocus="this.min=new Date().toISOString().split('T')[0]">
+                            <span class="required-span width-100 display-none">This field is required</span>
                         </div>
                     </div>
                     <span class="middle-vector"></span>
                     <div class="flexC task-form-column">
                         <div class="gap-8 width-100 flexC">
-                            <label for="taskPriority">Priority</label>
-                            <div class="flexR priority-select">
-                                <button type="button" class="priority-button flexR HighPriority" id="taskPriority" onclick="PriorityHandler('high'); event.stopPropagation();">
+                            <label class="width-100">Priority</label>
+                            <div class="flexR priority-select gap-16 width-100">
+                                <button type="button" class="priority-button gap-8 width-100 flexR HighPriority" onclick="PriorityHandler('high'); event.stopPropagation();">
                                     <span class="priority-text">Urgent</span>
                                     ${HIGH_PRIORITY_SVG}
                                 </button>
-                                <button type="button" class="priority-button flexR MidPriority" id="taskPriority" onclick="PriorityHandler('medium'); event.stopPropagation();">
+                                <button type="button" class="priority-button gap-8 width-100 flexR MidPriority" onclick="PriorityHandler('medium'); event.stopPropagation();">
                                     <span class="priority-text">Medium</span>
                                     ${MID_PRIORITY_SVG}
                                 </button>
-                                <button type="button" class="priority-button flexR LowPriority" id="taskPriority" onclick="PriorityHandler('low'); event.stopPropagation();">
+                                <button type="button" class="priority-button gap-8 width-100 flexR LowPriority" onclick="PriorityHandler('low'); event.stopPropagation();">
                                     <span class="priority-text">Low</span>
                                     ${LOW_PRIORITY_SVG}
                                 </button>
@@ -49,14 +49,14 @@ function addTaskOverlayForm(columnId) {
                         </div>
 
                         <div class="flexC gap-8 width-100">
-                            <label for="taskAssignee">Assigned To</label>
-                            <div class="input-svg-wrapper flexC">
-                                <input  class="inputs" type="text" id="taskAssignee" placeholder="Select Contacts to assign" oninput="searchAssignee(this.value)"
+                            <label class="width-100" for="taskAssignee">Assigned To</label>
+                            <div class="input-svg-wrapper width-100 flexC">
+                                <input  class="inputs change-onfoucus" type="text" id="taskAssignee" placeholder="Select Contacts to assign" oninput="searchAssignee(this.value)"
                                         onclick="toggleAssigneeOptions(); event.stopPropagation(); ">
-                                <div id="assigneeOptions" class="assignee-options display-none">
-                                    <div class="assignee-option flexR space-between" onclick="selectAssignee(this); highligtSlected(this)">
+                                <div id="assigneeOptions" class="assignee-options width-100 display-none">
+                                    <div class="assignee-option width-100 flexR space-between" onclick="selectAssignee(this); highligtSlected(this)">
                                         <div class="gap-16 flexR">
-                                            <span class="contact-icon flexR"  style="background-color: ${generateColorFromString('Unassigned Contact')};" >U C</span> 
+                                            <span class="contact-icon flexR"  style="background-color: ${getRandomColor('Unassigned Contact')};" >U C</span> 
                                             <span class="contact-name">Unassigned Contact</span>
                                         </div>
                                         ${CHECKBOX_SVG}
@@ -65,24 +65,24 @@ function addTaskOverlayForm(columnId) {
                                     
                                 </div>
                             </div>
-                            <div class="selected-assignee flexR display-none" id="selectedAssignee">
+                            <div class="selected-assignee width-100 gap-8 flexR display-none" id="selectedAssignee">
                                 
                             </div>
                         </div>
                         <div class="gap-8 width-100 flexC">
-                            <label for="taskCategory">Category<span class="highlight">*</span></label>
-                            <div class="category-options">
-                                <button class="inputs requierd-input" type="button" id="taskCategory" onclick="toggleCategoryOptions(); event.stopPropagation(); hideValidationErrors()">Select task category</button>
-                                <div class="category-options-list display-none flexC" id="categoryOptions">
-                                    <span onclick="selectCategory('User Story');" class="category-option" value="userStory">User Story</span>
-                                    <span onclick="selectCategory('Technical Task');" class="category-option" value="technicalTask">Technical Task</span>
+                            <label class="width-100" for="taskCategory">Category<span class="highlight">*</span></label>
+                            <div class="width-100">
+                                <button class="change-onfoucus category-options-btn inputs requierd-input" type="button" id="taskCategory" onclick="toggleCategoryOptions(); event.stopPropagation(); hideValidationErrors()">Select task category</button>
+                                <div class="category-options-list width-100 display-none flexC" id="categoryOptions">
+                                    <span onclick="selectCategory('User Story');" class="category-option width-100" value="userStory">User Story</span>
+                                    <span onclick="selectCategory('Technical Task');" class="category-option width-100" value="technicalTask">Technical Task</span>
                                 </div>
                             </div>
-                            <span class="required-span display-none">This field is required</span>
+                            <span class="required-span width-100 display-none">This field is required</span>
                         </div>
                         <div class="gap-8 width-100 flexC">
-                            <label for="subtasks">Subtasks</label>
-                            <div class="inputs input-add-cancel-wrapper flexR" id="inputBox">
+                            <label class="width-100" for="subtasks">Subtasks</label>
+                            <div class="inputs change-onfoucus space-between flexR" id="inputBox">
                                 <input type="text" id="subtasks" placeholder="add new subtask" oninput="checkSubtask(this.value.length)" onfocus="showAddCancelBtns()" onkeydown="onEnterAddSubTask(event, 'subtasks')">
                                 <button class="plus-button overlay-button" id="subtaskPlusBtn" type="button" onclick="showAddCancelBtns()">
                                         ${PLUS_SVG}
@@ -97,21 +97,21 @@ function addTaskOverlayForm(columnId) {
                                     </button>
                                 </div>
                             </div>
-                            <span id="subtaskHintMessage" class="display-none">Please type a clear subtask</span>
-                            <ul id="subtasksList" class="flexC display-none">
+                            <span id="subtaskHintMessage" class="width-100 display-none">Please type a clear subtask</span>
+                            <ul id="subtasksList" class="flexC width-100 display-none">
                             </ul>
                         </div>
                     </div>
                 </div>
-                <div class="flexR task-form-bottom">
+                <div class="flexR width-100 space-between">
                     <span>
                         <span class="highlight">*</span>
                         This field is required</span>
-                    <div class="flexR add-task-footer-btns">
-                        <button type="button" id="closeOverlayButton" onclick="closeOverlay()">
+                    <div class="flexR gap-16">
+                        <button class="btn-shadow" type="button" id="closeOverlayButton" onclick="closeOverlay()">
                             Cancel ${CLOSE_CANCEL_SVG}
                         </button>
-                        <button type="submit" id="addTaskButton">
+                        <button class="btn-shadow" type="submit" id="addTaskButton">
                             Creat Task ${SUBMIT_SVG}
                         </button>
                     </div>
@@ -146,8 +146,8 @@ function addSubTaskTemplate(subtaskInput, index = 0){
                 </button>
             </div>
         </div>
-        <div class="edit-subtask-input-wrapper flexR display-none" id="${editUniqueId}">
-            <input type="text" id="${editInputId}" class="edit-subtask-input" onkeydown="onEnterEditSubTask(event, this)">
+        <div class="edit-subtask-input-wrapper space-between width-100 flexR display-none" id="${editUniqueId}">
+            <input type="text" id="${editInputId}" class="width-100" onkeydown="onEnterEditSubTask(event, this)">
             <div class="gap-8 flexR">
             <button class="delete-subtask-button overlay-button" type="button" onclick="deleteSubtask(this)">
                 <svg width="16" height="18" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">

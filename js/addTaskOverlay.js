@@ -1,3 +1,43 @@
+function handleCategoryOptionsOutsideClick(event) {
+    const categoryOptions = document.getElementById('categoryOptions');
+    if (categoryOptions && categoryOptions.classList.contains('active')) {
+        if (!categoryOptions.contains(event.target) && event.target.id !== 'taskCategory') {
+            categoryOptions.classList.add('display-none');
+            categoryOptions.classList.remove('active');
+        }
+    }
+}
+
+function handleAssigneeOptionsOutsideClick(event) {
+    const assigneeOptions = document.getElementById('assigneeOptions');
+    if (assigneeOptions && assigneeOptions.classList.contains('active')) {
+        if (!assigneeOptions.contains(event.target) && event.target.id !== 'taskAssignee') {
+            assigneeOptions.classList.add('display-none');
+            assigneeOptions.classList.remove('active');
+        }
+    }
+}
+
+function handleSubtaskInputOutsideClick(event) {
+    const inputFeld = document.getElementById('inputBox');
+    const plusBtn = document.getElementById('subtaskPlusBtn');
+    const addCancelBtns = document.getElementById('addCancelBtns');
+    const HINT_MESSAGE_DIV = document.getElementById('subtaskHintMessage');
+
+    if (inputFeld && !inputFeld.contains(event.target)) {
+        plusBtn.classList.remove('display-none');
+        addCancelBtns.classList.add('display-none');
+        HINT_MESSAGE_DIV.classList.add('display-none');
+        inputFeld.classList.remove('correct-me');
+    }
+}
+
+function handleOutsideClick(event) {
+    handleCategoryOptionsOutsideClick(event);
+    handleAssigneeOptionsOutsideClick(event);
+    handleSubtaskInputOutsideClick(event);
+}
+
 
 function addTaskOverlay(columnId) {
     // Set the overlay content to the add task form
@@ -6,9 +46,6 @@ function addTaskOverlay(columnId) {
 
     // Show the overlay
     OVERLAY.classList.remove('display-none');
-
-    // Add click handler to overlay for outside clicks
-    OVERLAY.onclick = handleOutsideClick;
 
     setTimeout(() => {
         // Add animation class to the overlay content
@@ -31,18 +68,12 @@ function showValidationErrors() {
 
 function PriorityHandler(priority) {
     const buttons = document.querySelectorAll('.priority-button, .edit-priority-button');
+    const priorityMap = { 'high': 'HighPriority', 'medium': 'MidPriority', 'low': 'LowPriority' };
+    
     buttons.forEach(btn => btn.classList.remove('active'));
     buttons.forEach(btn => {
-        switch (priority) {
-            case 'high':
-                if (btn.classList.contains('HighPriority')) btn.classList.add('active');
-                break;
-            case 'medium':
-                if (btn.classList.contains('MidPriority')) btn.classList.add('active');
-                break;
-            case 'low':
-                if (btn.classList.contains('LowPriority')) btn.classList.add('active');
-                break;
+        if (btn.classList.contains(priorityMap[priority])) {
+            btn.classList.add('active');
         }
     });
 }
@@ -104,48 +135,9 @@ function selectCategory(category) {
     TASKCATEGORY.textContent = category;
     CATEGORYOPTIONS.classList.add('display-none');
     CATEGORYOPTIONS.classList.remove('active');
-    
 }
 
 
-
-function handleOutsideClick(event) {
-    // Category Options schließen
-    const categoryOptions = document.getElementById('categoryOptions');
-    if (categoryOptions && categoryOptions.classList.contains('active')) {
-        if (!categoryOptions.contains(event.target) && event.target.id !== 'taskCategory') {
-            categoryOptions.classList.add('display-none');
-            categoryOptions.classList.remove('active');
-        }
-    }
-
-    // Assignee Options schließen
-    const assigneeOptions = document.getElementById('assigneeOptions');
-    if (assigneeOptions && assigneeOptions.classList.contains('active')) {
-        if (!assigneeOptions.contains(event.target) && event.target.id !== 'taskAssignee') {
-            assigneeOptions.classList.add('display-none');
-            assigneeOptions.classList.remove('active');
-        }
-    }
-
-    // Subtask Input zurücksetzen
-    const inputFeld = document.getElementById('inputBox');
-    const plusBtn = document.getElementById('subtaskPlusBtn');
-    const addCancelBtns = document.getElementById('addCancelBtns');
-    const HINT_MESSAGE_DIV = document.getElementById('subtaskHintMessage');
-
-    if (inputFeld && !inputFeld.contains(event.target)) {
-        plusBtn.classList.remove('display-none');
-        addCancelBtns.classList.add('display-none');
-        HINT_MESSAGE_DIV.classList.add('display-none');
-    }
-
-    if (inputFeld && inputFeld.classList.contains('correct-me')) {
-        if (!inputFeld.contains(event.target)) {
-            inputFeld.classList.remove('correct-me');
-        }
-    }
-}
 
 function onEnterAddSubTask(event, inputId){
     if (event.key === 'Enter') {
@@ -209,19 +201,17 @@ function showHideAlertMessage() {
 function checkSubtask(subtaskLength, inputValue, subtasksList){
     const HINT_MESSAGE_DIV = document.getElementById('subtaskHintMessage');
     const INPUT_FELD = document.getElementById('inputBox');
-    const valueExists = subtasksList && Array.from(subtasksList.querySelectorAll('.subtask-text')).map(st => st.textContent.trim()).includes(inputValue.trim());
-    INPUT_FELD.classList.add('correct-me');
-
-    if (subtaskLength <= 2) {
-        HINT_MESSAGE_DIV.textContent = 'Subtask must be at least 3 characters long';
-        HINT_MESSAGE_DIV.classList.remove('display-none');
-    } else if (valueExists) {
-        HINT_MESSAGE_DIV.textContent = 'Subtask already exists';
-        HINT_MESSAGE_DIV.classList.remove('display-none');
-    } else {
-        HINT_MESSAGE_DIV.classList.add('display-none');
-        INPUT_FELD.classList.remove('correct-me');
-    }
+    const valueExists = subtasksList?.querySelectorAll('.subtask-text').values().find(st => st.textContent.trim() === inputValue.trim());
+    
+    const errorMessages = {
+        length: subtaskLength <= 2 ? 'Subtask must be at least 3 characters long' : null,
+        exists: valueExists ? 'Subtask already exists' : null
+    };
+    
+    const error = errorMessages.length || errorMessages.exists;
+    HINT_MESSAGE_DIV.textContent = error || '';
+    HINT_MESSAGE_DIV.classList.toggle('display-none', !error);
+    INPUT_FELD.classList.toggle('correct-me', !!error);
 }
 
 function deleteSubtask(subtask){
