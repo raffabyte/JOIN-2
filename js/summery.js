@@ -3,9 +3,14 @@ if (!USERKEY) {
   window.location.href = "../../index.html";
 }
 
-async function init() {
-  await loadAndRenderTaskCounts();
-}
+window.addEventListener("DOMContentLoaded", async () => {
+  addHeader();
+  linkesNavMenuVersion();
+  showHideHelpAndUser();
+  await setUserInitials();
+  await loadAndRenderTaskCounts()
+  await init();
+});
 
 /**
  * Lädt die Benutzerdaten aus Firebase.
