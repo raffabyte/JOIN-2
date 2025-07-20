@@ -54,15 +54,7 @@ function addTaskOverlayForm(columnId) {
                                 <input  class="inputs change-onfoucus" type="text" id="taskAssignee" placeholder="Select Contacts to assign" oninput="searchAssignee(this.value)"
                                         onclick="toggleAssigneeOptions(); event.stopPropagation(); ">
                                 <div id="assigneeOptions" class="assignee-options width-100 display-none">
-                                    <div class="assignee-option width-100 flexR space-between" onclick="selectAssignee(this); highligtSlected(this)">
-                                        <div class="gap-16 flexR">
-                                            <span class="contact-icon flexR"  style="background-color: ${getRandomColor('Unassigned Contact')};" >U C</span> 
-                                            <span class="contact-name">Unassigned Contact</span>
-                                        </div>
-                                        ${CHECKBOX_SVG}
-                                        ${CHECKBOX_FILLED_LIGHT_SVG}
-                                    </div>
-                                    
+                                    <!-- Contacts will be loaded dynamically -->
                                 </div>
                             </div>
                             <div class="selected-assignee width-100 gap-8 flexR display-none" id="selectedAssignee">

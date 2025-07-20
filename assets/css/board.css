@@ -281,17 +281,17 @@ span {
   justify-content: center;
 }
 
-.task-members img:nth-child(1) {
+.task-members span:nth-child(1) {
   left: 0;
   z-index: 1;
 }
 
-.task-members img:nth-child(2) {
+.task-members span:nth-child(2) {
   left: 28px;
   z-index: 2;
 }
 
-.task-members img:nth-child(3) {
+.task-members span:nth-child(3) {
   left: 54px;
   z-index: 3;
 }

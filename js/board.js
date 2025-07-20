@@ -170,7 +170,7 @@ function addTask(event, columnId) {
 
 function renderMembers(task) {
     return Array.isArray(task.assignee) ?
-        task.assignee.map(name => contactIconSpanTemplate(name)).join('') : ''
+        task.assignee.map(name => contactIconSpanTemplate(name)).join('') : '';
 }
 
 
