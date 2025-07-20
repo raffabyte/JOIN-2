@@ -325,9 +325,7 @@ span {
   z-index: 3;
 }
 
-.space-between {
-  justify-content: space-between;
-}
+
 
 .task-overlay {
   height: 80%;
@@ -335,18 +333,27 @@ span {
   background: white;
   padding: 48px 40px;
   border-radius: 30px;
-  gap: 24px;
   transform: translateX(200%);
   opacity: 0;
   transition: all 0.1s ease-in-out;
 
 }
-.task-overlay-content {
-  flex: 1;
+
+
+.task-overlay-content, .task-edit-form, #taskEditForm {
+  height: 100%;
+}
+
+.task-overlay-content>* {
   width: 100%;
 }
 
-.task-overlay-content>*, .task-overlay-footer {
+.task-overlay-header {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.task-overlay-header>*, .task-overlay-footer {
   width: 100%;
   text-align: left;
   padding: 0;
@@ -358,10 +365,6 @@ span {
 .task-overlay h2 {
   font-size: 61px;
   font-weight: 700;
-}
-
-.gap-25 {
-  gap: 25px;
 }
 
 .overlay-priority {
@@ -401,10 +404,6 @@ span {
 .member-name-text {
   font-size: 19px;
   font-weight: 400;
-}
-
-.width-100 {
-  width: 100%;
 }
 
 .subtasks-overlay-list {
@@ -459,9 +458,6 @@ span {
   gap: 24px;
 }
 
-.flex-end {
-  justify-content: flex-end;
-}
 
 .submit-edit {
   gap: 4px;
@@ -478,11 +474,9 @@ span {
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 25%);
 }
 
-.gap-24 {
-  gap: 24px;
-}
-
 .edit-task-div {
+  flex: 1;
   overflow-y: auto;
-  padding:0 4px 16px 0;
+  padding-right: 8px;
+  margin-bottom: 16px;
 }

@@ -9,18 +9,6 @@ let currentMode = "create";
 let currentEditKey = null;
 let activeContactKey = null;
 
-const predefinedColors = [
-  "#FF7A00",
-  "#9327FF",
-  "#6E52FF",
-  "#FC71FF",
-  "#FFBB2B",
-  "#1FD7C1",
-  "#462F8A",
-  "#FF4646",
-  "#00BEE8",
-];
-
 /**
  * Lädt Kontakte und eigenen Kontakt aus Firebase und rendert das UI.
  */
@@ -151,7 +139,7 @@ function getFormData() {
  * @param {{name: string, email: string, phone: string, contactKey: string}} formData
  */
 async function updateOwnUserContact(formData) {
-const { name, email, phone } = formData
+  const { name, email, phone } = formData
 
   const existingUserData = await loadData(`users/${USERKEY}`);
 
@@ -194,14 +182,14 @@ async function saveOrUpdateContact(formData) {
  */
 async function updateContact(name, email, phone, contactKey) {
   const existingContact = contactsData[contactKey] || {};
-    const updatedContact = { ...existingContact, name, email, phone };
+  const updatedContact = { ...existingContact, name, email, phone };
 
-    await putData(`${basePath}/${contactKey}`, updatedContact);
+  await putData(`${basePath}/${contactKey}`, updatedContact);
 
-    await loadDataAfterSave();
-    showcontactCardDetails(contactKey);
-    activateContactCard(contactKey);
-    document.getElementById("contactsDetails").classList.add("showDetails");
+  await loadDataAfterSave();
+  showcontactCardDetails(contactKey);
+  activateContactCard(contactKey);
+  document.getElementById("contactsDetails").classList.add("showDetails");
 }
 
 /**
@@ -284,7 +272,7 @@ function attachClickHandler(card, contact) {
     deactivateAllContactCards();
     activateContactCard(card);
     document.getElementById("contactsDetails").classList.add("showDetails");
-  showOwnContactCardDetails(contact);
+    showOwnContactCardDetails(contact);
   });
 }
 
@@ -510,7 +498,7 @@ async function deleteContact(key, closeOverlay = false) {
  */
 async function loadDataAfterSave() {
   const newContacts = await loadData(`users/${USERKEY}/contacts`);
-  contactsData = newContacts; 
+  contactsData = newContacts;
   renderContacts(newContacts);
 }
 
