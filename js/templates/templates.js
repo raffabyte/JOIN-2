@@ -72,7 +72,7 @@ function linkesNav(activePage) {
           <img class="icon" src="../img/summary.png" alt="">
           <p>Summary</p>
         </a>
-        <a href="add_task.html" class="menuOption flexR${activePage === 'add_task' ? ' aktiveNav' : ''}">
+        <a href="addTask.html" class="menuOption flexR${activePage === 'add_task' ? ' aktiveNav' : ''}">
           <img class="icon" src="../img/add-tasks.png" alt="">
           <p>Add Task</p>
         </a>
@@ -143,7 +143,7 @@ function noTaskCardTemplate() {
 
 function contactIconSpanTemplate(name) {
     return `
-    <span class="contact-icon flexR" data-name="${name}" style="background-color: ${generateColorFromString(name)};">${contactIconSpan(name)}</span>`;
+    <span class="contact-icon flexR" data-name="${name}" style="background-color: ${getRandomColor(name)};">${contactIconSpan(name)}</span>`;
 }
 
 
@@ -173,50 +173,52 @@ function memberWithNameTemplate(name){
 
 function taskOverlayTemplate(task){
     return `
-        <div class="flexC gap-24 task-overlay-content" id="taskOverlayContent">
+        <div class="flexC gap-24 task-overlay-content width-100" id="taskOverlayContent">
             <div class="space-between flexR">
                 <span class="task-category" id="${toCamelCase(task.category)}">${task.category}</span>
                 <button class="overlay-button" onclick="closeOverlay()">
                     ${CLOSE_CANCEL_SVG}
                 </button>
             </div>
-            <h2>${task.title}</h2>
-            <p class="${visibilityClass(task.description)}" id="taskOverlayDescription">${task.description || ''}</p>
-            <div class="gap-25 flexR">
-                <p class="task-overlay-headdings">Due Date:</p>
-                ${formatDate(task.dueDate)}
-            </div>
-            <div class="flexR gap-25 ${visibilityClass(task.priority)}">
-                <p class="task-overlay-headdings">Priority:</p>
-                <div class="flexR overlay-priority">
-                    ${handlePriority(task.priority)} 
-                    ${handlePrioritySvg(task.priority)}
+            <div class="task-overlay-header gap-24 flexC">
+                <h2>${task.title}</h2>
+                <p class="${visibilityClass(task.description)}" id="taskOverlayDescription">${task.description || ''}</p>
+                <div class="gap-25 flexR">
+                    <p class="task-overlay-headdings">Due Date:</p>
+                    ${formatDate(task.dueDate)}
+                </div>
+                <div class="flexR gap-25 ${visibilityClass(task.priority)}">
+                    <p class="task-overlay-headdings">Priority:</p>
+                    <div class="flexR overlay-priority">
+                        ${handlePriority(task.priority)} 
+                        ${handlePrioritySvg(task.priority)}
+                    </div>
+                </div>
+                <div class="assignee-container gap-8 flexC ${visibilityClass(task.assignee)}">
+                    <p class="task-overlay-headdings">Assignees:</p>
+                    <div class="flexC width-100">
+                    ${renderMembersWithName(task)}
+                    </div>
+                </div>
+                <div class="gap-8 flexC subtasks-overlay ${visibilityClass(task.subtasks)}">   
+                    <p class="task-overlay-headdings">Subtasks:</p>
+                    <div class="subtasks-overlay-list flexC width-100">
+                        ${task.subtasks && task.subtasks.length > 0 ? task.subtasks.map(subtask => `
+                            <div class="subtask-item-overlay gap-16 flexR">
+                                <button class="checkbox" onclick="toggleSubtask('${task.id}', '${subtask.value}')">
+                                    ${subtask.checked ? CHECKBOX_FILLED_DARK_SVG : CHECKBOX_SVG}
+                                </button>
+                                <span>${subtask.value}</span>
+                            </div>
+                        `).join('') : '<p>No subtasks available</p>'}
+                    </div>
                 </div>
             </div>
-            <div class="assignee-container gap-8 flexC ${visibilityClass(task.assignee)}">
-                <p class="task-overlay-headdings">Assignees:</p>
-                <div class="flexC width-100">
-                ${renderMembersWithName(task)}
-                </div>
-            </div>
-            <div class="gap-8 flexC subtasks-overlay ${visibilityClass(task.subtasks)}">   
-                <p class="task-overlay-headdings">Subtasks:</p>
-                <div class="subtasks-overlay-list flexC width-100">
-                    ${task.subtasks && task.subtasks.length > 0 ? task.subtasks.map(subtask => `
-                        <div class="subtask-item-overlay gap-16 flexR">
-                            <button class="checkbox" onclick="toggleSubtask('${task.id}', '${subtask.value}')">
-                                ${subtask.checked ? CHECKBOX_FILLED_DARK_SVG : CHECKBOX_SVG}
-                            </button>
-                            <span>${subtask.value}</span>
-                        </div>
-                    `).join('') : '<p>No subtasks available</p>'}
-                </div>
-            </div>
-        </div>
-        <div class="task-overlay-footer gap-8 flexR">
+            <div class="task-overlay-footer gap-8 flexR">
                 <button class="task-footer-btn gap-8 flexR" onclick="deleteTask('${task.id}')">${DELETE_SVG} Delete</button>
                 ${SEPARATOR_SVG}
                 <button class="task-footer-btn gap-8 flexR" onclick="editTask('${task.id}')">${EDIT_SVG} Edit</button>
+            </div>
         </div>
         ${editTaskOverlayTemplate(task)}
         `;
@@ -224,7 +226,7 @@ function taskOverlayTemplate(task){
 
 function taskEditTemplate(task) {
     return `
-        <div class="flexC width-100 gap-24 display-none">
+        <div class="flexC width-100 gap-24">
             <div class="gap-8 width-100 flexC">
                 <label for="editedTaskTitle">Title</label>
                 <input class="inputs requierd-input" type="text" id="editedTaskTitle" value="${task.title}" placeholder="Enter a title" >
@@ -267,7 +269,7 @@ function taskEditTemplate(task) {
                     <div id="assigneeOptions" class="assignee-options display-none">
                         <div class="assignee-option flexR space-between" onclick="selectAssignee(this); highligtSlected(this)">
                             <div class="gap-16 flexR">
-                                <span class="contact-icon flexR"  style="background-color: ${generateColorFromString('Unassigned Contact')};" >U C</span> 
+                                <span class="contact-icon flexR"  style="background-color: ${getRandomColor('Unassigned Contact')};" >U C</span> 
                                 <span class="contact-name">Unassigned Contact</span>
                             </div>
                             ${CHECKBOX_SVG}
@@ -306,7 +308,8 @@ function taskEditTemplate(task) {
 
 function editTaskOverlayTemplate(task) {
     return `
-        <div class="flexR width-100 flex-end" id="taskEditOverlayForm">
+    <div class="display-none flexC gap-24" id="taskEditForm">
+        <div class="flexR width-100 flex-end">
             <button class="overlay-button" onclick="closeOverlay()">
                     ${CLOSE_CANCEL_SVG}
             </button>
@@ -319,7 +322,8 @@ function editTaskOverlayTemplate(task) {
                 Ok
                 ${SUBMIT_LIGHT_SVG}
             </button>
-        </div>`;
+        </div>
+    </div>`;
 }
 
 

@@ -101,3 +101,28 @@ input{
     border: unset;
     outline: none;
 }
+
+.space-between {
+  justify-content: space-between;
+}
+
+.gap-24 {
+  gap: 24px;
+}
+
+.gap-25 {
+  gap: 25px;
+}
+
+.flex-end {
+  justify-content: flex-end;
+}
+
+
+.width-100 {
+  width: 100%;
+}
+
+.gap-16 {
+  gap: 16px;
+}

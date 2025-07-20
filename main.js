@@ -4,6 +4,31 @@ const USERKEY = window.USERKEY;
 */
 window.BASE_URL = "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/";
 window.USERKEY = localStorage.getItem("loggedInUserKey");
+const BASE_URL = "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/";
+const USERKEY = localStorage.getItem("loggedInUserKey");
+const predefinedColors = [
+  "#FF7A00",
+  "#9327FF",
+  "#6E52FF",
+  "#FC71FF",
+  "#FFBB2B",
+  "#1FD7C1",
+  "#462F8A",
+  "#FF4646",
+  "#00BEE8",
+];
+
+
+/**
+ * Lädt UI-Komponenten, Benutzerinformationen und Aufgabenübersicht beim Laden der Seite.
+ */
+window.addEventListener("DOMContentLoaded", async () => {
+  addHeader();
+  linkesNavMenuVersion();
+  showHideHelpAndUser();
+  await setUserInitials();
+  await init();
+});
 
 function login() {
             const EMAIL = document.getElementById('email').value;
@@ -152,10 +177,6 @@ function getInitials(name) {
     .join("")
     .substring(0, 2);
 }
-
-
-
-
 
 
 
