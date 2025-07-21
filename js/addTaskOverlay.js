@@ -63,22 +63,7 @@ async function loadAndRenderContacts() {
         const assigneeOptions = document.getElementById('assigneeOptions');
         
         if (data && assigneeOptions) {
-            // Clear existing content
-            assigneeOptions.innerHTML = '';
-            
-            // Add each contact as an option
-            Object.entries(data).forEach(([key, contact]) => {
-                assigneeOptions.innerHTML += `
-                    <div class="assignee-option width-100 flexR space-between" onclick="selectAssignee(this); highligtSlected(this)">
-                        <div class="gap-16 flexR">
-                            <span class="contact-icon flexR" style="background-color: ${contact.color};">${contactIconSpan(contact.name)}</span> 
-                            <span class="contact-name">${contact.name}</span>
-                        </div>
-                        ${CHECKBOX_SVG}
-                        ${CHECKBOX_FILLED_LIGHT_SVG}
-                    </div>
-                `;
-            });
+            assigneeOptions.innerHTML = Object.entries(data).filter(([,contact]) => contact?.name).map(([,contact]) => assigneeOptionTemplate(contact)).join('');
         }
     } catch (error) {
         console.error('Error loading contacts:', error);

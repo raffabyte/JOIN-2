@@ -147,7 +147,7 @@ textarea.inputs {
     color: #FF8190;
 }
 
-label{
+label, .prio-style{
     text-align: left;
     font-size: 20px;
 }
