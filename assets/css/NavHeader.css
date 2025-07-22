@@ -30,6 +30,10 @@ header h3 {
     gap: 15px;
 }
 
+.menu a {
+    width: 100%;
+}
+
 #menu{
     background: #2a3547;
     border-radius: 20px 0 20px 20px;
