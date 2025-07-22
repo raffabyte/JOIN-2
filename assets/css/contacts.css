@@ -647,3 +647,530 @@ form {
 }
 
 
+@media (max-width: 1399px) {
+    /* 20% verkleinerte Version aller Maße aus dem Ursprungs-CSS */
+
+.content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background-color: #F6F7F8;
+    flex: 1;
+}
+
+.contacsList {
+    width: 365px;
+    height: calc(100vh - 77px);
+    box-shadow: 3.2px 0 4.8px rgba(0, 0, 0, 0.2);
+}
+
+.contactCard, .ownContactCard {
+    max-width: 282px;
+    height: 62px;
+    gap: 28px;
+    padding-left: 19px;
+}
+
+.contactName {
+    font-size: 16px;
+}
+
+.contactMail {
+    font-size: 13px;
+}
+
+.contactImg {
+    height: 34px;
+    width: 34px;
+}
+
+.AddNew {
+    height: 81px;
+}
+
+.AddNewButton {
+    gap: 13px;
+    height: 45px;
+    width: 282px;
+    border-radius: 8px;
+}
+
+.AddNewText {
+    font-size: 17px;
+}
+
+.AddNewImg {
+    width: 26px;
+    height: 26px;
+}
+
+.contactsContainer {
+    padding-left: 400px;
+    padding-top: 88px;
+}
+
+.into {
+    max-height: 61px;
+    gap: 24px;
+}
+
+.separater {
+    width: 3px;
+}
+
+h1 {
+    font-size: 49px;
+}
+
+h2 {
+    font-size: 22px;
+}
+
+.leftSide {
+    height: 473px;
+    width: 373px;
+    padding: 0 38px;
+    gap: 10px;
+}
+
+.joinSmall {
+    height: 53px;
+}
+
+.leftSide h1,
+.ownBigContactCircle {
+    font-size: 49px;
+}
+
+.leftSide p {
+    font-size: 22px;
+}
+
+.vektor {
+    height: 2.4px;
+    border-radius: 5px;
+}
+
+.rightSide {
+    width: 596px;
+    height: 473px;
+    padding: 53px 0;
+}
+
+.pbContainer {
+    width: 200px;
+}
+
+.pb,
+.BigPB,
+.BigContactCircle {
+    width: 96px;
+    height: 96px;
+    font-size: 38px;
+}
+
+.flexCC {
+    max-width: 338px;
+    gap: 43px;
+}
+
+.closeContact {
+    width: 26px;
+    height: 26px;
+}
+
+.inputs_div {
+    gap: 24px;
+}
+
+.input {
+    padding: 10px;
+    font-size: 16px;
+}
+
+.name_icon,
+.mail_icon,
+.phone_icon {
+    background-size: 20px;
+    background-position-x: 304px;
+    background-position-y: 10px;
+}
+
+.login-buttons {
+    gap: 19px;
+}
+
+.create-btn,
+.cancel-button {
+    padding: 12px 19px;
+    font-size: 17px;
+    height: 45px;
+}
+
+form {
+    gap: 34px;
+}
+
+.check {
+    width: 19px;
+    height: 19px;
+}
+
+.createText {
+    font-size: 17px;
+}
+
+.cancelText {
+    font-size: 16px;
+}
+
+.contactsDetails {
+    padding-top: 72px;
+    gap: 17px;
+}
+
+.displayFlex {
+    gap: 43px;
+}
+
+.contectName {
+    font-size: 38px;
+}
+
+.displayFlex1 {
+    gap: 13px;
+}
+
+.editContainer,
+.DeleteContainer {
+    gap: 6px;
+}
+
+.pSmall,
+.mailInfoSmall,
+.phoneInfoSmall,
+.strong {
+    font-size: 13px;
+}
+
+.contactInformation {
+    font-size: 16px;
+    padding: 20px 0;
+}
+
+.displayColumn1 {
+    gap: 12px;
+}
+
+.contactCardsContainer {
+    max-height: calc(100vh - 158px);
+    padding-bottom: 16px;
+}
+
+.letterHeader {
+    padding-left: 29px;
+    font-size: 16px;
+    height: 46px;
+}
+
+.separatorList {
+    height: 1.6px;
+    margin-bottom: 6px;
+}
+
+.contactCircle,
+.ownContactCircle,
+.ownContactCircleWrapper,
+.ownContactCircleWrapper img {
+    width: 34px;
+    height: 34px;
+    font-size: 13px;
+}
+
+.initialsOnImage {
+    font-size: 13px;
+}
+
+.separatorList1 {
+    width: 320px;
+    border-radius: 13px;
+    height: 1.6px;
+}
+
+.succesDiv {
+    left: 600px;
+    top: 560px;
+    height: 59px;
+    width: 261px;
+    border-radius: 16px;
+}
+
+.succesText {
+    font-size: 16px;
+}
+
+}
+
+@media (max-width: 1099px) {
+    /* 30% verkleinerte Version aller Maße aus dem Ursprungs-CSS */
+
+.content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background-color: #F6F7F8;
+    flex: 1;
+}
+
+.contacsList {
+    width: 319px;
+    height: calc(100vh - 67px);
+    box-shadow: 2.8px 0 4.2px rgba(0, 0, 0, 0.2);
+}
+
+.contactCard, .ownContactCard {
+    max-width: 246px;
+    height: 55px;
+    gap: 25px;
+    padding-left: 17px;
+}
+
+.contactName {
+    font-size: 14px;
+}
+
+.contactMail {
+    font-size: 11px;
+}
+
+.contactImg {
+    height: 29px;
+    width: 29px;
+}
+
+.AddNew {
+    height: 71px;
+}
+
+.AddNewButton {
+    gap: 11px;
+    height: 39px;
+    width: 246px;
+    border-radius: 7px;
+}
+
+.AddNewText {
+    font-size: 15px;
+}
+
+.AddNewImg {
+    width: 22px;
+    height: 22px;
+}
+
+.contactsContainer {
+    padding-left: 345px;
+    padding-top: 77px;
+}
+
+.into {
+    max-height: 53px;
+    gap: 21px;
+}
+
+.separater {
+    width: 2.8px;
+}
+
+h1 {
+    font-size: 43px;
+}
+
+h2 {
+    font-size: 19px;
+}
+
+.leftSide {
+    height: 414px;
+    width: 327px;
+    padding: 0 34px;
+    gap: 9px;
+}
+
+.joinSmall {
+    height: 46px;
+}
+
+.leftSide h1,
+.ownBigContactCircle {
+    font-size: 43px;
+}
+
+.leftSide p {
+    font-size: 19px;
+}
+
+.vektor {
+    height: 2.1px;
+    border-radius: 4.8px;
+}
+
+.rightSide {
+    width: 522px;
+    height: 414px;
+    padding: 46px 0;
+}
+
+.pbContainer {
+    width: 175px;
+}
+
+.pb,
+.BigPB,
+.BigContactCircle {
+    width: 84px;
+    height: 84px;
+    font-size: 33px;
+}
+
+.flexCC {
+    max-width: 295px;
+    gap: 37px;
+}
+
+.closeContact {
+    width: 23px;
+    height: 23px;
+}
+
+.inputs_div {
+    gap: 21px;
+}
+
+.input {
+    padding: 9px;
+    font-size: 14px;
+}
+
+.name_icon,
+.mail_icon,
+.phone_icon {
+    background-size: 17px;
+    background-position-x: 266px;
+    background-position-y: 9px;
+}
+
+.login-buttons {
+    gap: 17px;
+}
+
+.create-btn,
+.cancel-button {
+    padding: 10px 17px;
+    font-size: 15px;
+    height: 39px;
+}
+
+form {
+    gap: 29px;
+}
+
+.check {
+    width: 17px;
+    height: 17px;
+}
+
+.createText {
+    font-size: 15px;
+}
+
+.cancelText {
+    font-size: 14px;
+}
+
+.contactsDetails {
+    padding-top: 63px;
+    gap: 15px;
+}
+
+.displayFlex {
+    gap: 37px;
+}
+
+.contectName {
+    font-size: 33px;
+}
+
+.displayFlex1 {
+    gap: 11px;
+}
+
+.editContainer,
+.DeleteContainer {
+    gap: 5px;
+}
+
+.pSmall,
+.mailInfoSmall,
+.phoneInfoSmall,
+.strong {
+    font-size: 11px;
+}
+
+.contactInformation {
+    font-size: 14px;
+    padding: 18px 0;
+}
+
+.displayColumn1 {
+    gap: 10px;
+}
+
+.contactCardsContainer {
+    max-height: calc(100vh - 138px);
+    padding-bottom: 14px;
+}
+
+.letterHeader {
+    padding-left: 26px;
+    font-size: 14px;
+    height: 41px;
+}
+
+.separatorList {
+    height: 1.4px;
+    margin-bottom: 5px;
+}
+
+.contactCircle,
+.ownContactCircle,
+.ownContactCircleWrapper,
+.ownContactCircleWrapper img {
+    width: 29px;
+    height: 29px;
+    font-size: 11px;
+}
+
+.initialsOnImage {
+    font-size: 11px;
+}
+
+.separatorList1 {
+    width: 280px;
+    border-radius: 11px;
+    height: 1.4px;
+}
+
+.succesDiv {
+    left: 525px;
+    top: 490px;
+    height: 52px;
+    width: 228px;
+    border-radius: 14px;
+}
+
+.succesText {
+    font-size: 14px;
+}
+
+}
