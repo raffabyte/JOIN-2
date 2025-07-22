@@ -245,7 +245,7 @@ function taskEditTemplate(task) {
         <div class="flexC width-100 gap-24">
             <div class="gap-8 width-100 flexC">
                 <label class="width-100" for="editedTaskTitle">Title</label>
-                <input class="inputs change-onfoucus requierd-input" type="text" id="editedTaskTitle" value="${task.title}" placeholder="Enter a title" >
+                <input class="inputs change-onfoucus requierd-input" oninput="hideValidationErrors()" type="text" id="editedTaskTitle" value="${task.title}" placeholder="Enter a title" >
                 <span class="required-span width-100 display-none">This field is required</span>
             </div>
             <div class="gap-8 width-100 flexC">

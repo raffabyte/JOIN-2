@@ -155,6 +155,10 @@ function submitEdit() {
     const editedTaskData = editedTask();
     const taskId = window.currentEditingTask.id;
 
+    if (!editedTaskData.title || !editedTaskData.dueDate) {
+        showValidationErrors();
+        return null;
+    }else {
     updateTaskInFirebase(taskId, editedTaskData)
         .then(() => {
             updateBoard();
@@ -163,4 +167,5 @@ function submitEdit() {
         .catch(error => {
             console.error('Failed to update task:', error);
         });
+    }
 }
