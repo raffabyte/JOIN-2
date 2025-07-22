@@ -4,23 +4,34 @@ nav {
     height: 100vh;
     width: 232px;
     background-color: #2A3647;
-    padding: 64px 0;
+    
 }
-
-.raffa {
-    height: 1024px;
-    display: flex
-;
+.navContent {
+    display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: space-between;
+    max-height: 1024px;
+    height: 100%;
+    padding: 64px 0;
+    
 }
 
 header {
+    width: 100%;
     z-index: 1;
-    padding: 20px 40px 20px 116px;
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 10%);
 }
+.headerContent {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: calc(1920px - 232px);
+    padding: 20px 40px 20px 116px;
+}
+
+
+
 
 header h3 {
     font-size: 20px;
@@ -233,13 +244,6 @@ span {
     display: none !important;
 }
 
-@media (min-width: 1930px) {
-  nav {
-    left: 50%;
-    transform: translateX(-960px);
-  }
-
-}
 @media (max-height: 860px) {
   .nav-menu-top {
     gap: 64px;

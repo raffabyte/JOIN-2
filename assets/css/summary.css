@@ -15,13 +15,12 @@ body {
     display: flex;
     flex-direction: column;
     width: 100%;
-    /* padding: 110px 96px; */
-    padding-inline: clamp(16px, 5vw, 96px);  /* Links/Rechts: min 16px, skaliert mit Viewport, max 96px */
-  padding-block: clamp(40px, 8vh, 110px);
+    padding: 110px 96px;
     background-color: #F6F7F8;
     flex: 1;
     gap: 56px;
     height: calc(1024px - 96px);
+    max-width: calc(1920px - 232px);
 }
 
 .into {

@@ -41,12 +41,10 @@ html, body {
     width: 100%;
     min-height: 100vh;
     display: flex;
-    justify-content: center;
     flex-direction: row;
 }
 
 body{
-    max-width: 1920px;
     background: white;
     padding-left: 232px;
     overflow-x: hidden;
