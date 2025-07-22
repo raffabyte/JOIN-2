@@ -6,10 +6,6 @@
   flex: 1;
 }
 
-.board-heading {
-  margin-bottom: 8px;
-}
-
 .h1-div {
   margin: 80px 0 40px 0;
   justify-content: space-between;
@@ -157,14 +153,14 @@ h1 {
 
 .board-bottom {
   flex: 1;
-  padding: 8px 64px 24px 64px;
+  padding: 16px 64px;
   gap: 26px;
-  max-height: 68vh;
   overflow-y: auto;
 }
 
 .board-column {
   height: 100%;
+  gap: 16px;
 }
 
 .no-task-item {
@@ -188,7 +184,6 @@ h1 {
   box-shadow: 0 0 10px 3px rgba(0, 0, 0, 8%);
   padding: 16px;
   gap: 24px;
-  margin-bottom: 16px;
   cursor: pointer;
   transition: transform 300ms ease-out;
 }

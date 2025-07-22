@@ -106,7 +106,7 @@ function groupAndSortTasks(tasks) {
 function generateColumnData(tasksByColumn) {
     const columns = ['todoColumn', 'inProgressColumn', 'awaitFeedbackColumn', 'doneColumn'];
     const dragAreas = ['toDoDragArea', 'inProgressDragArea', 'awaitingFeedbackDragArea', 'doneDragArea'];
-    
+
     return columns.map((col, i) => {
         const tasksHTML = tasksByColumn[col].map(taskCardTemplate).join('');
         return { col, dragAreaId: dragAreas[i], tasksHTML };
@@ -116,7 +116,7 @@ function generateColumnData(tasksByColumn) {
 function renderColumns(columnData) {
     columnData.forEach(({ col, dragAreaId, tasksHTML }) => {
         const column = document.getElementById(col);
-        column.innerHTML = dragAreaTemplate(dragAreaId) + tasksHTML;
+        column.innerHTML = tasksHTML + dragAreaTemplate(dragAreaId);
         setupColumnEventHandlers(column, col, dragAreaId);
     });
 }
@@ -132,9 +132,14 @@ async function updateColumns(tasks) {
 function checkEmptyColumn() {
     const boardColumns = document.querySelectorAll('.board-column');
     boardColumns.forEach(column => {
-        if (!column.querySelector('.task-card')) {
-            // Füge no-task template hinzu
-            column.innerHTML += noTaskCardTemplate(column.getAttribute('column-name'));
+        const existingNoTask = column.querySelector('.no-task-item');
+        const dragArea = column.querySelector('.drag-area');
+        
+        if (!column.querySelector('.task-card') && dragArea && dragArea.classList.contains('display-none')) {
+            !existingNoTask ? column.innerHTML += noTaskCardTemplate(column.getAttribute('column-name')) : null;
+        } else {
+            // Entferne no-task-item wenn dragArea sichtbar ist oder Tasks vorhanden sind
+            existingNoTask ? existingNoTask.remove() : null;
         }
     });
 }
@@ -144,7 +149,7 @@ async function fetchBoardData() {
         fetch(TASKS_BASE_URL),
         loadAllContactColors()
     ]);
-    
+
     return Object.entries((await tasksResponse.json()) || {}).map(([firebaseKey, task]) => ({
         ...task,
         id: firebaseKey
@@ -194,7 +199,7 @@ let contactColorMap = new Map();
 async function loadAllContactColors() {
     const response = await fetch(`https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/users/${USERKEY}/contacts.json`);
     const result = await response.json();
-    
+
     // Erstelle Color Map für schnellen Zugriff
     contactColorMap.clear();
     Object.values(result || {}).forEach(contact => {
@@ -202,7 +207,7 @@ async function loadAllContactColors() {
             contactColorMap.set(contact.name, contact.color);
         }
     });
-    
+
     return result;
 }
 
@@ -220,7 +225,7 @@ async function getContactByName(name) {
 function renderMembers(task) {
     const filteredAssignees = Array.isArray(task.assignee) ? task.assignee.filter(name => name && name.trim()) : '';
     if (filteredAssignees.length === 0) return '';
-    
+
     const displayAssignees = filteredAssignees.slice(0, 3);
     const result = displayAssignees.map(name => contactIconSpanTemplate(name)).join('');
     return filteredAssignees.length > 3 ? result + extraCountSpanTemplate(filteredAssignees.length - 3) : result;
@@ -345,22 +350,21 @@ function highlight(id) {
     const noTaskItem = column.querySelector('.no-task-item');
 
     DRAG_AREA.classList.remove('display-none');
-    if (noTaskItem) {
-        noTaskItem.classList.add('display-none');
-    }
+    
     dragAreaHeight(DRAG_AREA);
+    
+    !column.querySelector('.task-card') ? checkEmptyColumn() : null;
 }
 
 
 function removeHighlight(id) {
     const DRAG_AREA = document.getElementById(id);
     if (!DRAG_AREA || !DRAG_AREA.parentElement) return;
-    
+
     const column = DRAG_AREA.parentElement;
     const noTaskItem = column.querySelector('.no-task-item');
 
     DRAG_AREA.classList.add('display-none');
-    if (noTaskItem) {
-        noTaskItem.classList.remove('display-none');
-    }
+
+    !column.querySelector('.task-card') ? checkEmptyColumn() : null;
 }
