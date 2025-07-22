@@ -96,7 +96,7 @@ button {
 
 .password-field .hidden-input {
   -webkit-text-security: none !important;
-  text-security: none !important;
+  -text-security: none !important;
   font-family: monospace !important;
   color: black !important;
 }

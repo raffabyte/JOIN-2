@@ -169,14 +169,18 @@ function addTask(event, columnId) {
 /* Task-Design in Board functions */
 
 function renderMembers(task) {
-    return Array.isArray(task.assignee) ?
-        task.assignee.map(name => contactIconSpanTemplate(name)).join('') : '';
+    const filteredAssignees = Array.isArray(task.assignee) ? task.assignee.filter(name => name && name.trim()) : '';
+    if (filteredAssignees.length === 0) return '';
+    
+    const displayAssignees = filteredAssignees.slice(0, 3);
+    const result = displayAssignees.map(name => contactIconSpanTemplate(name)).join('');
+    return filteredAssignees.length > 3 ? result + contactIconSpanTemplate(`+ ${filteredAssignees.length - 3}`) : result;
 }
 
 
 function renderMembersWithName(task) {
     return Array.isArray(task.assignee) ?
-        task.assignee.map(name => `${memberWithNameTemplate(name)}`).join('') : '';
+        task.assignee.filter(name => name && name.trim()).map(name => `${memberWithNameTemplate(name)}`).join('') : '';
 }
 
 
@@ -302,6 +306,8 @@ function highlight(id) {
 
 function removeHighlight(id) {
     const DRAG_AREA = document.getElementById(id);
+    if (!DRAG_AREA || !DRAG_AREA.parentElement) return;
+    
     const column = DRAG_AREA.parentElement;
     const noTaskItem = column.querySelector('.no-task-item');
 

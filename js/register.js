@@ -143,6 +143,8 @@ function updateMask(id, input) {
       svg.classList.toggle('visible', state.visible);
     }
   }
+  console.log(password);
+  console.log(passwordStates);
 }
 
 

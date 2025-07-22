@@ -242,7 +242,7 @@ function taskEditTemplate(task) {
                 <span class="required-span width-100 display-none">This field is required</span>
             </div>
             <div class="gap-8 width-100 flexC">
-                <label class="width-100">Priority</label>
+                <span class="width-100 prio-style">Priority</span>
                 <div class="flexR priority-select width-100 gap-16">
                     <button type="button" class="edit-priority-button gap-8 width-100 flexR HighPriority ${task.priority === 'HighPriority' ? 'active' : ''}" 
                             onclick="PriorityHandler('high'); event.stopPropagation();">
@@ -267,14 +267,7 @@ function taskEditTemplate(task) {
                     <input  class="inputs change-onfoucus" type="text" id="editedTaskAssignee" placeholder="Select Contacts to assign" oninput="searchAssignee(this.value)"
                             onclick="toggleAssigneeOptions(); event.stopPropagation(); ">
                     <div id="assigneeOptions" class="assignee-options width-100 display-none">
-                        <div class="assignee-option width-100 flexR space-between" onclick="selectAssignee(this); highligtSlected(this)">
-                            <div class="gap-16 flexR">
-                                <span class="contact-icon flexR"  style="background-color: ${getRandomColor('Unassigned Contact')};" >U C</span> 
-                                <span class="contact-name">Unassigned Contact</span>
-                            </div>
-                            ${CHECKBOX_SVG}
-                            ${CHECKBOX_FILLED_LIGHT_SVG}
-                        </div>
+                        <!-- Dynamically generated assignee options will be inserted here -->
                     </div>
                 </div>
                 <div class="selected-assignee width-100 gap-8 flexR ${task.assignee && task.assignee.length > 0 ? '' : 'display-none'}" id="editedAssignee">
@@ -324,6 +317,19 @@ function editTaskOverlayTemplate(task) {
             </button>
         </div>
     </div>`;
+}
+
+function assigneeOptionTemplate(contact) {
+    return`
+                    <div class="assignee-option width-100 flexR space-between" onclick="selectAssignee(this); highligtSlected(this)">
+                        <div class="gap-16 flexR">
+                            <span class="contact-icon flexR" style="background-color: ${contact.color};">${contactIconSpan(contact.name)}</span> 
+                            <span class="contact-name">${contact.name}</span>
+                        </div>
+                        ${CHECKBOX_SVG}
+                        ${CHECKBOX_FILLED_LIGHT_SVG}
+                    </div>
+                `
 }
 
 

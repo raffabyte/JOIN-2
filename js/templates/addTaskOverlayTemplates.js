@@ -31,7 +31,7 @@ function addTaskOverlayForm(columnId) {
                     <span class="middle-vector"></span>
                     <div class="flexC task-form-column">
                         <div class="gap-8 width-100 flexC">
-                            <label class="width-100">Priority</label>
+                            <span class="width-100 prio-style">Priority</span>
                             <div class="flexR priority-select gap-16 width-100">
                                 <button type="button" class="priority-button gap-8 width-100 flexR HighPriority" onclick="PriorityHandler('high'); event.stopPropagation();">
                                     <span class="priority-text">Urgent</span>

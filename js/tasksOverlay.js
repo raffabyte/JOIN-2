@@ -100,7 +100,7 @@ function showEditTaskOverlay(task) {
 
     TASK_EDIT_FORM.classList.remove('display-none');
     TASK_INFOS.classList.add('display-none');
-   
+    loadAndRenderContacts();
 }
 
 function editTask(taskId) {

@@ -292,6 +292,12 @@ span {
 }
 
 .task-members span:nth-child(3) {
-  left: 54px;
+  left: 56px;
   z-index: 3;
+}
+
+.task-members span:nth-child(4) {
+  left: 84px;
+  z-index: 4;
+  background: #0065fd !important;
 }
