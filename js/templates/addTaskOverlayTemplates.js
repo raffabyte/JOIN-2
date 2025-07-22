@@ -53,7 +53,7 @@ function addTaskOverlayForm(columnId) {
                             <div class="input-svg-wrapper width-100 flexC">
                                 <input  class="inputs change-onfoucus" type="text" id="taskAssignee" placeholder="Select Contacts to assign" oninput="searchAssignee(this.value)"
                                         onclick="toggleAssigneeOptions(); event.stopPropagation(); ">
-                                <div id="assigneeOptions" class="assignee-options width-100 display-none">
+                                <div id="assigneeOptions" oninput="toggleAssigneeOptions()" class="assignee-options width-100 display-none">
                                     <!-- Contacts will be loaded dynamically -->
                                 </div>
                             </div>

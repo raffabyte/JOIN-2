@@ -64,6 +64,11 @@ async function loadAndRenderContacts() {
         
         if (data && assigneeOptions) {
             assigneeOptions.innerHTML = Object.entries(data).filter(([,contact]) => contact?.name).map(([,contact]) => assigneeOptionTemplate(contact)).join('');
+            
+            // Nach dem Laden der Kontakte, bereits ausgewählte markieren
+            setTimeout(() => {
+                markPreselectedAssignees();
+            }, 100);
         }
     } catch (error) {
         console.error('Error loading contacts:', error);
@@ -95,11 +100,73 @@ function PriorityHandler(priority) {
     });
 }
 
+function searchAssignee(text) {
+    const assigneeOptions = document.getElementById('assigneeOptions');
+    const options = assigneeOptions.querySelectorAll('.assignee-option');
+    let visibleCount = 0;
+
+    options.forEach(option => {
+        const contactName = option.querySelector('.contact-name').textContent;
+        const isMatch = contactName.toLowerCase().includes(text.toLowerCase());
+        option.classList.toggle('display-none', !isMatch);
+        if (isMatch) visibleCount++;
+    });
+
+    checkNoResults(visibleCount , text);
+}
+
+function checkNoResults(numberOfResults , text) {
+    // "Not found" Element entfernen falls vorhanden
+    const existingNotFound = assigneeOptions.querySelector('.no-results');
+    if (existingNotFound) existingNotFound.remove();
+
+    // "Not found" anzeigen wenn keine Ergebnisse und Text eingegeben
+    if (numberOfResults === 0 && text.trim()) {
+        assigneeOptions.innerHTML += noSearchResultsTemplate();
+    }
+}
+
 function toggleAssigneeOptions() {
-    const  ASSIGNEEOPTIONS = document.getElementById('assigneeOptions');
+    const ASSIGNEEOPTIONS = document.getElementById('assigneeOptions');
     
     ASSIGNEEOPTIONS.classList.toggle('display-none');
     ASSIGNEEOPTIONS.classList.toggle('active');
+    
+    // Wenn die Optionen geöffnet werden, bereits zugewiesene Kontakte markieren
+    if (ASSIGNEEOPTIONS.classList.contains('active')) {
+        markPreselectedAssignees();
+    }
+}
+
+function markPreselectedAssignees() {
+    const currentAssignees = getCurrentTaskAssignees();
+    
+    document.querySelectorAll('.assignee-option').forEach(option => {
+        const contactNameElement = option.querySelector('.contact-name');
+        const checkbox = option.querySelector('.checkbox');
+        const checkboxFilled = option.querySelector('.checkbox-filled');
+        if (contactNameElement && checkbox && checkboxFilled) {
+            const isSelected = currentAssignees.includes(contactNameElement.textContent);
+            option.classList.toggle('selcted-assignee', isSelected);
+            checkbox.classList.toggle('display-none', isSelected);
+            checkboxFilled.classList.toggle('display-none', !isSelected);
+        }
+    });
+}
+
+function getCurrentTaskAssignees() {
+    // Für Edit-Modus: aus dem HTML der Task extrahieren
+    const taskOverlayContent = document.getElementById('taskOverlayContent');
+    if (taskOverlayContent) {
+        const assigneeContainer = document.querySelector('.assignee-container .flexC');
+        if (assigneeContainer) {
+            // Assignee-Namen aus dem HTML extrahieren
+            const memberElements = assigneeContainer.querySelectorAll('.member-name-text');
+            return Array.from(memberElements).map(el => el.textContent.trim()).filter(name => name);
+        }
+    }
+    
+    return [];
 }
 
 
@@ -112,30 +179,50 @@ function highligtSlected(item) {
     CHECKBOXFILLED.classList.toggle('display-none');
 }
 
-
-function toggleAssigneeIcon(assigneeName) {
-    let SELECTEDASSIGNEE = document.getElementById('selectedAssignee') || document.getElementById('editedAssignee');
-    
-    let iconSpans = SELECTEDASSIGNEE.querySelectorAll('.contact-icon');
-    let found = false;
-    iconSpans.forEach(span => {
-        if (span.dataset.name === assigneeName) {
-            span.remove();
-            found = true;
-        }
-    });
-    if (!found) {
-        SELECTEDASSIGNEE.classList.remove('display-none');
-        SELECTEDASSIGNEE.innerHTML += contactIconSpanTemplate(assigneeName);
-    }
-}
-
-
 function selectAssignee(assignee) {
     let nameSpan = assignee.querySelector('.contact-name');
     let assigneeName = nameSpan ? nameSpan.textContent : assignee;
 
     toggleAssigneeIcon(assigneeName);
+    highligtSlected(assignee);
+}
+
+
+function toggleAssigneeIcon(assigneeName) {
+    let SELECTEDASSIGNEE = document.getElementById('selectedAssignee') || document.getElementById('editedAssignee');
+    let iconSpans = SELECTEDASSIGNEE.querySelectorAll('.contact-icon:not(.extra-count)');
+    let notFound = false;
+    
+    iconSpans.forEach(span => {
+        if (span.dataset.name === assigneeName) {
+            span.remove();
+            notFound = true;
+        }
+    });
+
+    addToSelectedAssignee(assigneeName, !notFound);
+}
+
+function addToSelectedAssignee(assigneeName, found) {
+    let SELECTEDASSIGNEE = document.getElementById('selectedAssignee') || document.getElementById('editedAssignee');
+    if (found) {
+        SELECTEDASSIGNEE.classList.remove('display-none');
+        SELECTEDASSIGNEE.innerHTML += contactIconSpanTemplate(assigneeName);
+    }
+    updateAssigneeDisplay(SELECTEDASSIGNEE);
+}
+
+function updateAssigneeDisplay(container) {
+    const maxVisible = 5;
+    const allSpans = container.querySelectorAll('.contact-icon:not(.extra-count)');
+    
+    container.querySelector('.contact-icon.extra-count')?.remove();
+    
+    allSpans.forEach((span, index) => span.style.display = index < maxVisible ? '' : 'none');
+    
+    if (allSpans.length > maxVisible) {
+        container.innerHTML += extraCountSpanTemplate(allSpans.length - maxVisible);
+    }
 }
 
 function toggleCategoryOptions() {

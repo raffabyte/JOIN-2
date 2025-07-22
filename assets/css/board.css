@@ -1,17 +1,13 @@
 .content {
   display: flex;
   flex-direction: column;
-  padding: 110px 96px;
+  padding: 0;
   background-color: #f6f7f8;
   flex: 1;
 }
 
 .board-heading {
   margin-bottom: 8px;
-}
-
-.content {
-  padding: 0;
 }
 
 .h1-div {
@@ -299,5 +295,10 @@ span {
 .task-members span:nth-child(4) {
   left: 84px;
   z-index: 4;
-  background: #0065fd !important;
+}
+
+.extra-count {
+  background: #29ABE2;
+  color: white;
+  border-color: white;
 }

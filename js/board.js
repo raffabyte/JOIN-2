@@ -120,7 +120,7 @@ function checkEmptyColumn() {
     boardColumns.forEach(column => {
         if (!column.querySelector('.task-card')) {
             // Füge no-task template hinzu
-            column.innerHTML += noTaskCardTemplate();
+            column.innerHTML += noTaskCardTemplate(column.getAttribute('column-name'));
         }
     });
 }
@@ -174,7 +174,7 @@ function renderMembers(task) {
     
     const displayAssignees = filteredAssignees.slice(0, 3);
     const result = displayAssignees.map(name => contactIconSpanTemplate(name)).join('');
-    return filteredAssignees.length > 3 ? result + contactIconSpanTemplate(`+ ${filteredAssignees.length - 3}`) : result;
+    return filteredAssignees.length > 3 ? result + extraCountSpanTemplate(filteredAssignees.length - 3) : result;
 }
 
 
