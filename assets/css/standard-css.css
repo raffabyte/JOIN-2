@@ -56,7 +56,7 @@ main{
     width: 100%;
     flex: 1;
     justify-content: flex-start;
-    min-height: 100vh;
+    max-height: 100vh;
 }
 
 a {

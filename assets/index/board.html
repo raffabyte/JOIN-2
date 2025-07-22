@@ -21,9 +21,9 @@
 </head>
 
 <body onload="init(); updateBoard();">
-    <nav id="linkesNavMenu"></nav>
+    <nav class="flexC space-between" id="linkesNavMenu"></nav>
     <main class="flexC">
-        <header id="header"></header>
+        <header id="header" class="width-100 flexR space-between"></header>
         <div class="overlay flexC display-none" id="overlay" onclick="handleOverlayClicks(event)">
             <div class="flexC overlay-content" id="overlayContent">
             </div>
@@ -90,10 +90,10 @@
                 </div>
             </div>
             <div class="board-bottom width-100 space-between flexR">
-                <div class="board-column width-100 flexC" id="todoColumn"></div>
-                <div class="board-column width-100 flexC" id="inProgressColumn"></div>
-                <div class="board-column width-100 flexC" id="awaitFeedbackColumn"></div>
-                <div class="board-column width-100 flexC" id="doneColumn"></div>
+                <div class="board-column width-100 flexC" column-name="to do" id="todoColumn"></div>
+                <div class="board-column width-100 flexC" column-name="in progress" id="inProgressColumn"></div>
+                <div class="board-column width-100 flexC" column-name="awaiting feedback" id="awaitFeedbackColumn"></div>
+                <div class="board-column width-100 flexC" column-name="done" id="doneColumn"></div>
             </div>
         </div>
         </div>

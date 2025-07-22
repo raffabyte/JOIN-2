@@ -40,7 +40,7 @@ function header() {
 
     return `
         <h3>Kanban Project Management Tool</h3>
-        <div class="userInfo ${hideUserInfo ? 'hidden-userinfo' : ''}">
+        <div class="userInfo flexR gap-16 ${hideUserInfo ? 'hidden-userinfo' : ''}">
             <a href="help.html" id="helpLink" class="${hideInfoHeader ? 'hidden-userinfo' : ''}">
                 <img class="help" src="../img/SummaryUser/help.png" alt="" />
             </a>
@@ -67,7 +67,7 @@ function linkesNav(activePage) {
   return `
     <div class="flexC nav-menu-top">
       <img class="join" src="../img/fav-icon.png" alt="">
-      <div class="menu">
+      <div class="width-100 flexC menu">
         <a href="summary.html" class="flexR menuOption${activePage === 'summary' ? ' aktiveNav' : ''}">
           <img class="icon" src="../img/summary.png" alt="">
           <p>Summary</p>
@@ -134,16 +134,32 @@ function taskCardTemplate(task) {
         </div>`;
 }
 
-function noTaskCardTemplate() {
+function noTaskCardTemplate(columnName) {
     return `
         <div class="no-task-item flexR">
-            <p>No Tasks to do</p>
+            <p>No tasks ${columnName}</p>
         </div>`;
 }
 
-function contactIconSpanTemplate(name) {
+function noSearchResultsTemplate() {
     return `
-    <span class="contact-icon flexR" data-name="${name}" style="background-color: ${getRandomColor(name)};">${contactIconSpan(name)}</span>`;
+            <div class="no-results assignee-option width-100 flexR space-between" style="opacity: 0.6; cursor: default;">
+                <div class="gap-16 flexR">
+                    <span class="contact-icon flexR" style="background-color: #ccc;">?</span>
+                    <span class="contact-name">Not found</span>
+                </div>
+            </div>`;
+}
+
+
+function extraCountSpanTemplate(count) {
+    return `<span class="contact-icon extra-count flexR">+${count}</span>`;
+}
+
+function contactIconSpanTemplate(name) {
+    const color = getContactColor(name);
+    return `
+    <span class="contact-icon flexR" data-name="${name}" style="background-color: ${color};">${contactIconSpan(name)}</span>`;
 }
 
 
@@ -264,14 +280,14 @@ function taskEditTemplate(task) {
             <div class="flexC gap-8 width-100">
                 <label class="width-100" for="editedTaskAssignee">Assigned To</label>
                 <div class="input-svg-wrapper width-100 flexC">
-                    <input  class="inputs change-onfoucus" type="text" id="editedTaskAssignee" placeholder="Select Contacts to assign" oninput="searchAssignee(this.value)"
+                    <input  class="inputs change-onfoucus" oninput="toggleAssigneeOptions()" type="text" id="editedTaskAssignee" placeholder="Select Contacts to assign"
                             onclick="toggleAssigneeOptions(); event.stopPropagation(); ">
                     <div id="assigneeOptions" class="assignee-options width-100 display-none">
                         <!-- Dynamically generated assignee options will be inserted here -->
                     </div>
                 </div>
                 <div class="selected-assignee width-100 gap-8 flexR ${task.assignee && task.assignee.length > 0 ? '' : 'display-none'}" id="editedAssignee">
-                ${task.assignee && task.assignee.length > 0 ? task.assignee.map(name => contactIconSpanTemplate(name)).join('') : ''}
+                    ${task.assignee && task.assignee.length > 0 ? task.assignee.map(name => contactIconSpanTemplate(name)).join('') : ''}
                 </div>
             </div>
             <div class="gap-8 width-100 flexC">
@@ -320,10 +336,11 @@ function editTaskOverlayTemplate(task) {
 }
 
 function assigneeOptionTemplate(contact) {
+    const color = getContactColor(contact.name);
     return`
-                    <div class="assignee-option width-100 flexR space-between" onclick="selectAssignee(this); highligtSlected(this)">
+                    <div class="assignee-option width-100 flexR space-between" onclick="selectAssignee(this)">
                         <div class="gap-16 flexR">
-                            <span class="contact-icon flexR" style="background-color: ${contact.color};">${contactIconSpan(contact.name)}</span> 
+                            <span class="contact-icon flexR" style="background-color: ${color};">${contactIconSpan(contact.name)}</span> 
                             <span class="contact-name">${contact.name}</span>
                         </div>
                         ${CHECKBOX_SVG}

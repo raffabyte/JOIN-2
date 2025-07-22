@@ -128,10 +128,16 @@ function applyStarMaskToPassword(passwordInput, msgBox) {
       updateVisualFeedback(passwordInput, msgBox, realPassword, visible);
     }
   });
+  setTimeout(() => {
+    realPassword = passwordInput.value;
+    if (realPassword.length > 0) {
+      updatePasswordField(passwordInput, realPassword, false);
+      updateVisualFeedback(passwordInput, msgBox, realPassword, false);
+    }
+  }, 100); // Verzögerung, damit Autofill durch ist
 
   clearMessage(msgBox);
 }
-
 
 function handlePasswordInput(e, realPassword, input, visible) {
   const start = input.selectionStart;

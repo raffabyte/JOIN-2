@@ -68,6 +68,7 @@ main {
     justify-content: center; 
     align-items: center;
     min-height: 0;
+    margin-top: 110px;
 }
 
 .login-container {
@@ -95,29 +96,29 @@ button {
 }
 
 .mail_icon {
-    background-image: url(../img/LogIn/mail.png) !important;
-    background-repeat: no-repeat;
-    background-size: 25px;
-    background-position: right 10px center;
-}
-.lock_icon {
-    background-image: url(../img/LogIn/lock.png) !important;
+    background-image: url("../img/LogIn/mail.png") !important;
     background-repeat: no-repeat;
     background-size: 20px;
-    background-position: right 10px center;
+    background-position: right 21px center;
+}
+.lock_icon {
+    background-image: url("../img/LogIn/lock.png") !important;
+    background-repeat: no-repeat;
+    background-size: 20px;
+    background-position: right 21px center;
 }
 .visibility_icon {
     background-image: url("../img/LogIn/visibility.png") !important;
     background-repeat: no-repeat;
     background-size: 20px;
-    background-position: right 10px center;
+    background-position: right 21px center;
   }
   
   .visibility_off_icon {
     background-image: url("../img/LogIn/visibility_off.png") !important;
     background-repeat: no-repeat;
     background-size: 20px;
-    background-position: right 10px center;
+    background-position: right 21px center;
 }
 input:-webkit-autofill,
 input:-webkit-autofill:focus,
@@ -125,8 +126,6 @@ input:-webkit-autofill:hover {
     -webkit-box-shadow: 0 0 0px 1000px white inset;
     transition: background-color 5000s ease-in-out 0s;
 }
-
-  
 
 .login-container form {
     width: 100%;
@@ -222,10 +221,9 @@ footer a:hover {
     font-weight: bold;
 }
 
-@media (max-width: 428px) {
+@media (max-width: 560px) {
     main {
-        display: block;
-        margin-top: 110px;
+        margin-top: 85px;
     }
     header img {
         height: 77px;
