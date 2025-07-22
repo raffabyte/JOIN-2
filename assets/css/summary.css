@@ -267,9 +267,201 @@ font-weight: 400;
 }
 
 @media (max-width: 1399px) {
-  
+  .content {
+    padding: 88px 77px;
+    gap: 45px;
+    height: calc(820px - 77px);
+    max-width: calc(1536px - 186px);
+  }
+
+  .into {
+    max-height: 61px;
+    gap: 24px;
+  }
+
+  h1 {
+    font-size: 49px;
+  }
+
+  h2 {
+    font-size: 22px;
+  }
+
+  .separater {
+    width: 3px;
+  }
+
+  .nameAndToDo {
+    gap: 64px;
+  }
+
+  .row-grid {
+    gap: 22px;
+    max-width: 448px;
+  }
+
+  .row {
+    gap: 26px;
+    max-height: 134px;
+  }
+
+  .item1 {
+    max-width: 211px;
+    gap: 14px;
+  }
+
+  .img1 {
+    width: 55px;
+  }
+
+  .nummber {
+    font-size: 51px;
+  }
+
+  .To-do {
+    font-size: 16px;
+    width: 64px;
+  }
+
+  .item2 {
+    max-width: 448px;
+    gap: 14px;
+    padding: 0 38px;
+  }
+
+  .deadline {
+    gap: 10px;
+  }
+
+  .p-strong {
+    font-size: 17px;
+  }
+
+  .p-normal {
+    font-size: 13px;
+  }
+
+  .item3 {
+    max-width: 134px;
+    gap: 10px;
+  }
+
+  .greetings {
+    gap: 2px;
+  }
+
+  #greetingText,
+  #comma {
+    font-size: 38px;
+  }
+
+  .name {
+    font-size: 51px;
+  }
+
+  .circle {
+    width: 55px;
+    height: 55px;
+  }
 }
 
+@media (max-width: 1100px) {
+  .content {
+    padding: 64px 56px; /* noch stärker reduziert */
+    gap: 40px;
+    height: calc(700px - 56px);
+    max-width: calc(1345px - 164px);
+  }
 
+  .into {
+    max-height: 54px;
+    gap: 20px;
+  }
+
+  h1 {
+    font-size: 43px;
+  }
+
+  h2 {
+    font-size: 19px;
+  }
+
+  .separater {
+    width: 2.5px;
+  }
+
+  .nameAndToDo {
+    gap: 54px;
+  }
+
+  .row-grid {
+    gap: 19px;
+    max-width: 395px;
+  }
+
+  .row {
+    gap: 22px;
+    max-height: 118px;
+  }
+
+  .item1 {
+    max-width: 185px;
+    gap: 12px;
+  }
+
+  .img1 {
+    width: 48px;
+  }
+
+  .nummber {
+    font-size: 45px;
+  }
+
+  .To-do {
+    font-size: 14px;
+    width: 56px;
+  }
+
+  .item2 {
+    max-width: 395px;
+    gap: 12px;
+    padding: 0 30px;
+  }
+
+  .deadline {
+    gap: 8px;
+  }
+
+  .p-strong {
+    font-size: 15px;
+  }
+
+  .p-normal {
+    font-size: 12px;
+  }
+
+  .item3 {
+    max-width: 117px;
+    gap: 8px;
+  }
+
+  .greetings {
+    gap: 1.5px;
+  }
+
+  #greetingText,
+  #comma {
+    font-size: 33px;
+  }
+
+  .name {
+    font-size: 45px;
+  }
+
+  .circle {
+    width: 48px;
+    height: 48px;
+  }
+}
 
 
