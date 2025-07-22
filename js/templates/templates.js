@@ -137,7 +137,7 @@ function taskCardTemplate(task) {
 function noTaskCardTemplate(columnName) {
     return `
         <div class="no-task-item flexR">
-            <p>No Tasks ${columnName}</p>
+            <p>No tasks ${columnName}</p>
         </div>`;
 }
 
@@ -157,8 +157,9 @@ function extraCountSpanTemplate(count) {
 }
 
 function contactIconSpanTemplate(name) {
+    const color = getContactColor(name);
     return `
-    <span class="contact-icon flexR" data-name="${name}" style="background-color: ${getRandomColor(name)};">${contactIconSpan(name)}</span>`;
+    <span class="contact-icon flexR" data-name="${name}" style="background-color: ${color};">${contactIconSpan(name)}</span>`;
 }
 
 
@@ -335,10 +336,11 @@ function editTaskOverlayTemplate(task) {
 }
 
 function assigneeOptionTemplate(contact) {
+    const color = getContactColor(contact.name);
     return`
                     <div class="assignee-option width-100 flexR space-between" onclick="selectAssignee(this)">
                         <div class="gap-16 flexR">
-                            <span class="contact-icon flexR" style="background-color: ${contact.color};">${contactIconSpan(contact.name)}</span> 
+                            <span class="contact-icon flexR" style="background-color: ${color};">${contactIconSpan(contact.name)}</span> 
                             <span class="contact-name">${contact.name}</span>
                         </div>
                         ${CHECKBOX_SVG}

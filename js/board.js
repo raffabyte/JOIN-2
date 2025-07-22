@@ -103,15 +103,29 @@ function groupAndSortTasks(tasks) {
 }
 
 
-function updateColumns(tasks) {
-    const tasksByColumn = groupAndSortTasks(tasks);
-    ['todoColumn', 'inProgressColumn', 'awaitFeedbackColumn', 'doneColumn'].forEach((col, i) => {
-        const column = document.getElementById(col);
-        const dragAreaId = ['toDoDragArea', 'inProgressDragArea', 'awaitingFeedbackDragArea', 'doneDragArea'][i];
-        column.innerHTML = dragAreaTemplate(dragAreaId);
-        setupColumnEventHandlers(column, col, dragAreaId);
-        tasksByColumn[col].forEach(task => document.getElementById(dragAreaId).insertAdjacentHTML('beforebegin', taskCardTemplate(task)));
+function generateColumnData(tasksByColumn) {
+    const columns = ['todoColumn', 'inProgressColumn', 'awaitFeedbackColumn', 'doneColumn'];
+    const dragAreas = ['toDoDragArea', 'inProgressDragArea', 'awaitingFeedbackDragArea', 'doneDragArea'];
+    
+    return columns.map((col, i) => {
+        const tasksHTML = tasksByColumn[col].map(taskCardTemplate).join('');
+        return { col, dragAreaId: dragAreas[i], tasksHTML };
     });
+}
+
+function renderColumns(columnData) {
+    columnData.forEach(({ col, dragAreaId, tasksHTML }) => {
+        const column = document.getElementById(col);
+        column.innerHTML = dragAreaTemplate(dragAreaId) + tasksHTML;
+        setupColumnEventHandlers(column, col, dragAreaId);
+    });
+}
+
+async function updateColumns(tasks) {
+    const tasksByColumn = groupAndSortTasks(tasks);
+    await loadAllContactColors();
+    const columnData = generateColumnData(tasksByColumn);
+    renderColumns(columnData);
 }
 
 
@@ -125,18 +139,26 @@ function checkEmptyColumn() {
     });
 }
 
-function updateBoard() {
-    fetch(TASKS_BASE_URL)
-        .then(response => response.json())
-        .then(data => {
-            const tasks = Object.entries(data || {}).map(([firebaseKey, task]) => ({
-                ...task,
-                id: firebaseKey
-            }));
+async function fetchBoardData() {
+    const [tasksResponse] = await Promise.all([
+        fetch(TASKS_BASE_URL),
+        loadAllContactColors()
+    ]);
+    
+    return Object.entries((await tasksResponse.json()) || {}).map(([firebaseKey, task]) => ({
+        ...task,
+        id: firebaseKey
+    }));
+}
 
-            updateColumns(tasks);
-            checkEmptyColumn();
-        });
+async function updateBoard() {
+    try {
+        const tasks = await fetchBoardData();
+        await updateColumns(tasks);
+        checkEmptyColumn();
+    } catch (error) {
+        console.error('Error updating board:', error);
+    }
 }
 
 
@@ -166,7 +188,34 @@ function addTask(event, columnId) {
 }
 
 
-/* Task-Design in Board functions */
+/* Tasks-Design in Board functions */
+let contactColorMap = new Map();
+
+async function loadAllContactColors() {
+    const response = await fetch(`https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/users/${USERKEY}/contacts.json`);
+    const result = await response.json();
+    
+    // Erstelle Color Map für schnellen Zugriff
+    contactColorMap.clear();
+    Object.values(result || {}).forEach(contact => {
+        if (contact.name && contact.color) {
+            contactColorMap.set(contact.name, contact.color);
+        }
+    });
+    
+    return result;
+}
+
+function getContactColor(name) {
+    if (!name) return 'transparent';
+    return contactColorMap.get(name) || 'transparent';
+}
+
+async function getContactByName(name) {
+    const contactsCache = await loadAllContactColors();
+    return Object.values(contactsCache || {}).find(contact => contact.name === name) || null;
+}
+
 
 function renderMembers(task) {
     const filteredAssignees = Array.isArray(task.assignee) ? task.assignee.filter(name => name && name.trim()) : '';
@@ -179,8 +228,10 @@ function renderMembers(task) {
 
 
 function renderMembersWithName(task) {
-    return Array.isArray(task.assignee) ?
-        task.assignee.filter(name => name && name.trim()).map(name => `${memberWithNameTemplate(name)}`).join('') : '';
+    if (!Array.isArray(task.assignee)) return '';
+    const filteredAssignees = task.assignee.filter(name => name && name.trim());
+    const results = filteredAssignees.map(name => memberWithNameTemplate(name));
+    return results.join('');
 }
 
 
@@ -257,12 +308,9 @@ function startDragging(event, id) {
 
 
 function stopDragging() {
-    if (currentDraggedElement) {
-        const element = document.getElementById(currentDraggedElement);
-        if (element) {
-            element.classList.remove('dragging');
-        }
-    }
+    const element = document.getElementById(currentDraggedElement);
+
+    element.classList.remove('dragging');
 }
 
 

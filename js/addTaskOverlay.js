@@ -56,20 +56,26 @@ function addTaskOverlay(columnId) {
     }, 10);
 }
 
+async function fetchContactsData() {
+    const response = await fetch(`https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/users/${USERKEY}/contacts.json`);
+    const data = await response.json();
+    await loadAllContactColors();
+    return Object.entries(data || {}).filter(([,contact]) => contact?.name);
+}
+
+function renderContactOptions(contactEntries) {
+    const assigneeOptions = document.getElementById('assigneeOptions');
+    if (assigneeOptions) {
+        const contactTemplates = contactEntries.map(([,contact]) => assigneeOptionTemplate(contact));
+        assigneeOptions.innerHTML = contactTemplates.join('');
+        setTimeout(() => markPreselectedAssignees(), 100);
+    }
+}
+
 async function loadAndRenderContacts() {
     try {
-        const response = await fetch(`https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/users/${USERKEY}/contacts.json`);
-        const data = await response.json();
-        const assigneeOptions = document.getElementById('assigneeOptions');
-        
-        if (data && assigneeOptions) {
-            assigneeOptions.innerHTML = Object.entries(data).filter(([,contact]) => contact?.name).map(([,contact]) => assigneeOptionTemplate(contact)).join('');
-            
-            // Nach dem Laden der Kontakte, bereits ausgewählte markieren
-            setTimeout(() => {
-                markPreselectedAssignees();
-            }, 100);
-        }
+        const contactEntries = await fetchContactsData();
+        renderContactOptions(contactEntries);
     } catch (error) {
         console.error('Error loading contacts:', error);
     }
