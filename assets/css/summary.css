@@ -365,9 +365,9 @@ font-weight: 400;
   }
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 1099px) {
   .content {
-    padding: 64px 56px; /* noch stärker reduziert */
+    padding: 54px 48px;
     gap: 40px;
     height: calc(700px - 56px);
     max-width: calc(1345px - 164px);

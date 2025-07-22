@@ -28,6 +28,7 @@ header {
     width: 100%;
     max-width: calc(1920px - 232px);
     padding: 20px 40px 20px 116px;
+    height: 96px;
 }
 
 
@@ -242,6 +243,207 @@ span {
 
 .hidden-userinfo {
     display: none !important;
+}
+
+
+
+@media (max-width: 1399px) {
+    body {
+        padding-left: 186px;
+    }
+   nav {
+    width: 186px; /* 232px → -20% */
+  }
+
+  .navContent {
+    padding: 51px 0; /* 64px → -20% */
+  }
+
+  .headerContent {
+    padding: 16px 32px 16px 93px; /* 20px 40px 20px 116px → -20% */
+    height: 77px;
+  }
+
+  header h3 {
+    font-size: 16px; /* 20px → -20% */
+  }
+
+  .help {
+    width: 26px;
+    height: 26px; /* 32px → -20% */
+  }
+
+  .menu {
+    gap: 12px; /* 15px → -20% */
+  }
+
+  #menu {
+    width: 120px; /* 150px → -20% */
+    height: 126px; /* 158px → -20% */
+    padding: 8px; /* 10px → -20% */
+    top: 105%; /* 131% ist zu groß auf kleinen Viewports – angepasst */
+    transform: translateX(13%);
+  }
+
+  #menu a {
+    padding: 6px 0 6px 13px; /* 8px → -20% */
+    font-size: 13px; /* 16px → -20% */
+  }
+
+  .userInfo {
+    gap: 13px;
+  }
+
+  .nav-menu-top,
+  .login-menu {
+    gap: 102px; /* 128px → -20% */
+  }
+
+  .join {
+    width: 80px; /* 100px → -20% */
+  }
+
+  .login-link,
+  .menuOption {
+    gap: 6px;
+    padding: 6px 45px; /* 8px 56px → -20% */
+  }
+
+  .icon {
+    width: 24px;
+    height: 24px; /* 30px → -20% */
+  }
+
+  .menuOption p {
+    font-size: 13px; /* 16px → -20% */
+  }
+
+  .initials-button {
+    width: 45px;
+    height: 45px; /* 56px → -20% */
+  }
+
+  .initials-button img {
+    width: 45px;
+    height: 45px;
+  }
+
+  .initials-text {
+    font-size: 16px; /* 20px → -20% */
+  }
+
+  span {
+    font-size: 11px; /* 14px → -20% */
+  }
+
+  .legalLinks a {
+    font-size: 11px;
+    padding: 6px; /* 8px → -20% */
+  }
+
+  .legalLinks {
+    gap: 3px;
+  }
+}
+
+@media (max-width: 1099px) {
+  body {
+    padding-left: 167px; /* 186px -10% */
+  }
+
+  nav {
+    width: 167px; /* 186px -10% */
+  }
+
+  .navContent {
+    padding: 46px 0; /* 51px -10% */
+  }
+
+  .headerContent {
+    padding: 14px 29px 14px 84px; /* 16 / 32 / 93 -10% */
+    height: 67px;
+  }
+
+  header h3 {
+    font-size: 14.4px; /* 16px -10% */
+  }
+
+  .help {
+    width: 23px;
+    height: 23px; /* 26px -10% */
+  }
+
+  .menu {
+    gap: 11px; /* 12px -10% */
+  }
+
+  #menu {
+    width: 108px; /* 120px -10% */
+    height: 113px; /* 126px -10% */
+    padding: 7px; /* 8px -10% */
+    top: 95%;
+    transform: translateX(12%);
+  }
+
+  #menu a {
+    padding: 5px 0 5px 11px;
+    font-size: 11.7px; /* 13px -10% */
+  }
+
+  .userInfo {
+    gap: 11px; /* 13px -10% */
+  }
+
+  .nav-menu-top,
+  .login-menu {
+    gap: 92px; /* 102px -10% */
+  }
+
+  .join {
+    width: 72px; /* 80px -10% */
+  }
+
+  .login-link,
+  .menuOption {
+    gap: 5px;
+    padding: 5px 40px; /* 6px 45px -10% */
+  }
+
+  .icon {
+    width: 22px;
+    height: 22px; /* 24px -10% */
+  }
+
+  .menuOption p {
+    font-size: 11.7px;
+  }
+
+  .initials-button {
+    width: 40px;
+    height: 40px; /* 45px -10% */
+  }
+
+  .initials-button img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .initials-text {
+    font-size: 14.4px; /* 16px -10% */
+  }
+
+  span {
+    font-size: 9.9px;
+  }
+
+  .legalLinks a {
+    font-size: 9.9px;
+    padding: 5.4px;
+  }
+
+  .legalLinks {
+    gap: 2.7px;
+  }
 }
 
 @media (max-height: 860px) {
