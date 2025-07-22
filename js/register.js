@@ -85,6 +85,8 @@ async function signUp() {
     console.error(error);
     alert("Es ist ein Fehler aufgetreten.");
   }
+  console.log(password);
+  console.log(passwordStates);
 }
 
 function getTrimmedValue(id) {

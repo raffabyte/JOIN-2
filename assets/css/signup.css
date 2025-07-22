@@ -131,13 +131,13 @@ button {
   font-size: 20px;
   color: transparent;
   -webkit-text-security: disc; /* Safari/Chrome */
-  text-security: disc; /* Firefox/Edge (teilweise) */
+  -text-security: disc; /* Firefox/Edge (teilweise) */
   caret-color: black;
 }
 
 .password-field .hidden-input {
   -webkit-text-security: none !important;
-  text-security: none !important;
+  -text-security: none !important;
   font-family: monospace !important;
   color: black !important;
 }
