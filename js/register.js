@@ -1,268 +1,225 @@
 /**
  * register2.js
- * Module for handling user registration: password masking, form validation, and submission.
- * Uses global postData function loaded via remoteStorage.js script tag.
+ * Handles user registration with universal password masking via '*'.
  */
 
-/**
- * @typedef {Object} PasswordState
- * @property {string} value - The unmasked password value.
- * @property {boolean} visible - Whether the password is currently visible.
- */
-
-/** @type {Record<string, PasswordState>} */
-const passwordStates = {
-  password: { value: '', visible: false },
-  password2: { value: '', visible: false },
-};
-
-// Demo contacts to preload for a new user
-const demoContacts = [
-  { name: 'Anna Becker', email: 'anna@example.com', phone: '123456789', color: '#FF7A00' },
-  { name: 'Tom Meier',   email: 'tom@example.com',   phone: '987654321', color: '#9327FF' },
-  { name: 'Lisa Schmidt', email: 'lisa@example.com',  phone: '555123456', color: '#6E52FF' },
-  { name: 'Peter Braun',  email: 'peter@example.com', phone: '333222111', color: '#FC71FF' },
-  { name: 'Nina Keller',  email: 'nina@example.com',  phone: '444555666', color: '#FFBB2B' },
-  { name: 'Max Fischer',  email: 'max@example.com',   phone: '666777888', color: '#1FD7C1' },
-  { name: 'Julia König',  email: 'julia@example.com',  phone: '777888999', color: '#462F8A' },
-  { name: 'Leon Wagner',  email: 'leon@example.com',  phone: '111222333', color: '#FF4646' },
-  { name: 'Emma Roth',    email: 'emma@example.com',  phone: '222333444', color: '#00BEE8' },
-];
+const demoContacts = [/* ... contacts ... */];
 
 document.addEventListener('DOMContentLoaded', () => {
-  initMaskedInputs();
-  initPasswordToggles();
+  ['password','password2'].forEach(id=>{
+    const i=document.getElementById(id);
+    if(i) applyStarMaskToPassword(i);
+  });
   setupLivePasswordValidation();
   bindFormSubmit();
 });
 
 /**
- * Binds the form submit event to the signUp handler.
+ * Binds form submit to signUp.
  */
-function bindFormSubmit() {
-  const form = document.getElementById('signUpForm');
-  if (!form) return;
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    await signUp();
+function bindFormSubmit(){
+  const f=document.getElementById('signUpForm');
+  if(!f) return;
+  f.addEventListener('submit',e=>{e.preventDefault();signUp();});
+}
+
+/**
+ * Masks input with '*' and toggles visibility on click.
+ * @param {HTMLInputElement} i
+ */
+/**
+ * Masks input with '*' and toggles visibility on SVG click.
+ * @param {HTMLInputElement} i
+ */
+/**
+ * Masks input with '*' and toggles visibility on SVG or background click.
+ * @param {HTMLInputElement} i
+ */
+function applyStarMaskToPassword(i){
+  let r='', v=false;
+  i.getRealPassword = () => r;
+  i.type = 'text';
+  const w = i.closest('.password-wrapper');
+  const svg = w?.querySelector('.toggle-password');
+  // Update on input
+  ['beforeinput','input'].forEach(evt=>{
+    i.addEventListener(evt, e=>{
+      if(evt==='beforeinput') r = handlePasswordInput(e, r, i, v);
+      updatePasswordField(i, r, v);
+      updateCursorPosition(i, v);
+    });
   });
-}
-
-/**
- * Attaches input and click listeners to password fields for masking behavior.
- */
-function initMaskedInputs() {
-  Object.keys(passwordStates).forEach((id) => {
-    const input = document.getElementById(id);
-    if (!input) return;
-    input.addEventListener('input', () => handleInput(id, input));
-    input.addEventListener('click', (e) => handleToggleClick(e, id, input));
-    updateMask(id, input);
+  // Toggle on SVG click
+  if(svg) svg.addEventListener('click', e=>{
+    e.stopPropagation();
+    if(r.length){ v = !v; updatePasswordField(i, r, v); }
   });
-}
-
-/**
- * Sets up live validation for matching passwords.
- */
-function setupLivePasswordValidation() {
-  const pw1 = document.getElementById('password');
-  const pw2 = document.getElementById('password2');
-  const msg = document.getElementById('msgBox');
-  if (!pw1 || !pw2 || !msg) return;
-
-  pw2.addEventListener('input', () => {
-    const val1 = pw1.dataset.real || '';
-    const val2 = pw2.dataset.real || '';
-    const match = val1 === val2;
-    pw2.classList.toggle('input-error', !match);
-    msg.textContent = match ? '' : 'Your passwords don’t match. Please try again.';
-  });
-}
-
-/**
- * Attaches click listeners to eye icons for toggling visibility.
- */
-function initPasswordToggles() {
-  document.querySelectorAll('.toggle-password').forEach((icon) => {
-    const target = icon.dataset.target;
-    icon.addEventListener('click', () => togglePassword(target));
-  });
-}
-
-/**
- * Toggles visibility of a password input.
- * @param {string} id - The ID of the password input element.
- */
-function togglePassword(id) {
-  const state = passwordStates[id];
-  const input = document.getElementById(id);
-  if (!state || !input) return;
-  state.visible = !state.visible;
-  updateMask(id, input);
-}
-
-/**
- * Handles click inside the masked input to detect eye-icon toggles.
- * @param {MouseEvent} e
- * @param {string} id
- * @param {HTMLInputElement} input
- */
-function handleToggleClick(e, id, input) {
-  const state = passwordStates[id];
-  const rect = input.getBoundingClientRect();
-  if (e.clientX > rect.right - 40 && state.value.length > 0) {
-    state.visible = !state.visible;
-    updateMask(id, input);
-  }
-}
-
-/**
- * Updates the input display, toggles background icon, manages eye-icon visibility, and toggles actual text display.
- * @param {string} id
- * @param {HTMLInputElement} input
- */
-function updateMask(id, input) {
-  const state = passwordStates[id];
-  // Display masked or plain text
-  input.value = state.visible ? state.value : '*'.repeat(state.value.length);
-  input.dataset.real = state.value;
-
-  // Toggle lock-icon background only for password fields
-  if (input.classList.contains('lock_icon')) {
-    input.classList.toggle('no-bg-icon', state.visible);
-  }
-
-  // Toggle actual text visibility via CSS class
-  input.classList.toggle('show-password', state.visible);
-
-  // Toggle eye-icon visibility via CSS class
-  const wrapper = input.closest('.password-wrapper');
-  if (wrapper) {
-    const svg = wrapper.querySelector('.toggle-password');
-    if (svg) {
-      svg.classList.toggle('visible', state.visible);
+  // Toggle on input background click (lock icon area)
+  i.addEventListener('click', e=>{
+    if(svg && !svg.contains(e.target) && clickedToggleArea(e, i) && r.length){
+      v = !v; updatePasswordField(i, r, v);
     }
-  }
-  console.log(password);
-  console.log(passwordStates);
-}
-
-
-/**
- * Handles raw input to maintain actual password state while masking.
- * @param {string} id - The ID of the password input element.
- * @param {HTMLInputElement} input - The input element being typed into.
- */
-function handleInput(id, input) {
-  const state = passwordStates[id];
-  const newLength = input.value.length;
-  const lastChar = input.value.slice(-1);
-
-  if (newLength < state.value.length) {
-    state.value = state.value.slice(0, newLength);
-  } else {
-    state.value += lastChar;
-  }
-
-  input.dataset.real = state.value;
-  updateMask(id, input);
+  });
+  // Initialize
+  setTimeout(()=>{ r = i.value; updatePasswordField(i, r, false); }, 100);
 }
 
 /**
- * Retrieves the trimmed value of an input by ID.
- * @param {string} id
- * @returns {string}
+ * Prevents default and updates real password.
  */
-function getTrimmedValue(id) {
-  const el = document.getElementById(id);
-  return el ? el.value.trim() : '';
+function handlePasswordInput(e,r,i,v){
+  const s=i.selectionStart,E=i.selectionEnd;
+  if(e.inputType==='insertText'&&e.data) r=r.slice(0,s)+e.data+r.slice(E);
+  else if(e.inputType==='deleteContentBackward') r=r.slice(0,s-1)+r.slice(E);
+  else if(e.inputType==='deleteContentForward') r=r.slice(0,s)+r.slice(E+1);
+  e.preventDefault();return r;
 }
 
 /**
- * Retrieves the real password (unmasked) from data attribute.
- * @param {string} id
- * @returns {string}
+ * Sets field value to mask or real.
  */
-function getPassword(id) {
-  const el = document.getElementById(id);
-  return el ? el.dataset.real || '' : '';
+/**
+ * Sets field value to mask or real, toggles eye icon and CSS background.
+ * @param {HTMLInputElement} i
+ * @param {string} r
+ * @param {boolean} v
+ */
+/**
+ * Sets field value to mask or real, toggles background icon and ensures eye icon always visible for toggling.
+ * @param {HTMLInputElement} i
+ * @param {string} r
+ * @param {boolean} v
+ */
+/**
+ * Sets field value to mask or real, toggles background icon and inline SVG visibility.
+ * @param {HTMLInputElement} i
+ * @param {string} r
+ * @param {boolean} v
+ */
+function updatePasswordField(i, r, v) {
+  // Update masked or real text
+  i.value = v ? r : '*'.repeat(r.length);
+  // Swap background icon: lock when visible, eye when masked
+  i.classList.remove('lock_icon', 'visibility_icon');
+  i.classList.add(v ? 'lock_icon' : 'visibility_icon');
+  // Show inline SVG (eye) only in masked mode
+  const svg = i.closest('.password-wrapper')?.querySelector('.toggle-password');
+  if (svg) svg.classList.toggle('visible', !v);
 }
 
 /**
- * Clears any existing password mismatch error.
+ * Repositions cursor after update.
  */
-function resetPasswordError() {
-  const pw2 = document.getElementById('password2');
-  const msg = document.getElementById('msgBox');
-  if (pw2) pw2.classList.remove('input-error');
-  if (msg) msg.textContent = '';
+function updateCursorPosition(i,v){
+  requestAnimationFrame(()=>{const p=v?i.selectionStart+1:i.value.length;i.setSelectionRange(p,p);});
 }
 
 /**
- * Validates that two passwords match and shows error if not.
- * @param {string} pw1
- * @param {string} pw2
- * @returns {boolean}
+ * Detects click in toggle icon area.
  */
-function validatePasswords(pw1, pw2) {
-  if (pw1 === pw2) return true;
-  const pw2El = document.getElementById('password2');
-  const msg = document.getElementById('msgBox');
-  if (pw2El) pw2El.classList.add('input-error');
-  if (msg) msg.textContent = 'Your passwords don’t match. Please try again.';
+function clickedToggleArea(e,i){return e.clientX>i.getBoundingClientRect().right-40;}
+
+/**
+ * Validates passwords match on both fields' input.
+ */
+/**
+ * Validates password match and toggles error style on wrapper.
+ */
+/**
+ * Adds listeners to validate password match and clear errors on focus.
+ */
+/**
+ * Adds listeners to validate password match on input events and clear errors on focus.
+ */
+function setupLivePasswordValidation(){
+  const p1=document.getElementById('password'),p2=document.getElementById('password2'),m=document.getElementById('msgBox');
+  if(!p1||!p2||!m) return;
+  ['beforeinput','input'].forEach(evt=>{
+    p1.addEventListener(evt,()=>validateMatch(p1,p2,m));
+    p2.addEventListener(evt,()=>validateMatch(p1,p2,m));
+  });
+  p2.addEventListener('focus',()=>p2.classList.remove('input-error'));
+}
+
+/**
+ * Checks if passwords match and toggles error styling.
+ * @param {HTMLInputElement} p1
+ * @param {HTMLInputElement} p2
+ * @param {HTMLElement} msg
+ */
+function validateMatch(p1,p2,msg){
+  const ok=p1.getRealPassword?.()===p2.getRealPassword?.();
+  p2.classList.toggle('input-error',!ok);
+  msg.textContent=ok?'':'Your passwords don’t match. Please try again.';
+}
+
+/**
+ * Clears error and resets match state.
+ */
+function resetPasswordError(){
+  const p2=document.getElementById('password2');
+  const m=document.getElementById('msgBox');
+  if(p2) p2.classList.remove('input-error');
+  if(m) m.textContent='';
+}
+
+/**
+ * Checks passwords equal or marks error.
+ */
+function validatePasswords(pw1,pw2){
+  if(pw1===pw2) return true;
+  const p2=document.getElementById('password2');
+  const m=document.getElementById('msgBox');
+  p2?.classList.add('input-error');
+  m.textContent='Your passwords don’t match. Please try again.';
   return false;
 }
 
 /**
- * Displays a full-screen success overlay, then redirects.
+ * Shows success overlay temporarily.
  */
-function showSignUpSuccessOverlay() {
-  const overlay = document.getElementById('signUpSuccess');
-  if (!overlay) return;
-  overlay.style.display = 'flex';
-  document.body.style.overflow = 'hidden';
-  setTimeout(() => {
-    overlay.style.display = 'none';
-    document.body.style.overflow = '';
-    window.location.href = '../../assets/index/login.html';
-  }, 3000);
+function showSignUpSuccessOverlay(){
+  console.log('Overlay wird angezeigt');
+
+  const o=document.getElementById('signUpSuccess');
+  if(!o) return;
+  o.style.display='flex';document.body.style.overflow='hidden';
+  setTimeout(()=>{o.style.display='none';document.body.style.overflow='';window.location.href='../../assets/index/login.html';},3000);
 }
 
+
 /**
- * Main sign-up flow: gathers input, validates, sends data, preloads contacts.
+ * Liest den Wert eines Inputs aus, trimmt Leer­zeichen und gibt ihn zurück.
+ * @param {string} id – die ID des Input‑Elements
+ * @returns {string}
  */
-async function signUp() {
+function getTrimedValue(id) {
+  const el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
+
+
+/**
+ * Submits user and preloads contacts.
+ */
+async function signUp(){
+  console.log('signUp startet');
+
   resetPasswordError();
-  const name = getTrimmedValue('name');
-  const email = getTrimmedValue('email');
-  const password = getPassword('password');
-  const password2 = getPassword('password2');
-  const accept = document.getElementById('accept')?.checked;
-
-  if (!validatePasswords(password, password2)) return;
-  if (!accept) {
-    alert('Please accept the privacy policy.');
-    return;
-  }
-
-  try {
-    const response = await postData('users', { name, email, password });
-    const userKey = response.name;
-    await preloadContacts(userKey);
-    localStorage.setItem('loggedInUserKey', userKey);
-    showSignUpSuccessOverlay();
-  } catch (error) {
-    console.error(error);
-    alert('Es ist ein Fehler aufgetreten.');
-  }
+  const n=getTrimedValue('name');
+  const e=getTrimedValue('email');
+  const pw1=document.getElementById('password')?.getRealPassword()||'';
+  const pw2=document.getElementById('password2')?.getRealPassword()||'';
+  const ok=document.getElementById('accept')?.checked;
+  if(!validatePasswords(pw1,pw2)||!ok){if(!ok)alert('Please accept the privacy policy.');return;}  
+  try{const r=await postData('users',{name:n,email:e,password:pw1});await preloadContacts(r.name);localStorage.setItem('loggedInUserKey',r.name);showSignUpSuccessOverlay();}catch{alert('Es ist ein Fehler aufgetreten.');}
 }
 
 /**
- * Preloads demo contacts for a new user using global postData.
- * @param {string} userKey - The new user's key.
+ * Adds demo contacts under user key.
+ * @param {string} uk
  */
-async function preloadContacts(userKey) {
-  for (const contact of demoContacts) {
-    await postData(`users/${userKey}/contacts`, contact);
-  }
+async function preloadContacts(uk){
+  for(const c of demoContacts)await postData(`users/${uk}/contacts`,c);
 }
+
