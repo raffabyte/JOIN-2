@@ -19,7 +19,7 @@ body {
     background-color: #F6F7F8;
     flex: 1;
     gap: 56px;
-    height: calc(1024px - 96px);
+    height: calc(100vh - 96px);
     max-width: calc(1920px - 232px);
 }
 
@@ -49,6 +49,13 @@ h2 {
     height: 61%;
     width: 2px;
     background-color: #D1D1D1;
+    border-radius: 8px;
+}
+.separaterM {
+  display: none;
+    height: 4px;
+    width: 26px;
+    background-color: #29ABE2;
     border-radius: 8px;
 }
 .nameAndToDo {
@@ -266,6 +273,10 @@ font-weight: 400;
     height: 100%;
 }
 
+.MobileGreeting {
+  display: noen;
+}
+
 @media (max-width: 1399px) {
   .content {
     padding: 88px 77px;
@@ -374,9 +385,18 @@ font-weight: 400;
   }
 
   .into {
+    align-items: flex-start;
+    flex-direction: column;
     max-height: 54px;
-    gap: 20px;
+    gap: 16px;
+    max-height: none;
   }
+
+  .separaterM {
+  display: flex;
+  height: 2px;
+  width: 90px;
+}
 
   h1 {
     font-size: 43px;
@@ -462,6 +482,28 @@ font-weight: 400;
     width: 48px;
     height: 48px;
   }
+  
+.separater {
+  display: none;
+}
 }
 
+@media (max-width: 799px) {
+  .MobileGreeting {
+    z-index: 100;
+    display: flex;
+  position: fixed;
+  width: 100vw;
+  height: calc(100vh - 160px);
+  background-color: #F6F7F8;
+  top: 80px;
+}
+  .content {
+        padding: 54px 17px 134px 17px;
+        height: 100%;
+    }
+    .greetings {
+      display: none;
+    }
+}
 
