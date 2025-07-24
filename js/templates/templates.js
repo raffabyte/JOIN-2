@@ -40,6 +40,7 @@ function header() {
 
     return `
         <h3>Kanban Project Management Tool</h3>
+        <img class="joinM" src="../img/Capa 3.png" alt="">
         <div class="userInfo flexR gap-16 ${hideUserInfo ? 'hidden-userinfo' : ''}">
             <a href="help.html" id="helpLink" class="${hideInfoHeader ? 'hidden-userinfo' : ''}">
                 <img class="help" src="../img/SummaryUser/help.png" alt="" />
