@@ -48,6 +48,7 @@ function bindLoginHandler({ form, emailInput, passwordInput, loginButton, msgBox
   const result = await login(email, password);
 
   if (result.success) {
+    sessionStorage.setItem("showMobileGreeting", "1");
     window.location.href = "../index/summary.html";
   } else {
     showLoginError(result.error, msgBox, emailInput, passwordInput);
@@ -232,6 +233,9 @@ function enableButton(button) {
   button.disabled = false;
   button.classList.remove("loading");
 }
+
+
+
 
 // 👤 Gast-Login mit Demo-Daten
 async function startGuestSession() {

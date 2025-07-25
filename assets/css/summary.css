@@ -173,6 +173,13 @@ font-weight: 400;
     justify-content: center;
 }
 
+.greetingsMobile {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    justify-content: center;
+}
+
 #greetingText,
 #comma {
   display: inline;
@@ -274,7 +281,7 @@ font-weight: 400;
 }
 
 .MobileGreeting {
-  display: noen;
+  display: none;
 }
 
 @media (max-width: 1399px) {
@@ -497,12 +504,29 @@ font-weight: 400;
   height: calc(100vh - 160px);
   background-color: #F6F7F8;
   top: 80px;
+  opacity: 1;
+  transition: opacity 1s ease;
+}
+.MobileGreeting.fade-out {
+  opacity: 0;
+}
+.greetingsMobile {
+    display: flex
+;
+    flex-direction: column;
+    gap: 3px;
+    justify-content: center;
+    width: 100%;
+    align-items: center;
 }
   .content {
         padding: 54px 17px 134px 17px;
         height: 100%;
     }
     .greetings {
+      display: none;
+    }
+    .hidden {
       display: none;
     }
 }
