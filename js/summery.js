@@ -3,6 +3,8 @@ if (!USERKEY) {
   window.location.href = "../../index.html";
 }
 
+mobileOverlayFadeOut()
+
 window.addEventListener("DOMContentLoaded", async () => {
   addHeader();
   linkesNavMenuVersion();
@@ -10,6 +12,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   await setUserInitials();
   await loadAndRenderTaskCounts()
   await init();
+  
 });
 
 /**
@@ -195,4 +198,23 @@ function renderNextDeadline(dates) {
   });
 
   elem.innerText = formatted;
+}
+
+function mobileOverlayFadeOut() {
+  const overlay = document.getElementById("MobileGreeting");
+  const shouldShow = sessionStorage.getItem("showMobileGreeting") === "1";
+  if (shouldShow) {
+    overlay.classList.remove("hidden")
+
+    setTimeout(() => {
+    overlay.classList.add("fade-out");
+
+    setTimeout(() => {
+      overlay.classList.add("hidden");
+      sessionStorage.removeItem("showMobileGreeting");
+    }, 1000);
+  }, 1000);
+  }
+  else {
+  }
 }

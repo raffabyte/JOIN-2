@@ -646,6 +646,21 @@ form {
     font-weight: 400;
 }
 
+.mobileAddNew {
+    display: none;
+    background-color: transparent;
+}
+
+.mobileCircle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 56px;
+    width: 56px;
+    border-radius: 50px;
+    background-color: #2a3647;
+     
+}
 
 @media (max-width: 1399px) {
     /* 20% verkleinerte Version aller Maße aus dem Ursprungs-CSS */
@@ -1173,4 +1188,63 @@ form {
     font-size: 14px;
 }
 
+}
+
+@media (max-width: 799px) {
+        .contactsContainer {
+        display: none;
+    }
+    .contacsList {
+        width: 100%;
+        height: calc(100vh - 160px);
+    }
+       .AddNew {
+        display: none;
+    }
+    .mobileAddNew {
+    display: flex;
+    position: fixed;
+    bottom: 100px;
+    right: 40px;
+}
+.overlayContent {
+    flex-direction: column;
+    height: calc(100vh - 180px);
+    width: 100%;
+    padding: 0 16px;
+}
+.leftSide {
+    width: 100%;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 30px;
+}
+.rightSide {
+    flex-direction: column;
+    align-items: center;
+    border-top-right-radius: 0;
+    border-bottom-left-radius: 30px;
+    width: 100%;
+    padding: 0;
+}
+.imgFlex {
+    display: none
+}
+.closeWrapper {
+    display: none
+}
+.cancel-button {
+    display: none;
+}
+.pbContainer {
+    position: relative; 
+}
+.pb {
+    position: absolute;
+}
+.flexCC {
+    padding-top: 60px;
+}
+.login-buttons {
+    align-self: center;
+}
 }

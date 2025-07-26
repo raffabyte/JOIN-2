@@ -457,6 +457,7 @@ span {
   .nav-menu-top {
     height: 100%;
   }
+      
   .menu {
     display: flex;
     flex-direction: row;
