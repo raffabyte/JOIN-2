@@ -1,7 +1,19 @@
+/* --- In standard-css.css oder globalem Utility-File --- */
+.flexR {
+  display: flex;
+  flex-direction: row;
+}
+.flexC {
+  display: flex;
+  flex-direction: column;
+}
+.width-100 {
+  width: 100%;
+}
+
 .add-task-content {
   align-items: flex-start;
   padding: 110px 5vw;
-  width: 100%;
   background-color: #f6f7f8;
   box-sizing: border-box;
 }
@@ -13,12 +25,12 @@ h1 {
 }
 
 .task-form {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 980px;
-  gap: 32px;
-  box-sizing: border-box;
+  gap: 48px;
+  align-items: stretch;
+}
+
+.form-group {
+  align-items: flex-start; 
 }
 
 .form-columns {
@@ -27,8 +39,6 @@ h1 {
 }
 
 .form-column {
-  display: flex;
-  flex-direction: column;
   gap: 24px;
   flex: 1;
 }
@@ -103,6 +113,16 @@ input.input-error,
   width: 100%;
 }
 
+.date-picker,
+.field-wrapper,
+.dropdown,
+.dropdown-input-wrapper,
+input.input-error,
+.dropdown-input-wrapper.input-error {
+  height: 51px;
+}
+
+
 .date-picker {
   position: relative;
   width: 100%;
@@ -110,7 +130,6 @@ input.input-error,
 }
 
 #due-date {
-  width: 100%;
   height: 100%;
   padding-right: 44px;
   box-sizing: border-box;
@@ -118,8 +137,9 @@ input.input-error,
 
 .calendar-btn {
   position: absolute;
-  top: 50%;
+  top: 67%;
   right: 16px;
+  height: 100%;
   transform: translateY(-50%);
   background: transparent;
   border: none;
@@ -141,7 +161,6 @@ input.input-error,
 }
 
 .priority-options {
-  display: flex;
   gap: 16px;
   height: 51px;
   padding-top: 12px;
@@ -462,4 +481,26 @@ input[type="date"].filled:not(.input-error),
 .input-error {
   border: 1px solid #ff3d00 !important;
   border-radius: 8px;
+}
+
+@media (max-width: 799px) {
+  nav .navContent {
+    flex-direction: row;       /* statt column */
+    justify-content: space-around; /* oder space-between, ganz nach Geschmack */
+    align-items: center;       /* damit die Icons schön in der Mitte sitzen */
+  }
+}
+
+@media (max-width: 768px) {
+  .form-columns {
+    flex-direction: column;      /* Forms stapeln sich übereinander */
+  }
+}
+
+@media (max-width: 318px) {
+  nav .navContent {
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+  }
 }

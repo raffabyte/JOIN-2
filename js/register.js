@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
   bindFormSubmit();
 });
 
+
 /**
  * Binds form submit to signUp.
  */
@@ -23,46 +24,62 @@ function bindFormSubmit(){
   f.addEventListener('submit',e=>{e.preventDefault();signUp();});
 }
 
+
 /**
- * Masks input with '*' and toggles visibility on click.
+ * Init password field with masking and toggle listeners
  * @param {HTMLInputElement} i
  */
-/**
- * Masks input with '*' and toggles visibility on SVG click.
- * @param {HTMLInputElement} i
- */
-/**
- * Masks input with '*' and toggles visibility on SVG or background click.
- * @param {HTMLInputElement} i
- */
-function applyStarMaskToPassword(i){
-  let r='', v=false;
+function applyStarMaskToPassword(i) {
   i.getRealPassword = () => r;
   i.type = 'text';
   const w = i.closest('.password-wrapper');
   const svg = w?.querySelector('.toggle-password');
-  // Update on input
-  ['beforeinput','input'].forEach(evt=>{
-    i.addEventListener(evt, e=>{
-      if(evt==='beforeinput') r = handlePasswordInput(e, r, i, v);
-      updatePasswordField(i, r, v);
-      updateCursorPosition(i, v);
+  let r = '', v = false;
+
+  bindPasswordInputEvents(i, () => r, (val) => r = val, () => v, (val) => v = val);
+  bindPasswordToggleEvents(i, svg, () => r, () => v, (val) => v = val);
+  setTimeout(() => {
+    r = i.value;
+    updatePasswordField(i, r, false);
+  }, 100);
+}
+
+
+/**
+ * Handles input & beforeinput events for password masking.
+ */
+function bindPasswordInputEvents(i, getR, setR, getV, setV) {
+  ['beforeinput', 'input'].forEach(evt => {
+    i.addEventListener(evt, e => {
+      if (evt === 'beforeinput') setR(handlePasswordInput(e, getR(), i, getV()));
+      updatePasswordField(i, getR(), getV());
+      updateCursorPosition(i, getV());
     });
   });
-  // Toggle on SVG click
-  if(svg) svg.addEventListener('click', e=>{
-    e.stopPropagation();
-    if(r.length){ v = !v; updatePasswordField(i, r, v); }
-  });
-  // Toggle on input background click (lock icon area)
-  i.addEventListener('click', e=>{
-    if(svg && !svg.contains(e.target) && clickedToggleArea(e, i) && r.length){
-      v = !v; updatePasswordField(i, r, v);
+}
+
+
+/**
+ * Handles click events on SVG and lock icon area.
+ */
+function bindPasswordToggleEvents(i, svg, getR, getV, setV) {
+  if (svg) {
+    svg.addEventListener('click', e => {
+      e.stopPropagation();
+      if (getR().length) {
+        setV(!getV());
+        updatePasswordField(i, getR(), getV());
+      }
+    });
+  }
+  i.addEventListener('click', e => {
+    if (svg && !svg.contains(e.target) && clickedToggleArea(e, i) && getR().length) {
+      setV(!getV());
+      updatePasswordField(i, getR(), getV());
     }
   });
-  // Initialize
-  setTimeout(()=>{ r = i.value; updatePasswordField(i, r, false); }, 100);
 }
+
 
 /**
  * Prevents default and updates real password.
@@ -74,6 +91,7 @@ function handlePasswordInput(e,r,i,v){
   else if(e.inputType==='deleteContentForward') r=r.slice(0,s)+r.slice(E+1);
   e.preventDefault();return r;
 }
+
 
 /**
  * Sets field value to mask or real.
@@ -107,6 +125,7 @@ function updatePasswordField(i, r, v) {
   if (svg) svg.classList.toggle('visible', !v);
 }
 
+
 /**
  * Repositions cursor after update.
  */
@@ -114,20 +133,13 @@ function updateCursorPosition(i,v){
   requestAnimationFrame(()=>{const p=v?i.selectionStart+1:i.value.length;i.setSelectionRange(p,p);});
 }
 
+
 /**
  * Detects click in toggle icon area.
  */
 function clickedToggleArea(e,i){return e.clientX>i.getBoundingClientRect().right-40;}
 
-/**
- * Validates passwords match on both fields' input.
- */
-/**
- * Validates password match and toggles error style on wrapper.
- */
-/**
- * Adds listeners to validate password match and clear errors on focus.
- */
+
 /**
  * Adds listeners to validate password match on input events and clear errors on focus.
  */
@@ -141,6 +153,7 @@ function setupLivePasswordValidation(){
   p2.addEventListener('focus',()=>p2.classList.remove('input-error'));
 }
 
+
 /**
  * Checks if passwords match and toggles error styling.
  * @param {HTMLInputElement} p1
@@ -153,6 +166,7 @@ function validateMatch(p1,p2,msg){
   msg.textContent=ok?'':'Your passwords don’t match. Please try again.';
 }
 
+
 /**
  * Clears error and resets match state.
  */
@@ -162,6 +176,7 @@ function resetPasswordError(){
   if(p2) p2.classList.remove('input-error');
   if(m) m.textContent='';
 }
+
 
 /**
  * Checks passwords equal or marks error.
@@ -175,16 +190,22 @@ function validatePasswords(pw1,pw2){
   return false;
 }
 
+
 /**
  * Shows success overlay temporarily.
  */
-function showSignUpSuccessOverlay(){
-  console.log('Overlay wird angezeigt');
+function showSignUpSuccessOverlay() {
+  const o = document.getElementById('signUpSuccess');
+  if (!o) return;
 
-  const o=document.getElementById('signUpSuccess');
-  if(!o) return;
-  o.style.display='flex';document.body.style.overflow='hidden';
-  setTimeout(()=>{o.style.display='none';document.body.style.overflow='';window.location.href='../../assets/index/login.html';},3000);
+  o.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+
+  setTimeout(() => {
+    o.style.display = 'none';
+    document.body.style.overflow = '';
+    window.location.href = '../../assets/index/login.html';
+  }, 3000);
 }
 
 
@@ -214,6 +235,7 @@ async function signUp(){
   if(!validatePasswords(pw1,pw2)||!ok){if(!ok)alert('Please accept the privacy policy.');return;}  
   try{const r=await postData('users',{name:n,email:e,password:pw1});await preloadContacts(r.name);localStorage.setItem('loggedInUserKey',r.name);showSignUpSuccessOverlay();}catch{alert('Es ist ein Fehler aufgetreten.');}
 }
+
 
 /**
  * Adds demo contacts under user key.

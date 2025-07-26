@@ -171,16 +171,23 @@ function initPriorityButtons() {
   });
 }
 
+
 function initDatePicker() {
   const dateInput = document.getElementById("due-date");
   const calendarToggle = document.getElementById("calendar-toggle");
   if (!dateInput || !calendarToggle) return;
 
   calendarToggle.addEventListener("click", () => {
-    dateInput.focus();
-    dateInput.showPicker?.();
+    // Chromium (Chrome, Edge): show native picker
+    if (typeof dateInput.showPicker === "function") {
+      dateInput.showPicker();
+    } else {
+      // Fallback für Firefox & Safari: einfach Fokus auf Feld setzen
+      dateInput.focus();
+    }
   });
 }
+
 
 function initFormValidation() {
   const form = document.querySelector(".task-form");

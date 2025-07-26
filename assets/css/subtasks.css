@@ -1,22 +1,31 @@
+/* --- In standard-css.css oder globalem Utility-File --- */
+.flexR {
+  display: flex;
+  flex-direction: row;
+}
+.flexC {
+  display: flex;
+  flex-direction: column;
+}
+.width-100 {
+  width: 100%;
+}
+
 .subtask-list {
   list-style: none;
   padding: 0;
-  display: flex;
-  flex-direction: column;
   gap: 8px;
-  width: 100%;
   margin-top: 8px;
   font-size: 16px;
 }
 
 .subtask-list li {
-  display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: 16px;
   transition: background-color 0.2s ease;
   border-radius: 10px;
-  padding: 0px 12px 0px 22px;
+  padding: 0 12px 0 22px;
   height: 32px;
 }
 
