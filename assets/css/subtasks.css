@@ -13,7 +13,7 @@
 
 .subtask-list {
   list-style: none;
-  padding: 0;
+  align-items: flex-start;
   gap: 8px;
   margin-top: 8px;
   font-size: 16px;
@@ -27,6 +27,7 @@
   border-radius: 10px;
   padding: 0 12px 0 22px;
   height: 32px;
+  width: 100%;
 }
 
 .subtask-actions {
@@ -126,6 +127,7 @@
   position: absolute;
   right: 12px;
   top: 50%;
+  margin-right: 12px;
   transform: translateY(-50%);
   background: none;
   border: none;
