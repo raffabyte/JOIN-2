@@ -619,12 +619,12 @@ form {
     z-index: 9999;
     pointer-events: none; /* optional: damit es nichts blockiert */
 
-     transform: translateX(100vw); /* Start außerhalb des Bildschirms */
+     transform: translateY(100vh); /* Start außerhalb des Bildschirms */
   transition: transform 0.4s ease;
 }
 
 .success-overlay.show {
-  transform: translateX(0); /* Fährt rein */
+  transform: translateY(0); /* Fährt rein */
 }
 
 .succesDiv {
@@ -1302,6 +1302,7 @@ form {
     height: calc(100vh - 180px);
     width: 100%;
     padding: 0 16px;
+    transform: translateY(100vh);
 }
 .leftSide {
     width: 100%;
@@ -1370,4 +1371,20 @@ form {
     height: 32px;
     width: 32px;
 }
+.BigContactCircle {
+            position: absolute;
+
+}
+    .contectName {
+        padding-left: 160px;
+    }
+    .ownBigContactCircle {
+        position: absolute;
+    }
+    .pbContainer {
+        padding-bottom: 30px;
+    }
+.succesDiv {
+        left: 200px;
+
 }
