@@ -165,6 +165,7 @@ function confirmSubtaskEdit(btn) {
   `;
 }
 
+
 /**
  * Cancels editing and restores the original subtask text.
  * @param {HTMLElement} btn - The cancel button element.

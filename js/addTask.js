@@ -39,6 +39,7 @@ async function loadAndRenderContacts() {
   setupDropdown("assigned-to-input", "assigned-to-options", users, true);
 }
 
+
 /**
  * Renders and manages a dropdown (multi- or single-select).
  * Includes debug logs on each render.
@@ -81,13 +82,6 @@ function setupDropdown(inputId, optionsId, options, isMultiSelect) {
     if (!isOpen) render();
   });
 }
-
-
-
-
-
-
-
 
 
 /**

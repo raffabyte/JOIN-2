@@ -329,7 +329,6 @@ background: white;
   height: 12px;
 }
 
-/* Checkbox-Liste */
 .checkbox-option {
   display: flex;
   align-items: center;
@@ -339,7 +338,6 @@ background: white;
   cursor: pointer;
 }
 
-/* Visuelle Abzeichen */
 .initial-badge {
   background-color: #29ABE2;
   color: white;
@@ -354,7 +352,6 @@ background: white;
   height: 24px;
 }
 
-/* Checkbox Styling */
 .contact-checkbox {
   appearance: none !important;
   -webkit-appearance: none !important;
