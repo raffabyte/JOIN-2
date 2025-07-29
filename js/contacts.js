@@ -90,6 +90,7 @@ function hideOverlay(overlay) {
     overlay.classList.remove("show");
     setTimeout(() => overlay.classList.add("d_none"), 400);
   }, 100);
+  editingOwnContact = false;
 }
 
 /**
@@ -269,6 +270,7 @@ function createOwnContactCard(contact) {
  */
 function attachClickHandler(card, contact) {
   card.addEventListener("click", () => {
+    editingOwnContact = true
     deactivateAllContactCards();
     activateContactCard(card);
     document.getElementById("contactsDetails").classList.add("showDetails");
@@ -287,6 +289,19 @@ function showOwnContactCardDetails(contact) {
   document.getElementById("ownEditButton").addEventListener("click", () => {
     editOwnContact(contact);
   });
+
+  if (window.innerWidth < 799) {
+    showOwnContactDetailsMobile()
+  } 
+}
+
+function showOwnContactDetailsMobile() {
+  const container = document.querySelector(".contactsContainer");
+  container.style.display = "flex"; // Sichtbar machen
+
+  const btn = document.getElementById("mobileAddBtn");
+  btn.setAttribute("onclick", "toggleMobileMenu()");
+  document.getElementById("mobileBtnIcon").src = "../img/more_vert.png"; // ← Dein Zurück-Icon
 }
 
 /**
@@ -358,10 +373,42 @@ function createContactCard(key, contact) {
     activeContactKey = key;
     deactivateAllContactCards();
     activateContactCard(card);
-    showcontactCardDetails(key);
+    if (window.innerWidth < 799) {
+    showContactDetailsMobile(key); // 👉 Funktion für Mobile
+  } else {
+    showcontactCardDetails(key); // 👉 Funktion für Desktop
+  }
   });
 
   return card;
+}
+
+function showContactDetailsMobile(key) {
+  const container = document.querySelector(".contactsContainer");
+  container.style.display = "flex"; // Sichtbar machen
+
+  // Optional: Inhalt aktualisieren
+  showcontactCardDetails(key);
+
+  const btn = document.getElementById("mobileAddBtn");
+  btn.setAttribute("onclick", "toggleMobileMenu()");
+  document.getElementById("mobileBtnIcon").src = "../img/more_vert.png"; // ← Dein Zurück-Icon
+}
+
+function toggleMobileMenu() {
+  const menu = document.getElementById("mobileMenu");
+  menu.classList.toggle("open");
+}
+
+function closeMobileDetails() {
+  const container = document.querySelector(".contactsContainer");
+  container.style.display = "none"; // Sichtbar machen
+
+  deactivateAllContactCards();
+
+  const btn = document.getElementById("mobileAddBtn");
+  btn.setAttribute("onclick", "openNewContactForm()");
+  document.getElementById("mobileBtnIcon").src = "../img/person_add.png";
 }
 
 /**
@@ -502,3 +549,25 @@ async function loadDataAfterSave() {
   renderContacts(newContacts);
 }
 
+function handleEditMobile() {
+  if (editingOwnContact === true) {
+    loadData(`users/${USERKEY}`).then((ownContact) => {
+      editOwnContact(ownContact);
+    });
+    toggleMobileMenu(); // Menü schließen
+    return;
+  }
+
+  if (activeContactKey) {
+    editContact(activeContactKey);
+    toggleMobileMenu(); // Menü schließen
+  }
+}
+
+function handleDeleteMobile() {
+  if (activeContactKey) {
+    deleteContact(activeContactKey);
+    toggleMobileMenu(); // Menü schließen
+  }
+  closeMobileDetails()
+}

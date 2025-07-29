@@ -662,6 +662,27 @@ form {
      
 }
 
+.closeOverlayMobile {
+    display: none
+}
+
+.separaterMobile {
+    display: none;
+}
+.intoWrapper {
+    display: flex;
+    justify-content: space-between;
+}
+.intoWrapper img {
+    display: none;
+    height: 32px;
+    width: 32px;
+}
+
+ .mobileMenuWrapper {
+  display: none;
+}
+
 @media (max-width: 1399px) {
     /* 20% verkleinerte Version aller Maße aus dem Ursprungs-CSS */
 
@@ -1191,8 +1212,27 @@ form {
 }
 
 @media (max-width: 799px) {
-        .contactsContainer {
+    .displayFlex1 {
         display: none;
+    }
+        .separater {
+        width: 2.8px;
+        display: none;
+    }
+    .into {
+        flex-direction: column;
+        gap: 16px;
+        align-items: flex-start;
+        max-height: 100%;
+    }
+        .contactsContainer {
+            display: none;
+        position: absolute;
+        padding: 0;
+        background-color: #F6F7F8;
+        height: calc(100% - 160px);
+        width: 100%;
+        padding: 16px;
     }
     .contacsList {
         width: 100%;
@@ -1201,11 +1241,61 @@ form {
        .AddNew {
         display: none;
     }
+    .mobileMenuWrapper {
+        display: flex;
+  position: fixed;
+  bottom: 100px;
+  right: 40px;
+}
     .mobileAddNew {
     display: flex;
-    position: fixed;
     bottom: 100px;
     right: 40px;
+}
+.mobileMenu {
+  position: absolute;
+  bottom: 100px;
+  right: -300px; /* Außerhalb des Bildschirms */
+  width: 116px;
+  height: 100px;
+  background-color: white;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
+  transition: right 0.3s ease-in-out;
+  z-index: 999;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  border-bottom-left-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.mobileEditContainer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    padding: 8px;
+}
+.mobileEditContainer img {
+    height: 24px;
+    width: 24px;
+}
+
+.mobileDeleteContainer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    padding: 8px;
+}
+.mobileDeleteContainer img{
+    height: 24px;
+    width: 24px;
+}
+
+.mobileMenu.open {
+  right: 0; /* Rein ins Bild */
 }
 .overlayContent {
     flex-direction: column;
@@ -1246,5 +1336,38 @@ form {
 }
 .login-buttons {
     align-self: center;
+}
+.vektorFlex {
+    display: flex
+;
+    width: 100%;
+    margin-bottom: 100px;
+}
+.closeOverlayMobile {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    margin-top: 16px;
+    justify-content: flex-end;
+}
+.closeOverlayMobile img {
+    display: flex;
+    width: 24px;
+    height: 24px;
+}
+    .separaterMobile {
+        display: flex;
+        height: 3px;
+        background-color: #29ABE2;
+        width: 100px;
+        border-radius: 8px;
+    }
+    .contactsDetailsContainer {
+    position: static;
+}
+.intoWrapper img {
+    display: flex;
+    height: 32px;
+    width: 32px;
 }
 }

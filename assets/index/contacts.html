@@ -42,10 +42,14 @@
           <div id="contactCardsContainer" class="contactCardsContainer"></div>
         </div>
         <div class="contactsContainer">
+          <div class="intoWrapper">
           <div class="into">
             <h1>Contacts</h1>
             <div class="separater"></div>
             <h2>better with a Team</h2>
+            <div class="separaterMobile"></div>
+          </div>
+          <img onclick="closeMobileDetails()" src="../img/arrow-left-line.png" alt="">
           </div>
           <div class="contactsDetailsContainer">
             <div id="contactsDetails" class="contactsDetails"></div>
@@ -55,6 +59,9 @@
       <div onclick="toggleOverlay()" id="overlay" class="overlay d_none">
         <div onclick="event.stopPropagation()" class="overlayContent">
           <div class="leftSide">
+            <div class="closeOverlayMobile">
+                <img onclick="toggleOverlay()" src="../img/close (1).png" alt="">
+            </div>
             <div class="imgFlex">
               <img class="joinSmall" src="../img/fav-icon.png" alt="" />
             </div>
@@ -145,11 +152,23 @@
         </div>
       </div>
     </main>
-    <button onclick="openNewContactForm()" class="mobileAddNew">
-      <div class="mobileCircle">
-        <img src="../img/person_add.png" alt="">
-      </div>
-    </button>
+    <div class="mobileMenuWrapper">
+  <button id="mobileAddBtn" onclick="openNewContactForm()" class="mobileAddNew">
+    <div class="mobileCircle">
+      <img id="mobileBtnIcon" src="../img/person_add.png" alt="">
+    </div>
+  </button>
+
+  <div class="mobileMenu" id="mobileMenu">
+  <div onclick="handleEditMobile()" class="mobileEditContainer">
+    <img src="../img/edit.png" alt="">
+    <p>Edit</p>
+  </div>
+  <div onclick="handleDeleteMobile()" class="mobileDeleteContainer">
+    <img src="../img/delete (1).png" alt="">
+    <p>Delete</p>
+  </div>
+</div>
     
     <!-- scripts  -->
     <script src="../../main.js"></script>
