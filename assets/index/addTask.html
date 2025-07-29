@@ -28,10 +28,11 @@
             </div>
         </header>
 
-        <div class="content add-task-content flexC width-100">
+        <div class="content add-task-content flexC width-100 override-align-left">
             <h1>Add Task</h1>
 
-            <form class="task-form flexC width-100">
+          <form class="task-form flexC width-100 align-stretch">
+
                 <div class="form-columns flexR">
 
                     <div class="form-column left-column flexC width-100">
@@ -116,13 +117,19 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group assigned-to-wrapper">
                             <label for="assigned-to-input">Assigned To</label>
+
+                            <!-- Container für die ausgewählten Kontakte -->
+                            <div id="selected-assignees" class="assigned-to-chips display-none"></div>
+
                             <div class="dropdown">
                                 <div class="dropdown-input-wrapper">
                                     <input id="assigned-to-input" type="text" placeholder="Select contacts"
                                         autocomplete="off" />
-                                    <button id="assigned-toggle-btn" type="button" class="dropdown-toggle"
+
+
+                                    <button id="assigned-to-toggle-btn" type="button" class="dropdown-toggle"
                                         aria-label="Toggle assigned">
                                         <svg width="24" height="24" viewBox="0 0 25 24" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
@@ -136,17 +143,17 @@
                                                     fill="#2A3647" />
                                             </g>
                                         </svg>
-
                                     </button>
-
                                 </div>
-                                <ul id="assigned-to-options" class="dropdown-options display-none"></ul>
 
+                                <!-- Dropdown mit Kontaktoptionen -->
+                                <ul id="assigned-to-options" class="dropdown-options"></ul>
 
-
-
+                                <div id="selected-assignees" class="flexR"></div>
                             </div>
                         </div>
+
+
                         <div class="form-group">
                             <label for="category-input">Category<span class="required-asterisk">*</span></label>
                             <div class="field-wrapper">
@@ -179,15 +186,11 @@
 
                         <div class="form-group">
                             <label for="subtasks">Subtasks</label>
-
                             <div class="subtask-input-container">
                                 <div class="input-add-cancel-wrapper" id="inputBox">
                                     <div class="flexR">
                                         <input id="subtasks" type="text" placeholder="Add new subtask"
                                             autocomplete="off" />
-
-
-
                                         <button class="plus-button overlay-button" id="subtaskPlusBtn" type="button">
                                             <svg width="15" height="14" viewBox="0 0 15 14" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
@@ -196,13 +199,8 @@
                                                     fill="#2A3647" />
                                             </svg>
                                         </button>
-
-
-
-
                                         <div class="add-cancel-btns flexR gap-8" id="addCancelBtns"
                                             style="display: none;">
-
                                             <button class="cancel-subtask-button overlay-button" type="button"
                                                 onclick="cancelSubtask()">
                                                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
@@ -211,14 +209,11 @@
                                                         d="M7.14434 8.40005L2.24434 13.3C2.061 13.4834 1.82767 13.575 1.54434 13.575C1.261 13.575 1.02767 13.4834 0.844336 13.3C0.661003 13.1167 0.569336 12.8834 0.569336 12.6C0.569336 12.3167 0.661003 12.0834 0.844336 11.9L5.74434 7.00005L0.844336 2.10005C0.661003 1.91672 0.569336 1.68338 0.569336 1.40005C0.569336 1.11672 0.661003 0.883382 0.844336 0.700049C1.02767 0.516715 1.261 0.425049 1.54434 0.425049C1.82767 0.425049 2.061 0.516715 2.24434 0.700049L7.14434 5.60005L12.0443 0.700049C12.2277 0.516715 12.461 0.425049 12.7443 0.425049C13.0277 0.425049 13.261 0.516715 13.4443 0.700049C13.6277 0.883382 13.7193 1.11672 13.7193 1.40005C13.7193 1.68338 13.6277 1.91672 13.4443 2.10005L8.54434 7.00005L13.4443 11.9C13.6277 12.0834 13.7193 12.3167 13.7193 12.6C13.7193 12.8834 13.6277 13.1167 13.4443 13.3C13.261 13.4834 13.0277 13.575 12.7443 13.575C12.461 13.575 12.2277 13.4834 12.0443 13.3L7.14434 8.40005Z"
                                                         fill="#2A3647" />
                                                 </svg>
-
                                             </button>
-
                                             <svg width="2" height="24" viewBox="0 0 2 24" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M1 0V24" stroke="#D1D1D1" />
                                             </svg>
-
                                             <button class="add-subtask-button overlay-button" type="button">
                                                 <svg width="16" height="12" viewBox="0 0 16 12" fill="none"
                                                     xmlns="http://www.w3.org/2000/svg">
@@ -226,8 +221,9 @@
                                                         d="M5.69474 9.15L14.1697 0.675C14.3697 0.475 14.6072 0.375 14.8822 0.375C15.1572 0.375 15.3947 0.475 15.5947 0.675C15.7947 0.875 15.8947 1.1125 15.8947 1.3875C15.8947 1.6625 15.7947 1.9 15.5947 2.1L6.39474 11.3C6.19474 11.5 5.96141 11.6 5.69474 11.6C5.42807 11.6 5.19474 11.5 4.99474 11.3L0.694738 7C0.494738 6.8 0.398905 6.5625 0.407238 6.2875C0.415572 6.0125 0.519738 5.775 0.719738 5.575C0.919738 5.375 1.15724 5.275 1.43224 5.275C1.70724 5.275 1.94474 5.375 2.14474 5.575L5.69474 9.15Z"
                                                         fill="#2A3647" />
                                                 </svg>
-
                                             </button>
+                                            <div class="add-cancel-btns flexR gap-8" id="addCancelBtns"
+                                                style="display: none;"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -238,6 +234,7 @@
 
                     </div>
                 </div>
+
 
                 <div class="form-footer flexR width-100">
                     <div class="footer-left flexR">
@@ -257,7 +254,9 @@
     </main>
 
     <script src="../../main.js"></script>
-    <script src="../../js/templates/templates.js"></script>
+    <link rel="stylesheet" href="../css/standard-css.css" />
+    <link rel="stylesheet" href="../fonts/Inter/font.css" />
+    <link rel="stylesheet" href="../css/NavHeader.css" />
     <script src="../../js/remoteStorage.js"></script>
     <script src="../../js/subtasks.js"></script>
     <script src="../../js/addTask.js"></script>

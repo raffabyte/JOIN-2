@@ -1,14 +1,8 @@
-/* --- In standard-css.css oder globalem Utility-File --- */
-.flexR {
-  display: flex;
-  flex-direction: row;
+.override-align-left {
+  align-items: flex-start !important;
 }
-.flexC {
-  display: flex;
-  flex-direction: column;
-}
-.width-100 {
-  width: 100%;
+.align-stretch {
+  align-items: stretch !important;
 }
 
 .add-task-content {
@@ -29,13 +23,11 @@ h1 {
   align-items: stretch;
 }
 
-.form-group {
-  align-items: flex-start; 
-}
 
 .form-columns {
   gap: 48px;
-  align-items: flex-start;
+  
+  align-items: stretch !important;
 }
 
 .form-column {
@@ -55,6 +47,7 @@ h1 {
   flex-direction: column;
   gap: 8px;
   width: 100%;
+    align-items: flex-start !important;
 }
 
 .form-group label,
@@ -238,8 +231,8 @@ input.input-error,
   height: 51px;
   border: 1px solid #d1d1d1;
   border-radius: 10px;
-  overflow: hidden;
   background-color: white;
+  overflow: hidden;
   transition: box-shadow 0.2s ease;
 }
 
@@ -262,51 +255,51 @@ input.input-error,
   background-color: transparent;
   border: none;
   border-radius: 50%;
-  transition: background-color 0.2s ease, transform 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   padding: 0 8px;
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .dropdown-arrow {
   fill: #2a3647;
-  transition: none;
 }
 
 .dropdown-toggle.open .dropdown-arrow {
   transform: rotate(180deg);
 }
 
+#assigned-to-options {
+  
+position: absolute;
+top: 100%;
+z-index: 1000;
+background: white;
+}
+
 .dropdown-options {
-  --sb-size: 12px;
-  --sb-thumb-color: #d1d1d1;
-  --sb-track-color: white;
   display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
   max-height: 228px;
   overflow-y: auto;
-  scroll-behavior: smooth;
   padding-bottom: 12px;
-  position: absolute;
-  z-index: 10;
   background-color: white;
   border-radius: 0 0 10px 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
 }
 
 .dropdown-options.show {
-  position: relative;
-  left: 0;
-  right: 0;
-  display: block;
-  background-color: white;
-  z-index: 10;
-  max-height: 228px;
-  overflow-y: auto;
-  margin-top: 0;
-  border-top: none;
-  border-radius: 0 0 10px 10px;
-  padding-bottom: 12px;
+  display: block !important;
+}
+
+.dropdown-options:not(.show) {
+  display: none;
 }
 
 .dropdown-options li {
@@ -316,16 +309,18 @@ input.input-error,
   padding: 12px 21px;
 }
 
-.dropdown-options::-webkit-scrollbar-button:single-button:vertical:decrement {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 6l-4 4h8z' fill='%23888'/%3E%3C/svg%3E");
+.dropdown-options::-webkit-scrollbar-button:single-button:vertical:decrement,
+.dropdown-options::-webkit-scrollbar-button:single-button:vertical:increment {
   background-repeat: no-repeat;
   background-position: center;
 }
 
+.dropdown-options::-webkit-scrollbar-button:single-button:vertical:decrement {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 6l-4 4h8z' fill='%23888'/%3E%3C/svg%3E");
+}
+
 .dropdown-options::-webkit-scrollbar-button:single-button:vertical:increment {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 10l4-4H4z' fill='%23888'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: center;
 }
 
 .dropdown-options.show::after {
@@ -334,7 +329,33 @@ input.input-error,
   height: 12px;
 }
 
-  .contact-checkbox {
+/* Checkbox-Liste */
+.checkbox-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 21px;
+  width: 100%;
+  cursor: pointer;
+}
+
+/* Visuelle Abzeichen */
+.initial-badge {
+  background-color: #29ABE2;
+  color: white;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  min-width: 24px;
+  height: 24px;
+}
+
+/* Checkbox Styling */
+.contact-checkbox {
   appearance: none !important;
   -webkit-appearance: none !important;
   aspect-ratio: 1 / 1;
@@ -368,6 +389,7 @@ input.input-error,
   border-width: 0 2px 2px 0;
   transform: translate(-30%, -48%) rotate(45deg);
 }
+
 
 .clear-button,
 .create-button {
@@ -489,24 +511,94 @@ input[type="date"].filled:not(.input-error),
     }
   }
 
-@media (max-width: 799px) {
-  nav .navContent {
-    flex-direction: row;       /* statt column */
-    justify-content: space-around; /* oder space-between, ganz nach Geschmack */
-    align-items: center;       /* damit die Icons schön in der Mitte sitzen */
-  }
-}
-
-@media (max-width: 768px) {
+@media (max-width: 700px) {
   .form-columns {
-    flex-direction: column;      /* Forms stapeln sich übereinander */
+    flex-direction: column !important;
   }
-}
+    .form-footer .footer-left {
+    display: none;
+  }
+  }
+  
+  @media (max-width: 700px) {
+  h1 {
+    font-size: 41px;
+    font-weight: 700;
+  }
 
-@media (max-width: 318px) {
-  nav .navContent {
+  input[type="text"],
+  input[type="date"],
+  textarea,
+  .priority-btn,
+  .dropdown-input-wrapper input,
+  #subtasks {
+    font-size: 16px;
+    font-weight: 400;
+    height: 40px;
+    width: 100%; 
+    max-width: 369px;
+    box-sizing: border-box;
+  }
+
+  .priority-options,
+  .form-group,
+  .dropdown,
+  .subtask-input-container {
+    gap: 4px !important;
+    margin-bottom: 8px; 
+  }
+
+  .priority-btn {
+    height: 40px;
+    min-width: 100px;
+    max-width: 369px;
+    flex: 1;
+  }
+
+  .dropdown-input-wrapper,
+  .input-add-cancel-wrapper {
+    height: 40px;
+    max-width: 369px;
+    width: 100%;
+  }
+
+  .add-cancel-btns {
+    height: 40px;
+  }
+
+   .form-footer {
+    justify-content: center;
+    padding-inline: 16px;
+  }
+
+  .footer-right.form-buttons {
+    display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: flex-end;
     align-items: center;
+    gap: 4px;
+
+    width: 428px;
+    height: 80px;
+    box-sizing: border-box;
+  }
+
+  .footer-right.form-buttons button {
+    height: 56px;
+    font-size: 16px;
+    font-weight: 400;
+    border-radius: 8px;
+  }
+
+  .footer-right .clear-button {
+    width: 110px;
+  }
+
+  .footer-right .create-button {
+    width: 183px;
+  }
+
+  .footer-left {
+    display: none;
   }
 }

@@ -27,6 +27,69 @@ function getBaseUrl() {
     : "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/";
 }
 
+
+/**
+ * Loads users and renders the "Assigned To" dropdown options.
+ * Includes debug logs to verify data loading.
+ */
+async function loadAndRenderContacts() {
+  console.log("⏳ loadAndRenderContacts start");
+  const users = await loadAssignableUsers();
+  console.log("✅ Users loaded:", users);
+  setupDropdown("assigned-to-input", "assigned-to-options", users, true);
+}
+
+/**
+ * Renders and manages a dropdown (multi- or single-select).
+ * Includes debug logs on each render.
+ * @param {string} inputId
+ * @param {string} optionsId
+ * @param {Array} options
+ * @param {boolean} isMultiSelect
+ */
+function setupDropdown(inputId, optionsId, options, isMultiSelect) {
+  const input = document.getElementById(inputId);
+  const dropdown = document.getElementById(optionsId);
+  const toggle = document.getElementById(inputId.replace("input", "toggle-btn"));
+  if (!input || !dropdown || !toggle) return;
+
+  const render = () => {
+    console.log(`🔄 render dropdown ${optionsId}`, options);
+    const filter = input.value.toLowerCase();
+    dropdown.innerHTML = "";
+    const filtered = options.filter(opt => {
+      const label = typeof opt === "string" ? opt : opt.name;
+      return label.toLowerCase().includes(filter);
+    });
+    console.log(`🔍 filtered ${filtered.length} options`);
+    filtered.forEach(option => {
+      const li = document.createElement("li");
+      li.innerHTML = getDropdownOptionHTML(option, isMultiSelect);
+      if (!isMultiSelect) li.addEventListener("click", () => { input.value = option; dropdown.classList.remove("display-none"); });
+      dropdown.appendChild(li);
+    });
+    dropdown.classList.add("show");
+  };
+
+  input.addEventListener("input", render);
+  input.addEventListener("focus", render);
+  toggle.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const isOpen = dropdown.classList.contains("show");
+    dropdown.classList.toggle("show", !isOpen);
+    toggle.classList.toggle("open", !isOpen);
+    if (!isOpen) render();
+  });
+}
+
+
+
+
+
+
+
+
+
 /**
  * Initializes input tracking for required fields and category.
  */
@@ -125,6 +188,9 @@ function hideValidationErrors() {
 /**
  * Adds listeners to close dropdowns when clicking outside.
  */
+/**
+ * Adds listeners to close dropdowns when clicking outside.
+ */
 function addCategoryAndAssigneeDropdownListeners() {
   document.addEventListener("click", (e) => {
     const inputs = [
@@ -137,21 +203,26 @@ function addCategoryAndAssigneeDropdownListeners() {
     ];
     const toggles = [
       document.getElementById("category-toggle-btn"),
-      document.getElementById("assigned-toggle-btn")
+      document.getElementById("assigned-to-toggle-btn")
     ];
-    dropdowns.forEach((dropdown, index) => {
+
+    dropdowns.forEach((dropdown, i) => {
+      const input = inputs[i];
+      const toggle = toggles[i];
+      // only run if all three elements exist
       if (
-        dropdown &&
+        dropdown && input && toggle &&
         !dropdown.contains(e.target) &&
-        !inputs[index].contains(e.target) &&
-        !toggles[index].contains(e.target)
+        !input.contains(e.target) &&
+        !toggle.contains(e.target)
       ) {
         dropdown.classList.remove("show");
-        toggles[index].classList.remove("open");
+        toggle.classList.remove("open");
       }
     });
   });
 }
+
 
 /**
  * Loads assignable users from Firebase excluding the current user.
@@ -424,5 +495,3 @@ function getDropdownOptionHTML(option, isMultiSelect) {
     `;
   }
 }
-
-
