@@ -1,6 +1,7 @@
 .override-align-left {
   align-items: flex-start !important;
 }
+
 .align-stretch {
   align-items: stretch !important;
 }
@@ -23,10 +24,9 @@ h1 {
   align-items: stretch;
 }
 
-
 .form-columns {
   gap: 48px;
-  
+
   align-items: stretch !important;
 }
 
@@ -47,7 +47,7 @@ h1 {
   flex-direction: column;
   gap: 8px;
   width: 100%;
-    align-items: flex-start !important;
+  align-items: flex-start !important;
 }
 
 .form-group label,
@@ -258,7 +258,6 @@ input.input-error,
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
   padding: 0 8px;
   transition: background-color 0.2s ease, transform 0.2s ease;
 }
@@ -272,11 +271,10 @@ input.input-error,
 }
 
 #assigned-to-options {
-  
-position: absolute;
-top: 100%;
-z-index: 1000;
-background: white;
+  position: absolute;
+  top: 100%;
+  z-index: 1000;
+  background: white;
 }
 
 .dropdown-options {
@@ -335,11 +333,10 @@ background: white;
   gap: 12px;
   padding: 12px 21px;
   width: 100%;
-  cursor: pointer;
 }
 
 .initial-badge {
-  background-color: #29ABE2;
+  background-color: #29abe2;
   color: white;
   font-weight: bold;
   padding: 4px 8px;
@@ -387,7 +384,6 @@ background: white;
   transform: translate(-30%, -48%) rotate(45deg);
 }
 
-
 .clear-button,
 .create-button {
   height: 56px;
@@ -423,7 +419,6 @@ background: white;
   background-color: #29abe2;
   box-shadow: 0px 4px 4px 0px #7d8da3;
 }
-
 
 .dropdown-input-wrapper:focus-within {
   border: 1px solid #29abe2;
@@ -503,69 +498,124 @@ input[type="date"].filled:not(.input-error),
 }
 
 @media (max-width: 1399px) {
-    span {
-        font-size: 14px;
-    }
+  span {
+    font-size: 16px;
   }
-
-@media (max-width: 700px) {
-  .form-columns {
-    flex-direction: column !important;
-  }
-    .form-footer .footer-left {
-    display: none;
-  }
-  }
-  
-  @media (max-width: 700px) {
   h1 {
     font-size: 41px;
     font-weight: 700;
+    margin: 8px 0 16px 0;
+    padding-top: 0;
+  }
+}
+
+@media (max-width: 700px) {
+  body {
+    padding: 0 !important;
+  }
+
+  header {
+    display: none;
+  }
+
+  .add-task-content {
+    padding-top: 0 !important;
+  }
+
+  .task-form {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  .content.add-task-content {
+    padding-top: 8px 16px 0 16px !important;
+  }
+
+  .form-columns {
+    flex-direction: column !important;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .form-column {
+    width: 100%;
+  }
+
+  h1 {
+    font-size: 41px;
+    font-weight: 700;
+    padding-top: 0;
   }
 
   input[type="text"],
   input[type="date"],
   textarea,
-  .priority-btn,
   .dropdown-input-wrapper input,
   #subtasks {
     font-size: 16px;
     font-weight: 400;
     height: 40px;
-    width: 100%; 
-    max-width: 369px;
     box-sizing: border-box;
   }
 
-  .priority-options,
-  .form-group,
-  .dropdown,
-  .subtask-input-container {
-    gap: 4px !important;
-    margin-bottom: 8px; 
-  }
-
-  .priority-btn {
-    height: 40px;
-    min-width: 100px;
-    max-width: 369px;
-    flex: 1;
+  textarea {
+    min-height: 96px !important;
   }
 
   .dropdown-input-wrapper,
   .input-add-cancel-wrapper {
     height: 40px;
-    max-width: 369px;
-    width: 100%;
   }
 
   .add-cancel-btns {
     height: 40px;
   }
 
-   .form-footer {
+  .priority-options {
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .priority-btn {
+    height: 40px;
     justify-content: center;
-    padding-inline: 16px;
+  }
+
+  small,
+  .validation-hint,
+  .required-message,
+  .error-message {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+  }
+
+  .form-footer {
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 0 8px;
+    margin-bottom: 80px;
+    background-color: transparent;
+  }
+
+  .footer-right {
+    display: flex;
+    width: 100%;
+    gap: 8px;
+    justify-content: space-between;
+  }
+
+  .footer-right button {
+    flex: 1;
+    max-width: 48%;
+    height: 48px;
+    font-size: 16px;
+    font-weight: 400;
+    border-radius: 8px;
   }
 
   .footer-right.form-buttons {
@@ -573,29 +623,28 @@ input[type="date"].filled:not(.input-error),
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;
-    gap: 4px;
-
-    width: 428px;
-    height: 80px;
-    box-sizing: border-box;
-  }
-
-  .footer-right.form-buttons button {
-    height: 56px;
-    font-size: 16px;
-    font-weight: 400;
-    border-radius: 8px;
+    gap: 8px;
+    width: 100%;
   }
 
   .footer-right .clear-button {
     width: 110px;
+    min-width: 100px;
+    max-width: 120px;
+    background-color: transparent;
+    border: 1px solid #d1d1d1;
   }
 
   .footer-right .create-button {
-    width: 183px;
+    width: 160px;
+    min-width: 150px;
   }
 
-  .footer-left {
-    display: none;
+  nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
   }
 }

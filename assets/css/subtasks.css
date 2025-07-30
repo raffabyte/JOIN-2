@@ -62,7 +62,7 @@
   border-radius: 0;
   font-size: 16px;
   box-sizing: border-box;
-  overflow: hidden; 
+  overflow: hidden;
 }
 
 .subtask-list li.editing::before {
@@ -95,7 +95,7 @@
   box-shadow: none !important;
   box-sizing: border-box;
   line-height: normal;
-  appearance: none;            
+  appearance: none;
 }
 
 .edit-subtask-input:focus {
@@ -122,21 +122,22 @@
 }
 
 .plus-button {
-  display: flex; 
+  display: flex;
   position: absolute;
-  right: 12px;
+  right: 22px;
   top: 50%;
-  margin-right: 12px;
   transform: translateY(-50%);
   background: none;
   border: none;
   padding: 0;
   align-items: center;
   justify-content: center;
+  width: 24px;
+  height: 24px;
 }
 
 .add-cancel-btns {
-  display: none; 
+  display: none;
   align-items: center;
   gap: 4px;
   position: absolute;
@@ -144,17 +145,22 @@
   top: 50%;
   transform: translateY(-50%);
   background-color: white;
+  height: 24px;
+  width: auto;        
+  padding: 0 2px;     
 }
-
 
 .overlay-button {
   background: none;
   border: none;
-  padding: 4px;
+  padding: 0 2px;      
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  gap: 4px;
   transition: background-color 0.2s ease;
 }
 
@@ -165,6 +171,8 @@
   fill: #2a3647;
   transition: fill 0.2s ease;
 }
+
+
 
 .overlay-button:hover {
   background-color: #eeeeee;

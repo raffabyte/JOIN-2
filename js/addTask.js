@@ -298,9 +298,15 @@ function initDatePicker() {
 }
 
 /**
- * Initializes priority button behavior and visual selection.
+ * Initializes priority button behavior, visual selection and icons.
  */
 function initPrioritySelection() {
+  // Set SVG icons from templates.js
+  document.getElementById("prioUrgentIcon").innerHTML = HIGH_PRIORITY_SVG;
+  document.getElementById("prioMediumIcon").innerHTML = MID_PRIORITY_SVG;
+  document.getElementById("prioLowIcon").innerHTML = LOW_PRIORITY_SVG;
+
+  // Handle button selection
   const buttons = document.querySelectorAll(".priority-btn");
   buttons.forEach(btn => {
     btn.addEventListener("click", () => {
@@ -309,6 +315,7 @@ function initPrioritySelection() {
     });
   });
 }
+
 
 /**
  * Initializes form submission and clear/reset logic.
