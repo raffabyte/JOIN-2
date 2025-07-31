@@ -1,7 +1,16 @@
+/**
+ * Regular expression for validating email addresses.
+ * @type {RegExp}
+ */
+
 const emailRegex = /^[a-zA-Z0-9._%+-]+@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
 
 document.addEventListener("DOMContentLoaded", initLogin);
 
+/**
+ * Initializes the login form: sets up input feedback,
+ * password masking, and event handlers.
+ */
 function initLogin() {
   const elements = getLoginElements();
   setupLiveFeedback(elements);
@@ -9,7 +18,11 @@ function initLogin() {
   bindLoginHandler(elements);
 }
 
-// 🔎 DOM-Elemente sammeln
+/**
+ * Retrieves references to all relevant DOM elements for the login form.
+ * @returns {Object} An object containing form and input elements.
+ */
+
 function getLoginElements() {
   return {
     form: document.getElementById("loginForm"),
@@ -20,7 +33,11 @@ function getLoginElements() {
   };
 }
 
-// 🖐 Eingabe überwachen & Fehler zurücksetzen
+/**
+ * Sets up live feedback to remove error states when the user types.
+ * @param {Object} param0 - Destructured email and password inputs and the message box.
+ */
+
 function setupLiveFeedback({ emailInput, passwordInput, msgBox }) {
   emailInput.addEventListener("input", () => {
     emailInput.classList.remove("input-error");
@@ -32,7 +49,11 @@ function setupLiveFeedback({ emailInput, passwordInput, msgBox }) {
   });
 }
 
-// 🧠 Login-Event verknüpfen
+/**
+ * Binds the form submit event for login.
+ * @param {Object} param0 - Destructured elements needed for login.
+ */
+
 function bindLoginHandler({ form, emailInput, passwordInput, loginButton, msgBox }) {
   form.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -57,40 +78,63 @@ function bindLoginHandler({ form, emailInput, passwordInput, loginButton, msgBox
 });
 }
 
-// ✅ Eingabe validieren
+/**
+ * Validates the user inputs for login.
+ * @param {string} email - The entered email address.
+ * @param {string} password - The entered password.
+ * @param {HTMLInputElement} emailInput
+ * @param {HTMLInputElement} passwordInput
+ * @param {HTMLElement} msgBox - The message box element for feedback.
+ * @returns {boolean} True if inputs are valid, false otherwise.
+ */
 function validateInputs(email, password, emailInput, passwordInput, msgBox) {
   let valid = true;
 
   if (!emailRegex.test(email)) {
     emailInput.classList.add("input-error");
-    showMessage("Bitte geben Sie eine gültige E-Mail-Adresse ein.", msgBox);
+    showMessage("Check your email. Please try again.", msgBox);
     valid = false;
   }
 
   if (password.length < 4) {
     passwordInput.classList.add("input-error");
-    showMessage("Das Passwort muss mindestens 4 Zeichen lang sein.", msgBox);
+    showMessage("Check your password. Please try again.", msgBox);
     valid = false;
   }
 
   return valid;
 }
 
-// 📢 Fehlermeldung je nach Login-Ergebnis
+/**
+ * Displays login error messages based on the error code.
+ * @param {string} errorCode - The error type (e.g., "wrong-password").
+ * @param {HTMLElement} msgBox
+ * @param {HTMLInputElement} emailInput
+ * @param {HTMLInputElement} passwordInput
+ */
+
 function showLoginError(errorCode, msgBox, emailInput, passwordInput) {
   switch (errorCode) {
     case "email-not-found":
-      showMessage("E-Mail ist nicht registriert.", msgBox);
+      showMessage("E-Mail is not registered.", msgBox);
       emailInput.classList.add("input-error");
       break;
     case "wrong-password":
-      showMessage("Passwort ist falsch.", msgBox);
+      showMessage("Password is wrong.", msgBox);
       passwordInput.classList.add("input-error");
       break;
     default:
-      showMessage("Fehler beim Login.", msgBox);
+      showMessage("Login error.", msgBox);
   }
 }
+
+/**
+ * Displays login error messages based on the error code.
+ * @param {string} errorCode - The error type (e.g., "wrong-password").
+ * @param {HTMLElement} msgBox
+ * @param {HTMLInputElement} emailInput
+ * @param {HTMLInputElement} passwordInput
+ */
 
 function applyStarMaskToPassword(passwordInput, msgBox) {
   let realPassword = "";
@@ -135,10 +179,19 @@ function applyStarMaskToPassword(passwordInput, msgBox) {
       updatePasswordField(passwordInput, realPassword, false);
       updateVisualFeedback(passwordInput, msgBox, realPassword, false);
     }
-  }, 100); // Verzögerung, damit Autofill durch ist
+  }, 500); // Verzögerung, damit Autofill durch ist
 
   clearMessage(msgBox);
 }
+
+/**
+ * Handles manual user input in the password field to update the real password.
+ * @param {InputEvent} e - The input event.
+ * @param {string} realPassword - The actual password.
+ * @param {HTMLInputElement} input - The password input element.
+ * @param {boolean} visible - Whether the password is currently visible.
+ * @returns {string} Updated password string.
+ */
 
 function handlePasswordInput(e, realPassword, input, visible) {
   const start = input.selectionStart;
@@ -156,9 +209,22 @@ function handlePasswordInput(e, realPassword, input, visible) {
   return realPassword;
 }
 
+/**
+ * Updates the displayed value of the password field based on visibility.
+ * @param {HTMLInputElement} input
+ * @param {string} realPassword
+ * @param {boolean} visible
+ */
+
 function updatePasswordField(input, realPassword, visible) {
   input.value = visible ? realPassword : "*".repeat(realPassword.length);
 }
+
+/**
+ * Adjusts cursor position to keep UX smooth when masking/unmasking.
+ * @param {HTMLInputElement} input
+ * @param {boolean} visible
+ */
 
 function updateCursorPosition(input, visible) {
   requestAnimationFrame(() => {
@@ -166,6 +232,14 @@ function updateCursorPosition(input, visible) {
     input.setSelectionRange(pos, pos);
   });
 }
+
+/**
+ * Applies visual feedback like icons based on password state.
+ * @param {HTMLInputElement} input
+ * @param {HTMLElement} msgBox
+ * @param {string} realPassword
+ * @param {boolean} visible
+ */
 
 function updateVisualFeedback(input, msgBox, realPassword, visible) {
   input.classList.remove("input-error", "lock_icon", "visibility_icon", "visibility_off_icon");
@@ -180,12 +254,24 @@ function updateVisualFeedback(input, msgBox, realPassword, visible) {
   input.classList.add(iconClass);
 }
 
+/**
+ * Checks if the user clicked in the password visibility toggle area.
+ * @param {MouseEvent} e
+ * @param {HTMLInputElement} input
+ * @returns {boolean} True if toggle area was clicked.
+ */
+
 function clickedToggleArea(e, input) {
   const rect = input.getBoundingClientRect();
   return e.clientX > rect.right - 40;
 }
 
-// 🔑 Login gegen Firebase-Datenbank
+/**
+ * Attempts to log the user in by verifying credentials against Firebase.
+ * @param {string} email
+ * @param {string} password
+ * @returns {Promise<{ success: boolean, error?: string }>} Result of the login attempt.
+ */
 
 async function login(email, password) {
   try {
@@ -213,31 +299,52 @@ async function login(email, password) {
   }
 }
 
-// 🧹 UI-Helfer
+/**
+ * Displays a message in the message box.
+ * @param {string} message - The message to show.
+ * @param {HTMLElement} box - The message box element.
+ */
+
 function showMessage(message, box) {
   box.textContent = message;
   box.style.color = "red";
 }
+
+/**
+ * Clears any message from the message box.
+ * @param {HTMLElement} box - The message box to clear.
+ */
 
 function clearMessage(box) {
   box.textContent = "";
   box.style.color = "";
 }
 
+/**
+ * Disables a button and applies loading state.
+ * @param {HTMLButtonElement} button
+ */
+
 function disableButton(button) {
   button.disabled = true;
   button.classList.add("loading");
 }
+
+/**
+ * Enables a button and removes loading state.
+ * @param {HTMLButtonElement} button
+ */
 
 function enableButton(button) {
   button.disabled = false;
   button.classList.remove("loading");
 }
 
+/**
+ * Starts a guest session with temporary demo user data.
+ * @returns {Promise<void>}
+ */
 
-
-
-// 👤 Gast-Login mit Demo-Daten
 async function startGuestSession() {
   const guestId = `guest_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
   const guestData = {
@@ -261,7 +368,12 @@ async function startGuestSession() {
   window.location.href = "../index/summary.html";
 }
 
-// 📋 Kontakte für Gast erstellen
+/**
+ * Preloads demo contacts for a guest user.
+ * @param {string} userPath - Path in the database where contacts should be stored.
+ * @returns {Promise<void>}
+ */
+
 async function preloadGuestContacts(userPath) {
   const contactsPath = `users/${userPath}/contacts`;
 
@@ -273,6 +385,11 @@ async function preloadGuestContacts(userPath) {
     });
   }
 }
+
+/**
+ * Predefined demo contacts for guest users.
+ * @type {Array<{ name: string, email: string, phone: string }>}
+ */
 
 const demoContacts = [
   { name: "Anna Becker", email: "anna@example.com", phone: "123456789" },
