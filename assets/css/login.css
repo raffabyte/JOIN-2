@@ -98,7 +98,7 @@ button {
 .mail_icon {
     background-image: url("../img/LogIn/mail.png") !important;
     background-repeat: no-repeat;
-    background-size: 20px;
+    background-size: 25px;
     background-position: right 21px center;
 }
 .lock_icon {
