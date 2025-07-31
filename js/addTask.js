@@ -4,14 +4,13 @@
  */
 
 /**
- * Sets USERKEY from localStorage only if not already defined globally.
+ * Ensures USERKEY and BASE_URL are available from main.js globals.
  */
-if (typeof USERKEY === "undefined") {
-  window.USERKEY = localStorage.getItem("userKey");
-}
+const USERKEY = window.USERKEY || localStorage.getItem("loggedInUserKey");
+const BASE_URL = window.BASE_URL || "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/";
 
 /**
- * Redirects to login page if USERKEY is not available.
+ * Redirects to login page if USERKEY is missing.
  */
 if (!USERKEY) {
   window.location.href = "../../index.html";
