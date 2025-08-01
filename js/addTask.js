@@ -1,24 +1,21 @@
 /**
  * @file addTask.js
- * @description Handles the add task form logic including dropdowns, date picker, validation, and Firebase saving. All logic is compatible with remoteStorage.js.
+ * @description Handles the add task form logic including dropdowns, date picker, validation, and Firebase saving. 
+ * Uses global USERKEY and BASE_URL from main.js and remoteStorage.js.
  */
 
-/**
- * Ensures USERKEY and BASE_URL are available from main.js globals.
- */
-const USERKEY = window.USERKEY || localStorage.getItem("loggedInUserKey");
-const BASE_URL = window.BASE_URL || "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/";
+/** Set USERKEY if not already defined */
+if (typeof USERKEY === "undefined") {
+  window.USERKEY = localStorage.getItem("userKey");
+}
 
-/**
- * Redirects to login page if USERKEY is missing.
- */
+/** Redirect if user not logged in */
 if (!USERKEY) {
   window.location.href = "../../index.html";
 }
 
 /**
  * Returns the Firebase base URL from global definition or fallback.
- * @returns {string} Firebase database base URL
  */
 function getBaseUrl() {
   return typeof BASE_URL !== "undefined"
@@ -26,75 +23,257 @@ function getBaseUrl() {
     : "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/";
 }
 
+/* -------------------------
+   Dropdown Handling
+------------------------- */
 
 /**
- * Loads users and renders the "Assigned To" dropdown options.
- * Includes debug logs to verify data loading.
- */
-async function loadAndRenderContacts() {
-  console.log("⏳ loadAndRenderContacts start");
-  const users = await loadAssignableUsers();
-  console.log("✅ Users loaded:", users);
-  setupDropdown("assigned-to-input", "assigned-to-options", users, true);
-}
-
-
-/**
- * Renders and manages a dropdown (multi- or single-select).
- * Includes debug logs on each render.
- * @param {string} inputId
- * @param {string} optionsId
- * @param {Array} options
- * @param {boolean} isMultiSelect
+ * Initializes dropdown toggle and input behavior
  */
 function setupDropdown(inputId, optionsId, options, isMultiSelect) {
   const input = document.getElementById(inputId);
   const dropdown = document.getElementById(optionsId);
   const toggle = document.getElementById(inputId.replace("input", "toggle-btn"));
   if (!input || !dropdown || !toggle) return;
-
-  const render = () => {
-    console.log(`🔄 render dropdown ${optionsId}`, options);
-    const filter = input.value.toLowerCase();
-    dropdown.innerHTML = "";
-    const filtered = options.filter(opt => {
-      const label = typeof opt === "string" ? opt : opt.name;
-      return label.toLowerCase().includes(filter);
-    });
-    console.log(`🔍 filtered ${filtered.length} options`);
-    filtered.forEach(option => {
-      const li = document.createElement("li");
-      li.innerHTML = getDropdownOptionHTML(option, isMultiSelect);
-      if (!isMultiSelect) li.addEventListener("click", () => { input.value = option; dropdown.classList.remove("display-none"); });
-      dropdown.appendChild(li);
-    });
-    dropdown.classList.add("show");
-  };
-
-  input.addEventListener("input", render);
-  input.addEventListener("focus", render);
   toggle.addEventListener("click", (e) => {
     e.stopPropagation();
-    const isOpen = dropdown.classList.contains("show");
-    dropdown.classList.toggle("show", !isOpen);
-    toggle.classList.toggle("open", !isOpen);
-    if (!isOpen) render();
+    handleToggleClick(dropdown, toggle, input, options, isMultiSelect);
   });
+
+  input.addEventListener("focus", () => renderDropdown(input, dropdown, options, isMultiSelect));
+  input.addEventListener("input", () => renderDropdown(input, dropdown, options, isMultiSelect));
+}
+
+/**
+ * Closes all dropdowns and resets arrows.
+ */
+function closeAllDropdowns() {
+  document.querySelectorAll(".dropdown-options.show").forEach(d => d.classList.remove("show"));
+  document.querySelectorAll(".dropdown-toggle.open").forEach(t => t.classList.remove("open"));
+}
+
+/**
+ * Handles toggle button clicks for dropdown open/close.
+ */
+function handleToggleClick(dropdown, toggle, input, options, isMultiSelect) {
+  const isOpen = dropdown.classList.contains("show");
+  closeAllDropdowns();
+console.log("🎯 Dropdown gefunden:", dropdown);
+
+  if (!isOpen) {
+    console.log("🔽 Dropdown wird geöffnet");
+    renderDropdown(input, dropdown, options, isMultiSelect);
+    dropdown.classList.add("show");
+    toggle.classList.add("open");
+  } else {
+    console.log("🔼 Dropdown wird geschlossen");
+    dropdown.classList.remove("show");
+    toggle.classList.remove("open");
+  }
 }
 
 
 /**
- * Initializes input tracking for required fields and category.
+ * Opens dropdown, renders options, sets arrow state.
  */
+function openDropdown(input, dropdown, toggle, options, isMultiSelect) {
+  renderDropdown(input, dropdown, options, isMultiSelect);
+  dropdown.classList.add("show");
+  toggle.classList.add("open");
+}
+
+/**
+ * Closes all dropdowns and resets arrows.
+ */
+function closeAllDropdowns() {
+  document.querySelectorAll(".dropdown-options.show").forEach(d => d.classList.remove("show"));
+  document.querySelectorAll(".dropdown-toggle.open").forEach(t => t.classList.remove("open"));
+}
+
+/**
+ * Renders dropdown options dynamically based on input filter.
+ */
+function renderDropdown(input, dropdown, options, isMultiSelect) {
+    const selectedValues = Array.from(document.querySelectorAll("input[name='assigned']:checked"))
+    .map(cb => cb.value);
+
+  dropdown.innerHTML = "";
+  const filter = input.value.toLowerCase();
+
+  options.filter(opt => (typeof opt === "string" ? opt : opt.name).toLowerCase().includes(filter))
+    .forEach(option => {
+      const li = document.createElement("li");
+      li.innerHTML = getDropdownOptionHTML(option, isMultiSelect);
+      if (isMultiSelect && selectedValues.includes(option.email)) {
+        li.querySelector("input[type='checkbox']").checked = true;
+      }
+      if (!isMultiSelect) {
+        li.addEventListener("click", () => selectDropdownOption(input, dropdown, option));
+      }
+      dropdown.appendChild(li);
+    });
+}
+
+
+/**
+ * Creates a dropdown item element.
+ */
+function createDropdownItem(option, input, dropdown, isMultiSelect) {
+  const li = document.createElement("li");
+  li.innerHTML = getDropdownOptionHTML(option, isMultiSelect);
+  if (!isMultiSelect) {
+    li.addEventListener("click", () => selectDropdownOption(input, dropdown, option));
+  }
+  return li;
+}
+
+/**
+ * Selects a dropdown option.
+ */
+function selectDropdownOption(input, dropdown, option) {
+  input.value = option;
+  dropdown.classList.remove("show");
+  clearDropdownErrorState(input);
+}
+
+/**
+ * Clears error state from dropdown.
+ */
+function clearDropdownErrorState(input) {
+  const wrapper = input.closest(".dropdown-input-wrapper");
+  input.classList.remove("input-error");
+  wrapper?.classList.remove("input-error");
+  wrapper?.classList.add("filled");
+  wrapper?.closest(".form-group")?.querySelector(".field-error")?.remove();
+}
+
+/**
+ * Handles clicks outside dropdowns to close them.
+ */
+function addDropdownOutsideClickListener() {
+  document.addEventListener("click", (e) => {
+    ["category", "assigned-to"].forEach(prefix => {
+      const input = document.getElementById(`${prefix}-input`);
+      const dropdown = document.getElementById(`${prefix}-options`);
+      const toggle = document.getElementById(`${prefix}-toggle-btn`);
+      if (dropdown && !dropdown.contains(e.target) && !input.contains(e.target) && !toggle.contains(e.target)) {
+        dropdown.classList.remove("show");
+        toggle.classList.remove("open");
+      }
+    });
+  });
+}
+
+/**
+ * Returns dropdown option HTML.
+ */
+function getDropdownOptionHTML(option, isMultiSelect) {
+  if (typeof option === "string") {
+    return `<span class="dropdown-option">${option}</span>`;
+  }
+  const initials = option.name.split(" ").map(n => n[0]).join("").toUpperCase();
+  return `
+    <label class="checkbox-option">
+      <span class="initial-badge-circle">${initials}</span>
+      <span class="contact-name">${option.name}</span>
+      <input type="checkbox" name="assigned" value="${option.email}" class="contact-checkbox-right">
+    </label>
+  `;
+}
+
+/* -------------------------
+   Selected Contacts
+------------------------- */
+
+function clearContactBadges(container) {
+  container.innerHTML = "";
+}
+
+function createContactBadge(initials) {
+  const badge = document.createElement("div");
+  badge.className = "contact-badge";
+  badge.textContent = initials;
+  return badge;
+}
+
+function renderContactBadges(container, selectedContacts) {
+  selectedContacts.forEach(cb => {
+    const initials = cb.closest("label")
+      .querySelector(".initial-badge-circle")?.textContent || "?";
+    container.appendChild(createContactBadge(initials));
+  });
+}
+
+function updateSelectedContacts() {
+  const container = document.getElementById("selected-assignees");
+  if (!container) return;
+
+  const checked = document.querySelectorAll("input[name='assigned']:checked");
+  clearContactBadges(container);
+
+  if (checked.length === 0) {
+    container.classList.add("display-none");
+    return;
+  }
+
+  renderContactBadges(container, checked);
+  container.classList.remove("display-none");
+}
+
+function initSelectedContactsListener() {
+  document.addEventListener("change", e => {
+    if (e.target && e.target.name === "assigned") {
+      updateSelectedContacts();
+    }
+  });
+}
+
+initSelectedContactsListener();
+
+/* -------------------------
+   Load Users
+------------------------- */
+
+async function loadAssignableUsers() {
+  try {
+    const users = await loadData("users");
+    return Object.entries(users)
+      .filter(([key]) => key !== USERKEY)
+      .map(([, user]) => {
+        if (!user?.email) return { name: "Unknown", email: "" };
+        return { name: extractName(user.email), email: user.email };
+      });
+  } catch (error) {
+    console.error("Error loading users:", error);
+    return [];
+  }
+}
+
+function extractName(email) {
+  return email.split("@")[0].replace(/[._]/g, " ")
+    .split(" ").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+}
+
+async function loadAndRenderContacts() {
+  const users = await loadAssignableUsers();
+  setupDropdown("assigned-to-input", "assigned-to-options", users, true);
+}
+
+function initDropdowns() {
+  const categories = ["Technical Task", "User Story"];
+  setupDropdown("category-input", "category-options", categories, false);
+  loadAndRenderContacts();
+}
+
+/* -------------------------
+   Field Validation & States
+------------------------- */
+
 function initFilledFieldTracking() {
   trackStandardFields(["title", "due-date", "description"]);
   trackCategoryField();
 }
 
-/**
- * Adds input listeners to required fields to toggle 'filled' state.
- * @param {string[]} fieldIds - Array of input field IDs.
- */
 function trackStandardFields(fieldIds) {
   fieldIds.forEach(id => {
     const input = document.getElementById(id);
@@ -102,24 +281,6 @@ function trackStandardFields(fieldIds) {
   });
 }
 
-/**
- * Removes error styling and message from a form input.
- * @param {HTMLElement} input - The input element to clear error from.
- */
-function clearFieldError(input) {
-  input.classList.remove("input-error");
-  const wrapper = input.closest(".form-group");
-  if (!wrapper) return;
-
-  const errorEl = wrapper.querySelector(".field-error");
-  if (errorEl) errorEl.remove();
-}
-
-
-/**
- * Binds 'input' event to mark input as filled or clear error.
- * @param {HTMLInputElement} input
- */
 function bindFilledListener(input) {
   input.addEventListener("input", () => {
     const value = input.value.trim();
@@ -131,14 +292,18 @@ function bindFilledListener(input) {
   });
 }
 
-/**
- * Special tracking for the category field wrapper.
- */
+function clearFieldError(input) {
+  input.classList.remove("input-error");
+  const wrapper = input.closest(".form-group");
+  if (!wrapper) return;
+  const errorEl = wrapper.querySelector(".field-error");
+  if (errorEl) errorEl.remove();
+}
+
 function trackCategoryField() {
   const input = document.getElementById("category-input");
   const wrapper = input?.closest(".dropdown-input-wrapper");
   if (!input || !wrapper) return;
-
   input.addEventListener("input", () => {
     wrapper.classList.remove("filled");
     input.classList.remove("input-error");
@@ -146,166 +311,15 @@ function trackCategoryField() {
   });
 }
 
+/* -------------------------
+   Priority & Date Picker
+------------------------- */
 
-/**
- * Initializes all required event listeners and UI states.
- */
-document.addEventListener("DOMContentLoaded", async () => {
-  protectPageAccess();
-  hideValidationErrors();
-  await loadAndRenderContacts();
-  addCategoryAndAssigneeDropdownListeners();
-  initPrioritySelection();
-  initSubtaskInput();
-  initAddTaskPage();
-  initFilledFieldTracking();
-});
-
-/**
- * Protects the page by redirecting if the user is not authenticated.
- */
-function protectPageAccess() {
-  if (!USERKEY) {
-    window.location.href = "../../index.html";
-  }
-}
-
-/**
- * Hides all validation errors initially.
- */
-function hideValidationErrors() {
-  clearValidationErrors();
-  resetFilledStates();
-}
-
-/**
- * Adds listeners to close dropdowns when clicking outside.
- */
-/**
- * Adds listeners to close dropdowns when clicking outside.
- */
-function addCategoryAndAssigneeDropdownListeners() {
-  document.addEventListener("click", (e) => {
-    const inputs = [
-      document.getElementById("category-input"),
-      document.getElementById("assigned-to-input")
-    ];
-    const dropdowns = [
-      document.getElementById("category-options"),
-      document.getElementById("assigned-to-options")
-    ];
-    const toggles = [
-      document.getElementById("category-toggle-btn"),
-      document.getElementById("assigned-to-toggle-btn")
-    ];
-
-    dropdowns.forEach((dropdown, i) => {
-      const input = inputs[i];
-      const toggle = toggles[i];
-      // only run if all three elements exist
-      if (
-        dropdown && input && toggle &&
-        !dropdown.contains(e.target) &&
-        !input.contains(e.target) &&
-        !toggle.contains(e.target)
-      ) {
-        dropdown.classList.remove("show");
-        toggle.classList.remove("open");
-      }
-    });
-  });
-}
-
-
-/**
- * Loads assignable users from Firebase excluding the current user.
- * @returns {Promise<Array<{ name: string, email: string }>>}
- */
-async function loadAssignableUsers() {
-  try {
-    const users = await loadData("users");
-    return Object.entries(users)
-      .filter(([key]) => key !== USERKEY)
-      .map(([, user]) => {
-        if (!user?.email) return { name: "Unknown", email: "" };
-        return {
-          name: extractName(user.email),
-          email: user.email
-        };
-      });
-  } catch (error) {
-    console.error("Error loading users:", error);
-    return [];
-  }
-}
-
-/**
- * Converts an email into a user-friendly name.
- * @param {string} email
- * @returns {string}
- */
-function extractName(email) {
-  return email.split("@")[0].replace(/[._]/g, " ")
-    .split(" ").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
-}
-
-/**
- * Loads users and renders the "Assigned To" dropdown options.
- */
-async function loadAndRenderContacts() {
-  const users = await loadAssignableUsers();
-  setupDropdown("assigned-to-input", "assigned-to-options", users, true);
-}
-
-/**
- * Initializes both category and assigned-to dropdowns.
- */
-function initDropdowns() {
-  const categories = ["Technical Task", "User Story"];
-  setupDropdown("category-input", "category-options", categories, false);
-  loadAssignableUsers().then(users => {
-    setupDropdown("assigned-to-input", "assigned-to-options", users, true);
-  });
-}
-
-/**
- * Initializes dropdowns, priority, date picker, form validation, subtasks.
- */
-function initAddTaskPage() {
-  initDropdowns();
-  initPrioritySelection();
-  initDatePicker();
-  initFormValidation();
-  initSubtaskControls();
-}
-
-/**
- * Initializes the date picker toggle for due-date input.
- */
-function initDatePicker() {
-  const dateInput = document.getElementById("due-date");
-  const calendarToggle = document.getElementById("calendar-toggle");
-  if (!dateInput || !calendarToggle) return;
-
-  calendarToggle.addEventListener("click", () => {
-    if (typeof dateInput.showPicker === "function") {
-      dateInput.showPicker();
-    } else {
-      dateInput.focus();
-    }
-  });
-}
-
-/**
- * Initializes priority button behavior, visual selection and icons.
- */
 function initPrioritySelection() {
-  // Set SVG icons from templates.js
   document.getElementById("prioUrgentIcon").innerHTML = HIGH_PRIORITY_SVG;
   document.getElementById("prioMediumIcon").innerHTML = MID_PRIORITY_SVG;
   document.getElementById("prioLowIcon").innerHTML = LOW_PRIORITY_SVG;
 
-  // Handle button selection
   const buttons = document.querySelectorAll(".priority-btn");
   buttons.forEach(btn => {
     btn.addEventListener("click", () => {
@@ -315,10 +329,23 @@ function initPrioritySelection() {
   });
 }
 
+function initDatePicker() {
+  const dateInput = document.getElementById("due-date");
+  const calendarToggle = document.getElementById("calendar-toggle");
+  if (!dateInput || !calendarToggle) return;
+  calendarToggle.addEventListener("click", () => {
+    if (typeof dateInput.showPicker === "function") {
+      dateInput.showPicker();
+    } else {
+      dateInput.focus();
+    }
+  });
+}
 
-/**
- * Initializes form submission and clear/reset logic.
- */
+/* -------------------------
+   Validation & Form Submit
+------------------------- */
+
 function initFormValidation() {
   const form = document.querySelector(".task-form");
   if (!form) return;
@@ -331,6 +358,7 @@ function initFormValidation() {
     if (isFormValid(form)) {
       disableButton(createBtn, true);
       await saveTaskToFirebase();
+      disableButton(createBtn, false);
     }
   });
 
@@ -341,11 +369,6 @@ function initFormValidation() {
   });
 }
 
-/**
- * Validates required form fields.
- * @param {HTMLFormElement} form
- * @returns {boolean}
- */
 function isFormValid(form) {
   const requiredIds = ["title", "due-date", "category-input"];
   let isValid = true;
@@ -362,15 +385,9 @@ function isFormValid(form) {
     form.querySelector(".priority-options")?.classList.add("input-error");
     isValid = false;
   }
-
   return isValid;
 }
 
-/**
- * Shows an error message below the input.
- * @param {HTMLElement} input
- * @param {string} message
- */
 function showFieldError(input, message) {
   if (!input) return;
   input.classList.add("input-error");
@@ -385,35 +402,25 @@ function showFieldError(input, message) {
   error.textContent = message;
 }
 
-/**
- * Removes validation error styles and messages from all inputs.
- */
 function clearValidationErrors() {
   document.querySelectorAll(".input-error").forEach(el => el.classList.remove("input-error"));
   document.querySelectorAll(".field-error").forEach(el => el.remove());
 }
 
-/**
- * Resets filled state styling.
- */
 function resetFilledStates() {
   document.querySelectorAll(".filled").forEach(el => el.classList.remove("filled"));
 }
 
-/**
- * Disables or enables a button.
- * @param {HTMLElement} button
- * @param {boolean} disabled
- */
 function disableButton(button, disabled) {
   if (!button) return;
   button.disabled = disabled;
   button.style.opacity = disabled ? "0.7" : "1";
 }
 
-/**
- * Initializes subtask input behavior (Enter key support).
- */
+/* -------------------------
+   Subtasks
+------------------------- */
+
 function initSubtaskInput() {
   const input = document.getElementById("subtasks");
   if (!input) return;
@@ -429,69 +436,96 @@ function initSubtaskInput() {
   });
 }
 
-/**
- * Renders and manages a dropdown (multi- or single-select).
- * @param {string} inputId - ID of the input field
- * @param {string} optionsId - ID of the dropdown options list
- * @param {Array} options - Options to show (strings or user objects)
- * @param {boolean} isMultiSelect - Enables checkbox rendering if true
- */
-function setupDropdown(inputId, optionsId, options, isMultiSelect) {
-  const input = document.getElementById(inputId);
-  const dropdown = document.getElementById(optionsId);
-  const toggle = document.getElementById(inputId.replace("input", "toggle-btn"));
-  if (!input || !dropdown || !toggle) return;
+/* -------------------------
+   Save Task to Firebase
+------------------------- */
 
-  const render = () => {
-    const filter = input.value.toLowerCase();
-    dropdown.innerHTML = "";
-    const filtered = options.filter(opt => {
-      const label = typeof opt === "string" ? opt : opt.name;
-      return label.toLowerCase().includes(filter);
-    });
-
-    filtered.forEach(option => {
-      const li = document.createElement("li");
-      li.innerHTML = getDropdownOptionHTML(option, isMultiSelect);
-      if (!isMultiSelect) {
-        li.addEventListener("click", () => {
-          input.value = option;
-          dropdown.classList.remove("show");
-        });
-      }
-      dropdown.appendChild(li);
-    });
-
-    dropdown.classList.add("show");
+function collectTaskData() {
+  return {
+    title: document.getElementById("title").value.trim(),
+    description: document.getElementById("description").value.trim(),
+    dueDate: document.getElementById("due-date").value,
+    priority: document.querySelector(".priority-btn.selected")?.dataset.priority || "",
+    category: document.getElementById("category-input").value.trim(),
+    assignedTo: getSelectedAssignees(),
+    subtasks: getSubtasks(),
+    status: "todo",
+    createdAt: new Date().toISOString()
   };
-
-  input.addEventListener("input", render);
-  input.addEventListener("focus", render);
-  toggle.addEventListener("click", () => {
-    const isOpen = dropdown.classList.contains("show");
-    dropdown.classList.toggle("show", !isOpen);
-    toggle.classList.toggle("open", !isOpen);
-    if (!isOpen) render();
-  });
 }
 
-/**
- * Returns innerHTML for a dropdown option item.
- * @param {string|Object} option
- * @param {boolean} isMultiSelect
- * @returns {string}
- */
-function getDropdownOptionHTML(option, isMultiSelect) {
-  if (typeof option === "string") {
-    return `<span class="dropdown-option">${option}</span>`;
-  } else {
-    const initials = option.name.split(" ").map(n => n[0]).join("");
-    return `
-      <label class="checkbox-option">
-        <input type="checkbox" name="assigned" value="${option.email}">
-        <span class="initial-badge">${initials}</span>
-        <span class="contact-name">${option.name}</span>
-      </label>
-    `;
+function getSelectedAssignees() {
+  return Array.from(document.querySelectorAll("input[name='assigned']:checked"))
+    .map(cb => cb.value);
+}
+
+function getSubtasks() {
+  return Array.from(document.querySelectorAll(".subtask-item"))
+    .map(item => item.textContent.trim());
+}
+
+function resetTaskForm() {
+  document.querySelector(".task-form").reset();
+  resetFilledStates();
+  clearValidationErrors();
+  clearSubtasks();
+}
+
+async function saveTaskToFirebase() {
+  const taskData = collectTaskData();
+
+  try {
+    await postData(`tasks/${USERKEY}`, taskData);
+    console.log("✅ Task successfully saved to Firebase:", taskData);
+    resetTaskForm();
+    showTaskAddedPopup();
+  } catch (error) {
+    alert("Error saving task. Please try again.");
   }
+}
+
+function showTaskAddedPopup() {
+  const popup = document.createElement("div");
+  popup.className = "task-added-popup";
+  popup.innerHTML = `${BOARD_SVG}<span>Task added to board</span>`;
+  document.body.appendChild(popup);
+
+  setTimeout(() => {
+    popup.classList.add("fade-out");
+    setTimeout(() => popup.remove(), 500);
+  }, 2500);
+}
+
+/* -------------------------
+   Init Page
+------------------------- */
+
+document.addEventListener("DOMContentLoaded", async () => {
+  protectPageAccess();
+  hideValidationErrors();
+  await loadAndRenderContacts();
+  addDropdownOutsideClickListener();
+  initPrioritySelection();
+  initSubtaskInput();
+  initAddTaskPage();
+  initFilledFieldTracking();
+});
+
+function protectPageAccess() {
+  if (!USERKEY) {
+    window.location.href = "../../index.html";
+  }
+}
+
+function hideValidationErrors() {
+  clearValidationErrors();
+  resetFilledStates();
+}
+
+function initAddTaskPage() {
+  initDropdowns();
+  initPrioritySelection();
+  initDatePicker();
+  initFormValidation();
+  initSubtaskControls();
 }

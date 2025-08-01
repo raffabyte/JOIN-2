@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="../css/NavHeader.css" />
     <link rel="stylesheet" href="../css/addTask.css" />
     <link rel="stylesheet" href="../css/subtasks.css" />
+    
 </head>
 
 <body onload="init();">
@@ -87,39 +88,24 @@
 
                         <div class="form-group assigned-to-wrapper">
                             <label for="assigned-to-input">Assigned To</label>
-
-                            <!-- Container für die ausgewählten Kontakte -->
-                            <div id="selected-assignees" class="assigned-to-chips display-none"></div>
-
                             <div class="dropdown">
                                 <div class="dropdown-input-wrapper">
-                                    <input id="assigned-to-input" type="text" placeholder="Select contacts"
-                                        autocomplete="off" />
+                                 <input id="assigned-to-input" type="text" placeholder="Select contacts" autocomplete="off" />
+<button id="assigned-to-toggle-btn" type="button" class="dropdown-toggle" aria-label="Toggle assigned">
+    <svg class="dropdown-arrow" width="24" height="24" viewBox="0 0 25 24" fill="none"
+        xmlns="http://www.w3.org/2000/svg">
+        <path
+            d="M11.55 14.3L8.95 11.7C8.63 11.38 8.56 11.02 8.74 10.61C8.91 10.2 9.22 10 9.67 10H14.82C15.27 10 15.59 10.2 15.76 10.61C15.94 11.02 15.87 11.38 15.55 11.7L12.95 14.3C12.85 14.4 12.74 14.48 12.62 14.53C12.51 14.58 12.38 14.6 12.25 14.6C12.12 14.6 11.99 14.58 11.87 14.53C11.76 14.48 11.65 14.4 11.55 14.3Z"
+            fill="#2A3647" />
+    </svg>
+</button>
 
-
-                                    <button id="assigned-to-toggle-btn" type="button" class="dropdown-toggle"
-                                        aria-label="Toggle assigned">
-                                        <svg width="24" height="24" viewBox="0 0 25 24" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <mask id="mask0_338061_4850" style="mask-type:alpha"
-                                                maskUnits="userSpaceOnUse" x="0" y="0" width="25" height="24">
-                                                <rect x="0.248535" width="24" height="24" fill="#D9D9D9" />
-                                            </mask>
-                                            <g mask="url(#mask0_338061_4850)">
-                                                <path
-                                                    d="M11.5485 14.3L8.94851 11.7C8.63184 11.3833 8.56101 11.0208 8.73601 10.6125C8.91101 10.2042 9.22351 10 9.67351 10H14.8235C15.2735 10 15.586 10.2042 15.761 10.6125C15.936 11.0208 15.8652 11.3833 15.5485 11.7L12.9485 14.3C12.8485 14.4 12.7402 14.475 12.6235 14.525C12.5068 14.575 12.3818 14.6 12.2485 14.6C12.1152 14.6 11.9902 14.575 11.8735 14.525C11.7568 14.475 11.6485 14.4 11.5485 14.3Z"
-                                                    fill="#2A3647" />
-                                            </g>
-                                        </svg>
-                                    </button>
                                 </div>
-
-                                <!-- Dropdown mit Kontaktoptionen -->
                                 <ul id="assigned-to-options" class="dropdown-options"></ul>
-
-                                <div id="selected-assignees" class="flexR"></div>
                             </div>
+                            <div id="selected-assignees" class="assigned-to-chips display-none"></div>
                         </div>
+
 
 
                         <div class="form-group">
@@ -133,21 +119,13 @@
                                             aria-label="Toggle category">
                                             <svg width="24" height="24" viewBox="0 0 25 24" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
-                                                <mask id="mask0_338061_4850" style="mask-type:alpha"
-                                                    maskUnits="userSpaceOnUse" x="0" y="0" width="25" height="24">
-                                                    <rect x="0.248535" width="24" height="24" fill="#D9D9D9" />
-                                                </mask>
-                                                <g mask="url(#mask0_338061_4850)">
-                                                    <path
-                                                        d="M11.5485 14.3L8.94851 11.7C8.63184 11.3833 8.56101 11.0208 8.73601 10.6125C8.91101 10.2042 9.22351 10 9.67351 10H14.8235C15.2735 10 15.586 10.2042 15.761 10.6125C15.936 11.0208 15.8652 11.3833 15.5485 11.7L12.9485 14.3C12.8485 14.4 12.7402 14.475 12.6235 14.525C12.5068 14.575 12.3818 14.6 12.2485 14.6C12.1152 14.6 11.9902 14.575 11.8735 14.525C11.7568 14.475 11.6485 14.4 11.5485 14.3Z"
-                                                        fill="#2A3647" />
-                                                </g>
+                                                <path
+                                                    d="M11.55 14.3L8.95 11.7C8.63 11.38 8.56 11.02 8.74 10.61C8.91 10.2 9.22 10 9.67 10H14.82C15.27 10 15.59 10.2 15.76 10.61C15.94 11.02 15.87 11.38 15.55 11.7L12.95 14.3C12.85 14.4 12.74 14.48 12.62 14.53C12.51 14.58 12.38 14.6 12.25 14.6C12.12 14.6 11.99 14.58 11.87 14.53C11.76 14.48 11.65 14.4 11.55 14.3Z"
+                                                    fill="#2A3647" />
                                             </svg>
-
                                         </button>
-
                                     </div>
-                                    <ul id="category-options" class="dropdown-options display-none"></ul>
+                                    <ul id="category-options" class="dropdown-options"></ul>
                                 </div>
                             </div>
                         </div>
