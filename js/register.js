@@ -1,9 +1,22 @@
-/**
- * register2.js
+/* register.js
  * Handles user registration with universal password masking via '*'.
  */
-
-const demoContacts = [/* ... contacts ... */];
+/**
+ * Predefined demo contacts for new users.
+ * @type {Array<{ name: string, email: string, phone: string, color: string }>}
+ */
+const demoContacts = [
+  { name: "Anna Becker", email: "anna@example.com", phone: "123456789", color: "#FF7A00" },
+  { name: "Tom Meier", email: "tom@example.com", phone: "987654321", color: "#FF5EB3" },
+  { name: "Lisa Schmidt", email: "lisa@example.com", phone: "555123456", color: "#6E52FF" },
+  { name: "Peter Braun", email: "peter@example.com", phone: "333222111", color: "#9327FF" },
+  { name: "Nina Keller", email: "nina@example.com", phone: "444555666", color: "#00BEE8" },
+  { name: "Max Fischer", email: "max@example.com", phone: "666777888", color: "#1FD7C1" },
+  { name: "Julia König", email: "julia@example.com", phone: "777888999", color: "#FF745E" },
+  { name: "Leon Wagner", email: "leon@example.com", phone: "111222333", color: "#FFA35E" },
+  { name: "Emma Roth", email: "emma@example.com", phone: "222333444", color: "#FC71FF" },
+  { name: "Paul Weber", email: "paul@example.com", phone: "999000111", color: "#462F8A" }
+];
 
 document.addEventListener('DOMContentLoaded', () => {
   ['password','password2'].forEach(id=>{
@@ -227,21 +240,64 @@ async function signUp(){
   console.log('signUp startet');
 
   resetPasswordError();
-  const n=getTrimedValue('name');
-  const e=getTrimedValue('email');
-  const pw1=document.getElementById('password')?.getRealPassword()||'';
-  const pw2=document.getElementById('password2')?.getRealPassword()||'';
-  const ok=document.getElementById('accept')?.checked;
-  if(!validatePasswords(pw1,pw2)||!ok){if(!ok)alert('Please accept the privacy policy.');return;}  
-  try{const r=await postData('users',{name:n,email:e,password:pw1});await preloadContacts(r.name);localStorage.setItem('loggedInUserKey',r.name);showSignUpSuccessOverlay();}catch{alert('Es ist ein Fehler aufgetreten.');}
+  const n = getTrimedValue('name');
+  const e = getTrimedValue('email');
+  const pw1 = document.getElementById('password')?.getRealPassword()||'';
+  const pw2 = document.getElementById('password2')?.getRealPassword()||'';
+  const ok = document.getElementById('accept')?.checked;
+
+  if(!validatePasswords(pw1,pw2)||!ok){
+    if(!ok) alert('Please accept the privacy policy.');
+    return;
+  }
+
+  try {
+    const r = await postData('users',{name:n,email:e,password:pw1});
+
+    // 🔹 Hier den Key setzen wie contacts.js ihn erwartet:
+    localStorage.setItem('userKey', r.name); // statt loggedInUserKey
+    window.USERKEY = r.name;
+
+    // 🔹 Kontakte sauber anlegen:
+    await preloadContacts(r.name);
+
+    showSignUpSuccessOverlay();
+
+  } catch(err) {
+    console.error("SignUp error:", err);
+    alert('Es ist ein Fehler aufgetreten.');
+  }
 }
 
-
 /**
- * Adds demo contacts under user key.
+ * Adds demo contacts under user key with unique keys.
  * @param {string} uk
  */
 async function preloadContacts(uk){
-  for(const c of demoContacts)await postData(`users/${uk}/contacts`,c);
+  for(const c of demoContacts){
+    await postData(`users/${uk}/contacts`, c);
+  }
 }
 
+// in contacts.js
+
+function renderContacts(data) {
+  const container = document.getElementById("contactCardsContainer");
+  container.innerHTML = "";
+
+  // ⬇️ HIER DIE PRÜFUNG EINFÜGEN
+  if (!data) {
+    console.warn("Keine Kontakte zum Rendern vorhanden, da 'data' null oder undefined ist.");
+    // Optional kannst du eine Nachricht für den Benutzer anzeigen:
+    // container.innerHTML = "<div>Du hast noch keine Kontakte angelegt.</div>";
+    return; // Die Funktion hier sicher beenden
+  }
+
+  const sortedEntries = sortContactsByName(data); // Dieser Code wird jetzt nur erreicht, wenn 'data' existiert
+
+  let currentLetter = null;
+
+  for (const [key, contact] of sortedEntries) {
+    // ... der Rest der Funktion bleibt unverändert
+  }
+}
