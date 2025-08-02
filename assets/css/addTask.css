@@ -208,12 +208,12 @@ input[type="text"]:focus, input[type="date"]:focus, textarea:focus,
     width: 100%;
     max-width: 100%;
     overflow-x: hidden;
-    padding-bottom: 80px !important;
+    padding-bottom: 60px !important;
     background-color: #f6f7f8;
   }
 
-  header {
-    display: none;
+  main {
+    max-height: none;
   }
 
   .content.add-task-content,
@@ -225,10 +225,6 @@ input[type="text"]:focus, input[type="date"]:focus, textarea:focus,
   .footer-right {
     box-sizing: border-box;
     padding: 0 8px;
-  }
-
-  .content.add-task-content {
-    margin-bottom: 80px !important;
   }
 
   .form-columns {
@@ -287,7 +283,6 @@ input[type="text"]:focus, input[type="date"]:focus, textarea:focus,
     justify-content: space-between;
     gap: 2%;
     flex-wrap: nowrap;
-    margin-bottom: 80px;
     background-color: #f6f7f8;
 }
 
@@ -311,6 +306,9 @@ input[type="text"]:focus, input[type="date"]:focus, textarea:focus,
   nav .menu {
     flex-direction: row !important;
     justify-content: space-around;
+  }
+  nav {
+    z-index: 10;
   }
 }
 
