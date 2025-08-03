@@ -3,8 +3,7 @@
  * @description Handles subtask creation, editing, and deletion with SVG icons injected from template.js.
  */
 
-/**
- * Initialize subtask controls on page load.
+ /* Initialize subtask controls on page load.
  */
 function initSubtaskControls() {
   injectStaticSubtaskIcons();
