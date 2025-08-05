@@ -1,19 +1,24 @@
 /**
  * @file subtasks.js
- * @description Handles subtask creation, editing, and deletion with SVG icons injected from template.js.
+ * @description Handles subtask creation, editing, and deletion.
  */
 
- /* Initialize subtask controls on page load.
+/* Initialize subtask controls on page load.
  */
 function initSubtaskControls() {
   injectStaticSubtaskIcons();
 
   const elements = getSubtaskElements();
   if (!elements) return;
-
   elements.plusBtn.addEventListener("click", () => showAddCancelBtns(elements));
   elements.clearBtn.addEventListener("click", () => cancelSubtask(elements));
   elements.confirmBtn.addEventListener("click", () => handleSubtaskAddition(elements));
+  elements.input.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      handleSubtaskAddition(elements);
+    }
+  });
 }
 
 /**
@@ -145,7 +150,6 @@ function editSubtask(btn) {
   li.querySelector("input").focus();
 }
 
-
 /**
  * Handle Enter key while editing.
  */
@@ -215,5 +219,19 @@ function clearSubtasks() {
   if (list) list.innerHTML = "";
 }
 
+/**
+ * Retrieves an array of subtask texts from the DOM.
+ * @returns {Array<string>}
+ */
+function getSubtaskListData() {
+    const list = document.getElementById("subtask-list");
+    if (!list) return [];
+  
+    return Array.from(list.querySelectorAll(".subtask-text")).map(
+        (item) => item.textContent.trim()
+    );
+}
+
 window.initSubtaskControls = initSubtaskControls;
 window.clearSubtasks = clearSubtasks;
+window.getSubtaskListData = getSubtaskListData; 
