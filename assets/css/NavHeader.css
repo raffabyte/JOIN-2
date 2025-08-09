@@ -55,12 +55,11 @@ header h3 {
   border-radius: 20px 0 20px 20px;
   padding: 10px;
   width: 150px;
-  height: 158px;
   align-items: flex-start;
   justify-content: center;
   position: absolute;
-  top: 131%;
-  right: 50%;
+  top: 76px;
+  right: 0px;
   transform: translateX(16%);
   transition: transform 0.1s ease-in-out, opacity 0.1s ease-in-out;
   opacity: 1;
@@ -240,6 +239,10 @@ span {
   display: none;
 }
 
+.helpMobileLink {
+  display: none;
+}
+
 @media (max-width: 1399px) {
   body {
     padding-left: 186px;
@@ -271,16 +274,9 @@ span {
   }
 
   #menu {
-    width: 120px; /* 150px → -20% */
-    height: 126px; /* 158px → -20% */
-    padding: 8px; /* 10px → -20% */
-    top: 105%; /* 131% ist zu groß auf kleinen Viewports – angepasst */
+    top: 60px;
+  right: 0px;
     transform: translateX(13%);
-  }
-
-  #menu a {
-    padding: 6px 0 6px 13px; /* 8px → -20% */
-    font-size: 13px; /* 16px → -20% */
   }
 
   .userInfo {
@@ -371,16 +367,9 @@ span {
   }
 
   #menu {
-    width: 108px; /* 120px -10% */
-    height: 113px; /* 126px -10% */
-    padding: 7px; /* 8px -10% */
-    top: 95%;
+    top: 53px;
+  right: 0px;
     transform: translateX(12%);
-  }
-
-  #menu a {
-    padding: 5px 0 5px 11px;
-    font-size: 11.7px; /* 13px -10% */
   }
 
   .userInfo {
@@ -440,6 +429,21 @@ span {
 }
 
 @media (max-width: 799px) {
+  #menu {
+    width: 140px; 
+    padding: 16px; 
+    top: 40px;
+  right: 6px;
+    transform: translateX(12%);
+    gap: 8px;
+  }
+  #menu a {
+    padding: 5px 0 5px 11px;
+    font-size: 14px; /* 13px -10% */
+  }
+  .helpMobileLink {
+  display: flex;
+}
   body {
     padding-left: 0;
   }
