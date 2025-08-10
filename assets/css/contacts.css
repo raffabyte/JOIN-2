@@ -1430,6 +1430,10 @@ form {
   width: 120px;
   height: 120px;
 }
+#overlay.show .pb {
+  width: 120px;
+  height: 120px;
+}
 .menuOverlay {
   position: fixed;          /* statt absolute */
   inset: 0;                 /* top:0; right:0; bottom:0; left:0; */
@@ -1441,5 +1445,9 @@ form {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+.create-btn:hover {
+    padding: 10px 17px;; 
+    height: 39px;
 }
 }
