@@ -348,7 +348,6 @@ input[type="text"]:focus, input[type="date"]:focus, textarea:focus,
   .create-button {
     flex: 1 1 auto;
     min-width: 0;
-    max-width: 49%;
     width: auto !important;
     height: 48px;
     font-size: 16px;
@@ -384,9 +383,22 @@ input[type="text"]:focus, input[type="date"]:focus, textarea:focus,
   }
 }
 
-@media (max-width: 375px) {
+@media (max-width: 380px) {
+  .clear-button,
+  .create-button {
+    min-width: 0;
+  }
+  .clear-button {
+    width: 84px;
+  }
+  .create-button {
+    width: 154px;
+  }
+
+  .priority-btn {
+    padding: 8px 5px;
+  }
   .priority-options {
     gap: 2px;
   }
 }
-
