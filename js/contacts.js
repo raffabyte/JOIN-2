@@ -79,6 +79,8 @@ function setupCreateButtons() {
 function toggleOverlay() {
   const overlay = document.getElementById("overlay");
   overlay.classList.contains("show") ? hideOverlay(overlay) : showOverlay(overlay);
+
+
 }
 
 /**
@@ -396,9 +398,15 @@ function showContactDetailsMobile(key) {
 }
 
 function toggleMobileMenu() {
-  const menu = document.getElementById("mobileMenu");
+  const menu = document.getElementById("menuOverlay");
   menu.classList.toggle("open");
 }
+
+document.getElementById("menuOverlay").addEventListener("click", () => {
+  document.getElementById("menuOverlay").classList.remove("open");
+});
+
+
 
 function closeMobileDetails() {
   const container = document.querySelector(".contactsContainer");

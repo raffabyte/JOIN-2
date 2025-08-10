@@ -1232,7 +1232,8 @@ form {
         background-color: #F6F7F8;
         height: calc(100% - 160px);
         width: 100%;
-        padding: 16px;
+        padding: 32px 16px;
+        gap: 32px;
     }
     .contacsList {
         width: 100%;
@@ -1254,8 +1255,8 @@ form {
 }
 .mobileMenu {
   position: absolute;
-  bottom: 100px;
-  right: -300px; /* Außerhalb des Bildschirms */
+ bottom: 100px;
+  right: 40px;
   width: 116px;
   height: 100px;
   background-color: white;
@@ -1294,8 +1295,8 @@ form {
     width: 24px;
 }
 
-.mobileMenu.open {
-  right: 0; /* Rein ins Bild */
+.menuOverlay.open {
+  transform: translateX(0);
 }
 .overlayContent {
     flex-direction: column;
@@ -1375,8 +1376,16 @@ form {
             position: absolute;
 
 }
+.ownBigContactCircle {
+        width: 84px;
+        height: 84px;
+        font-size: 33px;
+        border: solid 3px black;
+    }
     .contectName {
-        padding-left: 160px;
+                padding-left: 120px;
+                font-weight: 700;
+                font-size: 36px;
     }
     .ownBigContactCircle {
         position: absolute;
@@ -1385,7 +1394,52 @@ form {
         padding-bottom: 30px;
     }
 .succesDiv {
-        left: 200px;
+                left: 0;
+        top: 0;
 
+
+}
+    .contactInformation {
+        font-size: 20px;
+        font-weight: 400;
+        padding: 26px 0 0 0 ;
+
+    }
+        .contactsDetails {
+        gap: 21px;
+    }
+    .strong {
+    font-weight: 700;
+    font-size: 16px;
+    color: black;
+}
+.mailInfoSmall {
+    font-weight: 400;
+    font-size: 16px;
+    color: #007CEE;
+}
+.phoneInfoSmall {
+    font-weight: 400;
+    font-size: 16px;
+}
+#overlay.show .ownBigContactCircle {
+  width: 120px;
+  height: 120px;
+}
+#overlay.show .BigContactCircle {
+  width: 120px;
+  height: 120px;
+}
+.menuOverlay {
+  position: fixed;          /* statt absolute */
+  inset: 0;                 /* top:0; right:0; bottom:0; left:0; */
+  transform: translateX(100%);    /* initial verborgen (rechts raus) */
+  transition: transform 0.3s ease-in-out;
+  z-index: 999; 
+}
+.success-overlay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 }
