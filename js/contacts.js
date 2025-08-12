@@ -216,9 +216,9 @@ async function createNewContact(name, email, phone) {
 
 /**
  * Zeigt einen temporären Erfolgsoverlay an.
- * @param {string} [message="Kontakt erfolgreich gespeichert!"]
+ * @param {string} [message="Contact saved successfully!"]
  */
-function showSuccessOverlay(message = "Kontakt erfolgreich gespeichert!") {
+function showSuccessOverlay(message = "Contact saved successfully!") {
   const successOverlay = document.getElementById("successOverlay");
   const text = successOverlay.querySelector(".succesText");
   text.textContent = message;
@@ -545,7 +545,7 @@ async function deleteContact(key, closeOverlay = false) {
   if (closeOverlay) {
     toggleOverlay();
   }
-  showSuccessOverlay("Kontakt gelöscht!");
+  showSuccessOverlay("Contact deleted!");
 }
 
 /**
