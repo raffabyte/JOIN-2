@@ -4,6 +4,7 @@ nav {
   height: 100vh;
   width: 232px;
   background-color: #2a3647;
+  z-index: 1000;
 }
 .navContent {
   display: flex;

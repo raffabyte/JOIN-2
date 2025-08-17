@@ -1,6 +1,7 @@
 .task-overlay {
   height: 80%;
-  width: 525px;
+  max-width: 525px;
+  width: 80vw;
   background: white;
   padding: 48px 40px;
   border-radius: 30px;
@@ -9,7 +10,6 @@
   transition: all 0.1s ease-in-out;
 
 }
-
 
 .task-overlay-content, .task-edit-form, #taskEditForm {
   height: 100%;
@@ -144,4 +144,33 @@
   overflow-y: auto;
   padding-right: 8px;
   margin-bottom: 16px;
+}
+
+@media (max-width: 1000px) {
+  .task-overlay h2 {
+    font-size: 56px;
+  }
+}
+
+@media (max-width: 600px) {
+  .task-overlay h2 {
+    font-size: 47px;
+  }
+  .task-overlay {
+    padding: 32px ;
+  }
+  .task-overlay-headdings, #taskOverlayDescription, .overlay-priority, .member-name-text{
+    font-size: 16px;
+  }
+  .task-overlay-header {
+    gap:16px;
+  }
+}
+@media (max-width: 500px) {
+  .task-overlay {
+    padding: 32px 24px;
+  }
+  .task-overlay h2 {
+    font-size: 36px;
+  }
 }

@@ -113,24 +113,28 @@ function linkesNavLogin(activePage) {
 
 function taskCardTemplate(task) {
     return `
-        <div class="task-card width-100 flexC" id="${task.id}" 
-              onclick="taskOverlay('${task.id}')" 
+        <div class="task-card width-100 flexC" id="${task.id}"
+              onclick="if(window.__mobileDragging){window.__mobileDragging=false; return false;} taskOverlay('${task.id}')"
               draggable="true" ondragstart="startDragging(event, '${task.id}')"
-              ondragend="stopDragging(event, '${task.id}')">
+              ondragend="stopDragging(event, '${task.id}')"
+              ontouchstart="this._lpt=setTimeout(()=>{ window.__mobileDragging=true; try{ startDragging({dataTransfer:{setDragImage:()=>{}}}, '${task.id}'); }catch(e){ /* fallback */ currentDraggedElement='${task.id}'; this.classList.add('dragging'); } }, 250)"
+              ontouchmove="if(window.__mobileDragging){ const t=event.touches[0]; const el=document.elementFromPoint(t.clientX,t.clientY); const col=el && el.closest('.board-column-bottom'); const map={todoColumn:'toDoDragArea', inProgressColumn:'inProgressDragArea', awaitFeedbackColumn:'awaitingFeedbackDragArea', doneColumn:'doneDragArea'}; Object.keys(map).forEach(k=>{ if(!col || k!==col.id) removeHighlight(map[k]); }); if(col && map[col.id]){ highlight(map[col.id]); } event.preventDefault(); }"
+              ontouchend="clearTimeout(this._lpt); if(window.__mobileDragging){ const t=(event.changedTouches && event.changedTouches[0]) || (event.touches && event.touches[0]); if(t){ const el=document.elementFromPoint(t.clientX,t.clientY); const col=el && el.closest('.board-column-bottom'); if(col && col.id){ moveTo(col.id); } else { stopDragging(); ['toDoDragArea','inProgressDragArea','awaitingFeedbackDragArea','doneDragArea'].forEach(id=>removeHighlight(id)); } } event.preventDefault(); setTimeout(()=>{window.__mobileDragging=false;}, 250); }"
+              ontouchcancel="clearTimeout(this._lpt); if(window.__mobileDragging){ stopDragging(); ['toDoDragArea','inProgressDragArea','awaitingFeedbackDragArea','doneDragArea'].forEach(id=>removeHighlight(id)); setTimeout(()=>{window.__mobileDragging=false;}, 250); }">
             <div class="task-card-header width-100 flexR">
-                <span id="${toCamelCase(task.category)}">${task.category}</span>
+                <span id="${convertToCamelCase(task.category)}">${task.category}</span>
             </div>
             <h3>${task.title}</h3>
-            <p class="task-description ${visibilityClass(task.description)}" id="taskDescription">${task.description}</p>
-            <div class="subtasks flexR ${visibilityClass(Array.isArray(task.subtasks) && task.subtasks.length > 0)}" id="subtasks">
-                ${handleSubtasks(task.subtasks)}
+            <p class="task-description ${getVisibilityClass(task.description)}" id="taskDescription">${task.description}</p>
+            <div class="subtasks flexR ${getVisibilityClass(Array.isArray(task.subtasks) && task.subtasks.length > 0)}" id="subtasks">
+                ${generateSubtaskProgress(task.subtasks)}
             </div>
-            <div class="space-between flexR ${visibilityClass(hasFooterData(task))}">
-                <div class="task-members width-100 flexR ${visibilityClass(Array.isArray(task.assignee) && task.assignee.length > 0)}" id="taskMembers">
+            <div class="space-between flexR ${getVisibilityClass(taskHasFooterData(task))}">
+                <div class="task-members width-100 flexR ${getVisibilityClass(Array.isArray(task.assignee) && task.assignee.length > 0)}" id="taskMembers">
                     ${renderMembers(task)}
                 </div>
-                <div class="${visibilityClass(task.priority)} task-priority width-100 flexR">
-                    ${handlePrioritySvg(task.priority)}
+                <div class="${getVisibilityClass(task.priority)} task-priority width-100 flexR">
+                    ${getPrioritySvg(task.priority)}
                 </div>
             </div>
         </div>`;
@@ -138,7 +142,7 @@ function taskCardTemplate(task) {
 
 function noTaskCardTemplate(columnName) {
     return `
-        <div class="no-task-item flexR">
+        <div class="no-task-item flexR width-100">
             <p>No tasks ${columnName}</p>
         </div>`;
 }
@@ -193,32 +197,32 @@ function taskOverlayTemplate(task){
     return `
         <div class="flexC gap-24 task-overlay-content width-100" id="taskOverlayContent" data-task-id="${task.id}">
             <div class="space-between flexR">
-                <span class="task-category" id="${toCamelCase(task.category)}">${task.category}</span>
+                <span class="task-category" id="${convertToCamelCase(task.category)}">${task.category}</span>
                 <button class="overlay-button" onclick="closeOverlay()">
                     ${CLOSE_CANCEL_SVG}
                 </button>
             </div>
             <div class="task-overlay-header gap-24 flexC">
                 <h2>${task.title}</h2>
-                <p class="${visibilityClass(task.description)}" id="taskOverlayDescription">${task.description || ''}</p>
+                <p class="${getVisibilityClass(task.description)}" id="taskOverlayDescription">${task.description || ''}</p>
                 <div class="gap-25 flexR">
                     <p class="task-overlay-headdings">Due Date:</p>
                     ${formatDate(task.dueDate)}
                 </div>
-                <div class="flexR gap-25 ${visibilityClass(task.priority)}">
+                <div class="flexR gap-25 ${getVisibilityClass(task.priority)}">
                     <p class="task-overlay-headdings">Priority:</p>
                     <div class="flexR overlay-priority">
                         ${handlePriority(task.priority)} 
-                        ${handlePrioritySvg(task.priority)}
+                        ${getPrioritySvg(task.priority)}
                     </div>
                 </div>
-                <div class="assignee-container gap-8 flexC ${visibilityClass(task.assignee)}">
+                <div class="assignee-container gap-8 flexC ${getVisibilityClass(task.assignee)}">
                     <p class="task-overlay-headdings">Assignees:</p>
                     <div class="flexC width-100">
                     ${renderMembersWithName(task)}
                     </div>
                 </div>
-                <div class="gap-8 flexC subtasks-overlay ${visibilityClass(task.subtasks)}">   
+                <div class="gap-8 flexC subtasks-overlay ${getVisibilityClass(task.subtasks)}">   
                     <p class="task-overlay-headdings">Subtasks:</p>
                     <div class="subtasks-overlay-list flexC width-100">
                         ${task.subtasks && task.subtasks.length > 0 ? task.subtasks.map(subtask => `
@@ -319,7 +323,7 @@ function taskEditTemplate(task) {
 
 function editTaskOverlayTemplate(task) {
     return `
-    <div class="display-none flexC gap-24" id="taskEditForm">
+    <div class="display-none flexC gap-24 width-100" id="taskEditForm">
         <div class="flexR width-100 flex-end">
             <button class="overlay-button" onclick="closeOverlay()">
                     ${CLOSE_CANCEL_SVG}
@@ -350,7 +354,6 @@ function assigneeOptionTemplate(contact) {
                     </div>
                 `
 }
-
 
 // ------------------ contacts --------------------
 

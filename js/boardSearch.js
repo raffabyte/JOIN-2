@@ -1,21 +1,17 @@
 document.addEventListener("DOMContentLoaded", () => {
   const input = document.getElementById("searchInput");
-  if (!input) return;
-  input.addEventListener("input", debounce(handleSearch, 300));
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-  const input = document.getElementById("searchInput");
+  const mobileInput = document.getElementById("searchInputMobile");
   const searchBtn = document.getElementById("searchButton");
 
-  if (input) input.addEventListener("input", debounce(handleSearch, 300));
-  if (searchBtn) searchBtn.addEventListener("click", handleSearch);
+  if (input) input.addEventListener("input", debounce(() => handleSearch("searchInput"), 300));
+  if (mobileInput) mobileInput.addEventListener("input", debounce(() => handleSearch("searchInputMobile"), 300));
+  if (searchBtn) searchBtn.addEventListener("click", () => handleSearch("searchInput"));
 });
 
-function handleSearch() {
+function handleSearch(inputId = "searchInput") {
   const query = document
-    .getElementById("searchInput")
-    .value.trim()
+    .getElementById(inputId)
+    ?.value.trim()
     .toLowerCase();
   if (!query) return window.updateBoard?.();
   fetchFilteredTasks(query);
@@ -33,9 +29,42 @@ function fetchFilteredTasks(query) {
           t.title?.toLowerCase().includes(query) ||
           t.description?.toLowerCase().includes(query)
       );
-      window.updateColumns?.(result);
-      checkEmptyFiltered(result);
+      renderSearchResults(result);
     });
+}
+
+function renderSearchResults(tasks) {
+  const columns = [
+    { id: 'todoColumn', dragAreaId: 'toDoDragArea' },
+    { id: 'inProgressColumn', dragAreaId: 'inProgressDragArea' },
+    { id: 'awaitFeedbackColumn', dragAreaId: 'awaitingFeedbackDragArea' },
+    { id: 'doneColumn', dragAreaId: 'doneDragArea' }
+  ];
+
+  columns.forEach(({ id, dragAreaId }) => {
+    const column = document.getElementById(id);
+    const columnTasks = tasks.filter(task => task.column === id);
+    
+    if (columnTasks.length === 0) {
+      // Keine Tasks gefunden - zeige "No tasks found"
+      column.innerHTML = noTaskCardTemplate("found") + dragAreaTemplate(dragAreaId);
+    } else {
+      // Tasks gefunden - zeige diese
+      const tasksHTML = columnTasks.map(taskCardTemplate).join('');
+      column.innerHTML = tasksHTML + dragAreaTemplate(dragAreaId);
+    }
+    
+    // Setup event handlers für die Spalte
+    const dragArea = document.getElementById(dragAreaId);
+    if (dragArea) {
+      column.ondrop = () => moveTo(id);
+      column.ondragover = (e) => {
+        allowDrop(e);
+        highlight(dragAreaId);
+      };
+      column.ondragleave = () => removeHighlight(dragAreaId);
+    }
+  });
 }
 
 function checkEmptyFiltered(tasks) {
@@ -61,7 +90,7 @@ function insertNoMatchCardIfEmpty(colId, dragAreaId, tasks) {
   const hasTasks = tasks.some((t) => t.column === colId);
   if (hasTasks) return;
 
-  colEl.innerHTML = `<div class="no-task-item flexR">No tasks found</div>`;
+  colEl.innerHTML = noTaskCardTemplate("found");
   if (dragArea) colEl.appendChild(dragArea);
 }
 
@@ -75,10 +104,11 @@ function debounce(fn, delay) {
 
 function clearSearchInput() {
   const input = document.getElementById("searchInput");
-  if (input) {
-    input.value = "";
-    handleSearch();
-  }
+  const mobileInput = document.getElementById("searchInputMobile");
+  
+  if (input) input.value = "";
+  if (mobileInput) mobileInput.value = "";
+  handleSearch();
 }
 
 function fetchAllTasks() {

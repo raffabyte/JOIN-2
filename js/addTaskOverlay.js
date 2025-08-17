@@ -277,10 +277,10 @@ function cancelSubtask(){
     const plusBtn = document.getElementById('subtaskPlusBtn');
     const addCancelBtns = document.getElementById('addCancelBtns');
 
-    subtaskInput.value = ''; 
-    editedSubtaskInput.value = '';
-    plusBtn.classList.remove('display-none');
-    addCancelBtns.classList.add('display-none');
+    if (subtaskInput) subtaskInput.value = ''; 
+    if (editedSubtaskInput) editedSubtaskInput.value = '';
+    if (plusBtn) plusBtn.classList.remove('display-none');
+    if (addCancelBtns) addCancelBtns.classList.add('display-none');
 }
 
 function addSubtask(subtaskInputId){

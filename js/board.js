@@ -1,8 +1,4 @@
-const OVERLAY = document.getElementById('overlay');
-const OVERLAY_CONTENT = document.getElementById('overlayContent');
 const TASKS_BASE_URL = "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks.json";
-
-let currentDraggedElement;
 
 
 if (!USERKEY) {
@@ -10,45 +6,64 @@ if (!USERKEY) {
     window.location.href = "../../index.html";
 }
 
-/* Overlay closing functionality */
-
-function closeOverlay() {
-    OVERLAY_CONTENT.classList.remove('active');
-
-    setTimeout(() => {
-        OVERLAY.classList.add('display-none');
-        OVERLAY_CONTENT.classList.remove('add-task');
-        OVERLAY_CONTENT.innerHTML = '';
-        OVERLAY_CONTENT.classList.remove('add-task', 'edit-task-overlay', 'task-overlay');
-    }, 110);
-}
-
-
-function handleOverlayClicks(event) {
-    event.target === OVERLAY ? closeOverlay() : handleOutsideClick(event);
-}
-
 /* Saving added tasks to Board */
 
+/**
+ * Gets the selected priority from the form
+ * @returns {string} The selected priority or empty string
+ */
+function getSelectedPriority() {
+    const priorityBtn = document.querySelector('.priority-button.active');
+    return priorityBtn ? priorityBtn.classList[priorityBtn.classList.length - 2] : '';
+}
+
+
+/**
+ * Gets the assigned contacts from the form
+ * @returns {Array<string>} Array of assigned contact names
+ */
+function getAssignedContacts() {
+    return Array.from(document.querySelectorAll('#selectedAssignee .contact-icon'))
+        .map(span => span.dataset.name);
+}
+
+
+/**
+ * Gets the subtasks from the form
+ * @returns {Array<Object>} Array of subtask objects
+ */
+function getFormSubtasks() {
+    return Array.from(document.querySelectorAll('.subtask-text')).map(subtask => ({
+        value: subtask.textContent,
+        checked: false
+    }));
+}
+
+
+/**
+ * Collects task data from form elements and creates a task object
+ * @param {string} columnId - The ID of the column where the task will be placed
+ * @returns {Object} Task object with all form data
+ */
 function collectTaskData(columnId) {
-    const PRIORITY_BTN = document.querySelector('.priority-button.active');
     return {
         title: document.getElementById('taskTitle').value,
         description: document.getElementById('taskDescription').value,
         dueDate: document.getElementById('taskDueDate').value,
         category: document.getElementById('taskCategory').textContent,
-        assignee: Array.from(document.querySelectorAll('#selectedAssignee .contact-icon')).map(span => span.dataset.name),
-        priority: PRIORITY_BTN ? PRIORITY_BTN.classList[PRIORITY_BTN.classList.length - 2] : '',
-        subtasks: Array.from(document.querySelectorAll('.subtask-text')).map(subtask => ({
-            value: subtask.textContent,
-            checked: false
-        })),
+        assignee: getAssignedContacts(),
+        priority: getSelectedPriority(),
+        subtasks: getFormSubtasks(),
         column: columnId
     };
 }
 
-
-let saveTaskDataTo = (columnId) => {
+/**
+ * Validates and saves task data to a specific column
+ * @param {string} columnId - The ID of the target column
+ * @returns {Object|null} Task data object if valid, null if validation fails
+ */
+function validateAndSaveTaskData(columnId) {
     const taskData = collectTaskData(columnId);
     if (!taskData.title || !taskData.dueDate || !taskData.category) {
         showValidationErrors();
@@ -57,9 +72,14 @@ let saveTaskDataTo = (columnId) => {
     return taskData;
 }
 
-
-async function taskDataPush(columnId) {
-    const taskData = saveTaskDataTo(columnId);
+/**
+ * Pushes task data to the Firebase database
+ * @param {string} columnId - The ID of the column
+ * @returns {Promise<Response>} Promise that resolves to the fetch response
+ * @throws {Promise<string>} Promise that rejects with 'No task data' if no data provided
+ */
+async function pushTaskToDatabase(columnId) {
+    const taskData = validateAndSaveTaskData(columnId);
     if (!taskData) return Promise.reject('No task data');
 
     return fetch(TASKS_BASE_URL, {
@@ -86,6 +106,16 @@ function setupColumnEventHandlers(column, columnId, dragAreaId) {
 }
 
 
+/**
+ * Groups tasks by columns and sorts them by movedAt timestamp
+ * @function groupAndSortTasks
+ * @param {Array<Object>} tasks - Array of task objects
+ * @returns {Object} Object with tasks grouped by column and sorted
+ * @property {Array} todoColumn - Tasks in todo column
+ * @property {Array} inProgressColumn - Tasks in progress column
+ * @property {Array} awaitFeedbackColumn - Tasks awaiting feedback
+ * @property {Array} doneColumn - Completed tasks
+ */
 function groupAndSortTasks(tasks) {
     const tasksByColumn = {
         todoColumn: [], inProgressColumn: [],
@@ -102,7 +132,15 @@ function groupAndSortTasks(tasks) {
     return tasksByColumn;
 }
 
-
+/**
+ * Generates column data with HTML and drag area information
+ * @function generateColumnData
+ * @param {Object} tasksByColumn - Tasks grouped by column
+ * @returns {Array<Object>} Array of column data objects
+ * @property {string} col - Column ID
+ * @property {string} dragAreaId - Drag area ID for the column
+ * @property {string} tasksHTML - HTML string of all tasks in the column
+ */
 function generateColumnData(tasksByColumn) {
     const columns = ['todoColumn', 'inProgressColumn', 'awaitFeedbackColumn', 'doneColumn'];
     const dragAreas = ['toDoDragArea', 'inProgressDragArea', 'awaitingFeedbackDragArea', 'doneDragArea'];
@@ -113,6 +151,12 @@ function generateColumnData(tasksByColumn) {
     });
 }
 
+/**
+ * Renders column data to the DOM and sets up event handlers
+ * @function renderColumns
+ * @param {Array<Object>} columnData - Array of column data objects
+ * @returns {void}
+ */
 function renderColumns(columnData) {
     columnData.forEach(({ col, dragAreaId, tasksHTML }) => {
         const column = document.getElementById(col);
@@ -121,6 +165,12 @@ function renderColumns(columnData) {
     });
 }
 
+/**
+ * Updates all board columns with provided tasks
+ * @function updateColumns
+ * @param {Array<Object>} tasks - Array of task objects
+ * @returns {Promise<void>} Promise that resolves when columns are updated
+ */
 async function updateColumns(tasks) {
     const tasksByColumn = groupAndSortTasks(tasks);
     await loadAllContactColors();
@@ -129,21 +179,11 @@ async function updateColumns(tasks) {
 }
 
 
-function checkEmptyColumn() {
-    const boardColumns = document.querySelectorAll('.board-column');
-    boardColumns.forEach(column => {
-        const existingNoTask = column.querySelector('.no-task-item');
-        const dragArea = column.querySelector('.drag-area');
-        
-        if (!column.querySelector('.task-card') && dragArea && dragArea.classList.contains('display-none')) {
-            !existingNoTask ? column.innerHTML += noTaskCardTemplate(column.getAttribute('column-name')) : null;
-        } else {
-            // Entferne no-task-item wenn dragArea sichtbar ist oder Tasks vorhanden sind
-            existingNoTask ? existingNoTask.remove() : null;
-        }
-    });
-}
-
+/**
+ * Fetches all board data from Firebase database
+ * @function fetchBoardData
+ * @returns {Promise<Array<Object>>} Promise that resolves to array of task objects with IDs
+ */
 async function fetchBoardData() {
     const [tasksResponse] = await Promise.all([
         fetch(TASKS_BASE_URL),
@@ -156,6 +196,11 @@ async function fetchBoardData() {
     }));
 }
 
+/**
+ * Updates the entire board with fresh data from the database
+ * @function updateBoard
+ * @returns {Promise<void>} Promise that resolves when board is updated
+ */
 async function updateBoard() {
     try {
         const tasks = await fetchBoardData();
@@ -166,23 +211,21 @@ async function updateBoard() {
     }
 }
 
-
-function showAddedTaskNotification() {
-    const ADDEDTOBOARDMESSAGE = document.getElementById('addedToBoardMessage');
-    ADDEDTOBOARDMESSAGE.classList.remove('display-none');
-}
-
-
-
+/**
+ * Adds a new task to the specified column
+ * @param {Event|null} event - The event object (if triggered by form submission)
+ * @param {string} columnId - The ID of the target column
+ * @returns {void}
+ */
 function addTask(event, columnId) {
     if (event) event.preventDefault();
-    const taskData = saveTaskDataTo(columnId);
+    const taskData = validateAndSaveTaskData(columnId);
 
     if (!taskData) {
         return;
     }
 
-    taskDataPush(columnId)
+    pushTaskToDatabase(columnId)
         .then(() => {
             updateBoard();
             showAddedTaskNotification();
@@ -194,8 +237,18 @@ function addTask(event, columnId) {
 
 
 /* Tasks-Design in Board functions */
+
+/**
+ * Map to store contact colors for quick access
+ * @type {Map<string, string>}
+ */
 let contactColorMap = new Map();
 
+/**
+ * Loads all contact colors from Firebase and stores them in a Map for quick access
+ * @function loadAllContactColors
+ * @returns {Promise<Object>} Promise that resolves to the contacts object from Firebase
+ */
 async function loadAllContactColors() {
     const response = await fetch(`https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/users/${USERKEY}/contacts.json`);
     const result = await response.json();
@@ -211,17 +264,36 @@ async function loadAllContactColors() {
     return result;
 }
 
+/**
+ * Gets the color associated with a contact name
+ * @function getContactColor
+ * @param {string} name - The contact name
+ * @returns {string} The color value or 'transparent' if not found
+ */
 function getContactColor(name) {
     if (!name) return 'transparent';
     return contactColorMap.get(name) || 'transparent';
 }
 
+/**
+ * Finds and returns a contact object by name
+ * @function getContactByName
+ * @param {string} name - The contact name to search for
+ * @returns {Promise<Object|null>} Promise that resolves to the contact object or null if not found
+ */
 async function getContactByName(name) {
     const contactsCache = await loadAllContactColors();
     return Object.values(contactsCache || {}).find(contact => contact.name === name) || null;
 }
 
 
+/**
+ * Renders member icons for a task, showing up to 3 members with overflow count
+ * @function renderMembers
+ * @param {Object} task - The task object containing assignee information
+ * @param {Array<string>} task.assignee - Array of assigned contact names
+ * @returns {string} HTML string of member icons
+ */
 function renderMembers(task) {
     const filteredAssignees = Array.isArray(task.assignee) ? task.assignee.filter(name => name && name.trim()) : '';
     if (filteredAssignees.length === 0) return '';
@@ -231,140 +303,16 @@ function renderMembers(task) {
     return filteredAssignees.length > 3 ? result + extraCountSpanTemplate(filteredAssignees.length - 3) : result;
 }
 
-
+/**
+ * Renders member icons with names for detailed view
+ * @function renderMembersWithName
+ * @param {Object} task - The task object containing assignee information
+ * @param {Array<string>} task.assignee - Array of assigned contact names
+ * @returns {string} HTML string of members with names
+ */
 function renderMembersWithName(task) {
     if (!Array.isArray(task.assignee)) return '';
     const filteredAssignees = task.assignee.filter(name => name && name.trim());
     const results = filteredAssignees.map(name => memberWithNameTemplate(name));
     return results.join('');
-}
-
-
-
-function toCamelCase(word) {
-    if (!word) return ''; // Fallback für undefined/null
-    return (word.charAt(0).toLowerCase() + word.slice(1)).replace(' ', '')
-}
-
-
-function handlePrioritySvg(priority) {
-    switch (priority) {
-        case 'HighPriority':
-            return HIGH_PRIORITY_SVG;
-            break;
-        case 'MidPriority':
-            return MID_PRIORITY_SVG;
-            break;
-        case 'LowPriority':
-            return LOW_PRIORITY_SVG;
-            break;
-        default:
-            return '';
-    }
-}
-
-
-function handleSubtasks(subtasks) {
-    if (!subtasks || subtasks.length === 0) {
-        return '';
-    }
-
-    const completedSubtasks = subtasks.filter(subtask => subtask.checked === true).length;
-    const totalSubtasks = subtasks.length;
-    const progressPercentage = (completedSubtasks / totalSubtasks) * 100;
-
-    return handleSubtasksTemplate(progressPercentage, completedSubtasks, totalSubtasks);
-}
-
-
-function showCheckedSubtasksCount(subtasks) {
-    if (Array.isArray(subtasks) && subtasks.length > 0) {
-        return `${subtasks.filter(sub => sub.checked).length}/${subtasks.length}`;
-    }
-    return '';
-}
-
-
-function visibilityClass(condition) {
-    return condition ? '' : ' display-none';
-}
-
-
-function hasFooterData(task) {
-    return (Array.isArray(task.assignee) && task.assignee.length > 0) || task.priority;
-}
-
-
-/* Drag & Drop Functions */
-
-
-function allowDrop(ev) {
-    ev.preventDefault();
-}
-
-
-function startDragging(event, id) {
-    const taskCard = document.getElementById(id);
-
-    event.dataTransfer.setDragImage(new Image(), 0, 0);
-    currentDraggedElement = id;
-    taskCard.classList.add('dragging');
-}
-
-
-function stopDragging() {
-    const element = document.getElementById(currentDraggedElement);
-
-    element.classList.remove('dragging');
-}
-
-
-function moveTo(column) {
-    const element = document.getElementById(currentDraggedElement);
-    if (!element) return;
-
-    element.classList.remove('dragging');
-    ['toDoDragArea', 'inProgressDragArea', 'awaitingFeedbackDragArea', 'doneDragArea'].forEach(removeHighlight);
-
-    fetch(`https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks/${currentDraggedElement}.json`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ column, movedAt: Date.now() })
-    }).then(() => { updateBoard(); currentDraggedElement = null; });
-}
-
-
-function dragAreaHeight(element) {
-    const draggedTask = document.getElementById(currentDraggedElement);
-
-    if (draggedTask) {
-        const taskHeight = draggedTask.offsetHeight;
-        element.style.height = taskHeight + 'px';
-    }
-}
-
-
-function highlight(id) {
-    const DRAG_AREA = document.getElementById(id);
-    const column = DRAG_AREA.parentElement;
-    const noTaskItem = column.querySelector('.no-task-item');
-
-    DRAG_AREA.classList.remove('display-none');
-    
-    dragAreaHeight(DRAG_AREA);
-    
-    !column.querySelector('.task-card') ? checkEmptyColumn() : null;
-}
-
-
-function removeHighlight(id) {
-    const DRAG_AREA = document.getElementById(id);
-    if (!DRAG_AREA || !DRAG_AREA.parentElement) return;
-
-    const column = DRAG_AREA.parentElement;
-    const noTaskItem = column.querySelector('.no-task-item');
-
-    DRAG_AREA.classList.add('display-none');
-
-    !column.querySelector('.task-card') ? checkEmptyColumn() : null;
 }

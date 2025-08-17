@@ -38,7 +38,6 @@
     font-weight: 400;
 }
 
-
 .overlay-bottom{
     flex: 1;
 }
@@ -99,7 +98,6 @@ h2{
     padding: 16px;
     border-radius: 10px;
 }
-
 
 .task-form-bottom span {
     font-size: 16px;
@@ -356,4 +354,59 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .subtask:hover .delete-edit-btns{
     visibility: visible;
     opacity: 1;
+}
+
+@media (max-width: 1000px) {
+    .overlay-bottom{
+        overflow-y: auto;
+    }
+    .task-form-top{
+        align-items: center;
+        flex-direction: column;
+    }
+    .middle-vector{
+        display: none;
+    }
+    .task-form-column{
+        width: 100%;
+        margin-bottom: 24px;
+    }
+}
+@media (max-width: 800px) {
+    h2{
+        font-size: 47px;
+    }
+    .overlay-content.add-task{
+        padding: 32px 24px;
+    }
+    label, .category-option, .prio-style, .inputs, .assignee-option span, .priority-button span, .edit-priority-button span{
+        font-size: 16px;
+    }
+    .inputs::placeholder, .inputs input::placeholder{
+        font-size: 16px;
+    }
+    .submit-section{
+        flex-direction: column;
+        gap: 16px;
+    }
+    .inputs{
+        padding: 8px;
+    }
+    .add-cancel-btns {
+        right: 4px !important;
+        gap: 2px !important;
+    }
+    .overlay-button {
+        width: 20px !important;
+        height: 20px !important;
+    }
+    .overlay-button svg {
+        width: 16px !important;
+        height: 16px !important;
+    }
+}
+@media (max-width: 539px) {
+    .priority-button span, .edit-priority-button span {
+        display: none;
+    }
 }

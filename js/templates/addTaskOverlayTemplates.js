@@ -95,7 +95,7 @@ function addTaskOverlayForm(columnId) {
                         </div>
                     </div>
                 </div>
-                <div class="flexR width-100 space-between">
+                <div class="flexR width-100 space-between submit-section">
                     <span>
                         <span class="highlight">*</span>
                         This field is required</span>
