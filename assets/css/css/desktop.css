@@ -1,0 +1,39 @@
+/* Basisstatus: Beide Logos unsichtbar */
+.join-logo-desktop,
+.join-logo-mobile {
+    position: absolute;
+    height: 121px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease, transform 0.5s ease, top 0.5s ease, left 0.5s ease;
+}
+
+/* Sichtbar gemachtes Logo */
+.join-logo-desktop.visible,
+.join-logo-mobile.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Nach oben links bewegt */
+.join-logo-desktop.moved,
+.join-logo-mobile.moved {
+    top: 40px;
+    left: 40px;
+    transform: translate(0,0) scale(1);
+}
+
+/* Mobile Hintergrund */
+@media (max-width: 768px) {
+    body {
+        background: #2A3647 !important;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0 !important;
+        transition: background-color 0.8s ease;
+    }
+}

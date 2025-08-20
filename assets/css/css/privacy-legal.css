@@ -1,0 +1,118 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: #f6f7f8;
+  flex: 1;
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 110px 5vw 0; 
+}
+
+.heading a img {
+  height: 32px; 
+  width: 32px;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.heading a:hover img {
+  transform: scale(1.1); 
+}
+
+.legal-content {
+  padding-left: 5vw;
+  padding-right: 5vw;
+  box-sizing: border-box;
+}
+
+.legal-heading {
+  font-size: clamp(28px, 4vw, 61px);
+  font-weight: 700;
+  margin: 0;
+  padding: 0;
+  gap: 30px;
+}
+
+h5.section-heading {
+  font-size: clamp(18px, 2vw, 27px);
+  font-weight: 700;
+  letter-spacing: 0;
+  margin-top: 32px;
+  padding-bottom: 16px;
+}
+
+h6.subsection-heading {
+  font-size: clamp(16px, 1.8vw, 20px);
+  font-weight: 700;
+  letter-spacing: 0;
+  margin-top: 30px;
+  padding-bottom: 8px;
+}
+
+.students,
+.text,
+.emailcontact {
+  font-size: 16px;
+  line-height: 120%;
+  padding-bottom: 16px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.highlight-blue {
+  color: rgb(26, 175, 224);
+  display: inline;
+  font-weight: inherit;
+  font-size: clamp(14px, 1.5vw, 16px);
+  width: auto;
+}
+
+.imprint-heading {
+  max-width: 100%;
+  height: auto;
+  font-weight: 700;
+  font-size: 27px;
+  letter-spacing: 0;
+  margin: 0;
+  word-break: break-word;
+}
+
+.scope-line-break {
+  display: block;
+  height: 16px;
+}
+
+@media (max-width: 768px) {
+  .content {
+  height: calc(100dvh - 160px);
+  overflow: auto;
+  }
+  .heading {
+    padding-top: 30px;
+  }
+  .legal-content {
+    padding-bottom: 30px;
+  }
+  h5.section-heading {
+    margin-top: 16px;
+  }
+  h6.subsection-heading {
+    margin-top: 12px;
+  }
+}
+@media (max-width: 509px) {
+  .legal-content {
+    padding-bottom: 82px; 
+  }
+}
