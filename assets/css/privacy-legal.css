@@ -10,24 +10,26 @@
   width: 100%;
   background-color: #f6f7f8;
   flex: 1;
+  max-width: 1920px;
+  margin: 0 auto;
 }
 
 .heading {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 110px 5vw 0; 
+  padding: 110px 5vw 0;
 }
 
 .heading a img {
-  height: 32px; 
+  height: 32px;
   width: 32px;
   cursor: pointer;
   transition: transform 0.2s ease-in-out;
 }
 
 .heading a:hover img {
-  transform: scale(1.1); 
+  transform: scale(1.1);
 }
 
 .legal-content {
@@ -93,10 +95,65 @@ h6.subsection-heading {
   height: 16px;
 }
 
+@media (max-width: 799px) {
+  body.is-logged-out .navContent {
+    display: flex;
+    flex-direction: row;
+    align-items: center; 
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 64px; 
+  }
+
+  body.is-logged-out .login-menu {
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    gap: 6px;
+  }
+
+  body.is-logged-out .login-menu .login-link {
+    flex-direction: column; 
+    align-items: flex-start; 
+    gap: 4px;
+    padding: 0;
+  }
+
+  body.is-logged-out .login-menu .login-link p {
+    margin: 0;
+    text-align: center;
+    font-size: 14px;
+  }
+
+  body.is-logged-out .legalLinks {
+    display: flex !important;
+    flex-direction: row; 
+    align-items: center; 
+    margin-left: auto; 
+    flex: 0 0 auto !important;
+    width: auto !important;
+    max-width: none !important;
+    height: 78px;
+    border-radius: 10px;
+    gap: 10px;
+  }
+
+  body.is-logged-out .legalLinks a,
+  .legalLinks button {
+    font-size: 14px;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    padding: 24px 8px;
+    gap: 10px;
+  }
+}
+
 @media (max-width: 768px) {
   .content {
-  height: calc(100dvh - 160px);
-  overflow: auto;
+    height: calc(100dvh - 160px);
+    overflow: auto;
   }
   .heading {
     padding-top: 30px;
@@ -113,6 +170,6 @@ h6.subsection-heading {
 }
 @media (max-width: 509px) {
   .legal-content {
-    padding-bottom: 82px; 
+    padding-bottom: 82px;
   }
 }
