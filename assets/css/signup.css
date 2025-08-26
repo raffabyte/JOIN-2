@@ -29,34 +29,51 @@ body {
 }
 
 header {
-  position: absolute;
-  top: 32px;
-  left: 32px;
+    display: flex; 
+    justify-content: center;
+    width: 100%;
+}
+
+.headerContent {
+    display: flex;
+    justify-content: space-between; 
+    max-width: 1920px;
+    width: 100%;
+}
+
+.visibleNo {
+  opacity: 0;
 }
 
 header img {
   height: 121px;
   width: 100px;
+      padding-top: 40px;
+    padding-left: 40px;
 }
 
 main {
   display: flex;
-  justify-content: center;
-  margin-top: 160px;
-  flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 0;
+    margin-top: 110px;
 }
 
 .login-container {
-  position: relative;
-  background: white;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  border-radius: 32px;
-  padding: 48px 32px;
-  width: 598px;
-  max-height: 630px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+    position: relative;
+    background: white;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 32px;
+    padding: 48px 32px;
+    max-width: 598px;
+    width: 100%;
+    max-height: 630px;
+    display: flex
+;
+    flex-direction: column;
+    align-items: center;
 }
 
 .login-container form {
@@ -64,8 +81,9 @@ main {
 }
 
 form#signUpForm {
-  padding: 48px 32px;
+  padding: 48px 0;
   max-width: 422px;
+      gap: 16px;
 }
 
 .login-container input:focus:not(.input-error) {

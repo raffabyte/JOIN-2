@@ -85,6 +85,7 @@ header h3 {
   transform: translateX(200%);
   pointer-events: none;
   opacity: 0;
+  display: none;
 }
 
 #menu a:hover {
