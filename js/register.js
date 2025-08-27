@@ -32,9 +32,18 @@ document.addEventListener('DOMContentLoaded', () => {
  * Binds form submit to signUp.
  */
 function bindFormSubmit(){
-  const f=document.getElementById('signUpForm');
+  const f = document.getElementById('signUpForm');
   if(!f) return;
-  f.addEventListener('submit',e=>{e.preventDefault();signUp();});
+
+  // Falls im HTML vergessen:
+  f.noValidate = true;
+
+  f.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const ok = typeof window.validateForm === 'function' ? window.validateForm() : true;
+    if (!ok) return;       // hier werden Email/Name rot markiert
+    signUp();              // nur wenn alles valide ist
+  });
 }
 
 
@@ -301,3 +310,4 @@ function renderContacts(data) {
     // ... der Rest der Funktion bleibt unverändert
   }
 }
+

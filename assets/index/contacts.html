@@ -81,30 +81,24 @@
               <div onclick="toggleOverlay()" class="closeWrapper">
                 <img class="closeContact" src="../img/Close.png" alt="" />
               </div>
-              <form id="contactForm" onsubmit="submitContact(event)">
+              <form id="contactForm" novalidate>
                 <div class="inputs_div">
                   <input type="hidden" id="contactKey" />
-                  <input
-                    type="text"
-                    placeholder="Name"
-                    id="name"
-                    class="name_icon input"
-                    required
-                  />
-                  <input
-                    type="email"
-                    placeholder="Email"
-                    id="email"
-                    class="mail_icon input"
-                    required
-                  />
-                  <input
-                    type="tel"
-                    placeholder="Phone"
-                    id="phone"
-                    class="phone_icon input"
-                    required
-                  />
+                   <div class="input-field flexC">
+      <input type="text" id="name" class="name_icon input" placeholder="Name" required />
+      <div class="error-text" id="name-error" aria-live="polite"></div>
+    </div>
+
+    <div class="input-field flexC">
+      <input type="email" id="email" class="mail_icon input" placeholder="Email" required />
+      <div class="error-text" id="email-error" aria-live="polite"></div>
+    </div>
+
+    <div class="input-field flexC">
+      <input type="tel" id="phone" class="phone_icon input" placeholder="Phone" required />
+      <div class="error-text" id="phone-error" aria-live="polite"></div>
+    </div>
+
                 </div>
 
                 <div class="login-buttons">
@@ -176,5 +170,6 @@
     <script src="../../main.js"></script>
     <script src="../../js/templates/templates.js"></script>
     <script src="../../js/contacts.js"></script>
+    <script src="../../js/contacts-validation.js" defer></script>
   </body>
 </html>

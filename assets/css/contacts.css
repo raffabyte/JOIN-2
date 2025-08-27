@@ -6,6 +6,26 @@
     flex: 1;
 }
 
+input {
+    width: 100%;
+}
+
+.is-invalid{
+  border:2px solid #FF3B30 !important;
+  border-radius:8px;
+  outline:none;
+}
+.error-text{
+  display:block;
+  min-height:16px;       /* Platz reservieren -> kein Springen */
+  line-height:16px;
+  margin-top:6px;
+  font-size:12px;
+  color:#FF3B30;
+  visibility:hidden;     /* unsichtbar, aber reserviert Platz */
+}
+.input-field .is-invalid{ border-color:#FF3B30 !important; }
+
 .contacsList {
     display: flex;
     flex-direction: column;

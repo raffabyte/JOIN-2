@@ -3,6 +3,28 @@
   box-sizing: content-box;
 }
 
+.displayF {
+  display: flex;
+}
+
+.input-field {
+  width: 100%;
+  justify-content: center;
+}
+
+.is-invalid{ border:2px solid #FF3B30 !important; border-radius:8px; outline:none; }
+/* immer Platz reservieren, auch ohne Text */
+.error-text{
+  display:block;
+  height:16px;           /* fixe Höhe = kein Layout-Shift */
+  line-height:16px;
+  margin-top:6px;
+  font-size:12px;
+  color:#FF3B30;
+  visibility:hidden;     /* unsichtbar, aber nimmt Platz ein */
+}
+.input-error{ border:2px solid #FF3B30 !important; } /* für dein pw-Mismatch */
+
 body {
   margin: 0;
   padding: 0;
@@ -286,6 +308,8 @@ h2 {
 }
 
 .accept_div {
+  display: flex;
+  flex-direction: column;
   margin-top: 14px;
   padding-top: 14px;
 }
