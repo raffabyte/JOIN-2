@@ -240,7 +240,7 @@ border-bottom-right-radius: 30px;
 .inputs_div {
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    gap: 16px;
 }
 .input {
     padding: 12px; 
@@ -836,7 +836,7 @@ h2 {
 }
 
 .inputs_div {
-    gap: 24px;
+    gap: 16px;
 }
 
 .input {
@@ -1100,7 +1100,7 @@ h2 {
 }
 
 .inputs_div {
-    gap: 21px;
+    gap: 4px;
 }
 
 .input {
@@ -1336,7 +1336,7 @@ form {
     border-top-right-radius: 0;
     border-bottom-left-radius: 30px;
     width: 100%;
-    padding: 0;
+    padding: 0 0 16px 0;
 }
 .imgFlex {
     display: none
