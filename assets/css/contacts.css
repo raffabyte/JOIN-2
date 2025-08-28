@@ -499,7 +499,6 @@ form {
   justify-content: center;
   font-weight: bold;
   font-size: 16px;
-  margin-right: 10px;
   border: solid 2px white;
   font-weight: 400;
   font-size: 14px;
@@ -727,14 +726,6 @@ form {
     padding-left: 19px;
 }
 
-.contactName {
-    font-size: 16px;
-}
-
-.contactMail {
-    font-size: 13px;
-}
-
 .contactImg {
     height: 34px;
     width: 34px;
@@ -929,20 +920,6 @@ form {
     height: 46px;
 }
 
-.separatorList {
-    height: 1.6px;
-    margin-bottom: 6px;
-}
-
-.contactCircle,
-.ownContactCircle,
-.ownContactCircleWrapper,
-.ownContactCircleWrapper img {
-    width: 34px;
-    height: 34px;
-    font-size: 13px;
-}
-
 .initialsOnImage {
     font-size: 13px;
 }
@@ -989,14 +966,6 @@ form {
     height: 55px;
     gap: 25px;
     padding-left: 17px;
-}
-
-.contactName {
-    font-size: 14px;
-}
-
-.contactMail {
-    font-size: 11px;
 }
 
 .contactImg {
@@ -1187,30 +1156,6 @@ form {
     padding-bottom: 14px;
 }
 
-.letterHeader {
-    padding-left: 26px;
-    font-size: 14px;
-    height: 41px;
-}
-
-.separatorList {
-    height: 1.4px;
-    margin-bottom: 5px;
-}
-
-.contactCircle,
-.ownContactCircle,
-.ownContactCircleWrapper,
-.ownContactCircleWrapper img {
-    width: 29px;
-    height: 29px;
-    font-size: 11px;
-}
-
-.initialsOnImage {
-    font-size: 11px;
-}
-
 .separatorList1 {
     width: 280px;
     border-radius: 11px;
@@ -1232,6 +1177,17 @@ form {
 }
 
 @media (max-width: 799px) {
+    .overlay {
+    align-items: normal;
+}
+form {
+    gap: 16px;
+}
+
+
+        .contactsDetails {
+        padding-top: 0;
+        }
     .displayFlex1 {
         display: none;
     }
@@ -1320,21 +1276,17 @@ form {
 }
 .overlayContent {
     flex-direction: column;
-    height: calc(100vh - 180px);
     width: 100%;
-    padding: 0 16px;
     transform: translateY(100vh);
 }
 .leftSide {
     width: 100%;
-    border-bottom-left-radius: 0;
-    border-top-right-radius: 30px;
+    border-radius: 0;
 }
 .rightSide {
     flex-direction: column;
     align-items: center;
-    border-top-right-radius: 0;
-    border-bottom-left-radius: 30px;
+    border-radius: 0;
     width: 100%;
     padding: 0 0 16px 0;
 }
