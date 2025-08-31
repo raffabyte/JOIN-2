@@ -45,6 +45,7 @@ const addTaskManager = {
    */
   _cacheDOMElements() {
     this.elements.form = document.querySelector(".task-form");
+     this.elements.createBtn = this.elements.form?.querySelector(".create-button");
     this.elements.title = document.getElementById("title");
     this.elements.dueDate = document.getElementById("due-date");
     this.elements.categoryInput = document.getElementById("category-input");
@@ -60,11 +61,48 @@ const addTaskManager = {
   async _initComponents() {
     this._setupPriorityButtons();
     this._setupDatePicker();
+    this._setDueDateMinToday();  
     initSubtaskControls(); // Annahme: Diese Funktion existiert global oder in einer anderen Datei
     this.state.assignableUsers = await this._loadAssignableUsers();
     this._initializeDropdowns(); // Ruft die neue Dropdown-Logik auf
   },
-    
+  
+  /**
+ * Setzt das min-Datum des Due-Date-Pickers auf heute
+ * und verhindert manuelle Eingaben in die Vergangenheit.
+ * @private
+ */
+_setDueDateMinToday() {
+  const input = this.elements.dueDate;
+  if (!input) return;
+
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, "0");
+  const dd = String(today.getDate()).padStart(2, "0");
+  const todayStr = `${yyyy}-${mm}-${dd}`;
+
+  // HTML5-Constraint: Vergangenes Datum im nativen Picker deaktivieren
+  input.setAttribute("min", todayStr);
+
+  // Beim Tippen nicht frühere Daten zulassen (clampen)
+  input.addEventListener("input", () => {
+    if (input.value && input.value < todayStr) {
+      input.value = todayStr;
+    }
+    // falls du HTML5-Fehlermeldung nutzen willst:
+    input.setCustomValidity("");
+  });
+
+  // Beim Verlassen noch mal checken + eigene Fehlermeldung
+  input.addEventListener("blur", () => {
+    if (input.value && input.value < todayStr) {
+      this._showError(input, "Datum darf nicht in der Vergangenheit liegen.");
+    } else {
+      this._clearError(input);
+    }
+  });
+},
 
     /**
    * Registers all event listeners for the page.
@@ -85,20 +123,30 @@ _registerEventListeners() {
   },
 
     //Category Dropdown (single select)
-    _initializeDropdowns() {
-        new CustomDropdown('category', this.state.categories, {
-            onSelect: () => {
-                this._clearError(this.elements.categoryInput);
-            }
-        });
-        new CustomDropdown('assigned-to', this.state.assignableUsers, {
-            isMultiSelect: true,
-            getInitials: getInitials, 
-            onChange: () => {
-                this._updateContactBadges(); 
-            }
-        });
-    },
+   _initializeDropdowns() {
+  // Strings -> Objekte
+  const catOptions = this.state.categories.map(c => ({ name: c, value: c }));
+
+  new CustomDropdown('category', catOptions, {
+    // viele Implementierungen geben hier die gewählte Option zurück
+    onSelect: (opt) => {
+      const input = this.elements.categoryInput;
+      if (input) {
+        // falls CustomDropdown das Input nicht selbst setzt:
+        input.value = opt?.value ?? opt?.name ?? '';
+        input.dispatchEvent(new Event('input')); // Validierungslistener triggern
+        this._clearError(input);
+      }
+    }
+  });
+
+  new CustomDropdown('assigned-to', this.state.assignableUsers, {
+    isMultiSelect: true,
+    getInitials: getInitials,
+    onChange: () => this._updateContactBadges(),
+  });
+},
+
 
   // --- 2. COMPONENT SETUP ---
   /**
@@ -144,13 +192,13 @@ _registerEventListeners() {
    * @private
    */
   async _handleFormSubmit(e) {
-    e.preventDefault();
-    if (this._isFormValid()) {
-      this.elements.createBtn.disabled = true;
-      await this._saveTask();
-      this.elements.createBtn.disabled = false;
-    }
-  },
+  e.preventDefault();
+  if (this._isFormValid()) {
+    if (this.elements.createBtn) this.elements.createBtn.disabled = true;
+    await this._saveTask();
+    if (this.elements.createBtn) this.elements.createBtn.disabled = false;
+  }
+},
 
   /**
    * Validates the entire form.
@@ -158,27 +206,30 @@ _registerEventListeners() {
    * @private
    */
   _isFormValid() {
-    let isValid = true;
-    const requiredFields = [
-      this.elements.title,
-      this.elements.dueDate,
-      this.elements.categoryInput,
-    ];
-    requiredFields.forEach((field) => {
-      if (!field.value.trim()) {
-        this._showError(field, "This field is required.");
-        isValid = false;
-      }
-    });
-    if (!document.querySelector(".priority-btn.selected")) {
-      this._showError(
-        this.elements.prioButtons[0].parentElement,
-        "Please select a priority."
-      );
+  let isValid = true;
+  const requiredFields = [this.elements.title, this.elements.dueDate, this.elements.categoryInput];
+
+  requiredFields.forEach((field) => {
+    if (!field.value.trim()) {
+      this._showError(field, "Dieses Feld ist erforderlich.");
       isValid = false;
     }
-    return isValid;
-  },
+  });
+
+  // 👇 zusätzlich: Datum nicht in der Vergangenheit
+  const min = this.elements.dueDate.getAttribute("min");
+  const val = this.elements.dueDate.value;
+  if (val && min && val < min) {
+    this._showError(this.elements.dueDate, "Datum darf nicht in der Vergangenheit liegen.");
+    isValid = false;
+  }
+
+  if (!document.querySelector(".priority-btn.selected")) {
+    this._showError(this.elements.prioButtons[0].parentElement, "Bitte eine Priorität wählen.");
+    isValid = false;
+  }
+  return isValid;
+},
 
   /**
    * Shows a validation error message for a given field.
@@ -198,22 +249,6 @@ _registerEventListeners() {
     }
     errorEl.textContent = message;
   },
-
-/**
- * Adds event listeners to clear validation errors on user input
- * for fields that don't have it yet.
- * @private
- */
-_addInputListeners() {
-  const fieldsToClear = [
-    this.elements.title,
-    this.elements.dueDate,
-  ];
-
-  fieldsToClear.forEach((field) => {
-    field.addEventListener("input", () => this._clearError(field));
-  });
-},
 
   /**
    * Clears validation errors from a field.
@@ -305,19 +340,48 @@ _resetForm() {
    * @private
    */
 _updateContactBadges() {
-    const selected = this._getSelectedAssignees();
-    this.elements.selectedAssignees.innerHTML = "";
-    selected.forEach((email) => {
-        const user = this.state.assignableUsers.find((u) => u.email === email);
-        if (user) {
-            const badge = document.createElement("div");
-            badge.className = "contact-badge";
-            badge.textContent = getInitials(user.name);
-            // NEU: Hintergrundfarbe dynamisch setzen
-            badge.style.backgroundColor = user.color; 
-            this.elements.selectedAssignees.appendChild(badge);
-        }
-    });
+  const selectedEmails = this._getSelectedAssignees();
+  const wrap = this.elements.selectedAssignees;
+  wrap.innerHTML = "";
+
+  // Container zeigen/verstecken (achtet auf deine Klasse "display-none" aus dem HTML)
+  if (!selectedEmails.length) {
+    wrap.classList.add("display-none");
+    return;
+  } else {
+    wrap.classList.remove("display-none");
+  }
+
+  const MAX_VISIBLE = 3;
+  const visible = selectedEmails.slice(0, MAX_VISIBLE);
+  const hidden = selectedEmails.slice(MAX_VISIBLE);
+
+  // bis zu 3 Badges rendern
+  visible.forEach((email) => {
+    const user = this.state.assignableUsers.find(u => u.email === email);
+    if (!user) return;
+    const badge = document.createElement("div");
+    badge.className = "contact-badge";
+    badge.textContent = getInitials(user.name);
+    if (user.color) badge.style.backgroundColor = user.color;
+    badge.title = user.name; // Tooltip
+    badge.setAttribute("aria-label", user.name);
+    wrap.appendChild(badge);
+  });
+
+  // Overflow-Badge "+N"
+  if (hidden.length > 0) {
+    const names = hidden
+      .map(email => this.state.assignableUsers.find(u => u.email === email)?.name)
+      .filter(Boolean);
+
+    const overflow = document.createElement("div");
+    overflow.className = "contact-badge contact-badge--overflow";
+    overflow.textContent = `+${hidden.length}`; // nur "+"? -> einfach auf "+"
+    overflow.title = names.join(", ");
+    overflow.setAttribute("aria-label", names.join(", "));
+    wrap.appendChild(overflow);
+  }
 },
 
   /**

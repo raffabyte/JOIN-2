@@ -55,14 +55,19 @@ class CustomDropdown {
   }
 
   _toggle() {
-    const isOpen = this.optionsContainer.classList.contains("show");
-    CustomDropdown.closeAll(); // Close all other dropdowns
-    if (!isOpen) {
-      this.optionsContainer.classList.add("show");
-      this.toggleBtn.classList.add("open");
-      this._renderOptions();
-    }
+  const isOpen =
+    this.optionsContainer.classList.contains("show") ||
+    this.optionsContainer.classList.contains("active");
+
+  CustomDropdown.closeAll();
+  if (!isOpen) {
+    this.optionsContainer.classList.add("show", "active");
+    this.optionsContainer.classList.remove("display-none");
+    this.toggleBtn.classList.add("open");
+    this._renderOptions();
   }
+}
+
 
   _renderOptions() {
     const filter = this.input.value.toLowerCase();
@@ -80,54 +85,73 @@ class CustomDropdown {
    * Creates a single list item element for a dropdown.
    */
   _createOptionItem(option) {
-    const li = document.createElement("li");
-    li.className = "checkbox-option";
-    li.innerHTML = this._getOptionHTML(option);
+  const li = document.createElement("li");
+  li.className = this.isMultiSelect ? "checkbox-option" : "dropdown-option";
+  li.innerHTML = this._getOptionHTML(option);
 
-    if (this.isMultiSelect) {
-      li.addEventListener("click", (e) => {
-        if (e.target.tagName === "INPUT") return;
+  if (this.isMultiSelect) {
+    // Toggle Checkbox-Klick auch über LI
+    li.addEventListener("click", (e) => {
+      if (e.target.tagName === "INPUT") return;
+      const checkbox = li.querySelector('input[type="checkbox"]');
+      const customCheckboxSpan = li.querySelector(".custom-checkbox");
+      if (!checkbox || !customCheckboxSpan) return;
 
-        const checkbox = li.querySelector('input[type="checkbox"]');
-        const customCheckboxSpan = li.querySelector(".custom-checkbox");
-        if (!customCheckboxSpan) return;
-
-        checkbox.checked = !checkbox.checked;
-        customCheckboxSpan.innerHTML = checkbox.checked
-          ? CHECKBOX_FILLED_DARK_SVG
-          : CHECKBOX_SVG;
-        checkbox.dispatchEvent(new Event("change", { bubbles: true }));
-        e.stopPropagation();
-      });
-    }
-
-    return li;
+      checkbox.checked = !checkbox.checked;
+      customCheckboxSpan.innerHTML = checkbox.checked
+        ? CHECKBOX_FILLED_DARK_SVG
+        : CHECKBOX_SVG;
+      checkbox.dispatchEvent(new Event("change", { bubbles: true }));
+      e.stopPropagation();
+    });
+  } else {
+    // Single-Select: Wert setzen + onSelect feuern + schließen
+    li.addEventListener("click", () => {
+      const label = typeof option === "string"
+        ? option
+        : (option.name ?? option.label ?? option.value ?? "");
+      if (this.input) this.input.value = label;
+      this.onSelect?.(option); // falls du extra Infos brauchst, hier auch {value,label} mitgeben
+      this.close();
+    });
   }
+
+  return li;
+}
+
 
   // Logic for contact/user object
   _getOptionHTML(option) {
-    if (typeof option === "string") {
-      return `<span>${option}</span>`;
-    }
-    const initials = this.getInitials(option.name);
-    const isChecked = document.querySelector(
-      `input[name="assigned"][value="${option.email}"]`
-    )?.checked;
-    return `
+  // Single-Select (z. B. Category): einfacher Label-Render, KEIN getInitials
+  if (!this.isMultiSelect) {
+    const label = typeof option === "string"
+      ? option
+      : (option.name ?? option.label ?? option.value ?? "");
+    return `<span class="option-label">${label}</span>`;
+  }
+
+  // Multi-Select (z. B. Assignees): Kontakt-Markup
+  // Schutz: getInitials kann fehlen
+  const initials = this.getInitials
+    ? this.getInitials(option.name)
+    : (option.name || "?").slice(0, 2).toUpperCase();
+
+  const isChecked = document.querySelector(
+    `input[name="assigned"][value="${option.email}"]`
+  )?.checked;
+
+  return `
     <div class="contact-info">
-        <span class="initial-badge-circle" style="background-color: ${
-          option.color
-        };">${initials}</span>
-        <span class="contact-name">${option.name}</span>
+      <span class="initial-badge-circle" style="background-color: ${option.color};">${initials}</span>
+      <span class="contact-name">${option.name}</span>
     </div>
-    <input type="checkbox" name="assigned" value="${option.email}" ${
-      isChecked ? "checked" : ""
-    } class="d-none">
-        <span class="custom-checkbox">
+    <input type="checkbox" name="assigned" value="${option.email}" ${isChecked ? "checked" : ""} class="d-none">
+    <span class="custom-checkbox">
       ${isChecked ? CHECKBOX_FILLED_DARK_SVG : CHECKBOX_SVG}
     </span>
   `;
-  }
+}
+
 
   _filterOption(option, filter) {
     const optionName = typeof option === "string" ? option : option.name;
@@ -135,9 +159,10 @@ class CustomDropdown {
   }
 
   close() {
-    this.optionsContainer.classList.remove("show");
-    this.toggleBtn.classList.remove("open");
-  }
+  this.optionsContainer.classList.remove("show", "active");
+  this.optionsContainer.classList.add("display-none");
+  this.toggleBtn.classList.remove("open");
+}
 
   /** Closes all dropdown instances on the page. */
   static closeAll() {

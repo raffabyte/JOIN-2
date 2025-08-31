@@ -2,6 +2,7 @@
 
 body {
     width: 100%;
+    overflow: hidden;
 }
 
 .background {
@@ -21,6 +22,8 @@ body {
     gap: 56px;
     height: calc(100vh - 96px);
     max-width: calc(1920px - 232px);
+
+    overflow: auto; 
 }
 
 .into {
@@ -95,6 +98,7 @@ h2 {
     justify-content: center;
     gap: 18px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    min-height: 90px;
 }
 
 .img1 {
@@ -132,6 +136,7 @@ h2 {
     gap: 18px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     padding: 0 48px;
+    min-height: 90px;
 }
 
 
@@ -164,6 +169,7 @@ font-weight: 400;
     justify-content: center;
     gap: 13px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    min-height: 90px;
 }
 
 .greetings {
@@ -521,8 +527,8 @@ font-weight: 400;
     align-items: center;
 }
   .content {
-        padding: 54px 17px 134px 17px;
-        height: 100%;
+                padding: 36px 17px 29px 17px;
+        height: calc(100vh - 160px);
     }
     .greetings {
       display: none;

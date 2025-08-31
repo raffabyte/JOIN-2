@@ -1,7 +1,6 @@
 function onloadFunc() {}
 
-const BASE_URL =
-  "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/";
+// const BASE_URL = "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/";
 
 async function loadData(path = "") {
   let response = await fetch(BASE_URL + path + ".json");

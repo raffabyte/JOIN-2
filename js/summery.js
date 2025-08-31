@@ -33,11 +33,11 @@ async function init() {
 
     if (user.guest) {
   // Gastnutzer → keinen Namen anzeigen
-  document.getElementById("userName").innerText = "";
+  document.getElementById("userNameMobile").innerText = "";
   document.getElementById("comma").innerHTML = "";
 } else {
   const formattedName = formatName(user?.name || "Unknown User");
-  document.getElementById("userName").innerText = formattedName;
+  document.getElementById("userNameMobile").innerText = formattedName;
 }
 
 await showCurrentTime();

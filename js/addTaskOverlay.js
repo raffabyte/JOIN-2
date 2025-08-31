@@ -1,11 +1,17 @@
 function handleCategoryOptionsOutsideClick(event) {
-    const categoryOptions = document.getElementById('categoryOptions');
-    if (categoryOptions && categoryOptions.classList.contains('active')) {
-        if (!categoryOptions.contains(event.target) && event.target.id !== 'taskCategory') {
-            categoryOptions.classList.add('display-none');
-            categoryOptions.classList.remove('active');
-        }
-    }
+  const opts   = document.getElementById('category-options');
+  const input  = document.getElementById('category-input');
+  const toggle = document.getElementById('category-toggle-btn');
+  if (!opts || !opts.classList.contains('active')) return;
+
+  const clickedInsideOpts = opts.contains(event.target);
+  const clickedInput      = input && input.contains(event.target);
+  const clickedToggle     = toggle && toggle.contains(event.target);
+
+  if (!clickedInsideOpts && !clickedInput && !clickedToggle) {
+    opts.classList.add('display-none');
+    opts.classList.remove('active');
+  }
 }
 
 function handleAssigneeOptionsOutsideClick(event) {
@@ -121,15 +127,16 @@ function searchAssignee(text) {
     checkNoResults(visibleCount , text);
 }
 
-function checkNoResults(numberOfResults , text) {
-    // "Not found" Element entfernen falls vorhanden
-    const existingNotFound = assigneeOptions.querySelector('.no-results');
-    if (existingNotFound) existingNotFound.remove();
+function checkNoResults(numberOfResults, text) {
+  const assigneeOptions = document.getElementById('assigneeOptions');
+  if (!assigneeOptions) return;
 
-    // "Not found" anzeigen wenn keine Ergebnisse und Text eingegeben
-    if (numberOfResults === 0 && text.trim()) {
-        assigneeOptions.innerHTML += noSearchResultsTemplate();
-    }
+  const existingNotFound = assigneeOptions.querySelector('.no-results');
+  if (existingNotFound) existingNotFound.remove();
+
+  if (numberOfResults === 0 && text.trim()) {
+    assigneeOptions.innerHTML += noSearchResultsTemplate();
+  }
 }
 
 function toggleAssigneeOptions() {
@@ -232,19 +239,21 @@ function updateAssigneeDisplay(container) {
 }
 
 function toggleCategoryOptions() {
-    const CATEGORYOPTIONS = document.getElementById('categoryOptions');
-    
-    CATEGORYOPTIONS.classList.toggle('display-none');
-    CATEGORYOPTIONS.classList.toggle('active');
+  const opts = document.getElementById('category-options');
+  if (!opts) return;
+  opts.classList.toggle('display-none');
+  opts.classList.toggle('active');
 }
 
 function selectCategory(category) {
-    const TASKCATEGORY = document.getElementById('taskCategory');
-    const CATEGORYOPTIONS = document.getElementById('categoryOptions');
+  const input = document.getElementById('category-input');
+  const opts  = document.getElementById('category-options');
+  if (!input) return;
 
-    TASKCATEGORY.textContent = category;
-    CATEGORYOPTIONS.classList.add('display-none');
-    CATEGORYOPTIONS.classList.remove('active');
+  input.value = category;                  // <— wichtig: value, nicht textContent
+  input.dispatchEvent(new Event('input')); // Validierungs-/Clear-Listener anstoßen
+  opts?.classList.add('display-none');
+  opts?.classList.remove('active');
 }
 
 
