@@ -146,6 +146,8 @@ const addTaskManager = {
     new CustomDropdown("assigned-to", this.state.assignableUsers, {
       isMultiSelect: true,
       getInitials: getInitials,
+        isSelected: (opt) =>
+   this.state.selectedAssignees.has((opt.email || "").trim().toLowerCase()),
       onChange: () => {
         this._captureAssignedSelection();
         this._updateContactBadges();

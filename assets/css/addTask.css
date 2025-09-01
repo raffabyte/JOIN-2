@@ -6,9 +6,12 @@
 /* neutrales Styling für das Overflow-Badge */
 .contact-badge--overflow { background: #2A3647; }
 
-
 .override-align-left { align-items: flex-start !important; }
 .align-stretch { align-items: stretch !important; }
+
+main {
+    max-height: none;
+  }
 
 .add-task-content {
   align-items: flex-start;
@@ -21,7 +24,7 @@
 .backgroundColor {
   display: flex;
   background-color: #F6F7F8;
-  height: 100vh;
+  height: 100%;
   width: 100%;
 }
 

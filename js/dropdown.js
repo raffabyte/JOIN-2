@@ -19,6 +19,7 @@ class CustomDropdown {
     this.onSelect = config.onSelect;
     this.onChange = config.onChange;
     this.getInitials = config.getInitials;
+    this.isSelected = config.isSelected;
 
     this._cacheDOMElements();
     this._registerEventListeners();
@@ -136,9 +137,13 @@ class CustomDropdown {
     ? this.getInitials(option.name)
     : (option.name || "?").slice(0, 2).toUpperCase();
 
-  const isChecked = document.querySelector(
-    `input[name="assigned"][value="${option.email}"]`
-  )?.checked;
+  const key = (option.email ?? option.value ?? option.name ?? "").trim().toLowerCase();
+      let isChecked = false;
+    if (typeof this.isSelected === "function") {
+      isChecked = !!this.isSelected(option);
+   } else if (window.addTaskManager?.state?.selectedAssignees) {     
+     isChecked = window.addTaskManager.state.selectedAssignees.has(key);
+   }
 
   return `
     <div class="contact-info">

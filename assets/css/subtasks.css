@@ -16,6 +16,8 @@
   gap: 8px;
   margin-top: 8px;
   font-size: 16px;
+  max-height: 112px;
+    overflow: auto;
 }
 
 .subtask-list li {
@@ -27,6 +29,7 @@
   padding: 0 12px 0 22px;
   height: 32px;
   width: 100%;
+  flex-shrink: 0;
 }
 
 .subtask-actions {
