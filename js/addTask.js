@@ -3,242 +3,285 @@
  * @namespace addTaskManager
  */
 const addTaskManager = {
-  /**
-   * Cached DOM elements for easy access.
-   * @property {object} elements
-   */
+  // Cached DOM
   elements: {},
 
-  /**
-   * Holds the state of the application, like loaded users.
-   * @property {object} state
-   */
+  // App state
   state: {
     assignableUsers: [],
     categories: ["Technical Task", "User Story"],
+    selectedAssignees: new Set(), // persistente Auswahl
   },
 
-    // --- 1. SETUP & INITIALIZATION ---
-  /**
-   * Initializes the entire add task page.
-   * This is the main entry point.
-   */
+  // --- 1) SETUP & INIT ---
   async init() {
     this._protectPageAccess();
     this._cacheDOMElements();
     await this._initComponents();
     this._registerEventListeners();
-    this._addInputListeners(); 
+    this._addInputListeners();
   },
 
-  /**
-   * Redirects to the login page if no user is logged in.
-   */
   _protectPageAccess() {
-    if (!USERKEY) {
+    if (!window.USERKEY) {
       window.location.href = "../../index.html";
     }
   },
 
-  /**
-   * Caches frequently used DOM elements to avoid repeated lookups.
-   */
   _cacheDOMElements() {
     this.elements.form = document.querySelector(".task-form");
-     this.elements.createBtn = this.elements.form?.querySelector(".create-button");
+    this.elements.createBtn = this.elements.form ? this.elements.form.querySelector(".create-button") : null;
     this.elements.title = document.getElementById("title");
     this.elements.dueDate = document.getElementById("due-date");
     this.elements.categoryInput = document.getElementById("category-input");
     this.elements.prioButtons = document.querySelectorAll(".priority-btn");
-    this.elements.clearBtn = this.elements.form.querySelector(".clear-button");
+    this.elements.clearBtn = this.elements.form ? this.elements.form.querySelector(".clear-button") : null;
     this.elements.subtaskInput = document.getElementById("subtasks");
     this.elements.selectedAssignees = document.getElementById("selected-assignees");
   },
 
-  /**
-   * Initializes all page components like dropdowns and priority buttons.
-   */
   async _initComponents() {
     this._setupPriorityButtons();
     this._setupDatePicker();
-    this._setDueDateMinToday();  
-    initSubtaskControls(); // Annahme: Diese Funktion existiert global oder in einer anderen Datei
+    this._setDueDateMinToday();
+    if (typeof initSubtaskControls === "function") initSubtaskControls();
+
     this.state.assignableUsers = await this._loadAssignableUsers();
-    this._initializeDropdowns(); // Ruft die neue Dropdown-Logik auf
+    this._initializeDropdowns();
+    this._enforceSelectionOnlyFields();
   },
-  
+
   /**
- * Setzt das min-Datum des Due-Date-Pickers auf heute
- * und verhindert manuelle Eingaben in die Vergangenheit.
- * @private
- */
-_setDueDateMinToday() {
-  const input = this.elements.dueDate;
-  if (!input) return;
-
-  const today = new Date();
-  const yyyy = today.getFullYear();
-  const mm = String(today.getMonth() + 1).padStart(2, "0");
-  const dd = String(today.getDate()).padStart(2, "0");
-  const todayStr = `${yyyy}-${mm}-${dd}`;
-
-  // HTML5-Constraint: Vergangenes Datum im nativen Picker deaktivieren
-  input.setAttribute("min", todayStr);
-
-  // Beim Tippen nicht frühere Daten zulassen (clampen)
-  input.addEventListener("input", () => {
-    if (input.value && input.value < todayStr) {
-      input.value = todayStr;
-    }
-    // falls du HTML5-Fehlermeldung nutzen willst:
-    input.setCustomValidity("");
-  });
-
-  // Beim Verlassen noch mal checken + eigene Fehlermeldung
-  input.addEventListener("blur", () => {
-    if (input.value && input.value < todayStr) {
-      this._showError(input, "Datum darf nicht in der Vergangenheit liegen.");
-    } else {
-      this._clearError(input);
-    }
-  });
-},
-
-    /**
-   * Registers all event listeners for the page.
+   * Erzwingt „nur Auswahl, keine freie Eingabe“ für Due Date, Category, Assigned.
    */
-_registerEventListeners() {
-    this.elements.form.addEventListener("submit", (e) => this._handleFormSubmit(e));
-    this.elements.clearBtn?.addEventListener("click", () => this._resetForm());
-},
+  _enforceSelectionOnlyFields() {
+    // Due Date
+    if (this.elements.dueDate) {
+      makeSelectionOnly(this.elements.dueDate, () => this._openDatePicker());
+    }
 
-    /**
-   * Adds event listeners to clear validation errors on user input.
-   */
-  _addInputListeners() {
-    const fieldsToClear = [this.elements.title, this.elements.dueDate];
-    fieldsToClear.forEach((field) => {
-      field?.addEventListener("input", () => this._clearError(field));
+    // Category
+    const categoryInput = this.elements.categoryInput;
+    const categoryToggleBtn = document.getElementById("category-toggle-btn");
+    if (categoryInput && categoryToggleBtn) {
+      makeSelectionOnly(categoryInput, () => categoryToggleBtn.click());
+    }
+
+    // Assigned-To
+    const assignedInput = document.getElementById("assigned-to-input");
+    const assignedToggleBtn = document.getElementById("assigned-to-toggle-btn");
+    if (assignedInput && assignedToggleBtn) {
+      makeSelectionOnly(assignedInput, () => assignedToggleBtn.click());
+    }
+  },
+
+  _setDueDateMinToday() {
+    const input = this.elements.dueDate;
+    if (!input) return;
+
+    const now = new Date();
+    const local = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const yyyy = local.getFullYear();
+    const mm = String(local.getMonth() + 1).padStart(2, "0");
+    const dd = String(local.getDate()).padStart(2, "0");
+    const todayStr = `${yyyy}-${mm}-${dd}`;
+
+    input.setAttribute("min", todayStr);
+
+    input.addEventListener("input", () => {
+      if (input.value && input.value < todayStr) input.value = todayStr;
+      input.setCustomValidity("");
+    });
+
+    input.addEventListener("blur", () => {
+      if (input.value && input.value < todayStr) {
+        this._showError(input, "Datum darf nicht in der Vergangenheit liegen.");
+      } else {
+        this._clearError(input);
+      }
     });
   },
 
-    //Category Dropdown (single select)
-   _initializeDropdowns() {
-  // Strings -> Objekte
-  const catOptions = this.state.categories.map(c => ({ name: c, value: c }));
+  _registerEventListeners() {
+    if (this.elements.form) {
+      this.elements.form.addEventListener("submit", (e) => this._handleFormSubmit(e));
+    }
+    if (this.elements.clearBtn) {
+      this.elements.clearBtn.addEventListener("click", () => this._resetForm());
+    }
+  },
 
-  new CustomDropdown('category', catOptions, {
-    // viele Implementierungen geben hier die gewählte Option zurück
-    onSelect: (opt) => {
-      const input = this.elements.categoryInput;
-      if (input) {
-        // falls CustomDropdown das Input nicht selbst setzt:
-        input.value = opt?.value ?? opt?.name ?? '';
-        input.dispatchEvent(new Event('input')); // Validierungslistener triggern
+  _addInputListeners() {
+    const fields = [this.elements.title, this.elements.dueDate, this.elements.categoryInput];
+    fields.forEach((field) => {
+      if (!field) return;
+      field.addEventListener("input", () => this._clearError(field));
+      field.addEventListener("blur", () => {
+        if (field.value && field.value.trim()) this._clearError(field);
+      });
+    });
+  },
+
+  // --- DROPDOWNS ---
+  _initializeDropdowns() {
+    // Category (Single-Select)
+    const catOptions = this.state.categories.map((c) => ({ name: c, value: c }));
+    new CustomDropdown("category", catOptions, {
+      onSelect: (opt) => {
+        const input = this.elements.categoryInput;
+        if (!input) return;
+        const v = opt && (opt.value || opt.name) ? (opt.value || opt.name) : "";
+        input.value = v;
+        input.dispatchEvent(new Event("input"));
         this._clearError(input);
       }
-    }
-  });
+    });
 
-  new CustomDropdown('assigned-to', this.state.assignableUsers, {
-    isMultiSelect: true,
-    getInitials: getInitials,
-    onChange: () => this._updateContactBadges(),
-  });
-},
+    // Assigned-To (Multi-Select)
+    new CustomDropdown("assigned-to", this.state.assignableUsers, {
+      isMultiSelect: true,
+      getInitials: getInitials,
+      onChange: () => {
+        this._captureAssignedSelection();
+        this._updateContactBadges();
+      }
+      // falls verfügbar: onOpen: () => this._applyAssignedSelectionToDropdown()
+    });
 
+    this._wireAssignedDropdownOpenSync();
+  },
 
-  // --- 2. COMPONENT SETUP ---
-  /**
-   * Sets up click events and injects SVG icons for priority buttons.
-   * @private
-   */
+  // --- 2) COMPONENT SETUP ---
   _setupPriorityButtons() {
     const urgentIcon = document.getElementById("prioUrgentIcon");
     const mediumIcon = document.getElementById("prioMediumIcon");
     const lowIcon = document.getElementById("prioLowIcon");
 
-    if (urgentIcon) urgentIcon.innerHTML = HIGH_PRIORITY_SVG;
-    if (mediumIcon) mediumIcon.innerHTML = MID_PRIORITY_SVG;
-    if (lowIcon) lowIcon.innerHTML = LOW_PRIORITY_SVG;
+    if (urgentIcon && typeof HIGH_PRIORITY_SVG !== "undefined") urgentIcon.innerHTML = HIGH_PRIORITY_SVG;
+    if (mediumIcon && typeof MID_PRIORITY_SVG !== "undefined") mediumIcon.innerHTML = MID_PRIORITY_SVG;
+    if (lowIcon && typeof LOW_PRIORITY_SVG !== "undefined") lowIcon.innerHTML = LOW_PRIORITY_SVG;
+
+    this.elements.prioButtons.forEach((b) => {
+      b.setAttribute("aria-pressed", b.classList.contains("selected") ? "true" : "false");
+    });
 
     this.elements.prioButtons.forEach((btn) => {
       btn.addEventListener("click", () => {
-        this.elements.prioButtons.forEach((b) =>
-          b.classList.remove("selected")
-        );
+        this.elements.prioButtons.forEach((b) => {
+          b.classList.remove("selected");
+          b.setAttribute("aria-pressed", "false");
+        });
         btn.classList.add("selected");
+        btn.setAttribute("aria-pressed", "true");
         this._clearError(btn.parentElement);
       });
     });
   },
 
-  /**
-   * Enables the native date picker to be opened via a button click.
-   * @private
-   */
-  _setupDatePicker() {
-    const calendarToggle = document.getElementById("calendar-toggle");
-    calendarToggle?.addEventListener("click", () =>
-      this.elements.dueDate.showPicker()
-    );
+  // --- Datepicker ---
+  _openDatePicker() {
+    const input = this.elements.dueDate;
+    if (!input) return;
+
+    const wasReadOnly = input.readOnly;
+    const wasDisabled = input.disabled;
+
+    input.readOnly = false;
+    input.disabled = false;
+
+    try {
+      if (typeof input.showPicker === "function") {
+        input.showPicker();
+      } else {
+        try { input.click(); } catch (e) {}
+        input.focus();
+      }
+    } catch (e) {
+      try { input.click(); } catch (e2) {}
+      input.focus();
+    } finally {
+      input.readOnly = wasReadOnly;
+      input.disabled = wasDisabled;
+    }
   },
 
-  // --- 3. FORM SUBMISSION & VALIDATION ---
+  _setupDatePicker() {
+    const calendarToggle = document.getElementById("calendar-toggle");
+    const input = this.elements.dueDate;
+    if (!calendarToggle || !input) return;
 
-  /**
-   * Handles the form submission event.
-   * @param {Event} e
-   * @private
-   */
+    const withTemporarilyMutable = (el, fn) => {
+      const wasReadOnly = el.readOnly;
+      const wasDisabled = el.disabled;
+      el.readOnly = false;
+      el.disabled = false;
+      try { fn(); } finally {
+        el.readOnly = wasReadOnly;
+        el.disabled = wasDisabled;
+      }
+    };
+
+    const openNativePicker = () => {
+      withTemporarilyMutable(input, () => {
+        try {
+          if (typeof input.showPicker === "function") { input.showPicker(); return; }
+        } catch (e) {}
+        try { input.click(); } catch (e2) {}
+        input.focus();
+        setTimeout(() => { try { input.click(); } catch (e3) {} }, 0);
+      });
+    };
+
+    const open = (e) => { e.preventDefault(); openNativePicker(); };
+
+    calendarToggle.addEventListener("pointerdown", open);
+    calendarToggle.addEventListener("click", open);
+
+    input.addEventListener("pointerdown", (e) => {
+      if (input.readOnly) { e.preventDefault(); openNativePicker(); }
+    });
+  },
+
+  // --- 3) FORM SUBMISSION & VALIDATION ---
   async _handleFormSubmit(e) {
-  e.preventDefault();
-  if (this._isFormValid()) {
-    if (this.elements.createBtn) this.elements.createBtn.disabled = true;
-    await this._saveTask();
-    if (this.elements.createBtn) this.elements.createBtn.disabled = false;
-  }
-},
+    e.preventDefault();
+    if (this._isFormValid()) {
+      if (this.elements.createBtn) this.elements.createBtn.disabled = true;
+      await this._saveTask();
+      if (this.elements.createBtn) this.elements.createBtn.disabled = false;
+    }
+  },
 
-  /**
-   * Validates the entire form.
-   * @returns {boolean}
-   * @private
-   */
   _isFormValid() {
-  let isValid = true;
-  const requiredFields = [this.elements.title, this.elements.dueDate, this.elements.categoryInput];
+    let isValid = true;
+    const requiredFields = [this.elements.title, this.elements.dueDate, this.elements.categoryInput];
 
-  requiredFields.forEach((field) => {
-    if (!field.value.trim()) {
-      this._showError(field, "Dieses Feld ist erforderlich.");
+    requiredFields.forEach((field) => {
+      if (!field || !field.value || !field.value.trim()) {
+        this._showError(field || this.elements.form, "Dieses Feld ist erforderlich.");
+        isValid = false;
+      }
+    });
+
+    const min = this.elements.dueDate ? this.elements.dueDate.getAttribute("min") : null;
+    const val = this.elements.dueDate ? this.elements.dueDate.value : null;
+    if (val && min && val < min) {
+      this._showError(this.elements.dueDate, "Datum darf nicht in der Vergangenheit liegen.");
       isValid = false;
     }
-  });
 
-  // 👇 zusätzlich: Datum nicht in der Vergangenheit
-  const min = this.elements.dueDate.getAttribute("min");
-  const val = this.elements.dueDate.value;
-  if (val && min && val < min) {
-    this._showError(this.elements.dueDate, "Datum darf nicht in der Vergangenheit liegen.");
-    isValid = false;
-  }
+    if (!document.querySelector(".priority-btn.selected")) {
+      const parent = this.elements.prioButtons[0] ? this.elements.prioButtons[0].parentElement : this.elements.form;
+      this._showError(parent, "Bitte eine Priorität wählen.");
+      isValid = false;
+    }
+    return isValid;
+  },
 
-  if (!document.querySelector(".priority-btn.selected")) {
-    this._showError(this.elements.prioButtons[0].parentElement, "Bitte eine Priorität wählen.");
-    isValid = false;
-  }
-  return isValid;
-},
-
-  /**
-   * Shows a validation error message for a given field.
-   * @param {HTMLElement} field
-   * @param {string} message
-   * @private
-   */
   _showError(field, message) {
-    const formGroup = field.closest(".form-group, .priority-options");
+    if (!field) return;
+    let formGroup = null;
+    if (field.closest) formGroup = field.closest(".form-group, .priority-options");
     if (!formGroup) return;
     formGroup.classList.add("input-error");
     let errorEl = formGroup.querySelector(".field-error");
@@ -250,69 +293,49 @@ _registerEventListeners() {
     errorEl.textContent = message;
   },
 
-  /**
-   * Clears validation errors from a field.
-   * @param {HTMLElement} field
-   * @private
-   */
   _clearError(field) {
-    const formGroup = field.closest(".form-group, .priority-options");
-    formGroup?.classList.remove("input-error");
-    formGroup?.querySelector(".field-error")?.remove();
+    if (!field) return;
+    const formGroup = field.closest ? field.closest(".form-group, .priority-options") : null;
+    if (formGroup) {
+      formGroup.classList.remove("input-error");
+      const err = formGroup.querySelector(".field-error");
+      if (err) err.remove();
+    }
   },
 
-  /**
-   * Clears all validation errors from the form.
-   * @private
-   */
   _clearAllErrors() {
-    document
-      .querySelectorAll(".input-error")
-      .forEach((el) => el.classList.remove("input-error"));
+    document.querySelectorAll(".input-error").forEach((el) => el.classList.remove("input-error"));
     document.querySelectorAll(".field-error").forEach((el) => el.remove());
   },
 
-  // --- 4. DATA HANDLING (FIREBASE) ---
+  // --- 4) DATA ---
+  async _loadAssignableUsers() {
+    return await getAssignablePeople(window.USERKEY);
+  },
 
-  /**
-   * Loads assignable users from the database.
-   * @returns {Promise<Array>}
-   * @private
-   */
-async _loadAssignableUsers() {
-  return await getAssignablePeople(USERKEY);
-},
-
-/**
-   * Collects all form data into a task object.
-   * @returns {object}
-   * @private
-   */
   _collectTaskData() {
+    const selectedBtn = document.querySelector(".priority-btn.selected");
+    const priority = selectedBtn && selectedBtn.dataset ? selectedBtn.dataset.priority : "low";
+
     return {
       title: this.elements.title.value.trim(),
       description: document.getElementById("description").value.trim(),
       dueDate: this.elements.dueDate.value,
-      priority:
-      document.querySelector(".priority-btn.selected")?.dataset.priority || "low",
+      priority,
       category: this.elements.categoryInput.value.trim(),
       assignee: this._getSelectedAssignees(),
       members: this._getSelectedMembers(),
       subtasks: this._getSubtasks(),
-      status: "todo", 
-      column: "todoColumn", 
+      status: "todo",
+      column: "todoColumn",
       createdAt: new Date().toISOString(),
     };
   },
 
-/**
-   * Saves the collected task data to Firebase.
-   * @private
-   */
   async _saveTask() {
     const taskData = this._collectTaskData();
     try {
-      await postData('tasks', taskData); 
+      await postData("tasks", taskData);
       this._showSuccessPopup();
       this._resetForm();
     } catch (error) {
@@ -321,134 +344,248 @@ async _loadAssignableUsers() {
     }
   },
 
-  // --- 5. UI & EVENT HANDLERS ---
-
-  /**
-   * Resets the entire form to its initial state.
-   * @private
-   */
-_resetForm() {
-    this.elements.form.reset();
+  // --- 5) UI & EVENTS ---
+  _resetForm() {
+    if (this.elements.form) this.elements.form.reset();
     this._clearAllErrors();
-    document.querySelectorAll(".selected").forEach((el) => el.classList.remove("selected"));
-    this.elements.selectedAssignees.innerHTML = "";
-    clearSubtasks();
-},
 
-  /**
-   * Updates the display of selected contact badges.
-   * @private
-   */
-_updateContactBadges() {
-  const selectedEmails = this._getSelectedAssignees();
-  const wrap = this.elements.selectedAssignees;
-  wrap.innerHTML = "";
+    // Priority zurück auf "Medium"
+    this.elements.prioButtons.forEach((b) => {
+      b.classList.remove("selected");
+      b.setAttribute("aria-pressed", "false");
+    });
+    const mediumBtn = Array.from(this.elements.prioButtons).find((b) => b.dataset.priority === "medium");
+    if (mediumBtn) {
+      mediumBtn.classList.add("selected");
+      mediumBtn.setAttribute("aria-pressed", "true");
+    }
 
-  // Container zeigen/verstecken (achtet auf deine Klasse "display-none" aus dem HTML)
-  if (!selectedEmails.length) {
-    wrap.classList.add("display-none");
-    return;
-  } else {
-    wrap.classList.remove("display-none");
-  }
+    // Category Input leeren
+    if (this.elements.categoryInput) this.elements.categoryInput.value = "";
 
-  const MAX_VISIBLE = 3;
-  const visible = selectedEmails.slice(0, MAX_VISIBLE);
-  const hidden = selectedEmails.slice(MAX_VISIBLE);
+    // Persistente Auswahl löschen
+    this.state.selectedAssignees.clear();
 
-  // bis zu 3 Badges rendern
-  visible.forEach((email) => {
-    const user = this.state.assignableUsers.find(u => u.email === email);
-    if (!user) return;
-    const badge = document.createElement("div");
-    badge.className = "contact-badge";
-    badge.textContent = getInitials(user.name);
-    if (user.color) badge.style.backgroundColor = user.color;
-    badge.title = user.name; // Tooltip
-    badge.setAttribute("aria-label", user.name);
-    wrap.appendChild(badge);
-  });
+    // Checkboxen (falls gerendert) abwählen
+    document.querySelectorAll("#assigned-to-options input[type='checkbox']").forEach((cb) => { cb.checked = false; });
 
-  // Overflow-Badge "+N"
-  if (hidden.length > 0) {
-    const names = hidden
-      .map(email => this.state.assignableUsers.find(u => u.email === email)?.name)
-      .filter(Boolean);
+    // Chips leeren + verstecken
+    if (this.elements.selectedAssignees) {
+      this.elements.selectedAssignees.innerHTML = "";
+      this.elements.selectedAssignees.classList.add("display-none");
+    }
 
-    const overflow = document.createElement("div");
-    overflow.className = "contact-badge contact-badge--overflow";
-    overflow.textContent = `+${hidden.length}`; // nur "+"? -> einfach auf "+"
-    overflow.title = names.join(", ");
-    overflow.setAttribute("aria-label", names.join(", "));
-    wrap.appendChild(overflow);
-  }
-},
+    // Subtasks leeren
+    if (typeof clearSubtasks === "function") clearSubtasks();
+  },
 
-  /**
-   * Displays a temporary "Task added" confirmation popup.
-   * @private
-   */
+  _updateContactBadges() {
+    const selectedEmails = this._getSelectedAssignees();
+    const wrap = this.elements.selectedAssignees;
+    if (!wrap) return;
+    wrap.innerHTML = "";
+
+    if (!selectedEmails.length) {
+      wrap.classList.add("display-none");
+      return;
+    } else {
+      wrap.classList.remove("display-none");
+    }
+
+    const MAX_VISIBLE = 3;
+    const visible = selectedEmails.slice(0, MAX_VISIBLE);
+    const hidden = selectedEmails.slice(MAX_VISIBLE);
+
+    visible.forEach((email) => {
+      const user = this.state.assignableUsers.find((u) => u.email === email);
+      if (!user) return;
+      const badge = document.createElement("div");
+      badge.className = "contact-badge";
+      badge.textContent = getInitials(user.name);
+      if (user.color) badge.style.backgroundColor = user.color;
+      badge.title = user.name;
+      badge.setAttribute("aria-label", user.name);
+      wrap.appendChild(badge);
+    });
+
+    if (hidden.length > 0) {
+      const names = hidden
+        .map((email) => {
+          const u = this.state.assignableUsers.find((x) => x.email === email);
+          return u ? u.name : null;
+        })
+        .filter(Boolean);
+
+      const overflow = document.createElement("div");
+      overflow.className = "contact-badge contact-badge--overflow";
+      overflow.textContent = "+" + hidden.length;
+      overflow.title = names.join(", ");
+      overflow.setAttribute("aria-label", names.join(", "));
+      wrap.appendChild(overflow);
+    }
+  },
+
   _showSuccessPopup() {
-    const boardSvg = document.getElementById("boardSvgTemplate").innerHTML;
+    const tpl = document.getElementById("boardSvgTemplate");
+    const boardSvg = tpl ? tpl.innerHTML : "";
     const popup = document.createElement("div");
     popup.className = "task-added-popup";
-    popup.innerHTML = `
-      <span>Task added to board</span>
-      ${boardSvg}
-    `;
+    popup.innerHTML = '<span>Task added to board</span>' + boardSvg;
     document.body.appendChild(popup);
     setTimeout(() => {
       popup.classList.add("fade-out");
-      popup.addEventListener("animationend", () => popup.remove(), {
-        once: true,
-      });
+      popup.addEventListener("animationend", () => popup.remove(), { once: true });
     }, 3000);
   },
 
-  // --- 6. UTILITY HELPERS ---
+  // --- 6) UTILS (ASSIGNED-DROPDOWN) ---
+  _resolveOptionKey(node) {
+    let cb = null;
+    if (node && node.matches && node.matches('input[type="checkbox"]')) cb = node;
+    else if (node && node.querySelector) cb = node.querySelector('input[type="checkbox"]');
 
-  /**
-   * Filters dropdown options based on user input.
-   * @param {object|string} option
-   * @param {string} filter
-   * @returns {boolean}
-   * @private
-   */
+    let key = "";
+    if (cb && cb.dataset && cb.dataset.value) key = cb.dataset.value;
+    else if (cb && cb.dataset && cb.dataset.email) key = cb.dataset.email;
+    else if (cb && typeof cb.value !== "undefined") key = cb.value;
+    key = (key || "").trim().toLowerCase();
+
+    if (!key) {
+      let row = null;
+      if (cb && cb.closest) row = cb.closest("li, .dropdown-item, label");
+      if (!row && node && node.closest) row = node.closest("li, .dropdown-item, label");
+      const nameText = row ? (row.textContent || "").trim().toLowerCase() : "";
+      const m = this.state.assignableUsers.find((u) => u.name && u.name.trim().toLowerCase() === nameText);
+      if (m && m.email) key = m.email.trim().toLowerCase();
+    }
+    return key;
+  },
+
+  _captureAssignedSelection() {
+    const boxes = document.querySelectorAll('#assigned-to-options input[type="checkbox"]');
+    const sel = new Set();
+    boxes.forEach((cb) => {
+      const key = this._resolveOptionKey(cb);
+      if (cb.checked && key) sel.add(key);
+    });
+    this.state.selectedAssignees = sel;
+  },
+
+  _applyAssignedSelectionToDropdown() {
+    const selected = new Set(Array.from(this.state.selectedAssignees || []).map((v) => (v || "").trim().toLowerCase()));
+    const boxes = document.querySelectorAll('#assigned-to-options input[type="checkbox"]');
+    if (!boxes.length) return;
+
+    boxes.forEach((cb) => {
+      const key = this._resolveOptionKey(cb);
+      const isOn = selected.has(key);
+
+      cb.checked = isOn;
+      if (isOn) cb.setAttribute("checked", "");
+      else cb.removeAttribute("checked");
+      cb.setAttribute("aria-checked", isOn ? "true" : "false");
+
+      const row = cb.closest ? cb.closest("li, .dropdown-item, label") : null;
+      if (row) row.classList.toggle("is-checked", isOn);
+
+      // Event für evtl. interne UI
+      cb.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+  },
+
+  _wireAssignedDropdownOpenSync() {
+    const toggle = document.getElementById("assigned-to-toggle-btn");
+    const inputField = document.getElementById("assigned-to-input");
+    const panel = document.getElementById("assigned-to-options");
+    if (!panel) return;
+
+    const onOpen = () => {
+      let tries = 0;
+      const pump = () => {
+        this._applyAssignedSelectionToDropdown();
+        const boxes = panel.querySelectorAll('input[type="checkbox"]');
+        if ((boxes.length === 0 || tries < 12) && tries < 40) {
+          tries++;
+          setTimeout(pump, 25);
+        }
+      };
+      requestAnimationFrame(() => {
+        requestAnimationFrame(pump);
+      });
+
+      const obs = new MutationObserver(() => this._applyAssignedSelectionToDropdown());
+      obs.observe(panel, { childList: true, subtree: true });
+      setTimeout(() => { obs.disconnect(); }, 800);
+    };
+
+    if (toggle) toggle.addEventListener("click", onOpen);
+    if (inputField) inputField.addEventListener("click", onOpen);
+
+    panel.addEventListener("change", (e) => {
+      const t = e.target;
+      if (t && t.matches && t.matches('input[type="checkbox"]')) {
+        this._captureAssignedSelection();
+        this._updateContactBadges();
+      }
+    });
+  },
+
+  // --- 7) GENERIC HELPERS ---
   _filterOption(option, filter) {
-    const optionName = typeof option === "string" ? option : option.name;
+    const optionName = (typeof option === "string") ? option : option.name;
     return optionName.toLowerCase().includes(filter);
   },
 
-  /**
-   * Retrieves an array of selected assignee emails.
-   * @returns {Array<string>}
-   * @private
-   */
   _getSelectedAssignees() {
+    if (this.state.selectedAssignees && this.state.selectedAssignees.size) {
+      return Array.from(this.state.selectedAssignees);
+    }
     return Array.from(
-      document.querySelectorAll("input[name='assigned']:checked")
-    ).map((cb) => cb.value);
+      document.querySelectorAll('#assigned-to-options input[type="checkbox"]:checked')
+    ).map((cb) => {
+      if (cb.dataset && cb.dataset.value) return cb.dataset.value.trim().toLowerCase();
+      if (typeof cb.value !== "undefined") return (cb.value || "").trim().toLowerCase();
+      return "";
+    }).filter(Boolean);
   },
 
-  /**
-   * Retrieves an array of selected member emails.
-   * @returns {Array<string>}
-   * @private
-   */
   _getSelectedMembers() {
-    const memberCheckboxes = document.querySelectorAll("input[name='member']:checked");
-    return Array.from(memberCheckboxes).map((cb) => cb.value);
+    const boxes = document.querySelectorAll('input[name="member"]:checked');
+    return Array.from(boxes).map((cb) => cb.value);
   },
 
-  /**
-   * Retrieves an array of subtasks from the DOM.
-   * @returns {Array<string>}
-   * @private
-   */
-_getSubtasks() {
-    return getSubtaskListData(); 
-},
-};
+  _getSubtasks() {
+    return typeof getSubtaskListData === "function" ? getSubtaskListData() : [];
+  }
+}; // END addTaskManager
+
+/**
+ * Macht ein Input feld „nur auswählbar“: keine Tastatureingabe, kein Paste/Drop.
+ */
+function makeSelectionOnly(input, openFn) {
+  if (!input) return;
+
+  input.setAttribute("readonly", "readonly");
+
+  input.addEventListener("click", (e) => {
+    e.preventDefault();
+    if (typeof openFn === "function") openFn();
+  });
+
+  input.addEventListener("keydown", (e) => {
+    const allowed = ["Tab", "Shift", "Alt", "Control", "Meta", "Escape", "ArrowLeft", "ArrowRight", "Home", "End"];
+    if (allowed.indexOf(e.key) !== -1) return;
+    if (e.key === "Enter" || e.key === " " || e.key === "ArrowDown") {
+      e.preventDefault();
+      if (typeof openFn === "function") openFn();
+      return;
+    }
+    e.preventDefault();
+  });
+
+  input.addEventListener("paste", (e) => e.preventDefault());
+  input.addEventListener("drop", (e) => e.preventDefault());
+}
 
 // --- SCRIPT ENTRY POINT ---
 document.addEventListener("DOMContentLoaded", () => {
