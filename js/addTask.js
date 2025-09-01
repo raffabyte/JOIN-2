@@ -13,6 +13,11 @@ const addTaskManager = {
     selectedAssignees: new Set(), // persistente Auswahl
   },
 
+  /**
+   * Setzt das sichtbare Icon in .custom-checkbox passend zum Zustand.
+   * @private
+   */
+
   // --- 1) SETUP & INIT ---
   async init() {
     this._protectPageAccess();
@@ -313,24 +318,43 @@ const addTaskManager = {
     return await getAssignablePeople(window.USERKEY);
   },
 
-  _collectTaskData() {
-    const selectedBtn = document.querySelector(".priority-btn.selected");
-    const priority = selectedBtn && selectedBtn.dataset ? selectedBtn.dataset.priority : "low";
+_collectTaskData() {
+  const selectedBtn = document.querySelector(".priority-btn.selected");
+  const priority = selectedBtn && selectedBtn.dataset ? selectedBtn.dataset.priority : "low";
 
-    return {
-      title: this.elements.title.value.trim(),
-      description: document.getElementById("description").value.trim(),
-      dueDate: this.elements.dueDate.value,
-      priority,
-      category: this.elements.categoryInput.value.trim(),
-      assignee: this._getSelectedAssignees(),
-      members: this._getSelectedMembers(),
-      subtasks: this._getSubtasks(),
-      status: "todo",
-      column: "todoColumn",
-      createdAt: new Date().toISOString(),
-    };
-  },
+  // Subtasks aus dem UI -> universelles Objekt-Format
+  const normalizedSubtasks = (this._getSubtasks() || [])
+    .map(st => (typeof st === "string" ? st : String(st || "")))
+    .map(s => s.trim())
+    .filter(Boolean)
+    .map(text => ({
+      // 👉 Board-kompatibel:
+      value: text,
+      checked: false,
+
+      // 👉 zusätzlich tolerant für andere Renderer:
+      title: text,
+      name: text,
+      text,
+      done: false,
+      completed: false,
+      isDone: false
+    }));
+
+  return {
+    title: this.elements.title.value.trim(),
+    description: document.getElementById("description").value.trim(),
+    dueDate: this.elements.dueDate.value,
+    priority,
+    category: this.elements.categoryInput.value.trim(),
+    assignee: this._getSelectedAssignees(),
+    members: this._getSelectedMembers(),
+    subtasks: normalizedSubtasks,      // ⬅️ jetzt mit value/checked
+    status: "todo",
+    column: "todoColumn",
+    createdAt: new Date().toISOString(),
+  };
+},
 
   async _saveTask() {
     const taskData = this._collectTaskData();
@@ -438,28 +462,39 @@ const addTaskManager = {
     }, 3000);
   },
 
+
   // --- 6) UTILS (ASSIGNED-DROPDOWN) ---
-  _resolveOptionKey(node) {
-    let cb = null;
-    if (node && node.matches && node.matches('input[type="checkbox"]')) cb = node;
-    else if (node && node.querySelector) cb = node.querySelector('input[type="checkbox"]');
 
-    let key = "";
-    if (cb && cb.dataset && cb.dataset.value) key = cb.dataset.value;
-    else if (cb && cb.dataset && cb.dataset.email) key = cb.dataset.email;
-    else if (cb && typeof cb.value !== "undefined") key = cb.value;
-    key = (key || "").trim().toLowerCase();
+/**
+ * Liefert einen stabilen Key (z. B. E-Mail) für eine Optionszeile/Checkbox.
+ * Sucht in input[data-value|data-email|value], dann in row[data-value|data-email], dann Fallback auf Namens-Text.
+ * @private
+ */
+_resolveOptionKey(node) {
+  const cb = (node.matches && node.matches('input[type="checkbox"]'))
+    ? node
+    : (node.querySelector ? node.querySelector('input[type="checkbox"]') : null);
 
-    if (!key) {
-      let row = null;
-      if (cb && cb.closest) row = cb.closest("li, .dropdown-item, label");
-      if (!row && node && node.closest) row = node.closest("li, .dropdown-item, label");
-      const nameText = row ? (row.textContent || "").trim().toLowerCase() : "";
-      const m = this.state.assignableUsers.find((u) => u.name && u.name.trim().toLowerCase() === nameText);
-      if (m && m.email) key = m.email.trim().toLowerCase();
-    }
-    return key;
-  },
+  const row = (cb && cb.closest ? cb.closest('li, .dropdown-item, label') : null)
+          || (node.closest ? node.closest('li, .dropdown-item, label') : null)
+          || node;
+
+  let key =
+    (cb && cb.dataset && (cb.dataset.value || cb.dataset.email)) ||
+    (cb && typeof cb.value !== "undefined" ? cb.value : "") ||
+    (row && row.dataset && (row.dataset.value || row.dataset.email)) ||
+    "";
+
+  key = (key || "").trim().toLowerCase();
+
+  if (!key && row) {
+    const nameText = (row.textContent || "").trim().toLowerCase();
+    const match = this.state.assignableUsers.find(u => u.name && u.name.trim().toLowerCase() === nameText);
+    if (match && match.email) key = match.email.trim().toLowerCase();
+  }
+  return key;
+},
+
 
   _captureAssignedSelection() {
     const boxes = document.querySelectorAll('#assigned-to-options input[type="checkbox"]');
@@ -471,64 +506,244 @@ const addTaskManager = {
     this.state.selectedAssignees = sel;
   },
 
-  _applyAssignedSelectionToDropdown() {
-    const selected = new Set(Array.from(this.state.selectedAssignees || []).map((v) => (v || "").trim().toLowerCase()));
-    const boxes = document.querySelectorAll('#assigned-to-options input[type="checkbox"]');
-    if (!boxes.length) return;
 
-    boxes.forEach((cb) => {
-      const key = this._resolveOptionKey(cb);
-      const isOn = selected.has(key);
+/**
+ * Spiegelt die Auswahl in die aktuell gerenderten Options-Elemente.
+ * Arbeitet mit echten <input> ODER Custom-Checkboxen (role="checkbox").
+ * @private
+ */
+_applyAssignedSelectionToDropdown() {
+  const selected = new Set(
+    Array.from(this.state.selectedAssignees || []).map(v => (v || '').trim().toLowerCase())
+  );
+  const panel = document.getElementById('assigned-to-options');
+  if (!panel) return;
 
-      cb.checked = isOn;
-      if (isOn) cb.setAttribute("checked", "");
-      else cb.removeAttribute("checked");
-      cb.setAttribute("aria-checked", isOn ? "true" : "false");
+  // echte Inputs aktualisieren
+  panel.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
+    const key = this._resolveOptionKey(cb);
+    const on = selected.has(key);
 
-      const row = cb.closest ? cb.closest("li, .dropdown-item, label") : null;
-      if (row) row.classList.toggle("is-checked", isOn);
+    cb.checked = on;
+    if (on) cb.setAttribute('checked', '');
+    else cb.removeAttribute('checked');
+    cb.setAttribute('aria-checked', on ? 'true' : 'false');
 
-      // Event für evtl. interne UI
-      cb.dispatchEvent(new Event("change", { bubbles: true }));
-    });
-  },
+    const row = cb.closest ? cb.closest('li.checkbox-option') : null;
+    if (row) row.classList.toggle('is-checked', on);
+  });
 
-  _wireAssignedDropdownOpenSync() {
-    const toggle = document.getElementById("assigned-to-toggle-btn");
-    const inputField = document.getElementById("assigned-to-input");
-    const panel = document.getElementById("assigned-to-options");
+  // evtl. zusätzliche role=checkbox-Elemente
+  panel.querySelectorAll('[role="checkbox"]').forEach((el) => {
+    const key = this._resolveOptionKey(el);
+    const on = selected.has(key);
+
+    el.setAttribute('aria-checked', on ? 'true' : 'false');
+
+    const row = el.closest ? el.closest('li.checkbox-option') : el;
+    if (row && row.classList) row.classList.toggle('is-checked', on);
+  });
+},
+
+
+/**
+ * Erkennt, ob eine Optionszeile „checked“ ist (input, aria, Klassen).
+ * @private
+ */
+_rowIsChecked(row) {
+  const cb = row.querySelector ? row.querySelector('input[type="checkbox"]') : null;
+  if (cb) return !!cb.checked;
+
+  const roleBox = row.querySelector ? row.querySelector('[role="checkbox"]') : null;
+  if (roleBox) {
+    const v = roleBox.getAttribute('aria-checked');
+    if (v != null) return v === 'true';
+  }
+
+  const aria = row.getAttribute ? row.getAttribute('aria-checked') : null;
+  if (aria != null) return aria === 'true';
+
+  const cls = row.classList || { contains(){ return false; } };
+  return cls.contains('is-checked') || cls.contains('selected') || cls.contains('checked');
+},
+
+/**
+ * Klickt die *richtige* Stelle (sichtbarer Kasten), damit die interne UI (SVG & Klasse) mitzieht.
+ * @private
+ */
+_rowClickToggle(row) {
+  const fire = (el, type) => {
+    if (!el) return;
+    el.dispatchEvent(new PointerEvent(type, { bubbles: true, cancelable: true }));
+  };
+  const clickLike = (el) => {
+    if (!el) return;
+    fire(el, 'pointerdown');
+    el.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true, view: window }));
+    el.dispatchEvent(new MouseEvent('mouseup',   { bubbles: true, cancelable: true, view: window }));
+    el.dispatchEvent(new MouseEvent('click',     { bubbles: true, cancelable: true, view: window }));
+  };
+
+  const box = row.querySelector ? row.querySelector('.custom-checkbox') : null;
+  if (box) { clickLike(box); return; }
+
+  const cb = row.querySelector ? row.querySelector('input[type="checkbox"]') : null;
+  if (cb) { clickLike(cb); return; }
+
+  clickLike(row);
+},
+
+
+/**
+ * Heuristischer Sync: geht Zeile für Zeile durch und klickt,
+ * bis der visuelle Zustand dem State entspricht.
+ * @private
+ */
+_syncAssignedRowsHeuristic() {
+  const panel = document.getElementById('assigned-to-options');
+  if (!panel) return;
+
+  const rows = panel.querySelectorAll('li.checkbox-option');
+  if (!rows.length) return;
+
+  const wanted = new Set(
+    Array.from(this.state.selectedAssignees || []).map(v => (v || '').trim().toLowerCase())
+  );
+
+  this._assigneeSyncGuard = true;
+
+  rows.forEach((row) => {
+    const key = this._resolveOptionKey(row);
+    if (!key) return;
+
+    const shouldOn = wanted.has(key);
+    const cb = row.querySelector ? row.querySelector('input[type="checkbox"]') : null;
+    const isOn = cb ? !!cb.checked : row.classList.contains('is-checked');
+
+    if (isOn !== shouldOn) {
+      // interne UI toggeln (sichtbares Target klicken)
+      this._rowClickToggle(row);
+
+      // Zustand hart nachziehen (nur Klasse + input-Attr., KEIN SVG innerHTML)
+      row.classList.toggle('is-checked', shouldOn);
+      if (cb) {
+        cb.checked = shouldOn;
+        if (shouldOn) cb.setAttribute('checked', '');
+        else cb.removeAttribute('checked');
+        cb.setAttribute('aria-checked', shouldOn ? 'true' : 'false');
+      }
+    }
+  });
+
+  setTimeout(() => {
+    this._assigneeSyncGuard = false;
+    this._updateContactBadges();
+  }, 0);
+},
+
+  
+/**
+ * Setzt Auswahl notfalls per echten Klicks, damit interne Dropdown-UI/Styles übernehmen.
+ * @private
+ */
+_applyAssignedSelectionByClick() {
+  const selected = new Set(Array.from(this.state.selectedAssignees || []).map(v => (v || "").trim().toLowerCase()));
+  const panel = document.getElementById('assigned-to-options');
+  if (!panel) return;
+
+  const clickEl = (el) => el.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+
+  this._assigneeSyncGuard = true;
+
+  // Inputs
+  panel.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+    const key = this._resolveOptionKey(cb);
+    const shouldBeOn = selected.has(key);
+    if (cb.checked !== shouldBeOn) clickEl(cb);
+  });
+
+  // Custom role=checkbox
+  panel.querySelectorAll('[role="checkbox"]').forEach(box => {
+    const key = this._resolveOptionKey(box);
+    const shouldBeOn = selected.has(key);
+    const current = box.getAttribute('aria-checked') === 'true';
+    if (current !== shouldBeOn) clickEl(box);
+  });
+
+  setTimeout(() => { this._assigneeSyncGuard = false; this._updateContactBadges(); }, 0);
+},
+
+
+/**
+ * Synchronisiert die Checkboxen jedes Mal beim Öffnen des Assigned-Dropdowns.
+ * @private
+ */
+_wireAssignedDropdownOpenSync() {
+  const toggle     = document.getElementById("assigned-to-toggle-btn");
+  const inputField = document.getElementById("assigned-to-input");
+  const getPanel   = () => document.getElementById("assigned-to-options");
+
+  // während der User im Panel klickt, pausieren wir unseren Pump
+  let userInteracting = false;
+  const markInteractStart = (e) => {
+    const p = getPanel();
+    if (p && p.contains(e.target)) userInteracting = true;
+  };
+  const markInteractEnd = () => { userInteracting = false; };
+
+  const runOneSyncPass = () => {
+    if (userInteracting) return;
+    this._applyAssignedSelectionToDropdown();
+    if (typeof this._applyAssignedSelectionByClick === "function") {
+      this._applyAssignedSelectionByClick();
+    }
+    this._syncAssignedRowsHeuristic();
+  };
+
+  const onOpen = () => {
+    // pro Öffnen: frisch aufgelöstes Panel verwenden
+    const panel = getPanel();
     if (!panel) return;
 
-    const onOpen = () => {
-      let tries = 0;
-      const pump = () => {
-        this._applyAssignedSelectionToDropdown();
-        const boxes = panel.querySelectorAll('input[type="checkbox"]');
-        if ((boxes.length === 0 || tries < 12) && tries < 40) {
-          tries++;
-          setTimeout(pump, 25);
-        }
-      };
-      requestAnimationFrame(() => {
-        requestAnimationFrame(pump);
-      });
+    // globale Pointer-Listener nur kurz aktiv, um Interaktion zu erkennen
+    document.addEventListener("pointerdown", markInteractStart, true);
+    document.addEventListener("pointerup",   markInteractEnd,   true);
 
-      const obs = new MutationObserver(() => this._applyAssignedSelectionToDropdown());
-      obs.observe(panel, { childList: true, subtree: true });
-      setTimeout(() => { obs.disconnect(); }, 800);
-    };
+    // mehrere kurze Sync-Pässe (wegen asynchronem Rendern/Animationen)
+    requestAnimationFrame(() => {
+      runOneSyncPass();               // direkt nach dem ersten Frame
+      setTimeout(runOneSyncPass, 80); // kleiner zweiter Pass
+      setTimeout(runOneSyncPass, 200);// letzter Pass
 
-    if (toggle) toggle.addEventListener("click", onOpen);
-    if (inputField) inputField.addEventListener("click", onOpen);
-
-    panel.addEventListener("change", (e) => {
-      const t = e.target;
-      if (t && t.matches && t.matches('input[type="checkbox"]')) {
-        this._captureAssignedSelection();
-        this._updateContactBadges();
-      }
+      // zusätzlich: MutationObserver nur für dieses Panel
+      const obs = new MutationObserver(() => runOneSyncPass());
+      try { obs.observe(panel, { childList: true, subtree: true }); } catch {}
+      setTimeout(() => {
+        try { obs.disconnect(); } catch {}
+        document.removeEventListener("pointerdown", markInteractStart, true);
+        document.removeEventListener("pointerup",   markInteractEnd,   true);
+      }, 1500); // nach 1,5s wieder abklemmen
     });
-  },
+  };
+
+  // Öffnen-Trigger
+  toggle?.addEventListener("click", onOpen);
+  inputField?.addEventListener("click", onOpen);
+  inputField?.addEventListener("focus", onOpen);
+
+  // WICHTIG: change-Listener delegiert, damit er auch bei neuem Panel greift
+  document.addEventListener("change", (e) => {
+    const panel = getPanel();
+    if (!panel || !panel.contains(e.target)) return;
+    const t = e.target;
+    if (t && t.matches && (t.matches('input[type="checkbox"]') || t.matches('[role="checkbox"]'))) {
+      if (this._assigneeSyncGuard) return; // eigene Sync-Klicks ignorieren
+      this._captureAssignedSelection();
+      this._updateContactBadges();
+    }
+  });
+},
+
 
   // --- 7) GENERIC HELPERS ---
   _filterOption(option, filter) {
@@ -585,7 +800,8 @@ function makeSelectionOnly(input, openFn) {
 
   input.addEventListener("paste", (e) => e.preventDefault());
   input.addEventListener("drop", (e) => e.preventDefault());
-}
+};
+
 
 // --- SCRIPT ENTRY POINT ---
 document.addEventListener("DOMContentLoaded", () => {
