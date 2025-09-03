@@ -7,6 +7,7 @@ body{
     background: #F6F7F8;;
     margin: 0;
     flex-direction: column;
+    overflow-x: scroll;
 }
 
 header {
@@ -154,6 +155,7 @@ input:-webkit-autofill:hover {
 
 .login-container h2 {
     font-size: 61px;
+    font-weight: 700;
     margin-block-start: 0;
     margin-block-end: 0;
     margin-bottom: 30px;
@@ -200,8 +202,8 @@ input:-webkit-autofill:hover {
 }
 
 #msgBox {
-    margin-top: 20px; 
     color: red;
+    margin-top: 5px;
 }
 
 .input-error {
@@ -228,7 +230,7 @@ footer a:hover {
 
 @media (max-width: 560px) {
     main {
-        margin-top: 85px;
+        margin-top: 30px;
     }
     header img {
         height: 77px;

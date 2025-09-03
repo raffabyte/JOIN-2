@@ -192,7 +192,7 @@ span {
   width: 100%;
   padding: 8px;
   text-align: center;
-  font-size: 14px;
+  font-size: 16px;
   transition: background-color 0.2s, color 0.2s;
 }
 
@@ -277,7 +277,7 @@ span {
 
   #menu {
     top: 60px;
-  right: 0px;
+   right: 0px;
     transform: translateX(13%);
   }
 
@@ -297,7 +297,7 @@ span {
   .login-link,
   .menuOption {
     gap: 6px;
-    padding: 6px 45px; /* 8px 56px → -20% */
+    padding: 6px 40px; /* 8px 56px → -20% */
   }
 
   .icon {
@@ -305,9 +305,9 @@ span {
     height: 24px; /* 30px → -20% */
   }
 
-  .menuOption p {
+  /* .menuOption p {
     font-size: 13px; /* 16px → -20% */
-  }
+  } */
 
   .initials-button {
     width: 45px;
@@ -328,7 +328,7 @@ span {
   }
 
   .legalLinks a {
-    font-size: 11px;
+    /* font-size: 11px; */
     padding: 6px; /* 8px → -20% */
   }
 

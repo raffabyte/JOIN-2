@@ -116,11 +116,11 @@ function validateInputs(email, password, emailInput, passwordInput, msgBox) {
 function showLoginError(errorCode, msgBox, emailInput, passwordInput) {
   switch (errorCode) {
     case "email-not-found":
-      showMessage("E-Mail is not registered.", msgBox);
+      showMessage("Check your email and password. Please try again.", msgBox);
       emailInput.classList.add("input-error");
       break;
     case "wrong-password":
-      showMessage("Password is wrong.", msgBox);
+      showMessage("Check your email and password. Please try again.", msgBox);
       passwordInput.classList.add("input-error");
       break;
     default:

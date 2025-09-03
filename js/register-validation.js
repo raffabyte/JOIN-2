@@ -105,15 +105,15 @@ function isPlausibleEmail(str){
 function validateEmail(el){
   const v = el.value.trim();
   if (!v) return "Please enter an email.";
-  if (!isPlausibleEmail(v)) return "Please enter a valid email (e.g., name@example.com).";
+  if (!isPlausibleEmail(v)) return "Check your email";
   return "";
 }
 
 function validatePassword(el) {
   const v = getRealPw(el);
   if (!v) return "Please enter a password.";
-  const strong = v.length >= 10 && /[a-z]/.test(v) && /[A-Z]/.test(v) && /\d/.test(v);
-  if (!strong) return "At least 10 chars with upper/lowercase and a number.";
+  const strong = v.length >= 8 && /[a-z]/.test(v) && /[A-Z]/.test(v) && /\d/.test(v);
+  if (!strong) return;
   return "";
 }
 function validatePasswordRepeat(pwEl, pw2El) {

@@ -7,7 +7,8 @@
   display: flex;
 }
 
-.input-field {
+.input-field, 
+.password-field {
   width: 100%;
   justify-content: center;
 }
@@ -19,8 +20,8 @@
   height:16px;           /* fixe Höhe = kein Layout-Shift */
   line-height:16px;
   margin-top:6px;
-  font-size:12px;
-  color:#FF3B30;
+  font-size:16px;
+  color:#ff0d00;
   visibility:hidden;     /* unsichtbar, aber nimmt Platz ein */
 }
 .input-error{ border:2px solid #FF3B30 !important; } /* für dein pw-Mismatch */
@@ -34,20 +35,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-}
-
-.flexC {
-  display: flex;
-  flex-direction: column;
-}
-
-.flexR {
-  display: flex;
-  flex-direction: row;
-}
-
-.width-100 {
-  width: 100%;
+  overflow-x: scroll;
 }
 
 header {
@@ -70,8 +58,8 @@ header {
 header img {
   height: 121px;
   width: 100px;
-      padding-top: 40px;
-    padding-left: 40px;
+  padding-top: 40px;
+  padding-left: 40px;
 }
 
 main {
@@ -91,20 +79,15 @@ main {
     max-width: 598px;
     width: 100%;
     max-height: 630px;
-    display: flex
-;
+    display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-.login-container form {
-  width: 100%;
 }
 
 form#signUpForm {
   padding-top: 32px;
   max-width: 422px;
-      gap: 16px;
+  gap: 16px;
 }
 
 .login-container input:focus:not(.input-error) {
@@ -122,7 +105,7 @@ button {
 .inputs {
   display: flex;
   flex-direction: column;
-      gap: 8px;
+  gap: 8px;
   width: 100%;
   max-width: 422px;
 }
@@ -147,24 +130,20 @@ button {
   max-width: 422px;
 }
 
-.password-field input {
+/* .password-field input {
   padding: 12px 21px;
   font-size: 20px;
   color: black;
   background-color: white;
-}
+} */
+/* 
 
-.password-wrapper {
-  position: relative;
-  width: 422px;
-}
-
-.password-wrapper input {
+/* .password-wrapper input {
   color: black;
   padding: 12px 21px;
   font-size: 20px;
   line-height: 1;
-}
+} */
 
 .password-field .hidden-input {
   font-family: monospace !important;
@@ -252,7 +231,6 @@ input#password2.no-bg-icon {
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 20px;
-  cursor: pointer;
 }
 
 .login-container input::placeholder {
@@ -425,6 +403,7 @@ header img,
   .login-container {
     padding: 32px 16px;
     margin-top: 36px;
+    width: 80%;
   }
   .arrow-left-line {
     position: absolute;
@@ -437,14 +416,26 @@ header img,
     line-height: 120%;
   }
 }
+@media (max-width: 560px) {
+  header img {
+    height: 77px;
+    width: 64px;
+  }
+  .login-container {
+    margin: 0 20px;
+    /* width: 100%;
+    max-width: 80%; */
+  }
+  .input {
+    width: 100%;
+  }
+
+}
 
 @media (max-width: 430px) {
+
   .login-container {
-    width: 100%;
-    max-width: 100%;
-    padding: 32px 16px;
-    box-sizing: border-box;
-    margin-top: 32px 8px 0px 8px;
+    width: 80%;
   }
 
   h2 {

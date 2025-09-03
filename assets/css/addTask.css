@@ -41,6 +41,7 @@ h1 {
 
 .form-group {
   position: relative;
+  max-width: 440px;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -49,7 +50,7 @@ h1 {
   z-index: 1;
 }
 
-.form-group label, .required-asterisk { font-size: clamp(14px, 1.5vw, 20px); display: flex; flex-direction: row;}
+.form-group label, .required-asterisk { font-size: clamp(16px, 1.5vw, 20px); display: flex; flex-direction: row;}
 .form-group label { font-weight: 400; }
 .required-asterisk { color: #ff8190; padding: 0 4px; }
 
@@ -185,7 +186,11 @@ input.input-error, .dropdown-input-wrapper.input-error {
   display: block !important;
 }
 .dropdown-options li, #assigned-to-options li, #category-options li {
-  padding: 10px; cursor: pointer; background: white; display: flex; flex-direction: row;
+  padding: 10px; 
+  cursor: pointer; 
+  background: white; 
+  display: flex; 
+  flex-direction: row;
 }
 .dropdown-options li:hover, #assigned-to-options li:hover, #category-options li:hover {
   background: #f1f1f1;
@@ -267,9 +272,9 @@ input[type="text"]:focus, input[type="date"]:focus, textarea:focus,
 }
 
 @media (max-width: 1399px) {
-  span {
+  /* span {
     font-size: 16px;
-  }
+  } */
 
   h1 {
     font-size: 41px;
