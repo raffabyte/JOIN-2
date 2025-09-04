@@ -1,4 +1,3 @@
-/* ===== Priority Buttons ===== */
 .priority-options {
   display: flex;
   gap: clamp(4px, 2vw, 12px);
@@ -12,25 +11,26 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 10px 8px;
+  
   border: 1px solid #d1d1d1;
   border-radius: 10px;
   background: #fff;
   box-sizing: border-box;
   transition: all 0.1s ease-in-out;
-  font-size: 16px;
   line-height: 1;
 }
 .priority-btn span {
   color: #2a3647;
-  font-size: 16px;
+  font-size: 20px;
+  display: flex;
+  gap: 16px;
+  padding: 16px 10px;
+  width: auto;
 }
 .priority-btn svg {
-  width: 1em;
-  height: 1em;
   flex: 0 0 auto;
   vertical-align: middle;
+  
 }
 
 .priority-btn[data-priority="high"] svg {
@@ -63,14 +63,12 @@
   background-color: #7ae229;
 }
 
-/* Medium Fix */
 .priority-btn[data-priority="medium"] {
   padding-left: 6px;
   padding-right: 6px;
   gap: 4px;
 }
 
-/* ===== Dropdown States ===== */
 .dropdown-options .checkbox-option {
   display: flex;
   align-items: center;
@@ -81,7 +79,7 @@
 
 #assigned-to-options {
   overflow-x: hidden;
-  padding: 6px 12px;      /* links/rechts einheitlich */
+  padding: 6px 12px;    
   box-sizing: border-box;
 }
 
@@ -89,11 +87,11 @@
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 10px 12px;     /* identisch für alle */
+  padding: 10px 12px;     
   gap: 12px;
   border-radius: 10px;
   box-sizing: border-box;
-  min-width: 0;           /* wichtig für Ellipsis beim Namen */
+  min-width: 0;           
 }
 .dropdown-options .checkbox-option:hover {
   background-color: #2a3647;
@@ -116,8 +114,8 @@
 #assigned-to-options.dropdown-options { padding: 6px 8px; }
 
 #assigned-to-options .custom-checkbox {
-  margin-left: 0;          /* schiebt nach ganz rechts */
-  flex-shrink: 0;             /* verhindert Schrumpfen */
+  margin-left: 0;          
+  flex-shrink: 0;            
   display: flex;
   align-items: center;
   justify-content: center;
@@ -153,10 +151,10 @@
 }
 
 #assigned-to-options .custom-checkbox {
-  margin-left: auto;       /* schiebt ganz nach rechts */
-  width: 24px;             /* fixe Spaltenbreite */
+  margin-left: auto;       
+  width: 24px;             
   height: 24px;
-  flex: 0 0 24px;          /* keine Schrumpfung */
+  flex: 0 0 24px;         
   display: flex;
   align-items: center;
   justify-content: center;
@@ -166,36 +164,29 @@
   height: 24px;
 }
 
-/* === Hover nur, wenn der Kontakt NICHT ausgewählt ist === */
 #assigned-to-options li.checkbox-option:not(.is-checked):hover {
-  background: #eef1f5; /* hellgrau beim Überfahren */
+  background: #eef1f5; 
 }
 
-/* === Ausgewählt: Dunkelblau + Text und Checkbox in Weiß === */
 #assigned-to-options li.checkbox-option.is-checked {
-  background: #2a3647 !important; /* persistente Auswahlfarbe */
-  color: #fff; /* fallback für Text, falls Kontaktname fehlt */
+  background: #2a3647 !important;
+  color: #fff; 
 }
 
-/* Name weiß, wenn ausgewählt */
 #assigned-to-options li.checkbox-option.is-checked .contact-name {
   color: #fff;
 }
 
-/* Checkbox-Icon wird weiß, wenn ausgewählt */
 #assigned-to-options li.checkbox-option.is-checked .custom-checkbox svg {
-  color: #fff; /* für Icons mit currentColor */
+  color: #fff;
 }
 
-/* Standard-Checkbox-Farbe, wenn nicht ausgewählt */
 #assigned-to-options .custom-checkbox svg path,
 #assigned-to-options .custom-checkbox svg rect,
 #assigned-to-options .custom-checkbox svg circle {
-  stroke: currentColor; /* übernimmt die Farbe der SVG selbst */
+  stroke: currentColor;
 }
 
-
-/* ===== Footer Buttons ===== */
 .clear-button,
 .create-button {
   height: 56px;
@@ -228,7 +219,6 @@
   box-shadow: 0px 4px 4px 0px #7d8da3;
 }
 
-/* ===== Task Added Popup ===== */
 .task-added-popup {
   position: fixed;
   left: 50%;
@@ -271,7 +261,6 @@
   }
 }
 
-/* ===== Media Queries ===== */
 @media (max-width: 1399px) {
   span {
     font-size: 16px;
@@ -496,3 +485,4 @@
     gap: 3px;
   }
 }
+

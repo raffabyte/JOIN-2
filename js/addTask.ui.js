@@ -3,8 +3,6 @@
  * DOM cache, date picker, selection-only inputs, priority buttons, badges, and popup.
  */
 
-/* ---------------------- tiny file-scoped utilities (keep methods short) ---------------------- */
-
 /**
  * Shorthand querySelector.
  * @param {string} s
@@ -20,6 +18,24 @@ function todayStr() {
   const d = new Date(), y = d.getFullYear(), m = String(d.getMonth() + 1).padStart(2, "0"), da = String(d.getDate()).padStart(2, "0");
   return `${y}-${m}-${da}`;
 }
+
+// --- date reopen guard (prevents immediate re-opening after selection)
+let _dateGuardUntil = 0;
+/**
+ * Returns true if the date picker should stay closed.
+ * Uses performance.now() for precise timing.
+ */
+function dateGuardActive() {
+  return performance.now() < _dateGuardUntil;
+}
+/**
+ * Arms the guard to block picker reopening for the next X ms.
+ * @param {number} ms - Duration in milliseconds.
+ */
+function armDateGuard(ms = 400) {
+  _dateGuardUntil = performance.now() + ms;
+}
+
 
 /**
  * Ensures input becomes temporarily editable to open native pickers.
@@ -98,22 +114,53 @@ Object.assign(window.addTaskManager, {
   /**
    * Open the native date picker for due date.
    */
-  _openDatePicker() {
-    const input = this.elements.dueDate; if (!input) return;
-    withMutable(input, () => tryOpenDate(input));
-  },
+_openDatePicker() {
+  const input = this.elements.dueDate; if (!input) return;
+  if (dateGuardActive()) return;          
+  withMutable(input, () => tryOpenDate(input));
+},
+
 
   /**
    * Wire calendar button + input to open native picker reliably.
    */
-  _setupDatePicker() {
-    const btn = document.getElementById("calendar-toggle");
-    const input = this.elements.dueDate; if (!btn || !input) return;
-    const open = (e) => { e.preventDefault(); withMutable(input, () => tryOpenDate(input)); };
-    btn.addEventListener("pointerdown", open);
-    btn.addEventListener("click", open);
-    input.addEventListener("pointerdown", (e) => { if (input.readOnly) { e.preventDefault(); open(e); } });
-  },
+_setupDatePicker() {
+  const btn = document.getElementById("calendar-toggle");
+  const input = this.elements.dueDate;
+  if (!btn || !input) return;
+
+  const open = (e) => {
+    if (dateGuardActive()) return;
+    e.preventDefault();
+    withMutable(input, () => tryOpenDate(input));
+  };
+
+  btn.addEventListener("pointerdown", open);
+  btn.addEventListener("click", open);
+  input.addEventListener("pointerdown", (e) => this._handleDatePointer(e, input, open));
+  input.addEventListener("change", () => this._handleDateChange(input));
+},
+
+
+/**
+ * Handles pointerdown on the due date input.
+ * Prevents reopening the picker immediately if the guard is active.
+ */
+_handleDatePointer(e, input, open) {
+  if (!input.readOnly) return;
+  if (dateGuardActive()) return;
+  e.preventDefault();
+  open(e);
+},
+
+/**
+ * Handles date change: sets guard and removes focus.
+ */
+_handleDateChange(input) {
+  armDateGuard(500); 
+  setTimeout(() => input.blur(), 0);
+},
+
 
   /**
    * Enforce min date = today and validate on blur.
