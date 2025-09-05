@@ -1304,7 +1304,7 @@ form {
     display: none;
   }
   .cancel-button {
-    display: none;
+    display: flex;
   }
   .pbContainer {
     position: relative;
