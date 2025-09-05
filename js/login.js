@@ -4,6 +4,8 @@
  */
 
 const emailRegex = /^[a-zA-Z0-9._%+-]+@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
+const MIN_PASSWORD_LENGTH = 4;
+const DEBUG_LOGIN = false;
 
 document.addEventListener("DOMContentLoaded", initLogin);
 
@@ -56,27 +58,34 @@ function setupLiveFeedback({ emailInput, passwordInput, msgBox }) {
 
 function bindLoginHandler({ form, emailInput, passwordInput, loginButton, msgBox }) {
   form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  clearMessage(msgBox);
+    e.preventDefault();
+    clearMessage(msgBox);
 
-  const email = emailInput.value.trim();
-  const password = passwordInput.getRealPassword().trim();
+    const email = emailInput.value.trim();
+    const password = passwordInput.getRealPassword(); 
 
-  const isValid = validateInputs(email, password, emailInput, passwordInput, msgBox);
-  if (!isValid) return;
-
-  disableButton(loginButton);
-  const result = await login(email, password);
-
-  if (result.success) {
-    sessionStorage.setItem("showMobileGreeting", "1");
-    window.location.href = "../index/summary.html";
-  } else {
-    showLoginError(result.error, msgBox, emailInput, passwordInput);
-    enableButton(loginButton);
+    if (!validateInputs(email, password, emailInput, passwordInput, msgBox)) {
+    return; // Stoppt die Funktion, wenn die Eingaben ungültig sind
   }
-});
+    
+    if (!email || !password) {
+      showMessage("Check your input. Please try again.", msgBox);
+      return;
+    }
+
+    disableButton(loginButton);
+    const result = await login(email, password);
+
+    if (result.success) {
+      sessionStorage.setItem("showMobileGreeting", "1");
+      window.location.href = "../index/summary.html";
+    } else {
+      showMessage("Check your input. Please try again.", msgBox);
+      enableButton(loginButton);
+    }
+  });
 }
+
 
 /**
  * Validates the user inputs for login.
@@ -87,23 +96,25 @@ function bindLoginHandler({ form, emailInput, passwordInput, loginButton, msgBox
  * @param {HTMLElement} msgBox - The message box element for feedback.
  * @returns {boolean} True if inputs are valid, false otherwise.
  */
+
 function validateInputs(email, password, emailInput, passwordInput, msgBox) {
   let valid = true;
 
   if (!emailRegex.test(email)) {
     emailInput.classList.add("input-error");
-    showMessage("Check your email. Please try again.", msgBox);
+    showMessage("Check your input. Please try again.", msgBox);
     valid = false;
   }
 
-  if (password.length < 4) {
+  if (password.length < MIN_PASSWORD_LENGTH) {
     passwordInput.classList.add("input-error");
-    showMessage("Check your password. Please try again.", msgBox);
+    showMessage("Check your input. Please try again.", msgBox);
     valid = false;
   }
 
   return valid;
 }
+
 
 /**
  * Displays login error messages based on the error code.
@@ -116,11 +127,11 @@ function validateInputs(email, password, emailInput, passwordInput, msgBox) {
 function showLoginError(errorCode, msgBox, emailInput, passwordInput) {
   switch (errorCode) {
     case "email-not-found":
-      showMessage("Check your email and password. Please try again.", msgBox);
+      showMessage("Please check your input and try again.", msgBox);
       emailInput.classList.add("input-error");
       break;
     case "wrong-password":
-      showMessage("Check your email and password. Please try again.", msgBox);
+      showMessage("Please check your input and try again.", msgBox);
       passwordInput.classList.add("input-error");
       break;
     default:
@@ -266,12 +277,6 @@ function clickedToggleArea(e, input) {
   return e.clientX > rect.right - 40;
 }
 
-/**
- * Attempts to log the user in by verifying credentials against Firebase.
- * @param {string} email
- * @param {string} password
- * @returns {Promise<{ success: boolean, error?: string }>} Result of the login attempt.
- */
 
 async function login(email, password) {
   try {
@@ -288,8 +293,8 @@ async function login(email, password) {
       }
     }
 
-    if (!userFound) return { success: false, error: "email-not-found" };
-    if (userFound.user.password !== password) return { success: false, error: "wrong-password" };
+    if (!userFound) return { success: false, error: "wrong input" };
+    if (userFound.user.password !== password) return { success: false, error: "wrong input" };
 
     localStorage.setItem("loggedInUserKey", userFound.key);
     return { success: true };
@@ -298,6 +303,61 @@ async function login(email, password) {
     return { success: false, error: "server-error" };
   }
 }
+ 
+
+/**
+ * Flacht beliebig verschachtelte User-Objekte/Arrays zu einer Liste ab.
+ * Erwartet Objekte mit mind. { email, password } irgendwo in den Blättern.
+ */
+function flattenUsers(node, basePath = "users") {
+  const list = [];
+
+  function walk(n, path) {
+    if (!n) return;
+
+    // Fall: nutzerblatt (hat email + password)
+    if (typeof n === "object" && n !== null && "email" in n && "password" in n) {
+      list.push({ path, ...n });
+      return;
+    }
+
+    // Fall: Array → iterieren
+    if (Array.isArray(n)) {
+      n.forEach((item, idx) => walk(item, `${path}/${idx}`));
+      return;
+    }
+
+    // Fall: Objekt → rekursiv
+    if (typeof n === "object") {
+      for (const k in n) {
+        walk(n[k], `${path}/${k}`);
+      }
+      return;
+    }
+  }
+
+  walk(node, basePath);
+  return list;
+}
+
+
+/**
+ * Sammelt alle Blätter mit { email, password } – egal wie verschachtelt.
+ */
+function collectUsers(root) {
+  const out = [];
+  (function walk(n, path) {
+    if (!n) return;
+    if (typeof n === "object" && n !== null && "email" in n && "password" in n) {
+      out.push({ path, email: String(n.email), password: String(n.password) });
+      return;
+    }
+    if (Array.isArray(n)) { n.forEach((v,i)=>walk(v, `${path}/${i}`)); return; }
+    if (typeof n === "object") { for (const k in n) walk(n[k], `${path}/${k}`); }
+  })(root, "users");
+  return out;
+}
+
 
 /**
  * Displays a message in the message box.
