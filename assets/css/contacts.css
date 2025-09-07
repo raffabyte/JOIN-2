@@ -291,17 +291,8 @@ h2 {
   height: 56px;
 }
 .create-btn:hover {
-  display: flex;
   background-color: rgb(26, 175, 224);
-  color: white;
-  padding: 15px 24px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 21px;
-  gap: 4px;
-  height: 56px;
   box-shadow: 0 12px 12px -8px #a8a8a8;
-  transition: box-shadow 0.2s ease-in-out;
 }
 .cancel-button {
   display: flex;
@@ -317,18 +308,8 @@ h2 {
   padding: 15px 15px;
 }
 .cancel-button:hover {
-  display: flex;
-  align-items: center;
   background-color: white;
-  border: solid 2px rgb(26, 175, 224);
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 21px;
-  gap: 4px;
-  height: 56px;
-  padding: 15px 15px;
   box-shadow: 0 12px 12px -8px #a8a8a8;
-  transition: box-shadow 0.2s ease-in-out;
 }
 .cancel-button:hover .cancelText {
   color: rgb(26, 175, 224);
