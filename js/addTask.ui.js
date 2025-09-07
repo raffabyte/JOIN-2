@@ -9,6 +9,7 @@
  * @param {ParentNode} [r=document]
  */
 function qs(s, r = document) { return r.querySelector(s); }
+
 /**
  * Returns YYYY-MM-DD for today's local date.
  * @returns {string}
@@ -22,24 +23,6 @@ let _dateGuardUntil = 0;
 
 
 /**
- * Returns true if the date picker should stay closed.
- * Uses performance.now() for precise timing.
- */
-function dateGuardActive() {
-  return performance.now() < _dateGuardUntil;
-}
-
-
-/**
- * Arms the guard to block picker reopening for the next X ms.
- * @param {number} ms - Duration in milliseconds.
- */
-function armDateGuard(ms = 400) {
-  _dateGuardUntil = performance.now() + ms;
-}
-
-
-/**
  * Ensures input becomes temporarily editable to open native pickers.
  * @param {HTMLInputElement} el
  * @param {Function} fn
@@ -49,7 +32,6 @@ function withMutable(el, fn) {
   el.readOnly = false; el.disabled = false;
   try { fn(); } finally { el.readOnly = ro; el.disabled = di; }
 }
-
 
 /**
  * Tries all strategies to open a date input's native picker.
@@ -61,7 +43,6 @@ function tryOpenDate(input) {
   input.focus();
   setTimeout(() => { try { input.click(); } catch {} }, 0);
 }
-
 
 /**
  * Creates a colored badge for a user.
@@ -97,12 +78,13 @@ window.makeSelectionOnly = function makeSelectionOnly(input, openFn) {
   input.addEventListener("drop",  (e) => e.preventDefault());
 };
 
+const SUPPORTS_SHOW_PICKER = "showPicker" in HTMLInputElement.prototype;
+
+
 /* ---------------------- module methods ---------------------- */
 
 Object.assign(window.addTaskManager, {
-  /**
-   * Cache frequently used DOM elements.
-   */
+  /** Cache frequently used DOM elements. */
   _cacheDOMElements() {
     this.elements.form              = qs(".task-form");
     this.elements.createBtn         = this.elements.form?.querySelector(".create-button") || null;
@@ -115,15 +97,12 @@ Object.assign(window.addTaskManager, {
     this.elements.selectedAssignees = qs("#selected-assignees");
   },
 
-
-  /**
-   * Open the native date picker for due date.
-   */
-_openDatePicker() {
-  const input = this.elements.dueDate; if (!input) return;
-  if (dateGuardActive()) return;          
-  withMutable(input, () => tryOpenDate(input));
-},
+  /** Open the native date picker for due date. */
+  _openDatePicker() {
+    const input = this.elements.dueDate; if (!input) return;
+    if (dateGuardActive()) return;
+    withMutable(input, () => tryOpenDate(input));
+  },
 
 
   /**
@@ -133,38 +112,13 @@ _setupDatePicker() {
   const btn = document.getElementById("calendar-toggle");
   const input = this.elements.dueDate;
   if (!btn || !input) return;
-
-  const open = (e) => {
-    if (dateGuardActive()) return;
+  btn.addEventListener("click", (e) => {
     e.preventDefault();
-    withMutable(input, () => tryOpenDate(input));
-  };
-
-  btn.addEventListener("pointerdown", open);
-  btn.addEventListener("click", open);
-  input.addEventListener("pointerdown", (e) => this._handleDatePointer(e, input, open));
-  input.addEventListener("change", () => this._handleDateChange(input));
-},
-
-
-/**
- * Handles pointerdown on the due date input.
- * Prevents reopening the picker immediately if the guard is active.
- */
-_handleDatePointer(e, input, open) {
-  if (!input.readOnly) return;
-  if (dateGuardActive()) return;
-  e.preventDefault();
-  open(e);
-},
-
-
-/**
- * Handles date change: sets guard and removes focus.
- */
-_handleDateChange(input) {
-  armDateGuard(500); 
-  setTimeout(() => input.blur(), 0);
+    withMutable(input, () => {
+      if (typeof input.showPicker === "function") input.showPicker();
+      else { input.removeAttribute("readonly"); input.focus(); input.click(); }
+    });
+  });
 },
 
 
@@ -181,20 +135,19 @@ _handleDateChange(input) {
     });
   },
 
-
   /**
    * Make fields selection-only: due date, category, assigned-to.
    */
-  _enforceSelectionOnlyFields() {
-    const due = this.elements.dueDate;
-    const cat = this.elements.categoryInput;
-    const catBtn = document.getElementById("category-toggle-btn");
-    const asg = document.getElementById("assigned-to-input");
-    const asgBtn = document.getElementById("assigned-to-toggle-btn");
-    if (due)    makeSelectionOnly(due, () => this._openDatePicker());
-    if (cat && catBtn) makeSelectionOnly(cat, () => catBtn.click());
-    if (asg && asgBtn) makeSelectionOnly(asg, () => asgBtn.click());
-  },
+_enforceSelectionOnlyFields() {
+  const due = this.elements.dueDate;
+  const cat = this.elements.categoryInput;
+  const asg = document.getElementById("assigned-to-input");
+  const catBtn = document.getElementById("category-toggle-btn");
+  const asgBtn = document.getElementById("assigned-to-toggle-btn");
+  if (due) due.removeAttribute("readonly");
+  if (cat && catBtn) makeSelectionOnly(cat, () => catBtn.click());
+  if (asg && asgBtn) makeSelectionOnly(asg, () => asgBtn.click());
+},
 
 
   /**
@@ -214,7 +167,6 @@ _handleDateChange(input) {
       this._clearError(btn.parentElement);
     }));
   },
-
 
   /**
    * Render selected assignee badges + overflow chip.
@@ -236,7 +188,6 @@ _handleDateChange(input) {
     more.textContent = `+${hid.length}`; more.title = names.join(", ");
     more.setAttribute("aria-label", names.join(", ")); wrap.appendChild(more);
   },
-
 
   /**
    * Show success toast after creating a task.

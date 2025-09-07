@@ -14,6 +14,8 @@ window.addEventListener("DOMContentLoaded", async () => {
   
 });
 
+protectPageAccess(); // Funktion ist global verfügbar
+
 /**
  * Loads user data from Firebase.
  * @returns {Promise<Object>}

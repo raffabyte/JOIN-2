@@ -2,6 +2,7 @@ const TASKS_BASE_URL = "https://join-475-370cd-default-rtdb.europe-west1.firebas
 
 
 if (!USERKEY) {
+    // Kein Benutzer eingeloggt → weiterleiten
     window.location.href = "../../index.html";
 }
 
@@ -9,7 +10,7 @@ if (!USERKEY) {
 
 /**
  * Gets the selected priority from the form
- * @returns {string} 
+ * @returns {string} The selected priority or empty string
  */
 function getSelectedPriority() {
     const priorityBtn = document.querySelector('.priority-button.active');
@@ -19,7 +20,7 @@ function getSelectedPriority() {
 
 /**
  * Gets the assigned contacts from the form
- * @returns {Array<string>} 
+ * @returns {Array<string>} Array of assigned contact names
  */
 function getAssignedContacts() {
     return Array.from(document.querySelectorAll('#selectedAssignee .contact-icon'))
@@ -29,7 +30,7 @@ function getAssignedContacts() {
 
 /**
  * Gets the subtasks from the form
- * @returns {Array<Object>} 
+ * @returns {Array<Object>} Array of subtask objects
  */
 function getFormSubtasks() {
     return Array.from(document.querySelectorAll('.subtask-text')).map(subtask => ({
@@ -41,8 +42,8 @@ function getFormSubtasks() {
 
 /**
  * Collects task data from form elements and creates a task object
- * @param {string} columnId 
- * @returns {Object} 
+ * @param {string} columnId - The ID of the column where the task will be placed
+ * @returns {Object} Task object with all form data
  */
 function collectTaskData(columnId) {
     return {
@@ -57,11 +58,10 @@ function collectTaskData(columnId) {
     };
 }
 
-
 /**
  * Validates and saves task data to a specific column
- * @param {string} columnId 
- * @returns {Object|null} 
+ * @param {string} columnId - The ID of the target column
+ * @returns {Object|null} Task data object if valid, null if validation fails
  */
 function validateAndSaveTaskData(columnId) {
     const taskData = collectTaskData(columnId);
@@ -72,12 +72,11 @@ function validateAndSaveTaskData(columnId) {
     return taskData;
 }
 
-
 /**
  * Pushes task data to the Firebase database
- * @param {string} columnId 
- * @returns {Promise<Response>} 
- * @throws {Promise<string>} P
+ * @param {string} columnId - The ID of the column
+ * @returns {Promise<Response>} Promise that resolves to the fetch response
+ * @throws {Promise<string>} Promise that rejects with 'No task data' if no data provided
  */
 async function pushTaskToDatabase(columnId) {
     const taskData = validateAndSaveTaskData(columnId);
@@ -92,10 +91,10 @@ async function pushTaskToDatabase(columnId) {
 
 
 /**
- * Configures event handlers for a board column
- * @param {HTMLElement} column 
- * @param {string} columnId 
- * @param {string} dragAreaId
+ * Konfiguriert Event-Handler für eine Board-Spalte
+ * @param {HTMLElement} column - Das Spalten-Element
+ * @param {string} columnId - Die ID der Spalte
+ * @param {string} dragAreaId - Die ID der Drag-Area
  */
 function setupColumnEventHandlers(column, columnId, dragAreaId) {
     column.ondrop = () => moveTo(columnId);
@@ -110,38 +109,37 @@ function setupColumnEventHandlers(column, columnId, dragAreaId) {
 /**
  * Groups tasks by columns and sorts them by movedAt timestamp
  * @function groupAndSortTasks
- * @param {Array<Object>} tasks 
- * @returns {Object} 
- * @property {Array} todoColumn 
- * @property {Array} inProgressColumn
- * @property {Array} awaitFeedbackColumn 
- * @property {Array} doneColumn 
+ * @param {Array<Object>} tasks - Array of task objects
+ * @returns {Object} Object with tasks grouped by column and sorted
+ * @property {Array} todoColumn - Tasks in todo column
+ * @property {Array} inProgressColumn - Tasks in progress column
+ * @property {Array} awaitFeedbackColumn - Tasks awaiting feedback
+ * @property {Array} doneColumn - Completed tasks
  */
 function groupAndSortTasks(tasks) {
     const tasksByColumn = {
         todoColumn: [], inProgressColumn: [],
         awaitFeedbackColumn: [], doneColumn: []
     };
-   
+    // Gruppiere Tasks nach Spalten
     tasks.forEach(task => {
         if (tasksByColumn[task.column]) { tasksByColumn[task.column].push(task); }
     });
-   
+    // Sortiere nach movedAt
     Object.keys(tasksByColumn).forEach(col => {
         tasksByColumn[col].sort((a, b) => (a.movedAt || 0) - (b.movedAt || 0));
     });
     return tasksByColumn;
 }
 
-
 /**
  * Generates column data with HTML and drag area information
  * @function generateColumnData
- * @param {Object} tasksByColumn 
- * @returns {Array<Object>} 
- * @property {string} col 
- * @property {string} dragAreaId 
- * @property {string} tasksHTML 
+ * @param {Object} tasksByColumn - Tasks grouped by column
+ * @returns {Array<Object>} Array of column data objects
+ * @property {string} col - Column ID
+ * @property {string} dragAreaId - Drag area ID for the column
+ * @property {string} tasksHTML - HTML string of all tasks in the column
  */
 function generateColumnData(tasksByColumn) {
     const columns = ['todoColumn', 'inProgressColumn', 'awaitFeedbackColumn', 'doneColumn'];
@@ -153,11 +151,10 @@ function generateColumnData(tasksByColumn) {
     });
 }
 
-
 /**
  * Renders column data to the DOM and sets up event handlers
  * @function renderColumns
- * @param {Array<Object>} columnData 
+ * @param {Array<Object>} columnData - Array of column data objects
  * @returns {void}
  */
 function renderColumns(columnData) {
@@ -168,12 +165,11 @@ function renderColumns(columnData) {
     });
 }
 
-
 /**
  * Updates all board columns with provided tasks
  * @function updateColumns
- * @param {Array<Object>} tasks
- * @returns {Promise<void>}
+ * @param {Array<Object>} tasks - Array of task objects
+ * @returns {Promise<void>} Promise that resolves when columns are updated
  */
 async function updateColumns(tasks) {
     const tasksByColumn = groupAndSortTasks(tasks);
@@ -186,7 +182,7 @@ async function updateColumns(tasks) {
 /**
  * Fetches all board data from Firebase database
  * @function fetchBoardData
- * @returns {Promise<Array<Object>>} 
+ * @returns {Promise<Array<Object>>} Promise that resolves to array of task objects with IDs
  */
 async function fetchBoardData() {
     const [tasksResponse] = await Promise.all([
@@ -200,11 +196,10 @@ async function fetchBoardData() {
     }));
 }
 
-
 /**
  * Updates the entire board with fresh data from the database
  * @function updateBoard
- * @returns {Promise<void>} 
+ * @returns {Promise<void>} Promise that resolves when board is updated
  */
 async function updateBoard() {
     try {
@@ -216,11 +211,10 @@ async function updateBoard() {
     }
 }
 
-
 /**
  * Adds a new task to the specified column
- * @param {Event|null} event 
- * @param {string} columnId 
+ * @param {Event|null} event - The event object (if triggered by form submission)
+ * @param {string} columnId - The ID of the target column
  * @returns {void}
  */
 function addTask(event, columnId) {
@@ -250,15 +244,16 @@ function addTask(event, columnId) {
  */
 let contactColorMap = new Map();
 
-
 /**
  * Loads all contact colors from Firebase and stores them in a Map for quick access
  * @function loadAllContactColors
- * @returns {Promise<Object>}
+ * @returns {Promise<Object>} Promise that resolves to the contacts object from Firebase
  */
 async function loadAllContactColors() {
     const response = await fetch(`https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/users/${USERKEY}/contacts.json`);
     const result = await response.json();
+
+    // Erstelle Color Map für schnellen Zugriff
     contactColorMap.clear();
     Object.values(result || {}).forEach(contact => {
         if (contact.name && contact.color) {
@@ -269,24 +264,22 @@ async function loadAllContactColors() {
     return result;
 }
 
-
 /**
  * Gets the color associated with a contact name
  * @function getContactColor
- * @param {string} name 
- * @returns {string} 
+ * @param {string} name - The contact name
+ * @returns {string} The color value or 'transparent' if not found
  */
 function getContactColor(name) {
     if (!name) return 'transparent';
     return contactColorMap.get(name) || 'transparent';
 }
 
-
 /**
  * Finds and returns a contact object by name
  * @function getContactByName
- * @param {string} name 
- * @returns {Promise<Object|null>} 
+ * @param {string} name - The contact name to search for
+ * @returns {Promise<Object|null>} Promise that resolves to the contact object or null if not found
  */
 async function getContactByName(name) {
     const contactsCache = await loadAllContactColors();
@@ -297,9 +290,9 @@ async function getContactByName(name) {
 /**
  * Renders member icons for a task, showing up to 3 members with overflow count
  * @function renderMembers
- * @param {Object} task 
- * @param {Array<string>} task.assignee 
- * @returns {string}
+ * @param {Object} task - The task object containing assignee information
+ * @param {Array<string>} task.assignee - Array of assigned contact names
+ * @returns {string} HTML string of member icons
  */
 function renderMembers(task) {
     const filteredAssignees = Array.isArray(task.assignee) ? task.assignee.filter(name => name && name.trim()) : '';
@@ -310,13 +303,12 @@ function renderMembers(task) {
     return filteredAssignees.length > 3 ? result + extraCountSpanTemplate(filteredAssignees.length - 3) : result;
 }
 
-
 /**
  * Renders member icons with names for detailed view
  * @function renderMembersWithName
- * @param {Object} task
- * @param {Array<string>} task.assignee 
- * @returns {string} 
+ * @param {Object} task - The task object containing assignee information
+ * @param {Array<string>} task.assignee - Array of assigned contact names
+ * @returns {string} HTML string of members with names
  */
 function renderMembersWithName(task) {
     if (!Array.isArray(task.assignee)) return '';
