@@ -8,9 +8,9 @@ let currentDraggedElement;
 
 /**
  * Sets up event handlers for drag and drop on columns
- * @param {HTMLElement} column - The column element
- * @param {string} columnId - The ID of the column
- * @param {string} dragAreaId - The ID of the drag area
+ * @param {HTMLElement} column 
+ * @param {string} columnId 
+ * @param {string} dragAreaId
  * @returns {void}
  */
 function setupColumnEventHandlers(column, columnId, dragAreaId) {
@@ -37,7 +37,6 @@ function checkEmptyColumn() {
         if (!column.querySelector('.task-card') && dragArea && dragArea.classList.contains('display-none')) {
             !existingNoTask ? column.innerHTML += noTaskCardTemplate(column.getAttribute('column-name')) : null;
         } else {
-            // Entferne no-task-item wenn dragArea sichtbar ist oder Tasks vorhanden sind
             existingNoTask ? existingNoTask.remove() : null;
         }
     });
@@ -46,7 +45,7 @@ function checkEmptyColumn() {
 
 /**
  * Allows drop operation by preventing default behavior
- * @param {DragEvent} ev - The drag event
+ * @param {DragEvent} ev
  * @returns {void}
  */
 function allowDrop(ev) {
@@ -56,8 +55,8 @@ function allowDrop(ev) {
 
 /**
  * Initiates drag operation for a task card
- * @param {DragEvent} event - The drag start event
- * @param {string} id - The ID of the task being dragged
+ * @param {DragEvent} event 
+ * @param {string} id 
  * @returns {void}
  */
 function startDragging(event, id) {
@@ -81,7 +80,7 @@ function stopDragging() {
 
 /**
  * Moves the currently dragged task to a new column
- * @param {string} column - The target column ID
+ * @param {string} column
  * @returns {void}
  */
 function moveTo(column) {
@@ -105,7 +104,7 @@ function moveTo(column) {
 
 /**
  * Sets the height of a drag area to match the dragged task
- * @param {HTMLElement} element - The drag area element
+ * @param {HTMLElement} element 
  * @returns {void}
  */
 function setDragAreaHeight(element) {
@@ -120,7 +119,7 @@ function setDragAreaHeight(element) {
 
 /**
  * Highlights a drag area when a task is dragged over it
- * @param {string} id - The ID of the drag area to highlight
+ * @param {string} id 
  * @returns {void}
  */
 function highlight(id) {
@@ -138,7 +137,7 @@ function highlight(id) {
 
 /**
  * Removes highlight from a drag area
- * @param {string} id - The ID of the drag area to remove highlight from
+ * @param {string} id 
  * @returns {void}
  */
 function removeHighlight(id) {

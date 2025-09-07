@@ -14,7 +14,6 @@ function updateLogo() {
 window.addEventListener("load", () => {
     updateLogo();
 
-    // Ermittelt, welches Logo aktiv ist
     const activeLogo = window.matchMedia("(max-width: 768px)").matches
         ? mobileLogo
         : desktopLogo;

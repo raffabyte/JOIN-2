@@ -28,10 +28,7 @@
   white-space: nowrap;
 }
 
-.priority-btn svg {
-  flex: 0 0 auto;
-  vertical-align: middle;
-}
+.priority-btn svg { flex: 0 0 auto; vertical-align: middle; }
 
 .priority-btn[data-priority="high"] svg { color: #ff3d00; }
 .priority-btn[data-priority="medium"] svg { color: #ffa800; }
@@ -142,10 +139,7 @@
   align-items: center;
   justify-content: center;
 }
-#assigned-to-options .custom-checkbox svg {
-  width: 24px;
-  height: 24px;
-}
+#assigned-to-options .custom-checkbox svg { width: 24px; height: 24px; }
 
 #assigned-to-options li.checkbox-option:not(.is-checked):hover {
   background: #eef1f5; 
@@ -166,9 +160,7 @@
 
 #assigned-to-options .custom-checkbox svg path,
 #assigned-to-options .custom-checkbox svg rect,
-#assigned-to-options .custom-checkbox svg circle {
-  stroke: currentColor;
-}
+#assigned-to-options .custom-checkbox svg circle { stroke: currentColor; }
 
 .clear-button,
 .create-button {
@@ -330,7 +322,9 @@
     font-size: 16px;
   }
   .priorating { padding: 12px 4px; }
-  .priority-btn span { padding: 12px 4px 12px 32px; }
+  .priority-btn span { padding: 12px 0px 12px 32px; }
+  .priority-options { gap: 48px; }
+  .priority-icon { padding: 12px 0px; }
   .task-form { gap: 4px; }
   .form-footer,
   .footer-right {
@@ -403,4 +397,3 @@
   .create-button { width: 154px; }
   .priority-options { gap: 6px; }
 }
-

@@ -51,12 +51,49 @@ function header() {
             </button>
             <div class="flexC not-visible" id="menu">
                 <a class="helpMobileLink" href="help.html">Help</a>
-                <a href="../index/legal-notice.html">Legal notice</a>
-                <a href="../index/privacy.html">Privacy Policy</a>
-                <a onclick="logout()" href="login.html">Log Out</a>
+
+<a href="../index/legal-notice.html"
+   onclick="closeMenu(); hardNavigate(event, this.href)">Legal notice</a>
+
+<a href="../index/privacy.html"
+   onclick="closeMenu(); hardNavigate(event, this.href)">Privacy Policy</a>
+
+<a onclick="logout()" href="login.html">Log Out</a>
+
             </div>
         </div>
     `;
+}
+// === Header Helpers (nur 1x deklarieren) ===
+if (!window.toggleMenu) {
+  window.toggleMenu = function () {
+    const menu = document.getElementById('menu');
+    if (!menu) return;
+    menu.classList.toggle('not-visible');
+  };
+}
+
+if (!window.closeMenu) {
+  window.closeMenu = function () {
+    const menu = document.getElementById('menu');
+    if (!menu) return;
+    menu.classList.add('not-visible');
+  };
+}
+
+/**
+ * Erzwinge Navigation, selbst wenn andere Click-Handler preventDefault() aufrufen.
+ * Lässt das href trotzdem stehen (Accessibility, Kontextmenü, Mittelklick etc.).
+ */
+if (!window.hardNavigate) {
+  window.hardNavigate = function (ev, href) {
+    try {
+      if (ev) ev.preventDefault();
+      // optional: ev.stopPropagation(); falls ein Parent-Handler stört
+    } catch (_) {}
+    // harte Navigation
+    window.location.assign(href);
+  };
 }
 
 

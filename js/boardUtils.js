@@ -6,8 +6,8 @@
 
 /**
  * Converts a string to camelCase format
- * @param {string} word - The word to convert
- * @returns {string} The camelCase version of the word
+ * @param {string} word 
+ * @returns {string}
  */
 function convertToCamelCase(word) {
     if (!word) return '';
@@ -17,8 +17,8 @@ function convertToCamelCase(word) {
 
 /**
  * Returns the appropriate SVG icon for a given priority level
- * @param {string} priority - The priority level ('HighPriority', 'MidPriority', 'LowPriority')
- * @returns {string} SVG markup for the priority icon
+ * @param {string} priority 
+ * @returns {string} 
  */
 function getPrioritySvg(priority) {
     switch (priority) {
@@ -36,8 +36,8 @@ function getPrioritySvg(priority) {
 
 /**
  * Generates HTML for subtask progress display
- * @param {Array<Object>} subtasks - Array of subtask objects
- * @returns {string} HTML string for subtask progress or empty string if no subtasks
+ * @param {Array<Object>} subtasks 
+ * @returns {string} 
  */
 function generateSubtaskProgress(subtasks) {
     if (!subtasks || subtasks.length === 0) {
@@ -54,8 +54,8 @@ function generateSubtaskProgress(subtasks) {
 
 /**
  * Returns a string showing completed vs total subtasks count
- * @param {Array<Object>} subtasks - Array of subtask objects
- * @returns {string} Formatted count string (e.g., "2/5") or empty string
+ * @param {Array<Object>} subtasks 
+ * @returns {string} 
  */
 function getSubtasksCount(subtasks) {
     if (Array.isArray(subtasks) && subtasks.length > 0) {
@@ -67,8 +67,8 @@ function getSubtasksCount(subtasks) {
 
 /**
  * Returns appropriate CSS class for conditional visibility
- * @param {boolean} condition - Whether the element should be visible
- * @returns {string} Empty string if visible, ' display-none' if hidden
+ * @param {boolean} condition
+ * @returns {string}
  */
 function getVisibilityClass(condition) {
     return condition ? '' : ' display-none';
@@ -77,8 +77,8 @@ function getVisibilityClass(condition) {
 
 /**
  * Checks if a task has footer data (assignees or priority)
- * @param {Object} task - The task object to check
- * @returns {boolean} True if task has footer data, false otherwise
+ * @param {Object} task
+ * @returns {boolean} 
  */
 function taskHasFooterData(task) {
     return (Array.isArray(task.assignee) && task.assignee.length > 0) || task.priority;

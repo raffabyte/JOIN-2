@@ -1,137 +1,167 @@
+/** Handles outside clicks for the category options dropdown. */
 function handleCategoryOptionsOutsideClick(event) {
-  const opts   = document.getElementById('category-options');
-  const input  = document.getElementById('category-input');
-  const toggle = document.getElementById('category-toggle-btn');
-  if (!opts || !opts.classList.contains('active')) return;
+  const opts = document.getElementById("category-options");
+  const input = document.getElementById("category-input");
+  const toggle = document.getElementById("category-toggle-btn");
+  if (!opts || !opts.classList.contains("active")) return;
 
   const clickedInsideOpts = opts.contains(event.target);
-  const clickedInput      = input && input.contains(event.target);
-  const clickedToggle     = toggle && toggle.contains(event.target);
+  const clickedInput = input && input.contains(event.target);
+  const clickedToggle = toggle && toggle.contains(event.target);
 
   if (!clickedInsideOpts && !clickedInput && !clickedToggle) {
-    opts.classList.add('display-none');
-    opts.classList.remove('active');
+    opts.classList.add("display-none");
+    opts.classList.remove("active");
   }
 }
 
+/** Handles outside clicks for the assignee options list. */
 function handleAssigneeOptionsOutsideClick(event) {
-    const assigneeOptions = document.getElementById('assigneeOptions');
-    if (assigneeOptions && assigneeOptions.classList.contains('active')) {
-        if (!assigneeOptions.contains(event.target) && event.target.id !== 'taskAssignee') {
-            assigneeOptions.classList.add('display-none');
-            assigneeOptions.classList.remove('active');
-        }
+  const assigneeOptions = document.getElementById("assigneeOptions");
+  if (assigneeOptions && assigneeOptions.classList.contains("active")) {
+    if (
+      !assigneeOptions.contains(event.target) &&
+      event.target.id !== "taskAssignee"
+    ) {
+      assigneeOptions.classList.add("display-none");
+      assigneeOptions.classList.remove("active");
     }
+  }
 }
 
+/** Handles outside clicks for the subtask input area. */
 function handleSubtaskInputOutsideClick(event) {
-    const inputFeld = document.getElementById('inputBox');
-    const plusBtn = document.getElementById('subtaskPlusBtn');
-    const addCancelBtns = document.getElementById('addCancelBtns');
-    const HINT_MESSAGE_DIV = document.getElementById('subtaskHintMessage');
+  const inputFeld = document.getElementById("inputBox");
+  const plusBtn = document.getElementById("subtaskPlusBtn");
+  const addCancelBtns = document.getElementById("addCancelBtns");
+  const HINT_MESSAGE_DIV = document.getElementById("subtaskHintMessage");
 
-    if (inputFeld && !inputFeld.contains(event.target)) {
-        plusBtn.classList.remove('display-none');
-        addCancelBtns.classList.add('display-none');
-        HINT_MESSAGE_DIV.classList.add('display-none');
-        inputFeld.classList.remove('correct-me');
-    }
+  if (inputFeld && !inputFeld.contains(event.target)) {
+    plusBtn.classList.remove("display-none");
+    addCancelBtns.classList.add("display-none");
+    HINT_MESSAGE_DIV.classList.add("display-none");
+    inputFeld.classList.remove("correct-me");
+  }
 }
 
+/** Delegates global outside clicks to all handlers. */
 function handleOutsideClick(event) {
-    handleCategoryOptionsOutsideClick(event);
-    handleAssigneeOptionsOutsideClick(event);
-    handleSubtaskInputOutsideClick(event);
+  handleCategoryOptionsOutsideClick(event);
+  handleAssigneeOptionsOutsideClick(event);
+  handleSubtaskInputOutsideClick(event);
 }
 
-
+/** Opens the add-task overlay and initializes its content. */
 function addTaskOverlay(columnId) {
-    // Set the overlay content to the add task form
-    OVERLAY_CONTENT.innerHTML = addTaskOverlayForm(columnId);
-    OVERLAY_CONTENT.classList.add('add-task');
+  // Set the overlay content to the add task form
+  OVERLAY_CONTENT.innerHTML = addTaskOverlayForm(columnId);
+  OVERLAY_CONTENT.classList.add("add-task");
 
-    // Load and render contacts
-    loadAndRenderContacts();
+  // Load and render contacts
+  loadAndRenderContacts();
 
-    // Show the overlay
-    OVERLAY.classList.remove('display-none');
+  // Show the overlay
+  OVERLAY.classList.remove("display-none");
 
-    setTimeout(() => {
-        // Add animation class to the overlay content
-        OVERLAY_CONTENT.classList.add('active');
-    }, 10);
+  setTimeout(() => {
+    // Add animation class to the overlay content
+    OVERLAY_CONTENT.classList.add("active");
+  }, 10);
 }
 
+/** Fetches contacts for the current user from Firebase. */
 async function fetchContactsData() {
-    const response = await fetch(`https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/users/${USERKEY}/contacts.json`);
-    const data = await response.json();
-    await loadAllContactColors();
-    return Object.entries(data || {}).filter(([,contact]) => contact?.name);
+  const response = await fetch(
+    `https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/users/${USERKEY}/contacts.json`
+  );
+  const data = await response.json();
+  await loadAllContactColors();
+  return Object.entries(data || {}).filter(([, contact]) => contact?.name);
 }
 
+/** Renders the assignee options list from contacts. */
 function renderContactOptions(contactEntries) {
-    const assigneeOptions = document.getElementById('assigneeOptions');
-    if (assigneeOptions) {
-        const contactTemplates = contactEntries.map(([,contact]) => assigneeOptionTemplate(contact));
-        assigneeOptions.innerHTML = contactTemplates.join('');
-        setTimeout(() => markPreselectedAssignees(), 100);
-    }
+  const assigneeOptions = document.getElementById("assigneeOptions");
+  if (assigneeOptions) {
+    const contactTemplates = contactEntries.map(([, contact]) =>
+      assigneeOptionTemplate(contact)
+    );
+    assigneeOptions.innerHTML = contactTemplates.join("");
+    setTimeout(() => markPreselectedAssignees(), 100);
+  }
 }
 
+/** Loads contacts and renders them into the overlay. */
 async function loadAndRenderContacts() {
-    try {
-        const contactEntries = await fetchContactsData();
-        renderContactOptions(contactEntries);
-    } catch (error) {
-        console.error('Error loading contacts:', error);
-    }
+  try {
+    const contactEntries = await fetchContactsData();
+    renderContactOptions(contactEntries);
+  } catch (error) {
+    console.error("Error loading contacts:", error);
+  }
 }
 
-
+/** Hides all validation error messages for required inputs. */
 function hideValidationErrors() {
-    document.querySelectorAll('.required-span').forEach(span => span.classList.add('display-none'));
-    document.querySelectorAll('.requierd-input').forEach(input => input.classList.remove('correct-me'));
+  document
+    .querySelectorAll(".required-span")
+    .forEach((span) => span.classList.add("display-none"));
+  document
+    .querySelectorAll(".requierd-input")
+    .forEach((input) => input.classList.remove("correct-me"));
 }
 
-
+/** Shows all validation error messages for required inputs. */
 function showValidationErrors() {
-    document.querySelectorAll('.required-span').forEach(span => span.classList.remove('display-none'));
-    document.querySelectorAll('.requierd-input').forEach(input => input.classList.add('correct-me'));
+  document
+    .querySelectorAll(".required-span")
+    .forEach((span) => span.classList.remove("display-none"));
+  document
+    .querySelectorAll(".requierd-input")
+    .forEach((input) => input.classList.add("correct-me"));
 }
 
-
+/** Sets the active priority button by given priority. */
 function PriorityHandler(priority) {
-    const buttons = document.querySelectorAll('.priority-button, .edit-priority-button');
-    const priorityMap = { 'high': 'HighPriority', 'medium': 'MidPriority', 'low': 'LowPriority' };
-    
-    buttons.forEach(btn => btn.classList.remove('active'));
-    buttons.forEach(btn => {
-        if (btn.classList.contains(priorityMap[priority])) {
-            btn.classList.add('active');
-        }
-    });
+  const buttons = document.querySelectorAll(
+    ".priority-button, .edit-priority-button"
+  );
+  const priorityMap = {
+    high: "HighPriority",
+    medium: "MidPriority",
+    low: "LowPriority",
+  };
+
+  buttons.forEach((btn) => btn.classList.remove("active"));
+  buttons.forEach((btn) => {
+    if (btn.classList.contains(priorityMap[priority])) {
+      btn.classList.add("active");
+    }
+  });
 }
 
+/** Filters visible assignees by search text. */
 function searchAssignee(text) {
-    const assigneeOptions = document.getElementById('assigneeOptions');
-    const options = assigneeOptions.querySelectorAll('.assignee-option');
-    let visibleCount = 0;
+  const assigneeOptions = document.getElementById("assigneeOptions");
+  const options = assigneeOptions.querySelectorAll(".assignee-option");
+  let visibleCount = 0;
 
-    options.forEach(option => {
-        const contactName = option.querySelector('.contact-name').textContent;
-        const isMatch = contactName.toLowerCase().includes(text.toLowerCase());
-        option.classList.toggle('display-none', !isMatch);
-        if (isMatch) visibleCount++;
-    });
+  options.forEach((option) => {
+    const contactName = option.querySelector(".contact-name").textContent;
+    const isMatch = contactName.toLowerCase().includes(text.toLowerCase());
+    option.classList.toggle("display-none", !isMatch);
+    if (isMatch) visibleCount++;
+  });
 
-    checkNoResults(visibleCount , text);
+  checkNoResults(visibleCount, text);
 }
 
+/** Injects a “no results” info when nothing matches. */
 function checkNoResults(numberOfResults, text) {
-  const assigneeOptions = document.getElementById('assigneeOptions');
+  const assigneeOptions = document.getElementById("assigneeOptions");
   if (!assigneeOptions) return;
 
-  const existingNotFound = assigneeOptions.querySelector('.no-results');
+  const existingNotFound = assigneeOptions.querySelector(".no-results");
   if (existingNotFound) existingNotFound.remove();
 
   if (numberOfResults === 0 && text.trim()) {
@@ -139,229 +169,264 @@ function checkNoResults(numberOfResults, text) {
   }
 }
 
+/** Toggles the assignee options dropdown visibility. */
 function toggleAssigneeOptions() {
-    const ASSIGNEEOPTIONS = document.getElementById('assigneeOptions');
-    
-    ASSIGNEEOPTIONS.classList.toggle('display-none');
-    ASSIGNEEOPTIONS.classList.toggle('active');
-    
-    // Wenn die Optionen geöffnet werden, bereits zugewiesene Kontakte markieren
-    if (ASSIGNEEOPTIONS.classList.contains('active')) {
-        markPreselectedAssignees();
-    }
+  const ASSIGNEEOPTIONS = document.getElementById("assigneeOptions");
+
+  ASSIGNEEOPTIONS.classList.toggle("display-none");
+  ASSIGNEEOPTIONS.classList.toggle("active");
+  if (ASSIGNEEOPTIONS.classList.contains("active")) {
+    markPreselectedAssignees();
+  }
 }
 
+/** Marks already selected assignees in the options list. */
 function markPreselectedAssignees() {
-    const currentAssignees = getCurrentTaskAssignees();
-    
-    document.querySelectorAll('.assignee-option').forEach(option => {
-        const contactNameElement = option.querySelector('.contact-name');
-        const checkbox = option.querySelector('.checkbox');
-        const checkboxFilled = option.querySelector('.checkbox-filled');
-        if (contactNameElement && checkbox && checkboxFilled) {
-            const isSelected = currentAssignees.includes(contactNameElement.textContent);
-            option.classList.toggle('selcted-assignee', isSelected);
-            checkbox.classList.toggle('display-none', isSelected);
-            checkboxFilled.classList.toggle('display-none', !isSelected);
-        }
-    });
+  const currentAssignees = getCurrentTaskAssignees();
+
+  document.querySelectorAll(".assignee-option").forEach((option) => {
+    const contactNameElement = option.querySelector(".contact-name");
+    const checkbox = option.querySelector(".checkbox");
+    const checkboxFilled = option.querySelector(".checkbox-filled");
+    if (contactNameElement && checkbox && checkboxFilled) {
+      const isSelected = currentAssignees.includes(
+        contactNameElement.textContent
+      );
+      option.classList.toggle("selcted-assignee", isSelected);
+      checkbox.classList.toggle("display-none", isSelected);
+      checkboxFilled.classList.toggle("display-none", !isSelected);
+    }
+  });
 }
 
+/** Returns the names of currently selected assignees in the overlay. */
 function getCurrentTaskAssignees() {
-    // Für Edit-Modus: aus dem HTML der Task extrahieren
-    const taskOverlayContent = document.getElementById('taskOverlayContent');
-    if (taskOverlayContent) {
-        const assigneeContainer = document.querySelector('.assignee-container .flexC');
-        if (assigneeContainer) {
-            // Assignee-Namen aus dem HTML extrahieren
-            const memberElements = assigneeContainer.querySelectorAll('.member-name-text');
-            return Array.from(memberElements).map(el => el.textContent.trim()).filter(name => name);
-        }
+  const taskOverlayContent = document.getElementById("taskOverlayContent");
+  if (taskOverlayContent) {
+    const assigneeContainer = document.querySelector(
+      ".assignee-container .flexC"
+    );
+    if (assigneeContainer) {
+      const memberElements =
+        assigneeContainer.querySelectorAll(".member-name-text");
+      return Array.from(memberElements)
+        .map((el) => el.textContent.trim())
+        .filter((name) => name);
     }
-    
-    return [];
+  }
+
+  return [];
 }
 
-
+/** Toggles selected styling and checkbox icons for an assignee row. */
 function highligtSlected(item) {
-    const CHECKBOX = item.querySelector('.checkbox');
-    const CHECKBOXFILLED = item.querySelector('.checkbox-filled');
+  const CHECKBOX = item.querySelector(".checkbox");
+  const CHECKBOXFILLED = item.querySelector(".checkbox-filled");
 
-    item.classList.toggle('selcted-assignee');
-    CHECKBOX.classList.toggle('display-none');
-    CHECKBOXFILLED.classList.toggle('display-none');
+  item.classList.toggle("selcted-assignee");
+  CHECKBOX.classList.toggle("display-none");
+  CHECKBOXFILLED.classList.toggle("display-none");
 }
 
+/** Selects or deselects an assignee and updates selected list. */
 function selectAssignee(assignee) {
-    let nameSpan = assignee.querySelector('.contact-name');
-    let assigneeName = nameSpan ? nameSpan.textContent : assignee;
+  let nameSpan = assignee.querySelector(".contact-name");
+  let assigneeName = nameSpan ? nameSpan.textContent : assignee;
 
-    toggleAssigneeIcon(assigneeName);
-    highligtSlected(assignee);
+  toggleAssigneeIcon(assigneeName);
+  highligtSlected(assignee);
 }
 
-
+/** Toggles the presence of an assignee icon in the selection area. */
 function toggleAssigneeIcon(assigneeName) {
-    let SELECTEDASSIGNEE = document.getElementById('selectedAssignee') || document.getElementById('editedAssignee');
-    let iconSpans = SELECTEDASSIGNEE.querySelectorAll('.contact-icon:not(.extra-count)');
-    let notFound = false;
-    
-    iconSpans.forEach(span => {
-        if (span.dataset.name === assigneeName) {
-            span.remove();
-            notFound = true;
-        }
-    });
+  let SELECTEDASSIGNEE =
+    document.getElementById("selectedAssignee") ||
+    document.getElementById("editedAssignee");
+  let iconSpans = SELECTEDASSIGNEE.querySelectorAll(
+    ".contact-icon:not(.extra-count)"
+  );
+  let notFound = false;
 
-    addToSelectedAssignee(assigneeName, !notFound);
+  iconSpans.forEach((span) => {
+    if (span.dataset.name === assigneeName) {
+      span.remove();
+      notFound = true;
+    }
+  });
+
+  addToSelectedAssignee(assigneeName, !notFound);
 }
 
+/** Adds or removes an assignee icon and updates the display overflow. */
 function addToSelectedAssignee(assigneeName, found) {
-    let SELECTEDASSIGNEE = document.getElementById('selectedAssignee') || document.getElementById('editedAssignee');
-    if (found) {
-        SELECTEDASSIGNEE.classList.remove('display-none');
-        SELECTEDASSIGNEE.innerHTML += contactIconSpanTemplate(assigneeName);
-    }
-    updateAssigneeDisplay(SELECTEDASSIGNEE);
+  let SELECTEDASSIGNEE =
+    document.getElementById("selectedAssignee") ||
+    document.getElementById("editedAssignee");
+  if (found) {
+    SELECTEDASSIGNEE.classList.remove("display-none");
+    SELECTEDASSIGNEE.innerHTML += contactIconSpanTemplate(assigneeName);
+  }
+  updateAssigneeDisplay(SELECTEDASSIGNEE);
 }
 
+/** Manages visible icons and extra-count in the selection area. */
 function updateAssigneeDisplay(container) {
-    const maxVisible = 5;
-    const allSpans = container.querySelectorAll('.contact-icon:not(.extra-count)');
-    
-    container.querySelector('.contact-icon.extra-count')?.remove();
-    
-    allSpans.forEach((span, index) => span.style.display = index < maxVisible ? '' : 'none');
-    
-    if (allSpans.length > maxVisible) {
-        container.innerHTML += extraCountSpanTemplate(allSpans.length - maxVisible);
-    }
+  const maxVisible = 5;
+  const allSpans = container.querySelectorAll(
+    ".contact-icon:not(.extra-count)"
+  );
+
+  container.querySelector(".contact-icon.extra-count")?.remove();
+
+  allSpans.forEach(
+    (span, index) => (span.style.display = index < maxVisible ? "" : "none")
+  );
+
+  if (allSpans.length > maxVisible) {
+    container.innerHTML += extraCountSpanTemplate(allSpans.length - maxVisible);
+  }
 }
 
+/** Toggles the category options dropdown visibility. */
 function toggleCategoryOptions() {
-  const opts = document.getElementById('category-options');
+  const opts = document.getElementById("category-options");
   if (!opts) return;
-  opts.classList.toggle('display-none');
-  opts.classList.toggle('active');
+  opts.classList.toggle("display-none");
+  opts.classList.toggle("active");
 }
 
+/** Selects a category, updates the input, and closes the dropdown. */
 function selectCategory(category) {
-  const input = document.getElementById('category-input');
-  const opts  = document.getElementById('category-options');
+  const input = document.getElementById("category-input");
+  const opts = document.getElementById("category-options");
   if (!input) return;
 
-  input.value = category;                  // <— wichtig: value, nicht textContent
-  input.dispatchEvent(new Event('input')); // Validierungs-/Clear-Listener anstoßen
-  opts?.classList.add('display-none');
-  opts?.classList.remove('active');
+  input.value = category;
+  input.dispatchEvent(new Event("input"));
+  opts?.classList.add("display-none");
+  opts?.classList.remove("active");
 }
 
-
-
-function onEnterAddSubTask(event, inputId){
-    if (event.key === 'Enter') {
-        event.preventDefault();
-        addSubtask(inputId);
-    }
+/** Adds a subtask when pressing Enter on the target input. */
+function onEnterAddSubTask(event, inputId) {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    addSubtask(inputId);
+  }
 }
 
-function onEnterEditSubTask(event, editInput){
-    if (event.key === 'Enter') {
-        event.preventDefault();
-        finalEditditSubtask(editInput);
-    }
+/** Saves an edited subtask when pressing Enter. */
+function onEnterEditSubTask(event, editInput) {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    finalEditditSubtask(editInput);
+  }
 }
 
+/** Shows add/cancel buttons and hides the plus button for subtasks. */
 function showAddCancelBtns() {
-    const plusBtn = document.getElementById('subtaskPlusBtn');
-    const addCancelBtns = document.getElementById('addCancelBtns');
+  const plusBtn = document.getElementById("subtaskPlusBtn");
+  const addCancelBtns = document.getElementById("addCancelBtns");
 
-    plusBtn.classList.add('display-none');
-    addCancelBtns.classList.remove('display-none');
+  plusBtn.classList.add("display-none");
+  addCancelBtns.classList.remove("display-none");
 }
 
-function cancelSubtask(){
-    const subtaskInput = document.getElementById('subtasks');
-    const editedSubtaskInput = document.getElementById('editedSubtasks');
-    const plusBtn = document.getElementById('subtaskPlusBtn');
-    const addCancelBtns = document.getElementById('addCancelBtns');
+/** Resets subtask input fields and button visibility. */
+function cancelSubtask() {
+  const subtaskInput = document.getElementById("subtasks");
+  const editedSubtaskInput = document.getElementById("editedSubtasks");
+  const plusBtn = document.getElementById("subtaskPlusBtn");
+  const addCancelBtns = document.getElementById("addCancelBtns");
 
-    if (subtaskInput) subtaskInput.value = ''; 
-    if (editedSubtaskInput) editedSubtaskInput.value = '';
-    if (plusBtn) plusBtn.classList.remove('display-none');
-    if (addCancelBtns) addCancelBtns.classList.add('display-none');
+  if (subtaskInput) subtaskInput.value = "";
+  if (editedSubtaskInput) editedSubtaskInput.value = "";
+  if (plusBtn) plusBtn.classList.remove("display-none");
+  if (addCancelBtns) addCancelBtns.classList.add("display-none");
 }
 
-function addSubtask(subtaskInputId){
-    const inputElement = document.getElementById(subtaskInputId);
-    const inputValue = inputElement.value;
-    const hintDiv = document.getElementById('subtaskHintMessage');
-    const subtasksList = document.getElementById(subtaskInputId === 'editedSubtasks' ? 'editedSubtasksList' : 'subtasksList');
-    
-    checkSubtask(inputValue.length, inputValue, subtasksList);
-    
-    hintDiv.classList.contains('display-none') ?  addSubtaskToList(subtasksList, inputValue, inputElement) : '';
+/** Adds a subtask to the list with basic validation. */
+function addSubtask(subtaskInputId) {
+  const inputElement = document.getElementById(subtaskInputId);
+  const inputValue = inputElement.value;
+  const hintDiv = document.getElementById("subtaskHintMessage");
+  const subtasksList = document.getElementById(
+    subtaskInputId === "editedSubtasks" ? "editedSubtasksList" : "subtasksList"
+  );
+
+  checkSubtask(inputValue.length, inputValue, subtasksList);
+
+  hintDiv.classList.contains("display-none")
+    ? addSubtaskToList(subtasksList, inputValue, inputElement)
+    : "";
 }
 
+/** Appends a new subtask item to the visible list. */
 function addSubtaskToList(subtasksList, inputValue, inputElement) {
-    subtasksList.classList.remove('display-none');
-    subtasksList.innerHTML += addSubTaskTemplate(inputValue);
-    inputElement.value = '';
+  subtasksList.classList.remove("display-none");
+  subtasksList.innerHTML += addSubTaskTemplate(inputValue);
+  inputElement.value = "";
 }
 
+/** Toggles the subtask alert message and input highlight. */
 function showHideAlertMessage() {
-    const  HINT_MESSAGE_DIV = document.getElementById('subtaskHintMessage');
-    const INPUT_FELD = document.getElementById('inputBox');
+  const HINT_MESSAGE_DIV = document.getElementById("subtaskHintMessage");
+  const INPUT_FELD = document.getElementById("inputBox");
 
-    HINT_MESSAGE_DIV.classList.toggle('display-none');
-    INPUT_FELD.classList.toggle('correct-me');
+  HINT_MESSAGE_DIV.classList.toggle("display-none");
+  INPUT_FELD.classList.toggle("correct-me");
 }
 
-function checkSubtask(subtaskLength, inputValue, subtasksList){
-    const HINT_MESSAGE_DIV = document.getElementById('subtaskHintMessage');
-    const INPUT_FELD = document.getElementById('inputBox');
-    const valueExists = subtasksList?.querySelectorAll('.subtask-text').values().find(st => st.textContent.trim() === inputValue.trim());
-    
-    const errorMessages = {
-        length: subtaskLength <= 2 ? 'Subtask must be at least 3 characters long' : null,
-        exists: valueExists ? 'Subtask already exists' : null
-    };
-    
-    const error = errorMessages.length || errorMessages.exists;
-    HINT_MESSAGE_DIV.textContent = error || '';
-    HINT_MESSAGE_DIV.classList.toggle('display-none', !error);
-    INPUT_FELD.classList.toggle('correct-me', !!error);
+/** Validates subtask input and shows contextual errors. */
+function checkSubtask(subtaskLength, inputValue, subtasksList) {
+  const HINT_MESSAGE_DIV = document.getElementById("subtaskHintMessage");
+  const INPUT_FELD = document.getElementById("inputBox");
+  const valueExists = subtasksList
+    ?.querySelectorAll(".subtask-text")
+    .values()
+    .find((st) => st.textContent.trim() === inputValue.trim());
+
+  const errorMessages = {
+    length:
+      subtaskLength <= 2 ? "Subtask must be at least 3 characters long" : null,
+    exists: valueExists ? "Subtask already exists" : null,
+  };
+
+  const error = errorMessages.length || errorMessages.exists;
+  HINT_MESSAGE_DIV.textContent = error || "";
+  HINT_MESSAGE_DIV.classList.toggle("display-none", !error);
+  INPUT_FELD.classList.toggle("correct-me", !!error);
 }
 
-function deleteSubtask(subtask){
-    subtask.closest('.subtask-item').remove();
+/** Removes a subtask item from the list. */
+function deleteSubtask(subtask) {
+  subtask.closest(".subtask-item").remove();
 }
 
+/** Opens a subtask in edit mode and pre-fills the input. */
 function editSubtask(btn) {
-    let subtask = btn.closest('.subtask-item');
-    let subtaskDisplay = subtask.querySelector('.subtask');
-    let editDiv = subtask.querySelector('.edit-subtask-input-wrapper');
-    let toEditText = subtask.querySelector('.subtask-text').textContent;
+  let subtask = btn.closest(".subtask-item");
+  let subtaskDisplay = subtask.querySelector(".subtask");
+  let editDiv = subtask.querySelector(".edit-subtask-input-wrapper");
+  let toEditText = subtask.querySelector(".subtask-text").textContent;
 
-    subtaskDisplay.classList.add('display-none');
-    editDiv.classList.remove('display-none');
-    const editInput = editDiv.querySelector('.edit-subtask-input');
-    editInput.value = toEditText;
+  subtaskDisplay.classList.add("display-none");
+  editDiv.classList.remove("display-none");
+  const editInput = editDiv.querySelector(".edit-subtask-input");
+  editInput.value = toEditText;
 
-    onEnterEditSubTask(editInput);
+  onEnterEditSubTask(editInput);
 }
 
+/** Finalizes an edited subtask and restores display mode. */
+function finalEditditSubtask(subtask) {
+  let subtaskItem = subtask.closest(".subtask-item");
+  let editDiv = subtaskItem.querySelector(".edit-subtask-input-wrapper");
+  let subtaskDisplay = subtaskItem.querySelector(".subtask");
+  let input = editDiv.querySelector(".edit-subtask-input");
+  let newText = input.value;
 
-function finalEditditSubtask(subtask){
-    let subtaskItem = subtask.closest('.subtask-item');
-    let editDiv = subtaskItem.querySelector('.edit-subtask-input-wrapper');
-    let subtaskDisplay = subtaskItem.querySelector('.subtask');
-    let input = editDiv.querySelector('.edit-subtask-input');
-    let newText = input.value;
-
-    // Text aktualisieren
-    subtaskItem.querySelector('.subtask-text').textContent = newText;
-    // Edit-Modus ausblenden, Anzeige wieder einblenden
-    editDiv.classList.add('display-none');
-    subtaskDisplay.classList.remove('display-none');
+  subtaskItem.querySelector(".subtask-text").textContent = newText;
+  editDiv.classList.add("display-none");
+  subtaskDisplay.classList.remove("display-none");
 }

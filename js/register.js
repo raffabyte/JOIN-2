@@ -35,14 +35,13 @@ function bindFormSubmit(){
   const f = document.getElementById('signUpForm');
   if(!f) return;
 
-  // Falls im HTML vergessen:
   f.noValidate = true;
 
   f.addEventListener('submit', (e) => {
     e.preventDefault();
     const ok = typeof window.validateForm === 'function' ? window.validateForm() : true;
-    if (!ok) return;       // hier werden Email/Name rot markiert
-    signUp();              // nur wenn alles valide ist
+    if (!ok) return;       
+    signUp();             
   });
 }
 
@@ -137,12 +136,9 @@ function handlePasswordInput(e,r,i,v){
  * @param {boolean} v
  */
 function updatePasswordField(i, r, v) {
-  // Update masked or real text
   i.value = v ? r : '*'.repeat(r.length);
-  // Swap background icon: lock when visible, eye when masked
   i.classList.remove('lock_icon', 'visibility_icon');
   i.classList.add(v ? 'lock_icon' : 'visibility_icon');
-  // Show inline SVG (eye) only in masked mode
   const svg = i.closest('.password-wrapper')?.querySelector('.toggle-password');
   if (svg) svg.classList.toggle('visible', !v);
 }
@@ -232,8 +228,8 @@ function showSignUpSuccessOverlay() {
 
 
 /**
- * Liest den Wert eines Inputs aus, trimmt Leer­zeichen und gibt ihn zurück.
- * @param {string} id – die ID des Input‑Elements
+ * Reads the value of an input, trims spaces and returns it.
+ * @param {string} id 
  * @returns {string}
  */
 function getTrimedValue(id) {
@@ -262,12 +258,9 @@ async function signUp(){
 
   try {
     const r = await postData('users',{name:n,email:e,password:pw1});
-
-    // 🔹 Hier den Key setzen wie contacts.js ihn erwartet:
-    localStorage.setItem('userKey', r.name); // statt loggedInUserKey
+    localStorage.setItem('userKey', r.name); 
     window.USERKEY = r.name;
 
-    // 🔹 Kontakte sauber anlegen:
     await preloadContacts(r.name);
 
     showSignUpSuccessOverlay();
@@ -288,26 +281,104 @@ async function preloadContacts(uk){
   }
 }
 
-// in contacts.js
-
-function renderContacts(data) {
-  const container = document.getElementById("contactCardsContainer");
-  container.innerHTML = "";
-
-  // ⬇️ HIER DIE PRÜFUNG EINFÜGEN
-  if (!data) {
-    console.warn("Keine Kontakte zum Rendern vorhanden, da 'data' null oder undefined ist.");
-    // Optional kannst du eine Nachricht für den Benutzer anzeigen:
-    // container.innerHTML = "<div>Du hast noch keine Kontakte angelegt.</div>";
-    return; // Die Funktion hier sicher beenden
+/** Render contacts (grouped by initial letter) */
+function renderContacts(date) {
+  const c = document.getElementById("contactCardsContainer");
+  if (!c) return;
+  c.innerHTML = "";
+  if (isNoData(date)) return;
+  const entries = sortEntries(normalizeEntries(date));
+  if (!entries.length) return; 
+  const frag = document.createDocumentFragment();
+  let cur = null;
+  for (const [key, contact] of entries) {
+    const letter = getFirstLetter(contact?.name);
+    if (letter !== cur) { cur = letter; frag.appendChild(createSectionHeader(cur)); }
+    frag.appendChild(createContactCard(key, contact));
   }
-
-  const sortedEntries = sortContactsByName(data); // Dieser Code wird jetzt nur erreicht, wenn 'data' existiert
-
-  let currentLetter = null;
-
-  for (const [key, contact] of sortedEntries) {
-    // ... der Rest der Funktion bleibt unverändert
-  }
+  c.appendChild(frag);
 }
 
+/** true if no meaningful data is available */
+function isNoData(d) {
+  if (!d) return true;
+  const vals = Array.isArray(d) ? d : Object.values(d);
+  return !vals.some(v => v && typeof v === "object" && (v.name || "").trim());
+}
+
+/** normalized to [key, value] tuples*/
+function normalizeEntries(data) {
+  if (Array.isArray(data))
+    return data.map((c, i) => [String(i), c]).filter(([, c]) => c && typeof c === "object");
+  return Object.entries(data || {}).filter(([, c]) => c && typeof c === "object");
+}
+
+/** sorted by name (de-DE, case-insensitive, numeric) */
+function sortEntries(entries) {
+  return entries
+    .filter(([, c]) => typeof c.name === "string" && c.name.trim())
+    .sort((a, b) => a[1].name.localeCompare(b[1].name, "de-DE", { sensitivity: "base", numeric: true }));
+}
+
+/** first letter or '#' */
+function getFirstLetter(name) {
+  const n = (name || "").trim();
+  return n ? n[0].toLocaleUpperCase("de-DE") : "#";
+}
+
+/** Section header (divider + letter) */
+function createSectionHeader(letter) {
+  const w = document.createElement("div");
+  const hr = document.createElement("div");
+  const l = document.createElement("div");
+  w.className = "contact-section";
+  hr.className = "contact-section-divider";
+  l.className = "contact-section-label";
+  l.textContent = letter;
+  w.append(hr, l);
+  return w;
+}
+
+/** assemble a single contact card */
+function createContactCard(key, contact) {
+  const name = (contact?.name || "").trim();
+  const email = (contact?.email || "").trim();
+  const phone = (contact?.phone || "").trim();
+  const color = (contact?.color || "#2A3647").trim();
+  const card = document.createElement("div");
+  const text = document.createElement("div");
+  const title = document.createElement("div");
+  card.className = "contact-card"; card.tabIndex = 0; card.dataset.key = key;
+  text.className = "contact-text"; title.className = "contact-name"; title.textContent = name || "Unbekannt";
+  text.append(title, createMeta(email, phone)); card.append(createAvatar(name, color), text);
+  return card;
+}
+
+/** Avatar badge (initials + color) */
+function createAvatar(name, color) {
+  const a = document.createElement("div");
+  a.className = "contact-avatar";
+  a.style.backgroundColor = color || "#2A3647";
+  a.textContent = getInitials(name || "");
+  return a;
+}
+
+/** Email/Phone line */
+function createMeta(email, phone) {
+  const m = document.createElement("div");
+  m.className = "contact-meta";
+  if (email) { const a = document.createElement("a"); a.className = "contact-email"; a.href = `mailto:${email}`; a.textContent = email; m.appendChild(a); }
+  if (phone) { const t = document.createElement("a"); t.className = "contact-phone"; t.href = `tel:${safeTel(phone)}`; t.textContent = phone; m.appendChild(t); }
+  return m;
+}
+
+/** Initials (fallback, uses global getInitials if available) */
+function getInitials(name) {
+  if (typeof window.getInitials === "function") return window.getInitials(name);
+  return name.split(/\s+/).filter(Boolean).map(n => n[0]).join("").toUpperCase().slice(0, 2);
+}
+
+/** Tel-URI without spaces */
+function safeTel(phone) {
+  return String(phone).replace(/\s+/g, "");
+}

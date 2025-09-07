@@ -9,10 +9,10 @@ const DEBUG_LOGIN = false;
 
 document.addEventListener("DOMContentLoaded", initLogin);
 
+
 /**
- * Initializes the login form: sets up input feedback,
- * password masking, and event handlers.
- */
+ * Initializes the login form: sets up input feedback, password masking, and event handlers.
+*/
 function initLogin() {
   const elements = getLoginElements();
   setupLiveFeedback(elements);
@@ -20,11 +20,11 @@ function initLogin() {
   bindLoginHandler(elements);
 }
 
+
 /**
  * Retrieves references to all relevant DOM elements for the login form.
- * @returns {Object} An object containing form and input elements.
+ * @returns {Object} 
  */
-
 function getLoginElements() {
   return {
     form: document.getElementById("loginForm"),
@@ -35,11 +35,11 @@ function getLoginElements() {
   };
 }
 
+
 /**
  * Sets up live feedback to remove error states when the user types.
- * @param {Object} param0 - Destructured email and password inputs and the message box.
+ * @param {Object} param0 
  */
-
 function setupLiveFeedback({ emailInput, passwordInput, msgBox }) {
   emailInput.addEventListener("input", () => {
     emailInput.classList.remove("input-error");
@@ -51,11 +51,11 @@ function setupLiveFeedback({ emailInput, passwordInput, msgBox }) {
   });
 }
 
+
 /**
  * Binds the form submit event for login.
- * @param {Object} param0 - Destructured elements needed for login.
+ * @param {Object} param0 
  */
-
 function bindLoginHandler({ form, emailInput, passwordInput, loginButton, msgBox }) {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -65,7 +65,7 @@ function bindLoginHandler({ form, emailInput, passwordInput, loginButton, msgBox
     const password = passwordInput.getRealPassword(); 
 
     if (!validateInputs(email, password, emailInput, passwordInput, msgBox)) {
-    return; // Stoppt die Funktion, wenn die Eingaben ungültig sind
+    return; 
   }
     
     if (!email || !password) {
@@ -89,14 +89,13 @@ function bindLoginHandler({ form, emailInput, passwordInput, loginButton, msgBox
 
 /**
  * Validates the user inputs for login.
- * @param {string} email - The entered email address.
- * @param {string} password - The entered password.
+ * @param {string} email 
+ * @param {string} password
  * @param {HTMLInputElement} emailInput
  * @param {HTMLInputElement} passwordInput
- * @param {HTMLElement} msgBox - The message box element for feedback.
- * @returns {boolean} True if inputs are valid, false otherwise.
+ * @param {HTMLElement} msgBox
+ * @returns {boolean} 
  */
-
 function validateInputs(email, password, emailInput, passwordInput, msgBox) {
   let valid = true;
 
@@ -118,12 +117,11 @@ function validateInputs(email, password, emailInput, passwordInput, msgBox) {
 
 /**
  * Displays login error messages based on the error code.
- * @param {string} errorCode - The error type (e.g., "wrong-password").
+ * @param {string} errorCode
  * @param {HTMLElement} msgBox
  * @param {HTMLInputElement} emailInput
  * @param {HTMLInputElement} passwordInput
  */
-
 function showLoginError(errorCode, msgBox, emailInput, passwordInput) {
   switch (errorCode) {
     case "email-not-found":
@@ -141,12 +139,11 @@ function showLoginError(errorCode, msgBox, emailInput, passwordInput) {
 
 /**
  * Displays login error messages based on the error code.
- * @param {string} errorCode - The error type (e.g., "wrong-password").
+ * @param {string} errorCode 
  * @param {HTMLElement} msgBox
  * @param {HTMLInputElement} emailInput
  * @param {HTMLInputElement} passwordInput
  */
-
 function applyStarMaskToPassword(passwordInput, msgBox) {
   let realPassword = "";
   let visible = false;
@@ -154,7 +151,6 @@ function applyStarMaskToPassword(passwordInput, msgBox) {
   passwordInput.getRealPassword = () => realPassword;
   passwordInput.type = "text";
 
-  // Fallback bei Autovervollständigung oder Copy-Paste
   if (passwordInput.value.length > 0) {
     realPassword = passwordInput.value;
     updatePasswordField(passwordInput, realPassword, visible);
@@ -168,7 +164,6 @@ function applyStarMaskToPassword(passwordInput, msgBox) {
     updateVisualFeedback(passwordInput, msgBox, realPassword, visible);
   });
 
-  // 🔁 Fallback bei Copy/Paste, Autofill oder Änderungen nachträglich
   passwordInput.addEventListener("input", () => {
     if (passwordInput.value !== "*".repeat(realPassword.length)) {
       realPassword = passwordInput.value;
@@ -190,20 +185,20 @@ function applyStarMaskToPassword(passwordInput, msgBox) {
       updatePasswordField(passwordInput, realPassword, false);
       updateVisualFeedback(passwordInput, msgBox, realPassword, false);
     }
-  }, 500); // Verzögerung, damit Autofill durch ist
+  }, 500); 
 
   clearMessage(msgBox);
 }
 
+
 /**
  * Handles manual user input in the password field to update the real password.
- * @param {InputEvent} e - The input event.
- * @param {string} realPassword - The actual password.
- * @param {HTMLInputElement} input - The password input element.
- * @param {boolean} visible - Whether the password is currently visible.
- * @returns {string} Updated password string.
+ * @param {InputEvent} e 
+ * @param {string} realPassword
+ * @param {HTMLInputElement} input 
+ * @param {boolean} visible 
+ * @returns {string} 
  */
-
 function handlePasswordInput(e, realPassword, input, visible) {
   const start = input.selectionStart;
   const end = input.selectionEnd;
@@ -216,9 +211,10 @@ function handlePasswordInput(e, realPassword, input, visible) {
     realPassword = realPassword.slice(0, start) + realPassword.slice(end + 1);
   }
 
-  e.preventDefault(); // verhindert native Anzeige
+  e.preventDefault();
   return realPassword;
 }
+
 
 /**
  * Updates the displayed value of the password field based on visibility.
@@ -226,23 +222,23 @@ function handlePasswordInput(e, realPassword, input, visible) {
  * @param {string} realPassword
  * @param {boolean} visible
  */
-
 function updatePasswordField(input, realPassword, visible) {
   input.value = visible ? realPassword : "*".repeat(realPassword.length);
 }
+
 
 /**
  * Adjusts cursor position to keep UX smooth when masking/unmasking.
  * @param {HTMLInputElement} input
  * @param {boolean} visible
  */
-
 function updateCursorPosition(input, visible) {
   requestAnimationFrame(() => {
     const pos = visible ? input.selectionStart + 1 : input.value.length;
     input.setSelectionRange(pos, pos);
   });
 }
+
 
 /**
  * Applies visual feedback like icons based on password state.
@@ -251,7 +247,6 @@ function updateCursorPosition(input, visible) {
  * @param {string} realPassword
  * @param {boolean} visible
  */
-
 function updateVisualFeedback(input, msgBox, realPassword, visible) {
   input.classList.remove("input-error", "lock_icon", "visibility_icon", "visibility_off_icon");
   clearMessage(msgBox);
@@ -265,13 +260,13 @@ function updateVisualFeedback(input, msgBox, realPassword, visible) {
   input.classList.add(iconClass);
 }
 
+
 /**
  * Checks if the user clicked in the password visibility toggle area.
  * @param {MouseEvent} e
  * @param {HTMLInputElement} input
- * @returns {boolean} True if toggle area was clicked.
+ * @returns {boolean} 
  */
-
 function clickedToggleArea(e, input) {
   const rect = input.getBoundingClientRect();
   return e.clientX > rect.right - 40;
@@ -306,8 +301,8 @@ async function login(email, password) {
  
 
 /**
- * Flacht beliebig verschachtelte User-Objekte/Arrays zu einer Liste ab.
- * Erwartet Objekte mit mind. { email, password } irgendwo in den Blättern.
+* Flattens arbitrarily nested user objects/arrays into a list.
+* Expects objects with at least { email, password }.
  */
 function flattenUsers(node, basePath = "users") {
   const list = [];
@@ -315,19 +310,16 @@ function flattenUsers(node, basePath = "users") {
   function walk(n, path) {
     if (!n) return;
 
-    // Fall: nutzerblatt (hat email + password)
     if (typeof n === "object" && n !== null && "email" in n && "password" in n) {
       list.push({ path, ...n });
       return;
     }
 
-    // Fall: Array → iterieren
     if (Array.isArray(n)) {
       n.forEach((item, idx) => walk(item, `${path}/${idx}`));
       return;
     }
 
-    // Fall: Objekt → rekursiv
     if (typeof n === "object") {
       for (const k in n) {
         walk(n[k], `${path}/${k}`);
@@ -342,7 +334,7 @@ function flattenUsers(node, basePath = "users") {
 
 
 /**
- * Sammelt alle Blätter mit { email, password } – egal wie verschachtelt.
+ * Collects all sheets with { email, password } – no matter how nested.
  */
 function collectUsers(root) {
   const out = [];
@@ -361,50 +353,49 @@ function collectUsers(root) {
 
 /**
  * Displays a message in the message box.
- * @param {string} message - The message to show.
- * @param {HTMLElement} box - The message box element.
+ * @param {string} message 
+ * @param {HTMLElement} box 
  */
-
 function showMessage(message, box) {
   box.textContent = message;
   box.style.color = "red";
 }
 
+
 /**
  * Clears any message from the message box.
- * @param {HTMLElement} box - The message box to clear.
+ * @param {HTMLElement} box 
  */
-
 function clearMessage(box) {
   box.textContent = "";
   box.style.color = "";
 }
 
+
 /**
  * Disables a button and applies loading state.
  * @param {HTMLButtonElement} button
  */
-
 function disableButton(button) {
   button.disabled = true;
   button.classList.add("loading");
 }
 
+
 /**
  * Enables a button and removes loading state.
  * @param {HTMLButtonElement} button
  */
-
 function enableButton(button) {
   button.disabled = false;
   button.classList.remove("loading");
 }
 
+
 /**
  * Starts a guest session with temporary demo user data.
  * @returns {Promise<void>}
  */
-
 async function startGuestSession() {
   const guestId = `guest_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
   const guestData = {
@@ -430,10 +421,9 @@ async function startGuestSession() {
 
 /**
  * Preloads demo contacts for a guest user.
- * @param {string} userPath - Path in the database where contacts should be stored.
+ * @param {string} userPath 
  * @returns {Promise<void>}
  */
-
 async function preloadGuestContacts(userPath) {
   const contactsPath = `users/${userPath}/contacts`;
 
@@ -446,11 +436,11 @@ async function preloadGuestContacts(userPath) {
   }
 }
 
+
 /**
  * Predefined demo contacts for guest users.
  * @type {Array<{ name: string, email: string, phone: string }>}
  */
-
 const demoContacts = [
   { name: "Anna Becker", email: "anna@example.com", phone: "123456789", color: "#FF7A00" },
   { name: "Tom Meier", email: "tom@example.com", phone: "987654321", color: "#FF5EB3" },

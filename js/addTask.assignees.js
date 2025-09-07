@@ -344,4 +344,3 @@ Object.assign(window.addTaskManager, {
     });
   }
 });
-

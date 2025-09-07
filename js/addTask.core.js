@@ -13,6 +13,7 @@ window.addTaskManager = window.addTaskManager || {
     selectedAssignees: new Set(),
   },
 
+
   /**
    * App entry point. Safe to call once on DOMContentLoaded.
    * @returns {Promise<void>}
@@ -31,12 +32,14 @@ window.addTaskManager = window.addTaskManager || {
     this._addInputListeners();
   },
 
+
   /**
    * Redirects to login if user key is missing.
    */
   _protectPageAccess() {
     if (!window.USERKEY) window.location.href = "../../index.html";
   },
+
 
   /**
    * Registers global form events.
@@ -46,6 +49,7 @@ window.addTaskManager = window.addTaskManager || {
     if (f) f.addEventListener("submit", (e) => this._handleFormSubmit(e));
     if (clr) clr.addEventListener("click", () => this._resetForm());
   },
+
 
   /**
    * Clears errors while user types.
@@ -61,6 +65,7 @@ window.addTaskManager = window.addTaskManager || {
       });
   },
 
+
   /**
    * Handles submit → validate → save → re-enable button.
    * @param {SubmitEvent} e
@@ -73,6 +78,7 @@ window.addTaskManager = window.addTaskManager || {
     if (this.elements.createBtn) this.elements.createBtn.disabled = false;
   },
 
+
   /**
    * Master validation orchestrator.
    * @returns {boolean}
@@ -84,6 +90,7 @@ window.addTaskManager = window.addTaskManager || {
     ok &= this._validatePriority();
     return !!ok;
   },
+
 
   /**
    * Inline error renderer.
@@ -99,6 +106,7 @@ window.addTaskManager = window.addTaskManager || {
     el.textContent = message;
   },
 
+
   /**
    * Clears error from a field group.
    * @param {HTMLElement} field
@@ -112,6 +120,7 @@ window.addTaskManager = window.addTaskManager || {
     if (err) err.remove();
   },
 
+
   /**
    * Clears all errors in form.
    */
@@ -119,6 +128,7 @@ window.addTaskManager = window.addTaskManager || {
     document.querySelectorAll(".input-error").forEach(el => el.classList.remove("input-error"));
     document.querySelectorAll(".field-error").forEach(el => el.remove());
   },
+
 
   /**
    * Collects normalized task data from UI.
@@ -140,6 +150,7 @@ window.addTaskManager = window.addTaskManager || {
     };
   },
 
+
   /**
    * Persists the task and shows success UI.
    */
@@ -154,6 +165,7 @@ window.addTaskManager = window.addTaskManager || {
     }
   },
 
+
   /**
    * Resets form and UI state.
    */
@@ -166,6 +178,7 @@ window.addTaskManager = window.addTaskManager || {
     this._resetSubtasks();
   },
 
+
   /**
    * Returns selected assignees (emails).
    * @returns {string[]}
@@ -177,6 +190,7 @@ window.addTaskManager = window.addTaskManager || {
       .filter(Boolean);
   },
 
+
   /**
    * Returns selected members (separate group).
    * @returns {string[]}
@@ -185,6 +199,7 @@ window.addTaskManager = window.addTaskManager || {
     return Array.from(document.querySelectorAll('input[name="member"]:checked'))
       .map(cb => cb.value);
   },
+
 
   /**
    * Gets subtask texts (bridged to subtasks.js).
@@ -212,6 +227,7 @@ window.addTaskManager = window.addTaskManager || {
     return ok;
   },
 
+
   /**
    * Min date (today) validation.
    * @returns {boolean}
@@ -226,6 +242,7 @@ window.addTaskManager = window.addTaskManager || {
     return true;
   },
 
+
   /**
    * Priority selection validation.
    * @returns {boolean}
@@ -238,6 +255,7 @@ window.addTaskManager = window.addTaskManager || {
     return false;
   },
 
+
   /**
    * Returns group wrapper for a field.
    * @param {HTMLElement} field
@@ -245,6 +263,7 @@ window.addTaskManager = window.addTaskManager || {
   _formGroupOf(field) {
     return field.closest?.(".form-group, .priority-options") || null;
   },
+
 
   /**
    * Ensures and returns a .field-error element in group.
@@ -260,6 +279,7 @@ window.addTaskManager = window.addTaskManager || {
     return el;
   },
 
+
   /**
    * Returns selected priority (fallback "low").
    * @returns {string}
@@ -268,6 +288,7 @@ window.addTaskManager = window.addTaskManager || {
     const btn = document.querySelector(".priority-btn.selected");
     return btn?.dataset ? btn.dataset.priority : "low";
   },
+
 
   /**
    * Normalizes subtasks to a board-friendly shape.
@@ -286,6 +307,7 @@ window.addTaskManager = window.addTaskManager || {
       }));
   },
 
+
   /**
    * Resets priority to "Medium".
    */
@@ -298,6 +320,7 @@ window.addTaskManager = window.addTaskManager || {
     if (m) { m.classList.add("selected"); m.setAttribute("aria-pressed", "true"); }
   },
 
+
   /**
    * Clears assignee selection + chips.
    */
@@ -308,6 +331,7 @@ window.addTaskManager = window.addTaskManager || {
     if (wrap) { wrap.innerHTML = ""; wrap.classList.add("display-none"); }
   },
 
+
   /**
    * Clears subtasks via subtasks.js if available.
    */
@@ -315,6 +339,7 @@ window.addTaskManager = window.addTaskManager || {
     if (typeof clearSubtasks === "function") clearSubtasks();
   }
 };
+
 
 /* ---- Entry point ---- */
 document.addEventListener("DOMContentLoaded", () => {

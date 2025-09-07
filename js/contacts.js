@@ -9,42 +9,31 @@ let currentMode = "create";
 let currentEditKey = null;
 let activeContactKey = null;
 
-/**
- * Lädt Kontakte und eigenen Kontakt aus Firebase und rendert das UI.
- */
+/** Loads contacts and own contact, then renders the UI. */
 document.addEventListener("DOMContentLoaded", async () => {
   const contacts = await loadData(`users/${USERKEY}/contacts`);
   const ownContact = await loadData(`users/${USERKEY}`);
-
-  contactsData = contacts; // ⬅️ global speichern
+  contactsData = contacts;
   renderContacts(contacts);
   renderOwnContact(ownContact);
 });
 
-/**
- * Öffnet das Kontaktformular im "Neuer Kontakt"-Modus.
- * löscht die inputfelder und gibt ein unbekanntes Profilbild
- */
+
+/** Opens the contact form in “create new contact” mode. */
 function openNewContactForm() {
   document.getElementById("contactForm").reset();
   document.getElementById("contactKey").value = "";
-
   const avatarContainer = document.getElementById("editAvatarContainer");
   avatarContainer.innerHTML = `<img class="pb" src="../img/Group 13.png" alt="" />`;
-
-  setupFormButtons("create"); // ⬅️ wichtig!
+  setupFormButtons("create");
   toggleOverlay();
 }
 
-/**
- * Schaltet zwischen "create" und "edit" um und passt Button-Logik an.
- * @param {"create"|"edit"} mode
- * @param {string|null} [contactKey]
- */
+
+/** Configures form buttons for create or edit mode. */
 function setupFormButtons(mode, contactKey = null) {
   currentMode = mode;
   currentEditKey = contactKey;
-
   if (mode === "edit") {
     setupEditButtons(contactKey);
   } else {
@@ -52,10 +41,8 @@ function setupFormButtons(mode, contactKey = null) {
   }
 }
 
-/**
- * Konfiguriert das Formular für den Bearbeitungsmodus.
- * @param {string} contactKey
- */
+
+/** Sets up the form for editing an existing contact. */
 function setupEditButtons(contactKey) {
   document.getElementById("cancelText").textContent = "Delete";
   document.getElementById("submitText").textContent = "Save";
@@ -63,9 +50,8 @@ function setupEditButtons(contactKey) {
   document.getElementById("cancelBtn").onclick = () => deleteContact(contactKey, true);
 }
 
-/**
- * Konfiguriert das Formular für den Erstellmodus.
- */
+
+/** Sets up the form for creating a new contact. */
 function setupCreateButtons() {
   document.getElementById("cancelText").textContent = "Cancel";
   document.getElementById("submitText").textContent = "Create contact";
@@ -73,20 +59,15 @@ function setupCreateButtons() {
   document.getElementById("cancelBtn").onclick = toggleOverlay;
 }
 
-/**
- * Öffnet oder schließt das Overlay.
- */
+
+/** Toggles the visibility of the overlay. */
 function toggleOverlay() {
   const overlay = document.getElementById("overlay");
   overlay.classList.contains("show") ? hideOverlay(overlay) : showOverlay(overlay);
-
-
 }
 
-/**
- * Blendet das Overlay aus.
- * @param {HTMLElement} overlay
- */
+
+/** Hides the overlay. */
 function hideOverlay(overlay) {
   setTimeout(() => {
     overlay.classList.remove("show");
@@ -95,39 +76,29 @@ function hideOverlay(overlay) {
   editingOwnContact = false;
 }
 
-/**
- * Blendet das Overlay ein.
- * @param {HTMLElement} overlay
- */
+
+/** Shows the overlay. */
 function showOverlay(overlay) {
   overlay.classList.remove("d_none");
   setTimeout(() => overlay.classList.add("show"), 100);
 }
 
-/**
- * Verarbeitet das Kontaktformular (Speichern oder Aktualisieren).
- * @param {Event} event
- */
+
+/** Submits the contact form to create or update a contact. */
 async function submitContact(event) {
   event.preventDefault();
-
   const formData = getFormData();
-
   if (editingOwnContact) {
     await updateOwnUserContact(formData);
     return;
   }
-
   await saveOrUpdateContact(formData);
-
   toggleOverlay();
   showSuccessOverlay();
 }
 
-/**
- * Holt die Daten aus dem Kontaktformular.
- * @returns {{name: string, email: string, phone: string, contactKey: string}}
- */
+
+/** Retrieves data from the contact form. */
 function getFormData() {
   return {
     name: document.getElementById("name").value.trim(),
@@ -137,24 +108,13 @@ function getFormData() {
   };
 }
 
-/**
- * Speichert oder aktualisiert eigenen Kontakt.
- * @param {{name: string, email: string, phone: string, contactKey: string}} formData
- */
+
+/** Updates the signed-in user’s own contact information. */
 async function updateOwnUserContact(formData) {
-  const { name, email, phone } = formData
-
+  const { name, email, phone } = formData;
   const existingUserData = await loadData(`users/${USERKEY}`);
-
-  const updatedUser = {
-    ...existingUserData,
-    name,
-    email,
-    phone,
-  };
-
+  const updatedUser = { ...existingUserData, name, email, phone };
   await putData(`users/${USERKEY}`, updatedUser);
-
   renderOwnContact(updatedUser);
   showOwnContactCardDetails(updatedUser);
   activateContactCard("ownContact");
@@ -162,13 +122,10 @@ async function updateOwnUserContact(formData) {
   editingOwnContact = false;
 }
 
-/**
- * Speichert oder aktualisiert einen Kontakt.
- * @param {{name: string, email: string, phone: string, contactKey: string}} formData
- */
+
+/** Creates a new contact or updates an existing one. */
 async function saveOrUpdateContact(formData) {
   const { name, email, phone, contactKey } = formData;
-
   if (contactKey) {
     await updateContact(name, email, phone, contactKey);
   } else {
@@ -176,86 +133,57 @@ async function saveOrUpdateContact(formData) {
   }
 }
 
-/**
- * Aktualisiert einen bestehenden Kontakt in Firebase.
- * @param {string} name
- * @param {string} email
- * @param {string} phone
- * @param {string} contactKey
- */
+
+/** Updates an existing contact in Firebase. */
 async function updateContact(name, email, phone, contactKey) {
   const existingContact = contactsData[contactKey] || {};
   const updatedContact = { ...existingContact, name, email, phone };
-
   await putData(`${basePath}/${contactKey}`, updatedContact);
-
   await loadDataAfterSave();
   showcontactCardDetails(contactKey);
   activateContactCard(contactKey);
   document.getElementById("contactsDetails").classList.add("showDetails");
 }
 
-/**
- * Erstellt einen neuen Kontakt in Firebase.
- * @param {string} name
- * @param {string} email
- * @param {string} phone
- */
+
+/** Creates a new contact in Firebase. */
 async function createNewContact(name, email, phone) {
   const color = getRandomColor();
   const newContact = { name, email, phone, color };
-
   const result = await postData(basePath, newContact);
   const newKey = result.name;
-
   await loadDataAfterSave();
   showcontactCardDetails(newKey);
   activateContactCard(newKey);
   document.getElementById("contactsDetails").classList.add("showDetails");
 }
 
-/**
- * Zeigt einen temporären Erfolgsoverlay an.
- * @param {string} [message="Contact saved successfully!"]
- */
+
+/** Displays a temporary success overlay message. */
 function showSuccessOverlay(message = "Contact saved successfully!") {
   const successOverlay = document.getElementById("successOverlay");
   const text = successOverlay.querySelector(".succesText");
   text.textContent = message;
-
   successOverlay.classList.remove("d_none");
-
-  setTimeout(() => {
-    successOverlay.classList.add("show");
-  }, 10);
-
+  setTimeout(() => { successOverlay.classList.add("show"); }, 10);
   setTimeout(() => {
     successOverlay.classList.remove("show");
-    setTimeout(() => {
-      successOverlay.classList.add("d_none");
-    }, 400);
+    setTimeout(() => { successOverlay.classList.add("d_none"); }, 400);
   }, 1500);
 }
 
-/**
- * Rendert den eigenen Kontakt im UI.
- * @param {Contact} ownContact
- */
+
+/** Renders the signed-in user’s own contact card. */
 function renderOwnContact(ownContact) {
   const container = document.getElementById("ownContactArea");
   container.innerHTML = "";
-
   const contactCard = createOwnContactCard(ownContact);
   attachClickHandler(contactCard, ownContact);
-
   container.appendChild(contactCard);
 }
 
-/**
- * Erstellt das Card-Element für den eigenen Kontakt.
- * @param {Contact} contact
- * @returns {HTMLElement}
- */
+
+/** Creates the card element for the own contact. */
 function createOwnContactCard(contact) {
   const initials = getInitials(contact.name);
   const card = document.createElement("div");
@@ -265,14 +193,11 @@ function createOwnContactCard(contact) {
   return card;
 }
 
-/**
- * Hängt einen Klickhandler an eine Kontaktkarte an.
- * @param {HTMLElement} card
- * @param {Contact} contact
- */
+
+/** Attaches the click handler to a contact card. */
 function attachClickHandler(card, contact) {
   card.addEventListener("click", () => {
-    editingOwnContact = true
+    editingOwnContact = true;
     deactivateAllContactCards();
     activateContactCard(card);
     document.getElementById("contactsDetails").classList.add("showDetails");
@@ -280,234 +205,186 @@ function attachClickHandler(card, contact) {
   });
 }
 
-/**
- * Zeigt die Details des eigenen Kontakts im rechten Bereich.
- * @param {Contact} contact
- */
+
+/** Displays details for the own contact in the details panel. */
 function showOwnContactCardDetails(contact) {
   const detailsContainer = document.getElementById("contactsDetails");
   detailsContainer.innerHTML = getOwnContactCardDetailsHtml(contact);
-
   document.getElementById("ownEditButton").addEventListener("click", () => {
     editOwnContact(contact);
   });
-
   if (window.innerWidth < 799) {
-    showOwnContactDetailsMobile()
-  } 
+    showOwnContactDetailsMobile();
+  }
 }
 
+
+/** Shows the own contact details in mobile layout. */
 function showOwnContactDetailsMobile() {
   const container = document.querySelector(".contactsContainer");
-  container.style.display = "flex"; // Sichtbar machen
-
+  container.style.display = "flex";
   const btn = document.getElementById("mobileAddBtn");
   btn.setAttribute("onclick", "toggleMobileMenu()");
-  document.getElementById("mobileBtnIcon").src = "../img/more_vert.png"; // ← Dein Zurück-Icon
+  document.getElementById("mobileBtnIcon").src = "../img/more_vert.png";
 }
 
-/**
- * Rendert alle Kontakte aus einem Objekt.
- * @param {Object.<string, Contact>} data
- */
+
+/** Renders all contacts grouped and listed in the UI. */
 function renderContacts(data) {
   const container = document.getElementById("contactCardsContainer");
   container.innerHTML = "";
-
   const sortedEntries = sortContactsByName(data);
-
   let currentLetter = null;
-
   for (const [key, contact] of sortedEntries) {
     const firstLetter = contact.name[0].toUpperCase();
-
     if (firstLetter !== currentLetter) {
       currentLetter = firstLetter;
       appendLetterHeader(container, currentLetter);
     }
-
     const contactCard = createContactCard(key, contact);
     container.appendChild(contactCard);
   }
 }
 
-/**
- * Sortiert Kontakte alphabetisch nach Namen.
- * @param {Object.<string, Contact>} data
- * @returns {[string, Contact][]}
- */
+
+/** Sorts contacts alphabetically by name. */
 function sortContactsByName(data) {
   return Object.entries(data).sort((a, b) => a[1].name.localeCompare(b[1].name));
 }
 
-/**
- * Fügt einen Buchstaben-Header in die Kontaktliste ein.
- * @param {HTMLElement} container
- * @param {string} letter
- */
+
+/** Appends a letter header to the contact list. */
 function appendLetterHeader(container, letter) {
   const letterHeader = document.createElement("div");
   letterHeader.className = "letterHeader";
   letterHeader.innerText = letter;
-
   const separatorList = document.createElement("div");
   separatorList.className = "separatorList";
-
   container.appendChild(letterHeader);
   container.appendChild(separatorList);
 }
 
-/**
- * Erstellt eine einzelne Kontaktkarte.
- * @param {string} key
- * @param {Contact} contact
- * @returns {HTMLElement}
- */
+
+/** Creates a single contact card element. */
 function createContactCard(key, contact) {
   const initials = getInitials(contact.name);
   const card = document.createElement("div");
   card.className = "contactCard";
   card.setAttribute("data-key", key);
-
   card.innerHTML = getContendCardHtml(contact, initials, contact.color);
-
   card.addEventListener("click", () => {
     activeContactKey = key;
     deactivateAllContactCards();
     activateContactCard(card);
     if (window.innerWidth < 799) {
-    showContactDetailsMobile(key); // 👉 Funktion für Mobile
-  } else {
-    showcontactCardDetails(key); // 👉 Funktion für Desktop
-  }
+      showContactDetailsMobile(key);
+    } else {
+      showcontactCardDetails(key);
+    }
   });
-
   return card;
 }
 
+
+/** Shows the contact details in mobile layout. */
 function showContactDetailsMobile(key) {
   const container = document.querySelector(".contactsContainer");
-  container.style.display = "flex"; // Sichtbar machen
-
-  // Optional: Inhalt aktualisieren
+  container.style.display = "flex";
   showcontactCardDetails(key);
-
   const btn = document.getElementById("mobileAddBtn");
   btn.setAttribute("onclick", "toggleMobileMenu()");
-  document.getElementById("mobileBtnIcon").src = "../img/more_vert.png"; // ← Dein Zurück-Icon
+  document.getElementById("mobileBtnIcon").src = "../img/more_vert.png";
 }
 
+
+/** Toggles the mobile menu overlay. */
 function toggleMobileMenu() {
   const menu = document.getElementById("menuOverlay");
   menu.classList.toggle("open");
 }
+
 
 document.getElementById("menuOverlay").addEventListener("click", () => {
   document.getElementById("menuOverlay").classList.remove("open");
 });
 
 
-
+/** Closes the mobile details panel and resets UI. */
 function closeMobileDetails() {
   const container = document.querySelector(".contactsContainer");
-  container.style.display = "none"; // Sichtbar machen
-
+  container.style.display = "none";
   deactivateAllContactCards();
-
   const btn = document.getElementById("mobileAddBtn");
   btn.setAttribute("onclick", "openNewContactForm()");
   document.getElementById("mobileBtnIcon").src = "../img/person_add.png";
 }
 
-/**
- * Blendet alle Kontaktkarten als inaktiv.
- */
+
+/** Deactivates all contact cards. */
 function deactivateAllContactCards() {
   document.querySelectorAll(".contactCard").forEach((card) => {
     card.classList.remove("activeCard");
-
-    const circle = card.querySelector(".ownContactCircle"); // oder .contactCircle?
+    const circle = card.querySelector(".ownContactCircle");
     if (circle) {
       circle.style.borderColor = "black";
     }
   });
 }
 
-/**
- * Aktiviert eine Kontaktkarte im UI.
- * @param {string|HTMLElement} keyOrElement
- */
+
+/** Activates a contact card by key or element. */
 function activateContactCard(keyOrElement) {
   let card = keyOrElement;
-
   if (typeof card === "string") {
     card = document.querySelector(`.contactCard[data-key="${card}"]`);
     if (!card) return;
   }
-
   card.classList.add("activeCard");
-
   const circle = card.querySelector(".contactCircle") || card.querySelector(".ownContactCircle");
   if (circle) {
     circle.style.borderColor = "white";
   }
-
   document.getElementById("contactsDetails").classList.add("showDetails");
 }
 
-/**
- * Zeigt die vollständigen Details eines Kontakts an.
- * @param {string} key
- */
+
+/** Displays the details for a selected contact. */
 function showcontactCardDetails(key) {
   const contact = contactsData[key];
-
   const detailsContainer = document.getElementById("contactsDetails");
   detailsContainer.innerHTML = getContentCardDetailsHtml(contact, key);
 }
 
-/**
- * Öffnet das Overlay zum Bearbeiten des eigenen Kontakts.
- * @param {Contact} contact
- */
+
+/** Opens the overlay to edit the own contact. */
 function editOwnContact(contact) {
   editingOwnContact = true;
-
   document.getElementById("name").value = contact.name;
   document.getElementById("email").value = contact.email;
   document.getElementById("phone").value = contact.phone;
-
-  const initials = getInitials(contact.name)
-
+  const initials = getInitials(contact.name);
   const avatarContainer = document.getElementById("editAvatarContainer");
   avatarContainer.innerHTML = `
     <div class="ownBigContactCircle">
       ${initials}
     </div>
   `;
-
   setupFormButtons("edit", contact);
   toggleOverlay();
 }
 
-/**
- * Öffnet das Overlay zum Bearbeiten eines anderen Kontakts.
- * @param {string} key
- */
+
+/** Opens the overlay to edit another contact. */
 function editContact(key) {
   const contact = contactsData[key];
-
   prefillFormWithContactData(contact, key);
   renderEditAvatar(contact);
   setupFormButtons("edit", key);
   toggleOverlay();
 }
 
-/**
- * Füllt das Formular mit bestehenden Kontaktdaten.
- * @param {Contact} contact
- * @param {string} key
- */
+
+/** Prefills the form fields with an existing contact’s data. */
 function prefillFormWithContactData(contact, key) {
   document.getElementById("contactKey").value = key;
   document.getElementById("name").value = contact.name;
@@ -515,14 +392,11 @@ function prefillFormWithContactData(contact, key) {
   document.getElementById("phone").value = contact.phone;
 }
 
-/**
- * Zeigt den Avatar für den bearbeiteten Kontakt.
- * @param {Contact} contact
- */
+
+/** Renders the avatar circle for the edited contact. */
 function renderEditAvatar(contact) {
   const initials = getInitials(contact.name);
   const color = contact.color;
-
   const avatarContainer = document.getElementById("editAvatarContainer");
   avatarContainer.innerHTML = `
     <div class="BigContactCircle" style="background-color: ${color};">
@@ -531,51 +405,49 @@ function renderEditAvatar(contact) {
   `;
 }
 
-/**
- * Löscht einen Kontakt aus Firebase.
- * @param {string} key
- * @param {boolean} [closeOverlay=false]
- */
+
+/** Deletes a contact from Firebase. */
 async function deleteContact(key, closeOverlay = false) {
   await deleteData(`users/${USERKEY}/contacts/${key}`);
-  document.getElementById("contactsDetails").innerHTML = ""; // ❌ Details leeren
-  document.getElementById("contactsDetails").classList.remove("showDetails"); // ❌ ggf. auch "ausblenden"
+  document.getElementById("contactsDetails").innerHTML = "";
+  document.getElementById("contactsDetails").classList.remove("showDetails");
   await loadDataAfterSave();
-
   if (closeOverlay) {
     toggleOverlay();
   }
   showSuccessOverlay("Contact deleted!");
 }
 
-/**
- * Lädt alle Kontakte erneut aus Firebase und rendert sie.
- */
+
+/** Reloads contacts from Firebase and re-renders the list. */
 async function loadDataAfterSave() {
   const newContacts = await loadData(`users/${USERKEY}/contacts`);
   contactsData = newContacts;
   renderContacts(newContacts);
 }
 
+
+/** Handles the mobile edit action for current selection. */
 function handleEditMobile() {
   if (editingOwnContact === true) {
     loadData(`users/${USERKEY}`).then((ownContact) => {
       editOwnContact(ownContact);
     });
-    toggleMobileMenu(); // Menü schließen
+    toggleMobileMenu();
     return;
   }
-
   if (activeContactKey) {
     editContact(activeContactKey);
-    toggleMobileMenu(); // Menü schließen
+    toggleMobileMenu();
   }
 }
 
+
+/** Handles the mobile delete action for current selection. */
 function handleDeleteMobile() {
   if (activeContactKey) {
     deleteContact(activeContactKey);
-    toggleMobileMenu(); // Menü schließen
+    toggleMobileMenu();
   }
-  closeMobileDetails()
+  closeMobileDetails();
 }

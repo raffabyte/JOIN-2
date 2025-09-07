@@ -9,7 +9,6 @@
  * @param {ParentNode} [r=document]
  */
 function qs(s, r = document) { return r.querySelector(s); }
-
 /**
  * Returns YYYY-MM-DD for today's local date.
  * @returns {string}
@@ -19,8 +18,9 @@ function todayStr() {
   return `${y}-${m}-${da}`;
 }
 
-// --- date reopen guard (prevents immediate re-opening after selection)
 let _dateGuardUntil = 0;
+
+
 /**
  * Returns true if the date picker should stay closed.
  * Uses performance.now() for precise timing.
@@ -28,6 +28,8 @@ let _dateGuardUntil = 0;
 function dateGuardActive() {
   return performance.now() < _dateGuardUntil;
 }
+
+
 /**
  * Arms the guard to block picker reopening for the next X ms.
  * @param {number} ms - Duration in milliseconds.
@@ -48,6 +50,7 @@ function withMutable(el, fn) {
   try { fn(); } finally { el.readOnly = ro; el.disabled = di; }
 }
 
+
 /**
  * Tries all strategies to open a date input's native picker.
  * @param {HTMLInputElement} input
@@ -58,6 +61,7 @@ function tryOpenDate(input) {
   input.focus();
   setTimeout(() => { try { input.click(); } catch {} }, 0);
 }
+
 
 /**
  * Creates a colored badge for a user.
@@ -111,6 +115,7 @@ Object.assign(window.addTaskManager, {
     this.elements.selectedAssignees = qs("#selected-assignees");
   },
 
+
   /**
    * Open the native date picker for due date.
    */
@@ -153,6 +158,7 @@ _handleDatePointer(e, input, open) {
   open(e);
 },
 
+
 /**
  * Handles date change: sets guard and removes focus.
  */
@@ -175,6 +181,7 @@ _handleDateChange(input) {
     });
   },
 
+
   /**
    * Make fields selection-only: due date, category, assigned-to.
    */
@@ -188,6 +195,7 @@ _handleDateChange(input) {
     if (cat && catBtn) makeSelectionOnly(cat, () => catBtn.click());
     if (asg && asgBtn) makeSelectionOnly(asg, () => asgBtn.click());
   },
+
 
   /**
    * Inject SVGs, set ARIA, and bind clicks for priority group.
@@ -206,6 +214,7 @@ _handleDateChange(input) {
       this._clearError(btn.parentElement);
     }));
   },
+
 
   /**
    * Render selected assignee badges + overflow chip.
@@ -227,6 +236,7 @@ _handleDateChange(input) {
     more.textContent = `+${hid.length}`; more.title = names.join(", ");
     more.setAttribute("aria-label", names.join(", ")); wrap.appendChild(more);
   },
+
 
   /**
    * Show success toast after creating a task.
