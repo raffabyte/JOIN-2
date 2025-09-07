@@ -25,7 +25,7 @@ function closeOverlay() {
 
 /**
  * Handles overlay click events and closes overlay when clicking outside
- * @param {Event} event - The click event
+ * @param {Event} event 
  * @returns {void}
  */
 function handleOverlayClicks(event) {

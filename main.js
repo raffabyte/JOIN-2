@@ -206,5 +206,3 @@ async function deleteData(path = "") {
   });
   return (responseToJson = await response.json());
 }
-
-

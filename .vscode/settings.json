@@ -1,3 +1,4 @@
 {
-    "docwriter.language": "English"
+    "docwriter.language": "English",
+    "git.ignoreLimitWarning": true
 }

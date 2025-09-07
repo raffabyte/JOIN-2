@@ -9,6 +9,7 @@ function getRandomColor() {
   return predefinedColors[Math.floor(Math.random() * predefinedColors.length)];
 }
 
+
 /**
  * Orchestrates the fetching and processing of all assignable people.
  * This is the main entry point function.
@@ -32,10 +33,11 @@ async function getAssignablePeople(userKey) {
   }
 }
 
+
 /**
  * Fetches global users and personal contacts data in parallel.
- * @param {string} userKey - The key of the currently logged-in user.
- * @returns {Promise<[object, object]>} A promise that resolves to an array containing both datasets.
+ * @param {string} userKey 
+ * @returns {Promise<[object, object]>}
  */
 async function fetchPeopleData(userKey) {
   return await Promise.all([
@@ -44,10 +46,11 @@ async function fetchPeopleData(userKey) {
   ]);
 }
 
+
 /**
  * Processes the list of global users and adds them to the map.
- * @param {Map<string, object>} peopleMap - The map to populate.
- * @param {object} allUsersData - The raw user data from Firebase.
+ * @param {Map<string, object>} peopleMap 
+ * @param {object} allUsersData
  */
 function processUsersInMap(peopleMap, allUsersData) {
   if (!allUsersData) return;
@@ -63,10 +66,11 @@ function processUsersInMap(peopleMap, allUsersData) {
   });
 }
 
+
 /**
  * Processes the list of personal contacts and adds or updates them in the map.
- * @param {Map<string, object>} peopleMap - The map to populate.
- * @param {object} personalContactsData - The raw contact data from Firebase.
+ * @param {Map<string, object>} peopleMap 
+ * @param {object} personalContactsData 
  */
 function processContactsInMap(peopleMap, personalContactsData) {
   if (!personalContactsData) return;
@@ -84,10 +88,11 @@ function processContactsInMap(peopleMap, personalContactsData) {
   });
 }
 
+
 /**
  * Converts the final map of people into a sorted array.
- * @param {Map<string, object>} peopleMap - The populated map of people.
- * @returns {Array<object>} A sorted array of people.
+ * @param {Map<string, object>} peopleMap 
+ * @returns {Array<object>} 
  */
 function finalizePeopleList(peopleMap) {
   const finalList = Array.from(peopleMap.values());
@@ -111,6 +116,7 @@ function extractNameFromEmail(email) {
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join(" ");
 }
+
 
 /**
 * Gets the initials from a full name.

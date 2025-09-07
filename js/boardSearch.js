@@ -1,3 +1,4 @@
+/** Initializes search inputs and buttons on page load. */
 document.addEventListener("DOMContentLoaded", () => {
   const input = document.getElementById("searchInput");
   const mobileInput = document.getElementById("searchInputMobile");
@@ -8,6 +9,8 @@ document.addEventListener("DOMContentLoaded", () => {
   if (searchBtn) searchBtn.addEventListener("click", () => handleSearch("searchInput"));
 });
 
+
+/** Handles the search query and triggers task filtering. */
 function handleSearch(inputId = "searchInput") {
   const query = document
     .getElementById(inputId)
@@ -17,6 +20,8 @@ function handleSearch(inputId = "searchInput") {
   fetchFilteredTasks(query);
 }
 
+
+/** Fetches tasks from Firebase and filters them by search query. */
 function fetchFilteredTasks(query) {
   fetch(
     "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks.json"
@@ -33,6 +38,8 @@ function fetchFilteredTasks(query) {
     });
 }
 
+
+/** Renders filtered search results into their respective board columns. */
 function renderSearchResults(tasks) {
   const columns = [
     { id: 'todoColumn', dragAreaId: 'toDoDragArea' },
@@ -46,15 +53,12 @@ function renderSearchResults(tasks) {
     const columnTasks = tasks.filter(task => task.column === id);
     
     if (columnTasks.length === 0) {
-      // Keine Tasks gefunden - zeige "No tasks found"
       column.innerHTML = noTaskCardTemplate("found") + dragAreaTemplate(dragAreaId);
     } else {
-      // Tasks gefunden - zeige diese
       const tasksHTML = columnTasks.map(taskCardTemplate).join('');
       column.innerHTML = tasksHTML + dragAreaTemplate(dragAreaId);
     }
     
-    // Setup event handlers für die Spalte
     const dragArea = document.getElementById(dragAreaId);
     if (dragArea) {
       column.ondrop = () => moveTo(id);
@@ -67,6 +71,8 @@ function renderSearchResults(tasks) {
   });
 }
 
+
+/** Checks if columns are empty after filtering and updates display. */
 function checkEmptyFiltered(tasks) {
   const cols = [
     "todoColumn",
@@ -84,6 +90,8 @@ function checkEmptyFiltered(tasks) {
   cols.forEach((col, i) => insertNoMatchCardIfEmpty(col, ids[i], tasks));
 }
 
+
+/** Inserts a no-match card if a column has no matching tasks. */
 function insertNoMatchCardIfEmpty(colId, dragAreaId, tasks) {
   const colEl = document.getElementById(colId);
   const dragArea = document.getElementById(dragAreaId);
@@ -94,6 +102,8 @@ function insertNoMatchCardIfEmpty(colId, dragAreaId, tasks) {
   if (dragArea) colEl.appendChild(dragArea);
 }
 
+
+/** Delays execution of a function to limit rapid firing. */
 function debounce(fn, delay) {
   let to;
   return (...a) => {
@@ -102,6 +112,8 @@ function debounce(fn, delay) {
   };
 }
 
+
+/** Clears both search inputs and resets the board view. */
 function clearSearchInput() {
   const input = document.getElementById("searchInput");
   const mobileInput = document.getElementById("searchInputMobile");
@@ -111,6 +123,8 @@ function clearSearchInput() {
   handleSearch();
 }
 
+
+/** Fetches all tasks from Firebase and updates the board columns. */
 function fetchAllTasks() {
   fetch(
     "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks.json"

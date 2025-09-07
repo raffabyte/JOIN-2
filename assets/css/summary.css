@@ -439,7 +439,6 @@ font-weight: 400;
   }
 
   .item1 {
-    max-width: 185px;
     gap: 12px;
   }
 
@@ -475,8 +474,12 @@ font-weight: 400;
   }
 
   .item3 {
-    max-width: 117px;
     gap: 8px;
+  }
+
+  .item3 .To-do {
+    gap: 8px;
+    width: 70px;
   }
 
   .greetings {

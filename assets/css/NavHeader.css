@@ -73,6 +73,28 @@ header h3 {
   gap: 16px;
 }
 
+/* Menü ein-/ausblenden ausschließlich über display */
+#menu.not-visible { display: none; }
+
+/* Sichtbarer Zustand – lass es z. B. als Flex erscheinen */
+#menu { 
+  display: flex;            /* oder block – je nach Layout */
+  flex-direction: column;   /* falls du Spalten willst */
+  position: absolute;       /* wichtig, wenn es „über“ dem Header schweben soll */
+  z-index: 10000;           /* hoch genug, damit nichts darüber liegt */
+}
+
+/* Ganz sicherstellen, dass Links klickbar sind */
+#menu a {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+/* Falls irgendwo versehentlich pointer-events: none gesetzt ist: */
+.userInfo, .userInfo * {
+  pointer-events: auto;   /* (nur falls nötig – ansonsten weglassen) */
+}
+
 #menu a {
   padding: 8px 0 8px 16px;
   font-size: 16px;
@@ -306,8 +328,9 @@ span {
   }
 
   /* .menuOption p {
-    font-size: 13px; /* 16px → -20% */
-  } */
+    font-size: 13px; /* 16px → -20% 
+   } */
+   
 
   .initials-button {
     width: 45px;
@@ -328,7 +351,6 @@ span {
   }
 
   .legalLinks a {
-    /* font-size: 11px; */
     padding: 6px; /* 8px → -20% */
   }
 
@@ -417,7 +439,6 @@ span {
   }
 
   .legalLinks a {
-    font-size: 9.9px;
     padding: 5.4px;
   }
 
@@ -431,13 +452,13 @@ span {
     width: 140px; 
     padding: 16px; 
     top: 40px;
-  right: 6px;
+    right: 6px;
     transform: translateX(12%);
     gap: 8px;
   }
   #menu a {
     padding: 5px 0 5px 11px;
-    font-size: 14px; /* 13px -10% */
+    font-size: 16px; /* 13px -10% */
   }
   .helpMobileLink {
   display: flex;

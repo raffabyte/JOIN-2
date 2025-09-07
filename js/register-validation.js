@@ -6,17 +6,17 @@ const $$ = (id) => document.getElementById(id);
 const getRealPw = (el) => (el?.getRealPassword?.() ?? el?.value ?? "");
 function installErrorSlots(){
   const plan = [
-    { sel: '#name',       into: null },                 // direkt nach Input
+    { sel: '#name',       into: null },                
     { sel: '#email',      into: null },
-    { sel: '#password',   into: '.password-field' },    // unter den ganzen PW-Block
+    { sel: '#password',   into: '.password-field' },  
     { sel: '#password2',  into: '.password-field' },
-    { sel: '#accept',     into: '.accept_div' },        // unter Checkbox-Zeile
+    { sel: '#accept',     into: '.accept_div' },       
   ];
   plan.forEach(({sel, into}) => {
     const input = document.querySelector(sel);
     if(!input) return;
     const container = into ? input.closest(into) : input;
-    // existiert schon ein Slot?
+   
     let slot = into
       ? container.querySelector(':scope > .error-text')
       : input.nextElementSibling?.classList?.contains('error-text') ? input.nextElementSibling : null;
@@ -26,15 +26,14 @@ function installErrorSlots(){
       if(into) container.appendChild(slot);
       else input.insertAdjacentElement('afterend', slot);
     }
-    // initial unsichtbar, aber Platz da
+   
     slot.style.visibility = 'hidden';
     slot.textContent = '';
   });
 }
 
 document.addEventListener('DOMContentLoaded', installErrorSlots);
-/** zeigt/aktualisiert den Fehler unterhalb des Feldes */
-function getErrorSlot(inputEl){
+  function getErrorSlot(inputEl){
   const pwdField = inputEl.closest('.password-field');
   if(pwdField) return pwdField.querySelector(':scope > .error-text');
   const accept = inputEl.closest('.accept_div');
@@ -61,11 +60,11 @@ function clearError(inputEl){
   const slot = getErrorSlot(inputEl);
   if(slot){
     slot.textContent = '';
-    slot.style.visibility = 'hidden'; // Platz bleibt, kein Shift
+    slot.style.visibility = 'hidden'; 
   }
 }
 
-// --- Feldregeln ------------------------------------------------------
+// --- Field rules ------------------------------------------------------
 function validateName(el) {
   const v = el.value.trim();
   if (!v) return "Please enter your name.";
@@ -76,25 +75,20 @@ function isPlausibleEmail(str){
   const v = String(str || '').trim();
   if (!v) return false;
 
-  // Grundstruktur local@domain (max. Längen grob eingehalten)
   const m = v.match(/^([A-Za-z0-9._%+-]{1,64})@([A-Za-z0-9.-]{1,253})$/);
   if (!m) return false;
 
   const local = m[1];
   const domain = m[2];
 
-  // Keine doppelten Punkte
   if (domain.includes('..')) return false;
 
-  // Domain in Labels splitten (mind. 2: z.B. example + com)
   const parts = domain.split('.');
   if (parts.length < 2) return false;
 
-  // TLD: 2–24 Buchstaben
   const tld = parts[parts.length - 1];
   if (!/^[A-Za-z]{2,24}$/.test(tld)) return false;
 
-  // Jedes Label: 1–63, alnum oder '-', nicht mit '-' starten/enden
   if (!parts.every(lbl =>
     /^[A-Za-z0-9-]{1,63}$/.test(lbl) && !lbl.startsWith('-') && !lbl.endsWith('-')
   )) return false;
@@ -124,40 +118,34 @@ function validatePasswordRepeat(pwEl, pw2El) {
   return "";
 }
 function validateAccept(el) {
-  // Checkbox ist in deinem Snippet nicht drin – falls vorhanden:
   if (!el) return "";
   return el.checked ? "" : "Please accept the privacy policy.";
 }
 
-// --- Gesamte Validierung --------------------------------------------
+// --- Validation --------------------------------------------
 function validateForm() {
   const nameEl = $$("name");
   const emailEl = $$("email");
   const pwEl = $$("password");
   const pw2El = $$("password2");
-  const acceptEl = $$("accept");      // optional vorhanden
-  const msgBox = $$("msgBox");        // existiert unter dem 2. Passwort
+  const acceptEl = $$("accept");      
+  const msgBox = $$("msgBox");       
 
   const errors = [];
 
-  // Name
   const nMsg = validateName(nameEl);
   if (nMsg) { showError(nameEl, nMsg); errors.push(nameEl); } else { clearError(nameEl); }
 
-  // Email
   const eMsg = validateEmail(emailEl);
   if (eMsg) { showError(emailEl, eMsg); errors.push(emailEl); } else { clearError(emailEl); }
 
-  // Passwort
   const pMsg = validatePassword(pwEl);
   if (pMsg) { showError(pwEl, pMsg); errors.push(pwEl); } else { clearError(pwEl); }
 
-  // Passwort-Wiederholung (+ msgBox benutzen)
   const p2Msg = validatePasswordRepeat(pwEl, pw2El);
   if (p2Msg) { showError(pw2El, p2Msg); errors.push(pw2El); if (msgBox) msgBox.textContent = p2Msg; }
   else { clearError(pw2El); if (msgBox) msgBox.textContent = ""; }
 
-  // Privacy (falls vorhanden)
   const aMsg = validateAccept(acceptEl);
   if (aMsg && acceptEl) { showError(acceptEl, aMsg); errors.push(acceptEl); } 
   else if (acceptEl) { clearError(acceptEl); }
@@ -169,7 +157,7 @@ function validateForm() {
   return true;
 }
 
-// --- Live-Validierung (Fehler beim Tippen/Klicken entfernen) --------
+// --- Live validation (remove typing/clicking errors) --------
 function bindLiveValidation() {
   const nameEl = $$("name");
   const emailEl = $$("email");
@@ -185,7 +173,6 @@ function bindLiveValidation() {
     if (!validateEmail(emailEl)) clearError(emailEl);
   });
 
-  // deine PW-Felder arbeiten mit beforeinput/input (Masking) → hier auf beide hören
   ["beforeinput","input"].forEach(evt => {
     pwEl?.addEventListener(evt, () => {
       if (!validatePassword(pwEl)) clearError(pwEl);
@@ -204,7 +191,6 @@ function bindLiveValidation() {
   });
 }
 
-// --- Submit abfangen und (sofern ok) deine signUp() aufrufen --------
 document.addEventListener("DOMContentLoaded", () => {
   bindLiveValidation();
   const form = $$("signUpForm");
@@ -214,7 +200,6 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
     if (!validateForm()) return;
 
-    // Wenn du bereits eine signUp() Funktion hast, ruf sie jetzt auf:
     if (typeof window.signUp === "function") {
       window.signUp();
     } 
