@@ -462,18 +462,6 @@ function getContentCardDetailsHtml(contact, key) {
     .join("")
     .substring(0, 2)}
 
-    if (!window.logout) {
-  window.logout = function () {
-    // Lokalen Auth-Status löschen
-    localStorage.removeItem("loggedInUserKey");
-    localStorage.removeItem("guestMode");
-    sessionStorage.clear();
-
-    // Seite aus dem Verlauf entfernen → kein "Zurück" möglich
-    window.location.replace("../index/login.html");
-  };
-}
-
 </div>
   <div class="displayColumn">
     <h2 class="contectName">${contact.name}</h2>

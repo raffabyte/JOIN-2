@@ -42,8 +42,8 @@ function getFormSubtasks() {
 
 /**
  * Collects task data from form elements and creates a task object
- * @param {string} columnId - The ID of the column where the task will be placed
- * @returns {Object} Task object with all form data
+ * @param {string} columnId 
+ * @returns {Object} 
  */
 function collectTaskData(columnId) {
     return {
@@ -60,8 +60,8 @@ function collectTaskData(columnId) {
 
 /**
  * Validates and saves task data to a specific column
- * @param {string} columnId - The ID of the target column
- * @returns {Object|null} Task data object if valid, null if validation fails
+ * @param {string} columnId - 
+ * @returns {Object|null} 
  */
 function validateAndSaveTaskData(columnId) {
     const taskData = collectTaskData(columnId);
@@ -74,9 +74,9 @@ function validateAndSaveTaskData(columnId) {
 
 /**
  * Pushes task data to the Firebase database
- * @param {string} columnId - The ID of the column
- * @returns {Promise<Response>} Promise that resolves to the fetch response
- * @throws {Promise<string>} Promise that rejects with 'No task data' if no data provided
+ * @param {string} columnId 
+ * @returns {Promise<Response>}
+ * @throws {Promise<string>}
  */
 async function pushTaskToDatabase(columnId) {
     const taskData = validateAndSaveTaskData(columnId);
@@ -92,9 +92,9 @@ async function pushTaskToDatabase(columnId) {
 
 /**
  * Konfiguriert Event-Handler für eine Board-Spalte
- * @param {HTMLElement} column - Das Spalten-Element
- * @param {string} columnId - Die ID der Spalte
- * @param {string} dragAreaId - Die ID der Drag-Area
+ * @param {HTMLElement} column 
+ * @param {string} columnId 
+ * @param {string} dragAreaId 
  */
 function setupColumnEventHandlers(column, columnId, dragAreaId) {
     column.ondrop = () => moveTo(columnId);

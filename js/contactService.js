@@ -15,23 +15,38 @@ function getRandomColor() {
  * This is the main entry point function.
  */
 async function getAssignablePeople(userKey) {
-  if (!userKey) {
-    console.error("UserKey is required to fetch assignable people.");
-    return [];
-  }
+  if (!userKey) { console.error("UserKey required"); return []; }
   try {
-    const [allUsersData, personalContactsData] = await fetchPeopleData(userKey);
+    const [allUsersData, personalContactsData, ownUser] = await fetchPeopleData(userKey);
     const peopleMap = new Map();
 
     processUsersInMap(peopleMap, allUsersData);
+
+    // Eigener User immer hinzufügen (falls vorhanden)
+    if (ownUser) {
+      const eml = (ownUser.email || "").trim().toLowerCase();
+      const key = eml || (ownUser.name || "").trim().toLowerCase();
+      if (key) {
+        peopleMap.set(key, {
+          name: ownUser.name || extractNameFromEmail(eml),
+          email: eml,
+          color: ownUser.color || getRandomColor()
+        });
+      }
+    }
+
     processContactsInMap(peopleMap, personalContactsData);
 
-    return finalizePeopleList(peopleMap);
-  } catch (error) {
-    console.error("Error loading assignable people:", error);
+    const out = finalizePeopleList(peopleMap);
+    // kurze Sichtprüfung
+    console.log("[assignable] users:", !!allUsersData, "contacts:", !!personalContactsData, "own:", !!ownUser, "len:", out.length);
+    return out;
+  } catch (e) {
+    console.error("Error loading assignable people:", e);
     return [];
   }
 }
+
 
 
 /**
@@ -41,8 +56,9 @@ async function getAssignablePeople(userKey) {
  */
 async function fetchPeopleData(userKey) {
   return await Promise.all([
-    loadData('users'),
-    loadData(`users/${userKey}/contacts`)
+    loadData('users'),                    // alle Nutzer (global)
+    loadData(`users/${userKey}/contacts`),// deine Kontakte
+    loadData(`users/${userKey}`)          // dein eigenes User-Objekt
   ]);
 }
 
@@ -56,13 +72,14 @@ function processUsersInMap(peopleMap, allUsersData) {
   if (!allUsersData) return;
 
   Object.values(allUsersData).forEach(user => {
-    if (user && user.email) {
-      peopleMap.set(user.email, {
-        name: extractNameFromEmail(user.email),
-        email: user.email,
-        color: user.color || getRandomColor()
-      });
-    }
+    const eml = (user?.email || "").trim().toLowerCase();
+    if (!eml) return;
+    const key = eml;
+    peopleMap.set(key, {
+      name: extractNameFromEmail(eml),
+      email: eml,
+      color: user.color || getRandomColor()
+    });
   });
 }
 
@@ -76,17 +93,23 @@ function processContactsInMap(peopleMap, personalContactsData) {
   if (!personalContactsData) return;
 
   Object.values(personalContactsData).forEach(contact => {
-    if (contact && contact.email) {
-      const existingPerson = peopleMap.get(contact.email) || {};
-      peopleMap.set(contact.email, {
-        name: contact.name,
-        email: contact.email,
-        phone: contact.phone || '',
-        color: contact.color || existingPerson.color || getRandomColor()
-      });
-    }
+    const name  = (contact?.name || "").trim();
+    const email = (contact?.email || "").trim().toLowerCase();
+
+    // Key darf Email ODER Name sein (falls Email fehlt)
+    const key = (email || name).toLowerCase();
+    if (!key) return;
+
+    const existing = peopleMap.get(key) || {};
+    peopleMap.set(key, {
+      name:  name || extractNameFromEmail(email),
+      email: email, // kann leer bleiben
+      phone: contact.phone || "",
+      color: contact.color || existing.color || getRandomColor()
+    });
   });
 }
+
 
 
 /**
@@ -95,6 +118,8 @@ function processContactsInMap(peopleMap, personalContactsData) {
  * @returns {Array<object>} 
  */
 function finalizePeopleList(peopleMap) {
+  console.log('[contactService] finalize length=', Array.from(peopleMap.values()).length);
+
   const finalList = Array.from(peopleMap.values());
   finalList.sort((a, b) => a.name.localeCompare(b.name));
   return finalList;

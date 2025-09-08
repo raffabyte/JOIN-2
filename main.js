@@ -2,6 +2,7 @@
 const BASE_URL = window.BASE_URL;
 const USERKEY = window.USERKEY;
 */
+
 window.BASE_URL = "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/";
 window.USERKEY = localStorage.getItem("loggedInUserKey");
 const BASE_URL = "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/";

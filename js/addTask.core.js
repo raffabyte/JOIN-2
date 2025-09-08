@@ -13,6 +13,8 @@ window.addTaskManager = window.addTaskManager || {
     selectedAssignees: new Set(),
   },
 
+// addTask.core.js
+
   /**
    * App entry point. Safe to call once on DOMContentLoaded.
    * @returns {Promise<void>}
@@ -29,6 +31,11 @@ window.addTaskManager = window.addTaskManager || {
     this._setupPriorityButtons();
     this._registerEventListeners();
     this._addInputListeners();
+
+    console.log('[ASSIGNEES]', this.state.assignableUsers?.length, this.state.assignableUsers?.slice(0,3));
+console.log('[DOM]', !!document.getElementById('assigned-to-input'),
+                  !!document.getElementById('assigned-to-toggle-btn'),
+                  !!document.getElementById('assigned-to-options'));
   },
 
   /**
@@ -166,16 +173,24 @@ window.addTaskManager = window.addTaskManager || {
     this._resetSubtasks();
   },
 
-  /**
-   * Returns selected assignees (emails).
-   * @returns {string[]}
-   */
-  _getSelectedAssignees() {
-    if (this.state.selectedAssignees?.size) return Array.from(this.state.selectedAssignees);
-    return Array.from(document.querySelectorAll('#assigned-to-options input[type="checkbox"]:checked'))
-      .map(cb => (cb.dataset?.value || cb.value || "").trim().toLowerCase())
-      .filter(Boolean);
-  },
+/**
+ * Returns selected assignees as contact names (not emails),
+ * because the board colors/badges resolve by name.
+ * @returns {string[]}
+ */
+_getSelectedAssignees() {
+  const emails = this.state.selectedAssignees?.size
+    ? Array.from(this.state.selectedAssignees)
+    : Array.from(document.querySelectorAll('#assigned-to-options input[type="checkbox"]:checked'))
+        .map(cb => (cb.dataset?.email || cb.value || "").trim().toLowerCase())
+        .filter(Boolean);
+
+  return emails.map(e => {
+    const u = this.state.assignableUsers.find(x => x.email?.toLowerCase() === e);
+    return u?.name || e;
+  }).filter(Boolean);
+},
+
 
   /**
    * Returns selected members (separate group).
@@ -260,31 +275,30 @@ window.addTaskManager = window.addTaskManager || {
     return el;
   },
 
-  /**
-   * Returns selected priority (fallback "low").
-   * @returns {string}
-   */
-  _getSelectedPriority() {
-    const btn = document.querySelector(".priority-btn.selected");
-    return btn?.dataset ? btn.dataset.priority : "low";
-  },
+/**
+ * Returns selected priority in the exact format the board expects.
+ * @returns {"HighPriority"|"MidPriority"|"LowPriority"}
+ */
+_getSelectedPriority() {
+  const btn = document.querySelector(".priority-btn.selected");
+  const val = btn?.dataset?.priority || "low"; // "high" | "medium" | "low"
+  const MAP = { high: "HighPriority", medium: "MidPriority", low: "LowPriority" };
+  return MAP[val] || "LowPriority";
+},
 
   /**
    * Normalizes subtasks to a board-friendly shape.
    * @param {string[]} items
    * @returns {Array<Object>}
    */
-  _normalizeSubtasks(items) {
-    return items
-      .map(st => (typeof st === "string" ? st : String(st || "")))
-      .map(s => s.trim())
-      .filter(Boolean)
-      .map(text => ({
-        value: text, checked: false,
-        title: text, name: text, text,
-        done: false, completed: false, isDone: false
-      }));
-  },
+_normalizeSubtasks(items) {
+  return (items || [])
+    .map(s => (typeof s === "string" ? s : String(s || "")))
+    .map(t => t.trim())
+    .filter(Boolean)
+    .map(value => ({ value, checked: false }));
+},
+
 
   /**
    * Resets priority to "Medium".
@@ -306,8 +320,8 @@ window.addTaskManager = window.addTaskManager || {
     document.querySelectorAll("#assigned-to-options input[type='checkbox']").forEach(cb => cb.checked = false);
     const wrap = this.elements.selectedAssignees;
     if (wrap) { wrap.innerHTML = ""; wrap.classList.add("display-none"); }
-  },
-
+  }
+,
   /**
    * Clears subtasks via subtasks.js if available.
    */
@@ -317,7 +331,61 @@ window.addTaskManager = window.addTaskManager || {
 };
 
 /* ---- Entry point ---- */
-document.addEventListener("DOMContentLoaded", () => {
-  window.USERKEY = window.USERKEY || localStorage.getItem("userKey");
-  addTaskManager.init();
+(() => {
+  const run = () => addTaskManager.init();
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => setTimeout(run, 0), { once: true });
+  } else {
+    setTimeout(run, 0);
+  }
+})();
+
+/* === METHODS APPEND ============================================== */
+Object.assign(window.addTaskManager, {
+  /**
+   * Lädt zuweisbare Nutzer (eigener User + Kontakte).
+   * ≤14 Zeilen.
+   */
+  async _loadAssignableUsers() {
+    const [contacts, own] = await Promise.all([
+      loadData(`users/${USERKEY}/contacts`),
+      loadData(`users/${USERKEY}`)
+    ]);
+    const list = this._buildAssignableList(contacts, own);
+    const map = new Map();
+    list.forEach(u => map.set((u.email || u.name).toLowerCase(), u));
+    const out = Array.from(map.values()).sort((a,b) => a.name.localeCompare(b.name));
+    console.log("[ASSIGNEES LOADED]", out.length, out.slice(0,3));
+    return out;
+  },
+
+  /**
+   * Baut die Roh-Liste aus eigenem User + Kontakten.
+   * ≤14 Zeilen.
+   */
+  _buildAssignableList(contacts, own) {
+    const list = [];
+    if (own) {
+      const eml = (own.email || "").trim().toLowerCase();
+      list.push({ name: (own.name || "").trim() || this._nameFromEmail(eml),
+                  email: eml, color: own.color || getRandomColor?.() });
+    }
+    Object.values(contacts || {}).forEach(c => {
+      const eml = (c.email || "").trim().toLowerCase();
+      const nm  = (c.name  || "").trim() || this._nameFromEmail(eml);
+      if (!eml && !nm) return;
+      list.push({ name: nm, email: eml, color: c.color });
+    });
+    return list;
+  },
+
+  /**
+   * Leitet Namen aus E-Mail ab. ≤14 Zeilen.
+   */
+  _nameFromEmail(em) {
+    return (em || "")
+      .split("@")[0]
+      .replace(/[._]/g, " ")
+      .replace(/\b\w/g, m => m.toUpperCase()) || "Unknown";
+  },
 });

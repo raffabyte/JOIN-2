@@ -68,6 +68,7 @@ h1 {
   align-items: flex-start !important;
   z-index: 1;
 }
+
 .form-footer {
   padding-left: 0;         
   padding-right: 0;
@@ -81,12 +82,14 @@ h1 {
   display: flex;
   flex-direction: row;
 }
+
 .form-group label { font-weight: 400; }
 .priority-label { font-size: 20px !important; }
 .required-asterisk {
   color: #ff3d00;
   padding: 0 4px;
 }
+
 label[for="due-date"] { white-space: nowrap; }
 
 input[type="text"],
@@ -107,9 +110,11 @@ textarea {
   min-height: 120px;
   resize: vertical;
 }
+
 input[type="date"]::-webkit-calendar-picker-indicator {
   display: none;
 }
+
 input::placeholder,
 textarea::placeholder {
   color: #d1d1d1;
@@ -240,6 +245,7 @@ input.input-error,
   font-size: 16px;
   flex-shrink: 0;
 }
+
 .selected-contacts,
 .assigned-to-chips {
   display: flex;
@@ -247,6 +253,7 @@ input.input-error,
   gap: 6px;
   margin-top: 8px;
 }
+
 .contact-badge,
 .assigned-to-chips .chip {
   display: flex;
@@ -266,6 +273,7 @@ input.input-error,
   align-items: center;
   gap: 24px; 
 }
+
 .form-buttons {
   justify-content: flex-end;
   gap: 16px;
@@ -280,11 +288,13 @@ input.input-error,
   flex-shrink: 1;        
   min-width: min-content; 
 }
+
 .footer-left {
   display: flex;
   align-items: center;
   margin-top: 40px;
 }
+
 .footer-right {
   display: flex;
   gap: 16px;
@@ -296,6 +306,7 @@ input.input-error,
   font-size: 16px;
   vertical-align: middle;
 }
+
 .validation-hint .required-asterisk { display: inline; }
 
 .field-error { color: #ff3d00; }

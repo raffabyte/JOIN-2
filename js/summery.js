@@ -1,73 +1,80 @@
-if (!USERKEY) {
-  window.location.href = "../../index.html";
-}
+/**
+ * Dashboard / Summary page script
+ * Uses global constants from main.js (window.BASE_URL & window.USERKEY).
+ * Handles user greeting, task statistics, and overlay animation.
+ */
 
-mobileOverlayFadeOut()
+const userKey = window.USERKEY || localStorage.getItem("loggedInUserKey");
+
+(function guard() {
+  if (typeof window.protectPageAccess === "function") {
+    if (!window.protectPageAccess("../../index.html")) return;
+  } else {
+    if (!userKey) {
+      window.location.href = "../../index.html";
+      return;
+    }
+  }
+})();
 
 window.addEventListener("DOMContentLoaded", async () => {
+  mobileOverlayFadeOut();
   addHeader();
   linkesNavMenuVersion();
   showHideHelpAndUser();
   await setUserInitials();
-  await loadAndRenderTaskCounts()
+  await loadAndRenderTaskCounts();
   await init();
-  
 });
-
-protectPageAccess(); // Funktion ist global verfügbar
 
 /**
  * Loads user data from Firebase.
- * @returns {Promise<Object>}
+ * @returns {Promise<Object>} User object from Firebase
  */
 async function loadUserData() {
-  const response = await fetch(`${BASE_URL}users/${USERKEY}.json`);
+  const response = await fetch(`${window.BASE_URL}users/${userKey}.json`);
   const user = await response.json();
-  return user;
+  return user || {};
 }
 
 /**
- * Initializes greeting and username in the dashboard.
+ * Initializes dashboard with username and greeting.
+ * @returns {Promise<void>}
  */
 async function init() {
-    const user = await loadUserData();
-
+  const user = await loadUserData();
   if (user.guest) {
-  document.getElementById("userNameMobile").innerText = "";
-  document.getElementById("comma").innerHTML = "";
-} else {
-  const formattedName = formatName(user?.name || "Unknown User");
-  document.getElementById("userNameMobile").innerText = formattedName;
-}
-
-await showCurrentTime();
+    document.getElementById("userNameMobile").innerText = "";
+    document.getElementById("comma").innerHTML = "";
+  } else {
+    const formattedName = formatName(user?.name || "Unknown User");
+    document.getElementById("userNameMobile").innerText = formattedName;
+  }
+  await showCurrentTime();
 }
 
 /**
- * Shows the current time-of-day greeting.
+ * Displays the current greeting based on time of day.
+ * @returns {Promise<void>}
  */
 async function showCurrentTime() {
   const greetingElement = document.getElementById("greetingText");
-    const hour = new Date().getHours();
-    let greetingText = "";
+  if (!greetingElement) return;
+  const hour = new Date().getHours();
+  let greetingText = "";
 
-    if (hour >= 5 && hour < 11) {
-      greetingText = "Good morning";
-    } else if (hour >= 11 && hour < 17) {
-      greetingText = "Good afternoon";
-    } else if (hour >= 17 && hour < 22) {
-      greetingText = "Good evening";
-    } else {
-      greetingText = "Good night";
-    }
+  if (hour >= 5 && hour < 11)       greetingText = "Good morning";
+  else if (hour >= 11 && hour < 17) greetingText = "Good afternoon";
+  else if (hour >= 17 && hour < 22) greetingText = "Good evening";
+  else                              greetingText = "Good night";
 
-    greetingElement.innerText = greetingText;
-  }
-    
+  greetingElement.innerText = greetingText;
+}
+
 /**
- * Formats a name to match case.
- * @param {string} name 
- * @returns {string} 
+ * Formats a user's full name into proper case.
+ * @param {string} name - The user's name
+ * @returns {string} Formatted name
  */
 function formatName(name) {
   return name
@@ -77,7 +84,8 @@ function formatName(name) {
 }
 
 /**
- * Loads all tasks from Firebase and renders statistics.
+ * Loads tasks and renders the dashboard statistics.
+ * @returns {Promise<void>}
  */
 async function loadAndRenderTaskCounts() {
   try {
@@ -86,23 +94,23 @@ async function loadAndRenderTaskCounts() {
     renderTaskCounts(countByColumn, tasks.length, highPriorityCount);
     renderNextDeadline(upcomingUrgentDates);
   } catch (error) {
-    console.error("Fehler beim Laden der Aufgaben:", error);
+    console.error("Error loading tasks:", error);
   }
 }
 
 /**
- * Fetches tasks from the Firebase database.
- * @returns {Promise<Object[]>} 
+ * Fetches all tasks from Firebase.
+ * @returns {Promise<Object[]>} Array of task objects
  */
 async function fetchTasks() {
-  const response = await fetch("https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks.json");
+  const response = await fetch(`${window.BASE_URL}tasks.json`);
   const data = await response.json();
   return Object.values(data || {});
 }
 
 /**
- * Analyzes tasks by status and priority
- * @param {Object[]} tasks 
+ * Analyzes task statistics by column and priority.
+ * @param {Object[]} tasks - Array of task objects
  * @returns {{
  *   countByColumn: {todo: number, inProgress: number, awaitFeedback: number, done: number},
  *   highPriorityCount: number,
@@ -124,27 +132,25 @@ function analyzeTasks(tasks) {
 }
 
 /**
- * Increases the counter in the matching task status.
- *
- * @param {Object} task
+ * Increments task counters based on column type.
+ * @param {Object} task - Task object
  * @param {{todo: number, inProgress: number, awaitFeedback: number, done: number}} countByColumn
  */
 function countColumns(task, countByColumn) {
   switch (task.column) {
-    case "todoColumn": countByColumn.todo++; break;
-    case "inProgressColumn": countByColumn.inProgress++; break;
+    case "todoColumn":          countByColumn.todo++; break;
+    case "inProgressColumn":    countByColumn.inProgress++; break;
     case "awaitFeedbackColumn": countByColumn.awaitFeedback++; break;
-    case "doneColumn": countByColumn.done++; break;
+    case "doneColumn":          countByColumn.done++; break;
   }
 }
 
 /**
- * Counts high-priority tasks and checks for upcoming due dates.
- *
- * @param {Object} task
+ * Processes high-priority tasks and upcoming deadlines.
+ * @param {Object} task - Task object
  * @param {{count: number}} highPriorityRef
- * @param {Date[]} datesArr 
- * @param {Date} today 
+ * @param {Date[]} datesArr - Array of upcoming urgent dates
+ * @param {Date} today - Current date
  */
 function processPriority(task, highPriorityRef, datesArr, today) {
   if (task.priority === "HighPriority") {
@@ -159,11 +165,10 @@ function processPriority(task, highPriorityRef, datesArr, today) {
 }
 
 /**
- * Renders all task statistics in the dashboard.
- *
+ * Renders the task statistics into the dashboard UI.
  * @param {{todo: number, inProgress: number, awaitFeedback: number, done: number}} counts
- * @param {number} total 
- * @param {number} highPriority
+ * @param {number} total - Total number of tasks
+ * @param {number} highPriority - Total number of high-priority tasks
  */
 function renderTaskCounts(counts, total, highPriority) {
   document.getElementById("ToDo").innerText = counts.todo;
@@ -175,11 +180,12 @@ function renderTaskCounts(counts, total, highPriority) {
 }
 
 /**
- * Displays the next due date (if any) in the dashboard.
- * @param {Date[]} dates
+ * Displays the next upcoming deadline in the dashboard.
+ * @param {Date[]} dates - Array of urgent deadlines
  */
 function renderNextDeadline(dates) {
   const elem = document.getElementById("nextDeadlineDate");
+  if (!elem) return;
 
   if (dates.length === 0) {
     elem.innerText = "No urgent deadlines";
@@ -196,21 +202,22 @@ function renderNextDeadline(dates) {
   elem.innerText = formatted;
 }
 
+/**
+ * Handles the fade-out animation of the mobile greeting overlay.
+ */
 function mobileOverlayFadeOut() {
   const overlay = document.getElementById("MobileGreeting");
+  if (!overlay) return;
+
   const shouldShow = sessionStorage.getItem("showMobileGreeting") === "1";
-  if (shouldShow) {
-    overlay.classList.remove("hidden")
+  if (!shouldShow) return;
 
-    setTimeout(() => {
+  overlay.classList.remove("hidden");
+  setTimeout(() => {
     overlay.classList.add("fade-out");
-
     setTimeout(() => {
       overlay.classList.add("hidden");
       sessionStorage.removeItem("showMobileGreeting");
     }, 1000);
   }, 1000);
-  }
-  else {
-  }
 }

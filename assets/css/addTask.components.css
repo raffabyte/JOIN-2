@@ -33,23 +33,13 @@
 .priority-btn[data-priority="high"] svg { color: #ff3d00; }
 .priority-btn[data-priority="medium"] svg { color: #ffa800; }
 .priority-btn[data-priority="low"] svg { color: #7ae229; }
-
 .priority-btn.selected { border-color: transparent; }
-
-.priority-btn.selected .priority-text {
-  color: #fff;
-  font-weight: bold;
-}
+.priority-btn.selected .priority-text { color: #fff; font-weight: bold; }
 .priority-btn.selected svg path { fill: #fff; }
 .priority-btn[data-priority="high"].selected { background-color: #ff3d00; }
 .priority-btn[data-priority="medium"].selected { background-color: #ffa800; }
 .priority-btn[data-priority="low"].selected { background-color: #7ae229; }
-
-.priority-btn[data-priority="medium"] {
-  padding-left: 6px;
-  padding-right: 6px;
-  gap: 4px;
-}
+.priority-btn[data-priority="medium"] { padding-left: 6px; padding-right: 6px; gap: 4px; }
 
 .dropdown-options .checkbox-option {
   display: flex;
@@ -77,22 +67,16 @@
 }
 .dropdown-options .checkbox-option:hover { background-color: #2a3647; }
 
-.contact-info {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
+.contact-info { display: flex; align-items: center; gap: 16px; }
 
 .custom-checkbox { flex-shrink: 0; }
 
 .dropdown-options.show,
 #assigned-to-options.show,
-#category-options.show {
-  display: block !important;
-}
+#category-options.show { display: block !important; }
 
 #assigned-to-options.dropdown-options { padding: 6px 8px; }
-
+/*
 #assigned-to-options .custom-checkbox {
   margin-left: 0;          
   flex-shrink: 0;            
@@ -100,7 +84,7 @@
   align-items: center;
   justify-content: center;
 }
-
+*/
 #assigned-to-options .initial-badge-circle { flex: 0 0 32px; }
 
 #assigned-to-options li .contact-info {
@@ -138,29 +122,78 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  postition: relative; 
 }
+
 #assigned-to-options .custom-checkbox svg { width: 24px; height: 24px; }
 
-#assigned-to-options li.checkbox-option:not(.is-checked):hover {
-  background: #eef1f5; 
-}
+#assigned-to-options li.checkbox-option:not(.is-checked):hover { background: #eef1f5; }
 
 #assigned-to-options li.checkbox-option.is-checked {
   background: #2a3647 !important;
   color: #fff; 
 }
 
-#assigned-to-options li.checkbox-option.is-checked .contact-name {
-  color: #fff;
-}
+#assigned-to-options li.checkbox-option.is-checked .contact-name { color: #fff; }
 
-#assigned-to-options li.checkbox-option.is-checked .custom-checkbox svg {
-  color: #fff;
-}
+#assigned-to-options li.checkbox-option.is-checked .custom-checkbox svg { color: #fff; }
 
 #assigned-to-options .custom-checkbox svg path,
 #assigned-to-options .custom-checkbox svg rect,
 #assigned-to-options .custom-checkbox svg circle { stroke: currentColor; }
+
+/* 2) Nativen Input genau über dem sichtbaren Kasten platzieren u. verbergen */
+#assigned-to-options input[type="checkbox"] {
+  right: 12px;                /* passt zu deinem row padding */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  margin: 0;
+                   /* unsichtbar, aber klickbar */
+  z-index: 2;                 /* über dem .custom-checkbox */
+  cursor: pointer;
+}
+
+/*
+/* Assigned-To: Panel nach unten, überlagert, ohne Layout-Verschiebung 
+.assigned-to-wrapper .dropdown-input-wrapper { position: relative; overflow: visible; }
+
+.assigned-to-wrapper #assigned-to-options {
+  position: absolute;
+  top: calc(100%);    
+  left: 0;
+  right: 0;                 
+  display: none;            
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.12);
+  max-height: 240px;
+  overflow-y: auto;
+  z-index: 30;              
+  padding: 6px 12px;
+  box-sizing: border-box;
+}
+
+/* nur zeigen, wenn deine JS-Logik die Klasse setzt 
+.assigned-to-wrapper #assigned-to-options.show { display: block !important; }
+
+/* optional: Input unten „gerade“ wenn offen 
+.assigned-to-wrapper .dropdown-input-wrapper.open {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/* Wenn geöffnet → Panel nimmt Layout-Platz ein (schiebt Inhalte runter) 
+.assigned-to-wrapper .dropdown-input-wrapper.open #assigned-to-options {
+  position: static;
+  display: block !important;
+  margin-top: 6px;
+  max-height: 320px;       
+  overflow-y: auto;
+  z-index: auto;            
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+} */
 
 .clear-button,
 .create-button {
@@ -173,11 +206,13 @@
   align-items: center;
   justify-content: center;
 }
+
 .clear-button {
   width: 126px;
   background-color: white;
   color: #2a3647;
   border: 1px solid;
+
 }
 .create-button {
   width: 214px;
@@ -185,10 +220,12 @@
   color: white;
   border: none;
 }
+
 .clear-button:hover {
   box-shadow: 0px 4px 4px 0px #7d8da3;
   border: 1px solid #29abe2;
 }
+
 .create-button:hover {
   background-color: #29abe2;
   box-shadow: 0px 4px 4px 0px #7d8da3;
@@ -212,6 +249,7 @@
   opacity: 0;
   animation: slideUpFadeIn 0.5s forwards;
 }
+
 @keyframes slideUpFadeIn {
   0% {
     transform: translate(-50%, 100%);
@@ -383,7 +421,7 @@
     .priority-btn span {
         padding: 12px 4px 12px 12px;
     }
-     }
+}
 
 @media (max-width: 475px) {
   .priority-options { gap: 8px; }
