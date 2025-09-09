@@ -3,17 +3,13 @@
  * Core orchestration: init, events, validation, data, save, reset.
  */
 window.addTaskManager = window.addTaskManager || {
-  /** Cached DOM references (populated in _cacheDOMElements). */
   elements: {},
-
-  /** Application state shared across modules. */
   state: {
     assignableUsers: [],
     categories: ["Technical Task", "User Story"],
     selectedAssignees: new Set(),
   },
 
-// addTask.core.js
 
   /**
    * App entry point. Safe to call once on DOMContentLoaded.
@@ -31,12 +27,8 @@ window.addTaskManager = window.addTaskManager || {
     this._setupPriorityButtons();
     this._registerEventListeners();
     this._addInputListeners();
+},
 
-    console.log('[ASSIGNEES]', this.state.assignableUsers?.length, this.state.assignableUsers?.slice(0,3));
-console.log('[DOM]', !!document.getElementById('assigned-to-input'),
-                  !!document.getElementById('assigned-to-toggle-btn'),
-                  !!document.getElementById('assigned-to-options'));
-  },
 
   /**
    * Redirects to login if user key is missing.
@@ -44,6 +36,7 @@ console.log('[DOM]', !!document.getElementById('assigned-to-input'),
   _protectPageAccess() {
     if (!window.USERKEY) window.location.href = "../../index.html";
   },
+
 
   /**
    * Registers global form events.
@@ -53,6 +46,7 @@ console.log('[DOM]', !!document.getElementById('assigned-to-input'),
     if (f) f.addEventListener("submit", (e) => this._handleFormSubmit(e));
     if (clr) clr.addEventListener("click", () => this._resetForm());
   },
+
 
   /**
    * Clears errors while user types.
@@ -68,6 +62,7 @@ console.log('[DOM]', !!document.getElementById('assigned-to-input'),
       });
   },
 
+
   /**
    * Handles submit → validate → save → re-enable button.
    * @param {SubmitEvent} e
@@ -80,6 +75,7 @@ console.log('[DOM]', !!document.getElementById('assigned-to-input'),
     if (this.elements.createBtn) this.elements.createBtn.disabled = false;
   },
 
+
   /**
    * Master validation orchestrator.
    * @returns {boolean}
@@ -91,6 +87,7 @@ console.log('[DOM]', !!document.getElementById('assigned-to-input'),
     ok &= this._validatePriority();
     return !!ok;
   },
+
 
   /**
    * Inline error renderer.
@@ -106,6 +103,7 @@ console.log('[DOM]', !!document.getElementById('assigned-to-input'),
     el.textContent = message;
   },
 
+
   /**
    * Clears error from a field group.
    * @param {HTMLElement} field
@@ -119,6 +117,7 @@ console.log('[DOM]', !!document.getElementById('assigned-to-input'),
     if (err) err.remove();
   },
 
+
   /**
    * Clears all errors in form.
    */
@@ -126,6 +125,7 @@ console.log('[DOM]', !!document.getElementById('assigned-to-input'),
     document.querySelectorAll(".input-error").forEach(el => el.classList.remove("input-error"));
     document.querySelectorAll(".field-error").forEach(el => el.remove());
   },
+
 
   /**
    * Collects normalized task data from UI.
@@ -147,6 +147,7 @@ console.log('[DOM]', !!document.getElementById('assigned-to-input'),
     };
   },
 
+
   /**
    * Persists the task and shows success UI.
    */
@@ -161,6 +162,7 @@ console.log('[DOM]', !!document.getElementById('assigned-to-input'),
     }
   },
 
+
   /**
    * Resets form and UI state.
    */
@@ -173,9 +175,9 @@ console.log('[DOM]', !!document.getElementById('assigned-to-input'),
     this._resetSubtasks();
   },
 
+
 /**
- * Returns selected assignees as contact names (not emails),
- * because the board colors/badges resolve by name.
+ * Returns selected assignees as contact names.
  * @returns {string[]}
  */
 _getSelectedAssignees() {
@@ -184,8 +186,7 @@ _getSelectedAssignees() {
     : Array.from(document.querySelectorAll('#assigned-to-options input[type="checkbox"]:checked'))
         .map(cb => (cb.dataset?.email || cb.value || "").trim().toLowerCase())
         .filter(Boolean);
-
-  return emails.map(e => {
+return emails.map(e => {
     const u = this.state.assignableUsers.find(x => x.email?.toLowerCase() === e);
     return u?.name || e;
   }).filter(Boolean);
@@ -201,6 +202,7 @@ _getSelectedAssignees() {
       .map(cb => cb.value);
   },
 
+
   /**
    * Gets subtask texts (bridged to subtasks.js).
    * @returns {string[]}
@@ -209,7 +211,6 @@ _getSelectedAssignees() {
     return typeof getSubtaskListData === "function" ? getSubtaskListData() : [];
   },
 
-  /* ------------------------- small helpers to keep methods short ------------------------- */
 
   /**
    * Required fields validation.
@@ -227,6 +228,7 @@ _getSelectedAssignees() {
     return ok;
   },
 
+
   /**
    * Min date (today) validation.
    * @returns {boolean}
@@ -241,6 +243,7 @@ _getSelectedAssignees() {
     return true;
   },
 
+
   /**
    * Priority selection validation.
    * @returns {boolean}
@@ -253,6 +256,7 @@ _getSelectedAssignees() {
     return false;
   },
 
+
   /**
    * Returns group wrapper for a field.
    * @param {HTMLElement} field
@@ -260,6 +264,7 @@ _getSelectedAssignees() {
   _formGroupOf(field) {
     return field.closest?.(".form-group, .priority-options") || null;
   },
+  
 
   /**
    * Ensures and returns a .field-error element in group.
@@ -275,6 +280,7 @@ _getSelectedAssignees() {
     return el;
   },
 
+
 /**
  * Returns selected priority in the exact format the board expects.
  * @returns {"HighPriority"|"MidPriority"|"LowPriority"}
@@ -285,6 +291,7 @@ _getSelectedPriority() {
   const MAP = { high: "HighPriority", medium: "MidPriority", low: "LowPriority" };
   return MAP[val] || "LowPriority";
 },
+
 
   /**
    * Normalizes subtasks to a board-friendly shape.
@@ -312,6 +319,7 @@ _normalizeSubtasks(items) {
     if (m) { m.classList.add("selected"); m.setAttribute("aria-pressed", "true"); }
   },
 
+
   /**
    * Clears assignee selection + chips.
    */
@@ -320,8 +328,9 @@ _normalizeSubtasks(items) {
     document.querySelectorAll("#assigned-to-options input[type='checkbox']").forEach(cb => cb.checked = false);
     const wrap = this.elements.selectedAssignees;
     if (wrap) { wrap.innerHTML = ""; wrap.classList.add("display-none"); }
-  }
-,
+  },
+
+
   /**
    * Clears subtasks via subtasks.js if available.
    */
@@ -329,6 +338,7 @@ _normalizeSubtasks(items) {
     if (typeof clearSubtasks === "function") clearSubtasks();
   }
 };
+
 
 /* ---- Entry point ---- */
 (() => {
@@ -340,11 +350,10 @@ _normalizeSubtasks(items) {
   }
 })();
 
-/* === METHODS APPEND ============================================== */
+
 Object.assign(window.addTaskManager, {
   /**
-   * Lädt zuweisbare Nutzer (eigener User + Kontakte).
-   * ≤14 Zeilen.
+   * Loads user contact
    */
   async _loadAssignableUsers() {
     const [contacts, own] = await Promise.all([
@@ -359,10 +368,10 @@ Object.assign(window.addTaskManager, {
     return out;
   },
 
+
   /**
-   * Baut die Roh-Liste aus eigenem User + Kontakten.
-   * ≤14 Zeilen.
-   */
+   * Builds list from own user and contact info.
+  */
   _buildAssignableList(contacts, own) {
     const list = [];
     if (own) {
@@ -379,9 +388,7 @@ Object.assign(window.addTaskManager, {
     return list;
   },
 
-  /**
-   * Leitet Namen aus E-Mail ab. ≤14 Zeilen.
-   */
+
   _nameFromEmail(em) {
     return (em || "")
       .split("@")[0]
