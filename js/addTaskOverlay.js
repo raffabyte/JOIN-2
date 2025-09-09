@@ -1,15 +1,13 @@
 /** Handles outside clicks for the category options dropdown. */
 function handleCategoryOptionsOutsideClick(event) {
-  const opts = document.getElementById("category-options");
-  const input = document.getElementById("category-input");
-  const toggle = document.getElementById("category-toggle-btn");
+  const opts = document.getElementById("categoryOptions");
+  const input = document.getElementById("taskCategory");
   if (!opts || !opts.classList.contains("active")) return;
 
   const clickedInsideOpts = opts.contains(event.target);
   const clickedInput = input && input.contains(event.target);
-  const clickedToggle = toggle && toggle.contains(event.target);
 
-  if (!clickedInsideOpts && !clickedInput && !clickedToggle) {
+  if (!clickedInsideOpts && !clickedInput) {
     opts.classList.add("display-none");
     opts.classList.remove("active");
   }
@@ -289,7 +287,7 @@ function updateAssigneeDisplay(container) {
 
 /** Toggles the category options dropdown visibility. */
 function toggleCategoryOptions() {
-  const opts = document.getElementById("category-options");
+  const opts = document.getElementById("categoryOptions");
   if (!opts) return;
   opts.classList.toggle("display-none");
   opts.classList.toggle("active");
@@ -297,12 +295,12 @@ function toggleCategoryOptions() {
 
 /** Selects a category, updates the input, and closes the dropdown. */
 function selectCategory(category) {
-  const input = document.getElementById("category-input");
-  const opts = document.getElementById("category-options");
+  const input = document.getElementById("taskCategory");
+  const opts = document.getElementById("categoryOptions");
   if (!input) return;
 
-  input.value = category;
-  input.dispatchEvent(new Event("input"));
+  input.textContent = category;
+  input.classList.add("selected");
   opts?.classList.add("display-none");
   opts?.classList.remove("active");
 }
@@ -430,3 +428,6 @@ function finalEditditSubtask(subtask) {
   editDiv.classList.add("display-none");
   subtaskDisplay.classList.remove("display-none");
 }
+
+// Add event listener for outside clicks to close dropdowns
+document.addEventListener('click', handleOutsideClick);

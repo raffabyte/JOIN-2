@@ -8,8 +8,6 @@
 
 .align-stretch { align-items: stretch !important; }
 
-main { max-height: none; }
-
 .form-column { flex: 1; min-width: 0; } 
 
 .add-task-content {
@@ -23,8 +21,8 @@ main { max-height: none; }
 .backgroundColor {
   display: flex;
   background-color: #f6f7f8;
-  height: 100%;
   width: 100%;
+  flex: 1;
 }
 
 h1 {

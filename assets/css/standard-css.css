@@ -45,8 +45,9 @@ html, body {
 
 body{
     background: white;
-    padding-left: 232px;
     overflow-x: hidden;
+    max-width: 1920px;
+    margin: auto;
 }
 
 main{

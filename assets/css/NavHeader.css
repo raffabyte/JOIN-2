@@ -1,6 +1,4 @@
 nav {
-  position: fixed;
-  left: 0;
   height: 100vh;
   width: 232px;
   background-color: #2a3647;
@@ -73,26 +71,27 @@ header h3 {
   gap: 16px;
 }
 
-/* Menü ein-/ausblenden ausschließlich über display */
-#menu.not-visible { display: none; }
 
-/* Sichtbarer Zustand – lass es z. B. als Flex erscheinen */
+#menu.not-visible {
+   display: none;
+   }
+
 #menu { 
-  display: flex;            /* oder block – je nach Layout */
-  flex-direction: column;   /* falls du Spalten willst */
-  position: absolute;       /* wichtig, wenn es „über“ dem Header schweben soll */
-  z-index: 10000;           /* hoch genug, damit nichts darüber liegt */
+  display: flex;          
+  flex-direction: column;  
+  position: absolute;       
+  z-index: 10000;          
 }
 
-/* Ganz sicherstellen, dass Links klickbar sind */
+
 #menu a {
   pointer-events: auto;
   cursor: pointer;
 }
 
-/* Falls irgendwo versehentlich pointer-events: none gesetzt ist: */
+
 .userInfo, .userInfo * {
-  pointer-events: auto;   /* (nur falls nötig – ansonsten weglassen) */
+  pointer-events: auto;  
 }
 
 #menu a {
@@ -268,9 +267,7 @@ span {
 }
 
 @media (max-width: 1399px) {
-  body {
-    padding-left: 186px;
-  }
+ 
   nav {
     width: 186px; /* 232px → -20% */
   }
@@ -290,11 +287,11 @@ span {
 
   .help {
     width: 26px;
-    height: 26px; /* 32px → -20% */
+    height: 26px; 
   }
 
   .menu {
-    gap: 12px; /* 15px → -20% */
+    gap: 12px; 
   }
 
   #menu {
@@ -309,32 +306,27 @@ span {
 
   .nav-menu-top,
   .login-menu {
-    gap: 102px; /* 128px → -20% */
+    gap: 102px;
   }
 
   .join {
-    width: 80px; /* 100px → -20% */
+    width: 80px; 
   }
 
   .login-link,
   .menuOption {
     gap: 6px;
-    padding: 6px 40px; /* 8px 56px → -20% */
+    padding: 6px 40px;
   }
 
   .icon {
     width: 24px;
-    height: 24px; /* 30px → -20% */
+    height: 24px;
   }
-
-  /* .menuOption p {
-    font-size: 13px; /* 16px → -20% 
-   } */
-   
 
   .initials-button {
     width: 45px;
-    height: 45px; /* 56px → -20% */
+    height: 45px; 
   }
 
   .initials-button img {
@@ -343,15 +335,15 @@ span {
   }
 
   .initials-text {
-    font-size: 16px; /* 20px → -20% */
+    font-size: 16px;
   }
 
   span {
-    font-size: 11px; /* 14px → -20% */
+    font-size: 11px;
   }
 
   .legalLinks a {
-    padding: 6px; /* 8px → -20% */
+    padding: 6px; 
   }
 
   .legalLinks {
@@ -360,34 +352,31 @@ span {
 }
 
 @media (max-width: 1099px) {
-  body {
-    padding-left: 167px; /* 186px -10% */
-  }
-
+  
   nav {
-    width: 167px; /* 186px -10% */
+    width: 167px; 
   }
 
   .navContent {
-    padding: 46px 0; /* 51px -10% */
+    padding: 46px 0; 
   }
 
   .headerContent {
-    padding: 14px 29px 14px 84px; /* 16 / 32 / 93 -10% */
+    padding: 14px 29px 14px 84px;
     height: 67px;
   }
 
   header h3 {
-    font-size: 14.4px; /* 16px -10% */
+    font-size: 14.4px; 
   }
 
   .help {
     width: 23px;
-    height: 23px; /* 26px -10% */
+    height: 23px;
   }
 
   .menu {
-    gap: 11px; /* 12px -10% */
+    gap: 11px;
   }
 
   #menu {
@@ -397,32 +386,32 @@ span {
   }
 
   .userInfo {
-    gap: 11px; /* 13px -10% */
+    gap: 11px; 
   }
 
   .nav-menu-top,
   .login-menu {
-    gap: 92px; /* 102px -10% */
+    gap: 92px;
   }
 
   .join {
-    width: 72px; /* 80px -10% */
+    width: 72px;
   }
 
   .login-link,
   .menuOption {
     gap: 5px;
-    padding: 5px 40px; /* 6px 45px -10% */
+    padding: 5px 40px; 
   }
 
   .icon {
     width: 22px;
-    height: 22px; /* 24px -10% */
+    height: 22px; 
   }
 
   .initials-button {
     width: 40px;
-    height: 40px; /* 45px -10% */
+    height: 40px; 
   }
 
   .initials-button img {
@@ -431,7 +420,7 @@ span {
   }
 
   .initials-text {
-    font-size: 14.4px; /* 16px -10% */
+    font-size: 14.4px; 
   }
 
   span {
@@ -464,7 +453,7 @@ span {
   display: flex;
 }
   body {
-    padding-left: 0;
+    flex-direction: column-reverse;
   }
   nav {
     height: 80px;

@@ -122,7 +122,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  postition: relative; 
+  position: relative;
 }
 
 #assigned-to-options .custom-checkbox svg { width: 24px; height: 24px; }
@@ -318,15 +318,10 @@
 }
 
 @media (max-width: 798px) {
-  html,
-  body {
-    width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
-    padding-bottom: 90px !important;
-    background-color: #f6f7f8;
+  main{
+    max-height: 91vh;
   }
-  main { max-height: none; }
+  
   .add-task-content { padding: 50px 36px; }
   .content.add-task-content,
   .add-task-content,
@@ -334,8 +329,8 @@
   .form-columns,
   .form-column,
   .form-footer,
-  .footer-right { box-sizing: border-box; padding: 0 4px; margin-bottom: 0; }
-  .form-columns { flex-direction: column !important; }
+  .footer-right { padding: 0 4px; }
+  .form-columns { flex-direction: column !important; overflow-y: scroll; max-height: 64%; }
   h1 { padding: 0 4px; margin: 16px 0; }
   input[type="text"],
   input[type="date"],
@@ -352,7 +347,7 @@
   input[type="date"],
   textarea,
   .dropdown-input-wrapper { width: 100%; box-sizing: border-box; }
-  .form-footer { flex-wrap: wrap; align-items: flex-start; }
+  .form-footer { margin-top: 16px !important; flex-wrap: wrap; align-items: flex-start; }
   .validation-hint {
     align-items: center;
     gap: 4px;
@@ -373,7 +368,6 @@
     padding-left: 2px;
     padding-right: 4px;
     width: 100%;
-    box-sizing: border-box;
     margin-top: 8px;
   }
   .footer-right { order: 0; margin-left: auto; }

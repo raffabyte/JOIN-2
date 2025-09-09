@@ -15,7 +15,7 @@
 
 .background {
   display: flex;
-  height: calc(100vh - 96px);
+  height: calc(100vh - 160px);
   width: 100%;
   background-color: #f6f7f8;
 }
@@ -406,7 +406,7 @@ h1 {
   
 .h1-div {
   padding: 0 16px;
-  margin: 56px 0 24px 0;
+  margin: 48px 0 24px 0;
 }
 
 h1 {
@@ -505,7 +505,7 @@ h1 {
   }
   .board-bottom {
     flex-direction: column;
-    margin-bottom: 110px;
+    margin-bottom: 8px;
     padding: 8px 0 8px 16px;
   }
   .board-title p{
