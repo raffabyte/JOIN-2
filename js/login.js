@@ -4,7 +4,7 @@
  */
 
 const emailRegex = /^[a-zA-Z0-9._%+-]+@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
-const MIN_PASSWORD_LENGTH = 4;
+const MIN_PASSWORD_LENGTH = 0;
 const DEBUG_LOGIN = false;
 
 document.addEventListener("DOMContentLoaded", initLogin);
@@ -412,6 +412,8 @@ async function startGuestSession() {
   });
 
   await preloadGuestContacts(`guests/${guestId}`);
+
+  sessionStorage.setItem("showMobileGreeting", "1");
 
   localStorage.setItem("loggedInUserKey", `guests/${guestId}`);
   localStorage.setItem("guestMode", "true");
