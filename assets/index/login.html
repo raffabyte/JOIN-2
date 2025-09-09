@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,21 +16,22 @@
 
 
 </head>
+
 <body>
     <header>
         <div class="headerContent">
-        <div class="logo">
-            <a href="/index.html">
-                <img src="../img/Logo.png" alt="Join Logo">
-            </a>
+            <div class="logo">
+                <a href="/index.html">
+                    <img src="../img/Logo.png" alt="Join Logo">
+                </a>
 
+            </div>
+            <div class="header-desktop">
+                <span>Not a Join user?</span>
+                <a href="./signup.html">Sign up</a>
+            </div>
         </div>
-        <div class="header-desktop">
-            <span>Not a Join user?</span>
-            <a href="./signup.html">Sign up</a>
-        </div>
-        </div>
-    </header> 
+    </header>
 
     <main>
         <div class="login-container">
@@ -37,20 +39,21 @@
             <img src="../img/LogIn/Selector.png" alt="selector">
             <form id="loginForm" novalidate>
                 <div class="inputs">
-                  <input type="email" placeholder="Email" id="email" class="mail_icon" autocomplete="off" required />
-                  <input type="password" placeholder="Password" id="password" class="lock_icon" autocomplete="off" required />
+                    <input type="email" placeholder="Email" id="email" class="mail_icon" autocomplete="off" required />
+                    <input type="password" placeholder="Password" id="password" class="lock_icon" autocomplete="off"
+                        required />
                 </div>
-                <div id="msgBox"></div> 
+                <div id="msgBox"></div>
                 <div class="login-buttons">
-                  <button class="login-btn" type="submit">Log in</button>
-                  <button class="guest-login-btn" type="button" onclick="startGuestSession()">Guest Log in</button>
+                    <button class="login-btn" type="submit">Log in</button>
+                    <button class="guest-login-btn" type="button" onclick="startGuestSession()">Guest Log in</button>
                 </div>
-              </form>
-                           
+            </form>
+
         </div>
         <!---------Header-Mobile----------->
         <div class="header-mobile">
-            <div class="header-mobile-div" >
+            <div class="header-mobile-div">
                 <span>Not a Join user?</span>
                 <a href="./signup.html">Sign up</a>
             </div>
@@ -59,17 +62,18 @@
     </main>
 
     <footer>
-            <a href="./privacy-login.html">Privacy Policy</a>
-            <a href="./legal-notice-login.html">Legal notice</a>
+        <a href="./privacy-login.html">Privacy Policy</a>
+        <a href="./legal-notice-login.html">Legal notice</a>
     </footer>
 
     <!-- script  -->
-    <!-- <script type="module" defer src="../../main.js"></script> -->
-      <script src="/main.js" ></script>
+
+    <script src="/main.js"></script>
     <script src="../../js/login.js?v=force_001"></script>
 
-    <script src="../../js/remoteStorage.js" ></script>
+    <script src="../../js/remoteStorage.js"></script>
 
 
 </body>
+
 </html>
