@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 function openNewContactForm() {
   document.getElementById("contactForm").reset();
   document.getElementById("contactKey").value = "";
+  clearFormValidationState();
   const avatarContainer = document.getElementById("editAvatarContainer");
   avatarContainer.innerHTML = `<img class="pb" src="../img/Group 13.png" alt="" />`;
   setupFormButtons("create");
@@ -369,6 +370,7 @@ function editOwnContact(contact) {
       ${initials}
     </div>
   `;
+  clearFormValidationState();
   setupFormButtons("edit", contact);
   toggleOverlay();
 }
@@ -379,6 +381,7 @@ function editContact(key) {
   const contact = contactsData[key];
   prefillFormWithContactData(contact, key);
   renderEditAvatar(contact);
+  clearFormValidationState();
   setupFormButtons("edit", key);
   toggleOverlay();
 }

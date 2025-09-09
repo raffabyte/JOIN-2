@@ -43,14 +43,28 @@ async function loadUserData() {
  */
 async function init() {
   const user = await loadUserData();
+  const formattedName = user.guest ? "" : formatName(user?.name || "Unknown User");
+
+  ["userName", "userNameMobile"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = formattedName;
+  });
+
   if (user.guest) {
-    document.getElementById("userNameMobile").innerText = "";
-    document.getElementById("comma").innerHTML = "";
-  } else {
-    const formattedName = formatName(user?.name || "Unknown User");
-    document.getElementById("userNameMobile").innerText = formattedName;
+    ["comma", "commaMobile"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = "";
+    });
   }
+
   await showCurrentTime();
+}
+
+function setTextByIds(ids, text) {
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = text;
+  });
 }
 
 /**
@@ -67,6 +81,8 @@ async function showCurrentTime() {
   else if (hour >= 11 && hour < 17) greetingText = "Good afternoon";
   else if (hour >= 17 && hour < 22) greetingText = "Good evening";
   else                              greetingText = "Good night";
+
+  setTextByIds(["greetingText", "greetingTextMobile"], text);
 
   greetingElement.innerText = greetingText;
 }

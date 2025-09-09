@@ -507,28 +507,33 @@ font-weight: 400;
 
 @media (max-width: 799px) {
   .MobileGreeting {
-  z-index: 100;
-  display: flex;
-  position: fixed;
-  width: 100vw;
-  height: calc(100vh - 160px);
-  background-color: #F6F7F8;
-  top: 80px;
-  opacity: 1;
-  transition: opacity 1s ease;
-}
-.MobileGreeting.fade-out {
-  opacity: 0;
-}
+    z-index: 100;
+    display: grid;             
+    place-items: center;         
+    position: fixed;
+    inset: 80px 0 80px 0;        
+    background-color: #F6F7F8;
+    opacity: 1;
+    transition: opacity 1s ease;
+  }
+  .MobileGreeting.fade-out { opacity: 0; }
 .greetingsMobile {
-    display: flex
-;
+    display: flex;
     flex-direction: column;
-    gap: 3px;
-    justify-content: center;
-    width: 100%;
     align-items: center;
-}
+    justify-content: center;
+    gap: 8px;                   
+    width: min(90vw, 560px);     
+    text-align: center;
+    padding: 0 16px;            
+  }
+  .greetingsMobile .greeting {
+    display: flex;
+    align-items: baseline;      
+    gap: 4px;                   
+    white-space: nowrap;         
+    margin: 0;
+  }
   .content {
     padding: 36px 17px 29px 17px;
     height: calc(100vh - 160px);
@@ -543,6 +548,36 @@ font-weight: 400;
 
 @media (max-width: 400px) {
   .row {
+    gap: 8px;
+  }
+  .item2 {
     gap: 10px;
   }
+      .row-grid {
+        gap: 12px;
+    }
+        .content {
+        padding: 24px 8px 24px 8px;
+    }
 }
+
+#greetingTextMobile,
+#commaMobile {
+  display: inline;              
+  vertical-align: baseline;
+  font-weight: 500;
+  font-size: clamp(28px, 7vw, 40px); 
+  color: #2A3647;
+  line-height: 1.1;
+}
+
+#userNameMobile {
+  font-weight: 700;
+  font-size: clamp(34px, 9vw, 52px);
+  color: #29ABE2;
+  text-align: center;
+  line-height: 1.05;
+  word-break: break-word;      
+}
+
+

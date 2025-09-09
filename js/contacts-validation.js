@@ -187,3 +187,22 @@ function bindPhoneSanitizer() {
   const phoneEl = document.getElementById('phone'); if(!phoneEl) return;
   phoneEl.addEventListener('input', () => cleanPhoneInput(phoneEl));
 }
+
+
+/** Entfernt alle Fehlzustände & Meldungen im Formular. */
+function clearFormValidationState(formId = "contactForm") {
+  const form = document.getElementById(formId);
+  if (!form) return;
+
+  // Klassen & ARIA entfernen
+  form.querySelectorAll(".is-invalid").forEach((el) => {
+    el.classList.remove("is-invalid");
+    el.removeAttribute("aria-invalid");
+  });
+
+  // Fehlermeldungen leeren & verstecken
+  form.querySelectorAll(".error-text").forEach((slot) => {
+    slot.textContent = "";
+    slot.style.visibility = "hidden";
+  });
+}
