@@ -72,19 +72,15 @@ function setTextByIds(ids, text) {
  * @returns {Promise<void>}
  */
 async function showCurrentTime() {
-  const greetingElement = document.getElementById("greetingText");
-  if (!greetingElement) return;
   const hour = new Date().getHours();
-  let greetingText = "";
+  const text =
+    hour >= 5 && hour < 11 ? "Good morning" :
+    hour >= 11 && hour < 17 ? "Good afternoon" :
+    hour >= 17 && hour < 22 ? "Good evening" :
+    "Good night";
 
-  if (hour >= 5 && hour < 11)       greetingText = "Good morning";
-  else if (hour >= 11 && hour < 17) greetingText = "Good afternoon";
-  else if (hour >= 17 && hour < 22) greetingText = "Good evening";
-  else                              greetingText = "Good night";
-
+  // Desktop + Mobile aktualisieren
   setTextByIds(["greetingText", "greetingTextMobile"], text);
-
-  greetingElement.innerText = greetingText;
 }
 
 /**
