@@ -3,6 +3,7 @@ nav {
   width: 232px;
   background-color: #2a3647;
   z-index: 1000;
+  position: fixed;
 }
 .navContent {
   display: flex;
@@ -454,6 +455,7 @@ span {
 }
   body {
     flex-direction: column-reverse;
+    justify-content: flex-end;
   }
   nav {
     height: 80px;

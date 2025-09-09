@@ -321,7 +321,10 @@
   main{
     max-height: 91vh;
   }
-  
+  body{
+    min-height: auto !important;
+    margin: 0 !important;
+  }
   .add-task-content { padding: 50px 36px; }
   .content.add-task-content,
   .add-task-content,
