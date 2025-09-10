@@ -1,3 +1,7 @@
+.display-none { display: none !important; }
+
+.d-none { display: none !important; }
+
 .contact-badge--overflow { background: #2a3647; }
 
 .override-align-left { align-items: flex-start !important; }
