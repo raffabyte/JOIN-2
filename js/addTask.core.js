@@ -1,3 +1,5 @@
+const DEFAULT_CATEGORIES = ["Technical Task", "User Story"];
+
 /**
  * Global manager object for the Add Task page.
  * Core orchestration: init, events, validation, data, save, reset.
@@ -8,93 +10,54 @@ window.addTaskManager = window.addTaskManager || {
     assignableUsers: [],
     categories: ["Technical Task", "User Story"],
     selectedAssignees: new Set(),
+    selectedCategory: "",
   },
 
+  _cacheDOMElements() {
+    const q = (s) => document.querySelector(s);
+    this.elements.form             = q("#add-task-form");
+    this.elements.clearBtn         = q("#clear-btn");
+    this.elements.title            = q("#title");
+    this.elements.dueDate          = q("#due-date");
+    this.elements.prioButtons      = document.querySelectorAll(".priority-btn");
+    this.elements.createBtn        = q("#create-btn"); // falls vorhanden
+
+    // Category
+    this.elements.categoryDropdown = q(".dropdown.category-selector");
+    this.elements.categoryInput    = q("#category-input");
+    this.elements.categoryOptions  = q("#category-options");
+    this.elements.categoryToggle   = q("#category-toggle-btn");
+
+    // Assignees (falls vorhanden)
+    this.elements.selectedAssignees= q("#selectedAssignee");
+  },
 
   /**
    * App entry point. Safe to call once on DOMContentLoaded.
    * @returns {Promise<void>}
    */
-  async init() {
-    this._protectPageAccess();
-    this._cacheDOMElements();
-    this._setupDatePicker();
-    this._setDueDateMinToday();
-    if (typeof initSubtaskControls === "function") initSubtaskControls();
-    this.state.assignableUsers = await this._loadAssignableUsers();
-   
-this._initCategoryDropdown();   
-this._initializeDropdowns();
+async init() {
+  this._protectPageAccess();
+  this._cacheDOMElements();
+  this._setupDatePicker?.();
+  this._setDueDateMinToday?.();
+  if (typeof initSubtaskControls === "function") initSubtaskControls();
 
-    this._initializeDropdowns();
-    this._enforceSelectionOnlyFields();
-    this._setupPriorityButtons();
-    this._registerEventListeners();
-    this._addInputListeners();
+  // ⬇️ HIER setzen – VOR _initializeDropdowns()
+  this._categoryBase = Array.isArray(this.state.categories) && this.state.categories.length
+    ? [...this.state.categories]
+    : [...(typeof DEFAULT_CATEGORIES !== "undefined" ? DEFAULT_CATEGORIES : ["Technical Task", "User Story"])];
+
+  this.state.assignableUsers = typeof this._loadAssignableUsers === "function"
+    ? await this._loadAssignableUsers()
+    : [];
+
+  this._initializeDropdowns();       // ⬅️ erst jetzt!
+  this._enforceSelectionOnlyFields?.();
+  this._setupPriorityButtons?.();
+  this._registerEventListeners();
+  this._addInputListeners();
 },
-
-
-// Öffnen: immer beide Items neu bauen (mit !important)
-// Öffnen: immer beide Einträge sichtbar erzwingen (≤14)
-_openCat() {
-  const ul = document.getElementById('category-options');
-  if (!ul) return;
-  const items = ["Technical Task","User Story"];
-  ul.classList.add('is-open');
-  ul.style.display = 'block';
-  ul.style.maxHeight = 'none';
-  ul.style.overflow = 'visible';
-  ul.style.height = 'auto';
-  ul.innerHTML = items.map(c => `<li data-value="${c}" class="dropdown-option" style="display:list-item;">${c}</li>`).join('');
-},
-
-// Schließen (≤14)
-_closeCat() {
-  const ul = document.getElementById('category-options');
-  if (!ul) return;
-  ul.classList.remove('is-open');
-  ul.style.display = 'none';
-},
-
-// Auswahl setzen (≤14)
-_setCategory(v) {
-  const inp = document.getElementById('category-input');
-  if (!inp) return;
-  inp.value = (v || '').trim();
-  this._clearError(inp);
-},
-
-// Init: Click/Outside + Delegation, nutzt _openCat/_closeCat (≤14)
-_initCategoryDropdown() {
-  const box = document.querySelector('.dropdown.category-selector');
-  const wrap = document.querySelector('.dropdown-input-wrapper.category-dropdown');
-  const btn  = document.getElementById('category-toggle-btn');
-  const ul   = document.getElementById('category-options');
-  const inp  = document.getElementById('category-input');
-  if (!box || !wrap || !btn || !ul || !inp) return;
-  inp.readOnly = true; this._closeCat();
-  const open = () => this._openCat();
-  wrap.addEventListener('click', open);
-  btn.addEventListener('click', e => { e.stopPropagation(); open(); });
-  ul.addEventListener('click', e => { const li = e.target.closest('li[data-value]'); if (!li) return; this._setCategory(li.dataset.value); this._closeCat(); });
-  document.addEventListener('click', e => { if (!box.contains(e.target)) this._closeCat(); }, { capture: true });
-},
-
-
-_resetForm() {
-  if (this.elements.form) this.elements.form.reset();
-  this._clearAllErrors(); this._resetPriorityToMedium();
-  const inp=document.getElementById('category-input'); if(inp) inp.value='';
-  this._closeCat(); this._resetAssignees(); this._resetSubtasks();
-},
-
-
-
-
-
-
-
-
 
 
   /**
@@ -104,7 +67,6 @@ _resetForm() {
     if (!window.USERKEY) window.location.href = "../../index.html";
   },
 
-
   /**
    * Registers global form events.
    */
@@ -113,7 +75,6 @@ _resetForm() {
     if (f) f.addEventListener("submit", (e) => this._handleFormSubmit(e));
     if (clr) clr.addEventListener("click", () => this._resetForm());
   },
-
 
   /**
    * Clears errors while user types.
@@ -129,7 +90,6 @@ _resetForm() {
       });
   },
 
-
   /**
    * Handles submit → validate → save → re-enable button.
    * @param {SubmitEvent} e
@@ -142,7 +102,6 @@ _resetForm() {
     if (this.elements.createBtn) this.elements.createBtn.disabled = false;
   },
 
-
   /**
    * Master validation orchestrator.
    * @returns {boolean}
@@ -154,7 +113,6 @@ _resetForm() {
     ok &= this._validatePriority();
     return !!ok;
   },
-
 
   /**
    * Inline error renderer.
@@ -170,7 +128,6 @@ _resetForm() {
     el.textContent = message;
   },
 
-
   /**
    * Clears error from a field group.
    * @param {HTMLElement} field
@@ -184,7 +141,6 @@ _resetForm() {
     if (err) err.remove();
   },
 
-
   /**
    * Clears all errors in form.
    */
@@ -192,7 +148,6 @@ _resetForm() {
     document.querySelectorAll(".input-error").forEach(el => el.classList.remove("input-error"));
     document.querySelectorAll(".field-error").forEach(el => el.remove());
   },
-
 
   /**
    * Collects normalized task data from UI.
@@ -214,21 +169,19 @@ _resetForm() {
     };
   },
 
-
   /**
    * Persists the task and shows success UI.
    */
   async _saveTask() {
     try {
       await postData("tasks", this._collectTaskData());
-      this._showSuccessPopup();
+      this._showSuccessPopup?.();
       this._resetForm();
     } catch (err) {
       console.error("Error saving task:", err);
       alert("Could not save task. Please try again.");
     }
   },
-
 
   /**
    * Resets form and UI state.
@@ -242,23 +195,22 @@ _resetForm() {
     this._resetSubtasks();
   },
 
+  /**
+   * Returns selected assignees as contact names.
+   * @returns {string[]}
+   */
+  _getSelectedAssignees() {
+    const emails = this.state.selectedAssignees?.size
+      ? Array.from(this.state.selectedAssignees)
+      : Array.from(document.querySelectorAll('#assigned-to-options input[type="checkbox"]:checked'))
+          .map(cb => (cb.dataset?.email || cb.value || "").trim().toLowerCase())
+          .filter(Boolean);
 
-/**
- * Returns selected assignees as contact names.
- * @returns {string[]}
- */
-_getSelectedAssignees() {
-  const emails = this.state.selectedAssignees?.size
-    ? Array.from(this.state.selectedAssignees)
-    : Array.from(document.querySelectorAll('#assigned-to-options input[type="checkbox"]:checked'))
-        .map(cb => (cb.dataset?.email || cb.value || "").trim().toLowerCase())
-        .filter(Boolean);
-return emails.map(e => {
-    const u = this.state.assignableUsers.find(x => x.email?.toLowerCase() === e);
-    return u?.name || e;
-  }).filter(Boolean);
-},
-
+    return emails.map(e => {
+      const u = this.state.assignableUsers.find(x => x.email?.toLowerCase() === e);
+      return u?.name || e;
+    }).filter(Boolean);
+  },
 
   /**
    * Returns selected members (separate group).
@@ -269,7 +221,6 @@ return emails.map(e => {
       .map(cb => cb.value);
   },
 
-
   /**
    * Gets subtask texts (bridged to subtasks.js).
    * @returns {string[]}
@@ -277,7 +228,6 @@ return emails.map(e => {
   _getSubtasks() {
     return typeof getSubtaskListData === "function" ? getSubtaskListData() : [];
   },
-
 
   /**
    * Required fields validation.
@@ -295,7 +245,6 @@ return emails.map(e => {
     return ok;
   },
 
-
   /**
    * Min date (today) validation.
    * @returns {boolean}
@@ -310,7 +259,6 @@ return emails.map(e => {
     return true;
   },
 
-
   /**
    * Priority selection validation.
    * @returns {boolean}
@@ -323,7 +271,6 @@ return emails.map(e => {
     return false;
   },
 
-
   /**
    * Returns group wrapper for a field.
    * @param {HTMLElement} field
@@ -331,7 +278,6 @@ return emails.map(e => {
   _formGroupOf(field) {
     return field.closest?.(".form-group, .priority-options") || null;
   },
-  
 
   /**
    * Ensures and returns a .field-error element in group.
@@ -347,32 +293,29 @@ return emails.map(e => {
     return el;
   },
 
-
-/**
- * Returns selected priority in the exact format the board expects.
- * @returns {"HighPriority"|"MidPriority"|"LowPriority"}
- */
-_getSelectedPriority() {
-  const btn = document.querySelector(".priority-btn.selected");
-  const val = btn?.dataset?.priority || "low"; // "high" | "medium" | "low"
-  const MAP = { high: "HighPriority", medium: "MidPriority", low: "LowPriority" };
-  return MAP[val] || "LowPriority";
-},
-
+  /**
+   * Returns selected priority in the exact format the board expects.
+   * @returns {"HighPriority"|"MidPriority"|"LowPriority"}
+   */
+  _getSelectedPriority() {
+    const btn = document.querySelector(".priority-btn.selected");
+    const val = btn?.dataset?.priority || "low"; // "high" | "medium" | "low"
+    const MAP = { high: "HighPriority", medium: "MidPriority", low: "LowPriority" };
+    return MAP[val] || "LowPriority";
+  },
 
   /**
    * Normalizes subtasks to a board-friendly shape.
    * @param {string[]} items
    * @returns {Array<Object>}
    */
-_normalizeSubtasks(items) {
-  return (items || [])
-    .map(s => (typeof s === "string" ? s : String(s || "")))
-    .map(t => t.trim())
-    .filter(Boolean)
-    .map(value => ({ value, checked: false }));
-},
-
+  _normalizeSubtasks(items) {
+    return (items || [])
+      .map(s => (typeof s === "string" ? s : String(s || "")))
+      .map(t => t.trim())
+      .filter(Boolean)
+      .map(value => ({ value, checked: false }));
+  },
 
   /**
    * Resets priority to "Medium".
@@ -386,7 +329,6 @@ _normalizeSubtasks(items) {
     if (m) { m.classList.add("selected"); m.setAttribute("aria-pressed", "true"); }
   },
 
-
   /**
    * Clears assignee selection + chips.
    */
@@ -397,31 +339,14 @@ _normalizeSubtasks(items) {
     if (wrap) { wrap.innerHTML = ""; wrap.classList.add("display-none"); }
   },
 
-
   /**
    * Clears subtasks via subtasks.js if available.
    */
   _resetSubtasks() {
     if (typeof clearSubtasks === "function") clearSubtasks();
-  }
-};
+  },
 
 
-/* ---- Entry point ---- */
-(() => {
-  const run = () => addTaskManager.init();
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => setTimeout(run, 0), { once: true });
-  } else {
-    setTimeout(run, 0);
-  }
-})();
-
-
-Object.assign(window.addTaskManager, {
-  /**
-   * Loads user contact
-   */
   async _loadAssignableUsers() {
     const [contacts, own] = await Promise.all([
       loadData(`users/${USERKEY}/contacts`),
@@ -431,20 +356,19 @@ Object.assign(window.addTaskManager, {
     const map = new Map();
     list.forEach(u => map.set((u.email || u.name).toLowerCase(), u));
     const out = Array.from(map.values()).sort((a,b) => a.name.localeCompare(b.name));
-    console.log("[ASSIGNEES LOADED]", out.length, out.slice(0,3));
     return out;
   },
 
 
-  /**
-   * Builds list from own user and contact info.
-  */
   _buildAssignableList(contacts, own) {
     const list = [];
     if (own) {
       const eml = (own.email || "").trim().toLowerCase();
-      list.push({ name: (own.name || "").trim() || this._nameFromEmail(eml),
-                  email: eml, color: own.color || getRandomColor?.() });
+      list.push({
+        name: (own.name || "").trim() || this._nameFromEmail(eml),
+        email: eml,
+        color: own.color || getRandomColor?.()
+      });
     }
     Object.values(contacts || {}).forEach(c => {
       const eml = (c.email || "").trim().toLowerCase();
@@ -462,4 +386,67 @@ Object.assign(window.addTaskManager, {
       .replace(/[._]/g, " ")
       .replace(/\b\w/g, m => m.toUpperCase()) || "Unknown";
   },
-});
+
+
+  _initializeDropdowns() {
+    this._initCategoryDropdown();
+},
+
+  _initCategoryDropdown() {
+    const wrap   = this.elements.categoryDropdown;
+    const input  = this.elements.categoryInput;
+    const listEl = this.elements.categoryOptions;
+    const btn    = this.elements.categoryToggle;
+
+    if (!wrap || !input || !listEl) return;
+
+const render = () => {
+  const base = this._categoryBase
+    || (Array.isArray(this.state.categories) && this.state.categories.length ? this.state.categories : DEFAULT_CATEGORIES)
+    || ["Technical Task", "User Story"];
+
+  const items = Array.from(new Set(base));
+  listEl.innerHTML = items.map(cat => {
+    const sel = (cat === this.state.selectedCategory || cat === input.value.trim());
+    return `<li class="dropdown-option${sel ? " is-active" : ""}" data-value="${cat}">${cat}</li>`;
+  }).join("");
+};
+
+    const close = () => {
+      listEl.style.display = "none";
+      wrap.classList.remove("open");
+    };
+
+    const open = () => {
+      render();
+      listEl.style.display = "block";
+      wrap.classList.add("open");
+      const onDocClick = (e) => { if (!wrap.contains(e.target)) close(); };
+      document.addEventListener("click", onDocClick, { once: true });
+    };
+    btn?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      wrap.classList.contains("open") ? close() : open();
+    });
+    input.addEventListener("focus", open);
+    listEl.addEventListener("click", (e) => {
+      const li = e.target.closest(".dropdown-option");
+      if (!li) return;
+      const value = li.dataset.value || li.textContent.trim();
+      this.state.selectedCategory = value;
+      input.value = value;
+      this._clearError(input);
+      close();
+    });
+  },
+};
+
+/* ---- Entry point ---- */
+(() => {
+  const run = () => addTaskManager.init();
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => setTimeout(run, 0), { once: true });
+  } else {
+    setTimeout(run, 0);
+  }
+})();
