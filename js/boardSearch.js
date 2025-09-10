@@ -23,9 +23,7 @@ function handleSearch(inputId = "searchInput") {
 
 /** Fetches tasks from Firebase and filters them by search query. */
 function fetchFilteredTasks(query) {
-  fetch(
-    "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks.json"
-  )
+  fetch(getUserTasksUrl())
     .then((r) => r.json())
     .then((data) => {
       const tasks = Object.entries(data || {}).map(([id, t]) => ({ ...t, id }));
@@ -126,9 +124,7 @@ function clearSearchInput() {
 
 /** Fetches all tasks from Firebase and updates the board columns. */
 function fetchAllTasks() {
-  fetch(
-    "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks.json"
-  )
+  fetch(getUserTasksUrl())
     .then((r) => r.json())
     .then((data) => {
       const tasks = Object.entries(data || {}).map(([id, t]) => ({ ...t, id }));

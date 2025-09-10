@@ -1,5 +1,3 @@
-const TASKS_BASE_URL = "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks.json";
-
 
 if (!USERKEY) {
     // Kein Benutzer eingeloggt → weiterleiten
@@ -82,7 +80,8 @@ async function pushTaskToDatabase(columnId) {
     const taskData = validateAndSaveTaskData(columnId);
     if (!taskData) return Promise.reject('No task data');
 
-    return fetch(TASKS_BASE_URL, {
+    // store per-user so each user has their own copy
+    return fetch(getUserTasksUrl(), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(taskData)
@@ -185,8 +184,11 @@ async function updateColumns(tasks) {
  * @returns {Promise<Array<Object>>} Promise that resolves to array of task objects with IDs
  */
 async function fetchBoardData() {
+    // Ensure starter tasks exist for new users
+    await seedUserTasksIfEmpty();
+
     const [tasksResponse] = await Promise.all([
-        fetch(TASKS_BASE_URL),
+        fetch(getUserTasksUrl()),
         loadAllContactColors()
     ]);
 

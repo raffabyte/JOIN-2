@@ -17,7 +17,7 @@ function handlePriority(priority) {
  * @param {string} taskId
  */
 function taskOverlay(taskId) {
-    fetch(TASKS_BASE_URL)
+    fetch(getUserTasksUrl())
         .then(response => response.json())
         .then(data => {
             const taskEntry = Object.entries(data || {}).find(([key]) => key === taskId);
@@ -64,7 +64,7 @@ function formatDate(dateString) {
  * @returns {Promise<void>}
  */
 async function updateSubtaskInFirebase(firebaseKey, updatedSubtasks) {
-    await fetch(`https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks/${firebaseKey}.json`, {
+    await fetch(getUserTaskItemUrl(firebaseKey), {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ subtasks: updatedSubtasks })
@@ -79,7 +79,7 @@ async function updateSubtaskInFirebase(firebaseKey, updatedSubtasks) {
  */
 async function toggleSubtask(taskId, subtaskValue) {
     try {
-        const data = await (await fetch(TASKS_BASE_URL)).json();
+        const data = await (await fetch(getUserTasksUrl())).json();
         const taskEntry = Object.entries(data || {}).find(([key]) => key === taskId);
 
         if (!taskEntry) return;
@@ -88,7 +88,7 @@ async function toggleSubtask(taskId, subtaskValue) {
             subtask.value === subtaskValue ? { ...subtask, checked: !subtask.checked } : subtask
         );
 
-        await updateSubtaskInFirebase(firebaseKey, updatedSubtasks);
+    await updateSubtaskInFirebase(firebaseKey, updatedSubtasks);
         showTaskOverlay({ ...task, subtasks: updatedSubtasks, id: firebaseKey });
         updateBoard();
     } catch (error) {
@@ -101,13 +101,13 @@ async function toggleSubtask(taskId, subtaskValue) {
  * @param {string} taskId 
  */
 function deleteTask(taskId) {
-    fetch(TASKS_BASE_URL)
+    fetch(getUserTasksUrl())
         .then(response => response.json())
         .then(data => {
             const taskEntry = Object.entries(data || {}).find(([key]) => key === taskId);
             if (taskEntry) {
                 const [firebaseKey] = taskEntry;
-                return fetch(`https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks/${firebaseKey}.json`, {
+                return fetch(getUserTaskItemUrl(firebaseKey), {
                     method: 'DELETE'
                 });
             } else {
@@ -137,7 +137,7 @@ function showEditTaskOverlay(task) {
  * @param {string} taskId 
  */
 function editTask(taskId) {
-    fetch(TASKS_BASE_URL)
+    fetch(getUserTasksUrl())
         .then(response => response.json())
         .then(data => {
             const taskEntry = Object.entries(data || {}).find(([key]) => key === taskId);
@@ -179,8 +179,8 @@ function editedTask() {
  */
 async function updateTaskInFirebase(taskId, updatedTaskData) {
     try {
-        const taskUrl = `https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks/${taskId}.json`;
-        const response = await fetch(taskUrl, {
+    const taskUrl = getUserTaskItemUrl(taskId);
+    const response = await fetch(taskUrl, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(updatedTaskData)

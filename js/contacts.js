@@ -140,10 +140,32 @@ async function updateContact(name, email, phone, contactKey) {
   const existingContact = contactsData[contactKey] || {};
   const updatedContact = { ...existingContact, name, email, phone };
   await putData(`${basePath}/${contactKey}`, updatedContact);
+  // update tasks that reference the old contact name
+  await updateTasksAssigneeOnContactChange(existingContact.name, name);
   await loadDataAfterSave();
   showcontactCardDetails(contactKey);
   activateContactCard(contactKey);
   document.getElementById("contactsDetails").classList.add("showDetails");
+}
+
+/**
+ * Replace assignee occurrences of an old contact name with the new name in all user tasks and refresh board.
+ * @param {string} oldName
+ * @param {string} newName
+ * @returns {Promise<void>}
+ */
+async function updateTasksAssigneeOnContactChange(oldName, newName) {
+  /**
+   * Compact updater: uses helpers if defined, otherwise falls back to BASE_URL paths.
+   */
+  if (!oldName || oldName === newName) return;
+  const tasksUrl = (typeof getUserTasksUrl === 'function') ? getUserTasksUrl() : `${window.BASE_URL}users/${USERKEY}/tasks.json`;
+  const taskItem = id => (typeof getUserTaskItemUrl === 'function') ? getUserTaskItemUrl(id) : `${window.BASE_URL}users/${USERKEY}/tasks/${id}.json`;
+  const tasks = await fetch(tasksUrl).then(r => r.json());
+  const ops = Object.entries(tasks || {}).filter(([,t]) => Array.isArray(t.assignee) && t.assignee.includes(oldName))
+    .map(([k,t]) => fetch(taskItem(k), { method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ assignee: t.assignee.map(n => n === oldName ? newName : n) }) }));
+  await Promise.all(ops);
+  if (typeof updateBoard === 'function') updateBoard();
 }
 
 

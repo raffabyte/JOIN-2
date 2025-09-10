@@ -115,7 +115,7 @@ async function loadAndRenderTaskCounts() {
  * @returns {Promise<Object[]>} Array of task objects
  */
 async function fetchTasks() {
-  const response = await fetch(`${window.BASE_URL}tasks.json`);
+  const response = await fetch(`${window.BASE_URL}users/${userKey}/tasks.json`);
   const data = await response.json();
   return Object.values(data || {});
 }

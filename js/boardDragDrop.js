@@ -90,8 +90,8 @@ function moveTo(column) {
     element.classList.remove('dragging');
     ['toDoDragArea', 'inProgressDragArea', 'awaitingFeedbackDragArea', 'doneDragArea'].forEach(removeHighlight);
 
-    const tasksUrl = "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/tasks";
-    fetch(`${tasksUrl}/${currentDraggedElement}.json`, {
+    // update task in the current user's tasks collection
+    fetch(getUserTaskItemUrl(currentDraggedElement), {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ column, movedAt: Date.now() })
