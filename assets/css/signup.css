@@ -254,17 +254,15 @@ h2 {
 }
 
 .login-btn {
-  padding: 8px 24px;
-  height: 42px;
-  font-weight: 700;
+    padding: 15px 24px;
+    font-weight: 700;
     font-size: 21px;
-  font-weight: bold;
-  background-color: #2a3647;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  margin: 0;
+    background-color: #2a3647;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 0;
 }
 
 .login-btn:hover {
@@ -282,7 +280,6 @@ h2 {
 .accept_div {
   display: flex;
   flex-direction: column;
-  margin-top: 20px;
 
 }
 
