@@ -141,7 +141,6 @@ window.addTaskManager = window.addTaskManager || {
       assignee: this._getSelectedAssignees(),
       members: this._getSelectedMembers(),
       subtasks: this._normalizeSubtasks(this._getSubtasks() || []),
-      status: "todo",
       column: "todoColumn",
       createdAt: new Date().toISOString(),
     };
@@ -153,7 +152,7 @@ window.addTaskManager = window.addTaskManager || {
    */
   async _saveTask() {
     try {
-      await postData("tasks", this._collectTaskData());
+  await postData(`users/${USERKEY}/tasks`, this._collectTaskData());
       this._showSuccessPopup();
       this._resetForm();
     } catch (err) {
