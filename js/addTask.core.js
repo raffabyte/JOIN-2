@@ -22,12 +22,79 @@ window.addTaskManager = window.addTaskManager || {
     this._setDueDateMinToday();
     if (typeof initSubtaskControls === "function") initSubtaskControls();
     this.state.assignableUsers = await this._loadAssignableUsers();
+   
+this._initCategoryDropdown();   
+this._initializeDropdowns();
+
     this._initializeDropdowns();
     this._enforceSelectionOnlyFields();
     this._setupPriorityButtons();
     this._registerEventListeners();
     this._addInputListeners();
 },
+
+
+// Öffnen: immer beide Items neu bauen (mit !important)
+// Öffnen: immer beide Einträge sichtbar erzwingen (≤14)
+_openCat() {
+  const ul = document.getElementById('category-options');
+  if (!ul) return;
+  const items = ["Technical Task","User Story"];
+  ul.classList.add('is-open');
+  ul.style.display = 'block';
+  ul.style.maxHeight = 'none';
+  ul.style.overflow = 'visible';
+  ul.style.height = 'auto';
+  ul.innerHTML = items.map(c => `<li data-value="${c}" class="dropdown-option" style="display:list-item;">${c}</li>`).join('');
+},
+
+// Schließen (≤14)
+_closeCat() {
+  const ul = document.getElementById('category-options');
+  if (!ul) return;
+  ul.classList.remove('is-open');
+  ul.style.display = 'none';
+},
+
+// Auswahl setzen (≤14)
+_setCategory(v) {
+  const inp = document.getElementById('category-input');
+  if (!inp) return;
+  inp.value = (v || '').trim();
+  this._clearError(inp);
+},
+
+// Init: Click/Outside + Delegation, nutzt _openCat/_closeCat (≤14)
+_initCategoryDropdown() {
+  const box = document.querySelector('.dropdown.category-selector');
+  const wrap = document.querySelector('.dropdown-input-wrapper.category-dropdown');
+  const btn  = document.getElementById('category-toggle-btn');
+  const ul   = document.getElementById('category-options');
+  const inp  = document.getElementById('category-input');
+  if (!box || !wrap || !btn || !ul || !inp) return;
+  inp.readOnly = true; this._closeCat();
+  const open = () => this._openCat();
+  wrap.addEventListener('click', open);
+  btn.addEventListener('click', e => { e.stopPropagation(); open(); });
+  ul.addEventListener('click', e => { const li = e.target.closest('li[data-value]'); if (!li) return; this._setCategory(li.dataset.value); this._closeCat(); });
+  document.addEventListener('click', e => { if (!box.contains(e.target)) this._closeCat(); }, { capture: true });
+},
+
+
+_resetForm() {
+  if (this.elements.form) this.elements.form.reset();
+  this._clearAllErrors(); this._resetPriorityToMedium();
+  const inp=document.getElementById('category-input'); if(inp) inp.value='';
+  this._closeCat(); this._resetAssignees(); this._resetSubtasks();
+},
+
+
+
+
+
+
+
+
 
 
   /**
@@ -141,6 +208,7 @@ window.addTaskManager = window.addTaskManager || {
       assignee: this._getSelectedAssignees(),
       members: this._getSelectedMembers(),
       subtasks: this._normalizeSubtasks(this._getSubtasks() || []),
+      status: "todo",
       column: "todoColumn",
       createdAt: new Date().toISOString(),
     };
@@ -152,7 +220,7 @@ window.addTaskManager = window.addTaskManager || {
    */
   async _saveTask() {
     try {
-  await postData(`users/${USERKEY}/tasks`, this._collectTaskData());
+      await postData("tasks", this._collectTaskData());
       this._showSuccessPopup();
       this._resetForm();
     } catch (err) {

@@ -66,7 +66,7 @@
 .subtask-list li .subtask-edit-actions {
   display: flex;
   align-items: center;
-  padding-left: 44px;
+  padding: 0px 4px 0px 44px;
   height: 32px;
 }
 
