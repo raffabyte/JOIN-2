@@ -424,7 +424,6 @@ font-weight: 400;
 
   .nameAndToDo {
     gap: 54px;
-    justify-content: center;
   }
 
   .row-grid {
@@ -542,6 +541,9 @@ font-weight: 400;
     }
     .hidden {
       display: none;
+    }
+    .nameAndToDo {
+      justify-content: center;
     }
 }
 
