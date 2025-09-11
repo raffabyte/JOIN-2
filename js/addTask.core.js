@@ -364,7 +364,6 @@ Object.assign(window.addTaskManager, {
     const map = new Map();
     list.forEach(u => map.set((u.email || u.name).toLowerCase(), u));
     const out = Array.from(map.values()).sort((a,b) => a.name.localeCompare(b.name));
-    console.log("[ASSIGNEES LOADED]", out.length, out.slice(0,3));
     return out;
   },
 
