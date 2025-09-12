@@ -1,11 +1,7 @@
 .display-none { display: none !important; }
-
 .contact-badge--overflow { background: #2a3647; }
-
 .override-align-left { align-items: flex-start !important; }
-
 .align-stretch { align-items: stretch !important; }
-
 .form-column { flex: 1; min-width: 0; } 
 
 .add-task-content {
@@ -202,12 +198,6 @@ input.input-error,
   overflow-y: auto;
 }
 
-.dropdown.category-selector #category-options .dropdown-option:hover {
-  background: #eef1f5;  
-  border-radius: 10px 10px; 
-}
-.dropdown.category-selector #category-options .dropdown-option { padding: 12px 18px 12px 18px; }
-
 .dropdown-options li,
 #assigned-to-options li,
 #category-options li {
@@ -216,6 +206,52 @@ input.input-error,
   background: white;
   display: flex;
   flex-direction: row;
+}
+
+.dropdown.category-selector
+#category-options
+.dropdown-option:hover { background-color: #eef1f5; border-radius: 10px; }
+
+.dropdown.category-selector { position: relative; }
+
+#category-input,
+#category-input:focus { border-color: #d1d1d1 !important; box-shadow: none !important; }
+
+.form-group, 
+.field-wrapper,
+.dropdown.category-selector { overflow: visible; }
+
+.dropdown.category-selector #category-options {
+  display: none !important;            
+  top: 100% !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 2000 !important;
+  height: auto !important;
+  max-height: 220px !important;
+  overflow-y: auto !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  white-space: normal !important;
+  font-size: 16px !important;
+  line-height: 1.2 !important;
+  background: #fff;
+  border-radius: 0 0 10px 10px;
+  box-shadow: 0 2px 8px rgba(72, 34, 34, 0.1);
+  margin: 0;
+  padding: 6px 8px;
+  list-style: none;
+}
+
+.dropdown.category-selector.open #category-options { display: block !important; }
+
+.dropdown.category-selector #category-options .dropdown-option {
+  padding: 12px 18px;
+  display: flex; 
+  align-items: center; 
+  gap: 8px;
+  font-size: 16px; 
+  line-height: 1.8;
 }
 
 .assigned-to-wrapper .dropdown { position: relative; }
@@ -235,18 +271,9 @@ input.input-error,
 .assigned-to-wrapper #assigned-to-options.show { display: block; }
 .assigned-to-wrapper .dropdown-input-wrapper input { padding-right: 36px; }
 
-.option-label {
-  line-height: 1;
-  font-size: 20px;
-  align-items: center; 
-}
+.option-label { line-height: 1; font-size: 20px; align-items: center; }
 
-.contact-name {
-  display: flex;
-  align-items: center;
-  padding-left: 18px;
-  font-size: 16px;
-}
+.contact-name { display: flex; align-items: center; padding-left: 18px; font-size: 16px; }
 
 .initial-badge-circle {
   width: 32px;
@@ -261,12 +288,7 @@ input.input-error,
 }
 
 .selected-contacts,
-.assigned-to-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 8px;
-}
+.assigned-to-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
 
 .contact-badge,
 .assigned-to-chips .chip {
@@ -303,16 +325,9 @@ input.input-error,
   min-width: min-content; 
 }
 
-.footer-left {
-  display: flex;
-  align-items: center;
-  margin-top: 40px;
-}
+.footer-left { display: flex; align-items: center; margin-top: 40px; }
 
-.footer-right {
-  display: flex;
-  gap: 16px;
-}
+.footer-right { display: flex; gap: 16px; }
 
 .validation-hint {
   display: inline-block;
@@ -339,12 +354,6 @@ textarea:focus,
   border: 1px solid #29ABE2;
   box-shadow: 0 0 0 1px #29ABE2;
   border-radius: 10px;
-}
-
-#category-input,
-#category-input:focus {
-  border-color: #d1d1d1 !important;
-  box-shadow: none !important;
 }
 
 .dropdown-input-wrapper.category-dropdown,
@@ -390,64 +399,3 @@ textarea:not(:focus),
   border-color: #ff3d00 !important;
   box-shadow: 0 0 0 1px #ff3d00 !important;
 }
-
-/* Anker für absolute Positionierung der Optionsliste */
-.dropdown.category-selector { position: relative; }
-
-/* WICHTIG: Eltern nicht abschneiden lassen */
-.form-group,
-.field-wrapper,
-.dropdown.category-selector {
-  overflow: visible; /* falls irgendwo hidden gesetzt wurde */
-}
-
-/* Grundzustand: Liste zu und korrekt positioniert */
-.dropdown.category-selector #category-options {
-  display: none !important;              /* nur .open zeigt an */
-  top: 100% !important;
-  left: 0 !important;
-  right: 0 !important;
-  z-index: 2000 !important;
-
-  /* Sichtbarkeit & Größe stabilisieren */
-  height: auto !important;
-  max-height: 220px !important;
-  overflow-y: auto !important;
-
-  /* keine Animation/Skalierung, die „eine Zeile“ erzeugt */
-  opacity: 1 !important;
-  visibility: visible !important;
-  transform: none !important;
-
-  /* Typografie konsistent halten */
-  white-space: normal !important;
-  font-size: 16px !important;
-  line-height: 1.2 !important;
-
-  background: #fff;
-  border-radius: 0 0 10px 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,.1);
-  margin: 0;
-  padding: 6px 8px;
-  list-style: none;
-}
-
-/* geöffnet = zeigen */
-.dropdown.category-selector.open #category-options {
-  display: block !important;
-}
-
-/* Listeneinträge konsistent */
-.dropdown.category-selector #category-options .dropdown-option {
-  padding: 12px 18px;
-  cursor: pointer;
-  display: flex; align-items: center; gap: 8px;
-  font-size: 16px; line-height: 1.2;
-}
-.dropdown.category-selector #category-options .dropdown-option:hover {
-  background: #eef1f5; border-radius: 10px;
-}
-.dropdown.category-selector #category-options .dropdown-option.is-active {
-  font-weight: 600; background: #f7f9fc; border-radius: 10px;
-}
-

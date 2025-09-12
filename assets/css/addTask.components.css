@@ -77,8 +77,7 @@
 .custom-checkbox { flex-shrink: 0; }
 
 .dropdown-options.show,
-#assigned-to-options.show,
-#category-options.show { display: block !important; }
+#assigned-to-options.show { display: block !important; }
 
 #assigned-to-options.dropdown-options { padding: 6px 8px; }
 
