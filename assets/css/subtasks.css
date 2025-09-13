@@ -21,6 +21,34 @@
 
 .subtask-actions {
   display: none !important;
+  margin-right: 14px;
+}
+
+.overlay-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1 / 1;
+  padding: 4px;
+  border-radius: 50%;
+  box-sizing: border-box;
+
+  vertical-align: middle;       
+  transform-origin: center;     
+  transition: transform .2s, background-color .2s;
+  will-change: transform;
+}
+
+.overlay-button:hover {
+  background-color: #eeeeee;    
+  transform: scale(1.06);      
+}
+
+.overlay-button {
+  border: 1px solid transparent;    
+}
+.overlay-button:hover {
+  border-color: #ddd;                
 }
 
 .subtask-list li:hover .subtask-actions {
@@ -134,7 +162,6 @@
   right: 12px;
   top: 50%;
   transform: translateY(-50%);
-  background-color: white;
   height: 24px;
   width: auto;        
   padding: 0 2px;     
@@ -148,15 +175,11 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  width: 24px;
-  height: 24px;
   gap: 4px;
   transition: background-color 0.2s ease;
 }
 
 .overlay-button svg {
-  width: 20px;
-  height: 20px;
   pointer-events: none;
   fill: #2a3647;
   transition: fill 0.2s ease;

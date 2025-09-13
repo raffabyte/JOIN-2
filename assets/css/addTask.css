@@ -206,6 +206,7 @@ input.input-error,
   background: white;
   display: flex;
   flex-direction: row;
+  font-size: clamp(16px, 1.8vw, 20px);
 }
 
 .dropdown.category-selector
@@ -233,7 +234,7 @@ input.input-error,
   opacity: 1 !important;
   visibility: visible !important;
   white-space: normal !important;
-  font-size: 16px !important;
+  font-size: 20px !important;
   line-height: 1.2 !important;
   background: #fff;
   border-radius: 0 0 10px 10px;
@@ -241,17 +242,50 @@ input.input-error,
   margin: 0;
   padding: 6px 8px;
   list-style: none;
+  border:1px solid #d1d1d1; 
 }
+.dropdown.category-selector.open #category-options { display: block !important; border:1px solid #d1d1d1; }
 
-.dropdown.category-selector.open #category-options { display: block !important; }
-
-.dropdown.category-selector #category-options .dropdown-option {
+.dropdown.category-selector #category-options {
   padding: 12px 18px;
   display: flex; 
   align-items: center; 
   gap: 8px;
-  font-size: 16px; 
+  font-size: clamp(16px, 1.8vw, 20px);
   line-height: 1.8;
+}
+
+.category-dropdown {
+  border: 1px solid #d1d1d1;
+  border-radius: 10px;
+  box-shadow: none;
+  outline: none;
+  background-clip: padding-box;
+}
+
+.category-dropdown:focus-within {
+  border-color: #d1d1d1;
+  box-shadow: none;
+  outline: none;
+}
+
+.category-dropdown input:focus,
+.category-dropdown button:focus {
+  outline-color: transparent; 
+}
+
+.category-dropdown.no-focus,
+.category-dropdown.is-open,
+.category-dropdown.is-focused {
+  border: 1px solid #d1d1d1 !important;
+  box-shadow: none !important;
+}
+
+#category-input,
+#category-toggle-btn {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 .assigned-to-wrapper .dropdown { position: relative; }
@@ -350,39 +384,17 @@ textarea:focus,
     outline: none;
 }
 
-.dropdown-input-wrapper:focus-within {
-  border: 1px solid #29ABE2;
-  box-shadow: 0 0 0 1px #29ABE2;
-  border-radius: 10px;
-}
 
-.dropdown-input-wrapper.category-dropdown,
-.dropdown-input-wrapper.category-dropdown:focus-within,
-.dropdown-input-wrapper.no-focus:focus-within {
-  box-shadow: none !important;
-}
 
 input[type="text"]:not(:focus),
 input[type="search"]:not(:focus),
 input[type="date"]:not(:focus),
 textarea:not(:focus),
-.custom-dropdown-input:not(:focus),
+.custom-dropdown-input:not(:focus), #category-input:not(:focus)
 #subtasks:not(:focus) {
   border: 1px solid #d1d1d1;
   border-color: #d1d1d1;
   box-shadow: none;
-}
-
-.form-group input #due-date:focus {
-  border-color: #29ABE2 !important;
-  box-shadow: 0 0 0 1px #29ABE2 !important;
-  outline: none;
-}
-
-.date-picker:focus-within input[type="date"] {
-  border-color: #29ABE2 !important;
-  box-shadow: 0 0 0 1px #29ABE2 !important;
-  outline: none;
 }
 
 .form-group.input-error input[type="text"],

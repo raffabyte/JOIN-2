@@ -151,16 +151,28 @@ window.addTaskManager = window.addTaskManager || {
   /**
    * Persists the task and shows success UI.
    */
-  async _saveTask() {
-    try {
-      await postData("tasks", this._collectTaskData());
-      this._showSuccessPopup();
-      this._resetForm();
-    } catch (err) {
-      console.error("Error saving task:", err);
-      alert("Could not save task. Please try again.");
-    }
-  },
+async _saveTask() {
+  try {
+    const payload = this._collectTaskData();
+    const path = this._tasksPath();               // <— neu
+    const res = await postData(path, payload);    // <— neu
+
+    const newId = res?.name;
+    this._showSuccessPopup();
+
+    // (optional) ID parken für spätere Hervorhebung auf dem Board
+    if (newId) sessionStorage.setItem("board:highlight", newId);
+
+    // Redirect aufs Board (Pfad ggf. anpassen)
+    const boardUrl = `${location.origin}/assets/index/board.html`;
+    setTimeout(() => { window.location.href = boardUrl; }, 800);
+
+    this._resetForm();
+  } catch (err) {
+    console.error("Error saving task:", err);
+    alert("Could not save task. Please try again.");
+  }
+},
 
 
   /**
@@ -366,8 +378,15 @@ Object.assign(window.addTaskManager, {
     const out = Array.from(map.values()).sort((a,b) => a.name.localeCompare(b.name));
     return out;
   },
+  _tasksPath() {
+    if (!window.USERKEY) {
+      console.warn("[addTask] USERKEY fehlt – speichere fallback unter 'tasks'");
+      return "tasks"; // Fallback, falls noch kein Login
+    }
+    return `users/${USERKEY}/tasks`;
+  },
 
-
+  
   /**
    * Builds list from own user and contact info.
   */
@@ -393,5 +412,21 @@ Object.assign(window.addTaskManager, {
       .split("@")[0]
       .replace(/[._]/g, " ")
       .replace(/\b\w/g, m => m.toUpperCase()) || "Unknown";
+  },
+
+
+    _resolveBoardUrl() {
+    const candidates = [
+      "../../html/board.html",
+      "../html/board.html",
+      "board.html",
+      "/html/board.html"
+    ];
+    for (const c of candidates) {
+      try {
+        return new URL(c, location.href).href;
+      } catch {}
+    }
+    return "board.html";
   },
 });
