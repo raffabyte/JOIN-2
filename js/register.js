@@ -258,12 +258,15 @@ async function signUp(){
 
   try {
     const r = await postData('users',{name:n,email:e,password:pw1});
-    localStorage.setItem('userKey', r.name); 
-    window.USERKEY = r.name;
+  // store logged-in key consistently with the rest of the app and set global
+  localStorage.setItem('loggedInUserKey', r.name);
+  window.USERKEY = r.name;
 
-    await preloadContacts(r.name);
+  // preload contacts and ensure starter tasks exist immediately for this user
+  await preloadContacts(r.name);
+  await seedUserTasksIfEmpty();
 
-    showSignUpSuccessOverlay();
+  showSignUpSuccessOverlay();
 
   } catch(err) {
     console.error("SignUp error:", err);

@@ -12,13 +12,18 @@ const OVERLAY_CONTENT = document.getElementById('overlayContent');
  * @returns {void}
  */
 function closeOverlay() {
+    if (!OVERLAY || !OVERLAY_CONTENT) {
+        const page = document.getElementById('addTaskSeite');
+        if (page) {
+            page.querySelectorAll('input,textarea,select').forEach(el=>{ if(el.type==='checkbox'||el.type==='radio') el.checked=false; else el.value=''; });
+            page.querySelectorAll('.selected-assignee .contact-icon').forEach(n=>n.remove());
+            page.querySelectorAll('#subtasksList,#editedSubtasksList').forEach(l=>l.innerHTML='');
+            page.querySelectorAll('.priority-button.active, .edit-priority-button.active').forEach(b=>b.classList.remove('active'));
+        }
+        return;
+    }
     OVERLAY_CONTENT.classList.remove('active');
-    setTimeout(() => {
-        OVERLAY.classList.add('display-none');
-        OVERLAY_CONTENT.classList.remove('add-task');
-        OVERLAY_CONTENT.innerHTML = '';
-        OVERLAY_CONTENT.classList.remove('add-task', 'edit-task-overlay', 'task-overlay');
-    }, 110);
+    setTimeout(()=>{ OVERLAY.classList.add('display-none'); OVERLAY_CONTENT.classList.remove('add-task','edit-task-overlay','task-overlay'); OVERLAY_CONTENT.innerHTML=''; },110);
 }
 
 

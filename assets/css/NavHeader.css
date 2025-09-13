@@ -402,7 +402,7 @@ span {
   .login-link,
   .menuOption {
     gap: 5px;
-    padding: 5px 40px; 
+    padding: 5px 32px; 
   }
 
   .icon {
@@ -437,7 +437,7 @@ span {
   }
 }
 
-@media (max-width: 799px) {
+@media (max-width: 800px) {
   #menu {
     width: 140px; 
     padding: 16px; 

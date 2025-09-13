@@ -97,7 +97,7 @@ function addTaskOverlayForm(columnId, cancelLabel = 'Cancel') {
                     </div>
                 </div>
                 <div class="flexR width-100 space-between submit-section">
-                    <span class="flexR">
+                    <span class="flexR submit-span">
                         <span class="highlight">*</span>
                         This field is required</span>
                     <div class="flexR gap-16">
@@ -123,9 +123,9 @@ function addSubTaskTemplate(subtaskInput, index = 0){
     const editInputId = `editSubtaskInput_${index}_${Date.now()}`;
     
     return`
-    <li ondblclick="editSubtask(this)" class="subtask-item flexC">
+    <li ondblclick="editSubtask(this)" class="subtask-item width-100 flexC">
         <div class="subtask flexR" id="${uniqueId}">
-            <div class="subtask-headdinfg flexR gap-8" >
+            <div class="subtask-heading flexR gap-8" >
                 •
                 <span class="subtask-text">${subtaskInput}</span>
             </div>

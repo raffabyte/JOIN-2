@@ -139,6 +139,7 @@ function PriorityHandler(priority) {
 
 /** Filters visible assignees by search text. */
 function searchAssignee(text) {
+  if (!text || !text.trim()) return loadAndRenderContacts();
   const assigneeOptions = document.getElementById("assigneeOptions");
   const options = assigneeOptions.querySelectorAll(".assignee-option");
   let visibleCount = 0;
@@ -149,7 +150,7 @@ function searchAssignee(text) {
     option.classList.toggle("display-none", !isMatch);
     if (isMatch) visibleCount++;
   });
-
+  
   checkNoResults(visibleCount, text);
 }
 

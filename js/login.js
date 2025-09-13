@@ -414,9 +414,13 @@ async function startGuestSession() {
   await preloadGuestContacts(`guests/${guestId}`);
 
   sessionStorage.setItem("showMobileGreeting", "1");
-
-  localStorage.setItem("loggedInUserKey", `guests/${guestId}`);
+  // mark guest as logged in and set global USERKEY used by tasks API
+  const guestKey = `guests/${guestId}`;
+  localStorage.setItem("loggedInUserKey", guestKey);
   localStorage.setItem("guestMode", "true");
+  window.USERKEY = guestKey;
+  // seed starter tasks for guest immediately
+  await seedUserTasksIfEmpty();
 
   window.location.href = "../index/summary.html";
 }

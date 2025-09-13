@@ -8,10 +8,9 @@ main {
 }
 
 .backgroundColor {
-  height: calc(100vh - 96px);
   padding: 110px 96px 24px 96px;
   flex: 1;
-  max-height: 1024px;
+  max-height: 800px;
 
 }
 
@@ -321,10 +320,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   background: #E7E7E7;
 }
 
-.subtask-item {
-  width: 100%;
-}
-
 .subtask {
   width: 100%;
   padding: 4px 21px;
@@ -412,54 +407,94 @@ span {
   flex: 1;
 }
 
-@media (max-width: 1000px) {
+@media (max-height: 700px) or (max-width: 1025px) {
+  .backgroundColor {
+    padding: 64px 48px 24px 48px;
+  }
+
+  h2 {
+    font-size: 47px;
+  }
+
+  .prio-style,
+  label {
+    font-size: 16px;
+  }
+  
   .overlay-bottom {
-    overflow-y: auto;
+    max-height: calc(100vh - 256px);
   }
 
-  .task-form-top {
-    align-items: center;
-    flex-direction: column;
+  .inputs,
+  .inputs input::placeholder,
+  .inputs::placeholder,
+  .category-option,
+  .assignee-option span,
+  .priority-button span,
+  .category-options-btn::placeholder,
+  .subtasks::placeholder {
+    font-size: 16px;
   }
 
-  .middle-vector {
-    display: none;
+  .required-span,
+  #subtaskHintMessage {
+    font-size: 11px;
+  }
+
+  .inputs,
+  .inputs input::placeholder,
+  .inputs::placeholder,
+  .category-option,
+  textarea.inputs,
+  .priority-button {
+    padding: 8px !important;
+  }
+
+  #taskAssignee,
+  #taskCategory,
+  #editedTaskAssignee {
+    background: white url('data:image/svg+xml;utf8,<svg width="5" height="3" viewBox="0 0 8 5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.54854 4.3L0.948535 1.7C0.631868 1.38333 0.561035 1.02083 0.736035 0.6125C0.911035 0.204167 1.22354 0 1.67354 0H6.82354C7.27354 0 7.58603 0.204167 7.76103 0.6125C7.93604 1.02083 7.8652 1.38333 7.54853 1.7L4.94854 4.3C4.84854 4.4 4.7402 4.475 4.62354 4.525C4.50687 4.575 4.38187 4.6 4.24854 4.6C4.1152 4.6 3.9902 4.575 3.87354 4.525C3.75687 4.475 3.64854 4.4 3.54854 4.3Z" fill="%232A3647"/></svg>') no-repeat right 16px center/10px 7px;
+
+  }
+
+  .submit-section {
+    margin: 8px 0 8px 0;
   }
 
   .task-form-column {
-    width: 100%;
-    margin-bottom: 24px;
+    gap: 16px
   }
+}
 
+@media (max-width: 1000px) {
   .contact-icon {
     width: 24px;
     height: 24px;
     padding: 14px;
   }
+
+  .task-form-top {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .task-form-column {
+    margin-bottom: 16px;
+    width: 100%;
+  }
+
+  .middle.vector {
+    display: none;
+  }
 }
 
 @media (max-width: 800px) {
-  h2 {
-    font-size: 47px;
+  .overlay-bottom {
+    max-height: calc(100vh - 288px);
   }
-
-  .overlay-content.add-task {
-    padding: 32px 24px;
-  }
-
-  label,
-  .category-option,
-  .prio-style,
-  .inputs,
-  .assignee-option span,
-  .priority-button span,
-  .edit-priority-button span {
-    font-size: 16px;
-  }
-
-  .inputs::placeholder,
-  .inputs input::placeholder {
-    font-size: 16px;
+  .backgroundColor {
+    max-height: calc(100vh - 160px);
+    padding: 48px 16px;
   }
 
   .submit-section {
@@ -467,8 +502,13 @@ span {
     gap: 16px;
   }
 
-  .inputs {
-    padding: 8px;
+  .submit-span {
+    width: 100%;
+  }
+
+  .submit-section div {
+    width: 100%;
+    justify-content: flex-end;
   }
 
   .add-cancel-btns {

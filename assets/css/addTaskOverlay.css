@@ -76,6 +76,9 @@ h2 {
 .task-form-top {
     align-items: flex-start;
     flex: 1;
+    max-height: 408px;
+    overflow: scroll;
+    scrollbar-width: none;
 }
 
 #closeOverlayButton {
@@ -428,6 +431,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         height: 24px;
         padding: 14px;
     }
+    .submit-span {
+        width: 54%;
+    }
 }
 
 @media (max-width: 800px) {
@@ -477,6 +483,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         width: 16px !important;
         height: 16px !important;
     }
+    .submit-span {
+        width: 100%;
+    }
 }
 
 @media (max-width: 539px) {
@@ -485,4 +494,5 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     .edit-priority-button span {
         display: none;
     }
+    
 }
