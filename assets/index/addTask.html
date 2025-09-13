@@ -15,189 +15,37 @@
     <link rel="stylesheet" href="../fonts/Inter/font.css" />
     <link rel="stylesheet" href="../css/NavHeader.css" />
     <link rel="stylesheet" href="../css/addTask.css" />
-    <link rel="stylesheet" href="../css/subtasks.css" />
-    <link rel="stylesheet" href="../css/addTask.components.css" />
 
 </head>
 
-<body onload="init();">
+<body onload="init(); addTaskForm();">
 
     <nav>
         <div id="linkesNavMenu" class="navContent">
 
         </div>
     </nav>
-    <main class="flexC width-100">
+    <main class="flexC">
         <header>
             <div id="header" class="headerContent">
 
             </div>
         </header>
 
-        <div class="backgroundColor">
-            <div class="content add-task-content flexC width-100 override-align-left">
-                <h1>Add Task</h1>
-
-                <form class="task-form flexC width-100 align-stretch">
-
-                    <div class="form-columns flexR">
-
-                        <div class="form-column left-column flexC width-100">
-                            <div class="form-group flexC width-100">
-                                <label for="title">Title<span class="required-asterisk">*</span></label>
-                                <div class="field-wrapper">
-                                    <input type="text" id="title" placeholder="Enter a title" />
-                                </div>
-                            </div>
-                            <div class="form-group flexC width-100">
-
-                                <label for="description">Description</label>
-                                <textarea id="description" placeholder="Enter a description"></textarea>
-                            </div>
-                            <div class="form-group flexC width-100">
-                                <label for="due-date">Due Date<span class="required-asterisk">*</span></label>
-
-                                <div class="field-wrapper">
-                                    <div class="date-picker">
-                                        <input type="date" id="due-date" />
-                                        <button type="button" id="calendar-toggle" class="calendar-btn"
-                                            aria-label="Open calendar">
-                                            <svg class="calendar-icon" width="22" height="22" viewBox="0 0 18 20"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M11.5 16C10.8 16 10.2083 15.7583 9.725 15.275C9.24167 14.7917 9 14.2 9 13.5C9 12.8 9.24167 12.2083 9.725 11.725C10.2083 11.2417 10.8 11 11.5 11C12.2 11 12.7917 11.2417 13.275 11.725C13.7583 12.2083 14 12.8 14 13.5C14 14.2 13.7583 14.7917 13.275 15.275C12.7917 15.7583 12.2 16 11.5 16ZM2 20C1.45 20 0.979167 19.8042 0.5875 19.4125C0.195833 19.0208 0 18.55 0 18V4C0 3.45 0.195833 2.97917 0.5875 2.5875C0.979167 2.19583 1.45 2 2 2H3V1C3 0.716667 3.09583 0.479167 3.2875 0.2875C3.47917 0.0958333 3.71667 0 4 0C4.28333 0 4.52083 0.0958333 4.7125 0.2875C4.90417 0.479167 5 0.716667 5 1V2H13V1C13 0.716667 13.0958 0.479167 13.2875 0.2875C13.4792 0.0958333 13.7167 0 14 0C14.2833 0 14.5208 0.0958333 14.7125 0.2875C14.9042 0.479167 15 0.716667 15 1V2H16C16.55 2 17.0208 2.19583 17.4125 2.5875C17.8042 2.97917 18 3.45 18 4V18C18 18.55 17.8042 19.0208 17.4125 19.4125C17.0208 19.8042 16.55 20 16 20H2ZM2 18H16V8H2V18ZM2 6H16V4H2V6Z"
-                                                    fill="#2A3647" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-divider"></div>
-
-                        <div class="form-column right-column flexC width-100">
-                            <div class="form-group">
-                                <div class="priority-label">Priority</div>
-                                <div class="priority-options flexR width-100">
-                                    <button type="button" class="priority-btn" data-priority="high">
-                                        <span class="priorating priority-text">Urgent</span>
-                                        <span class="priority-icon" id="prioUrgentIcon"></span>
-                                    </button>
-                                    <button type="button" class="priority-btn selected" data-priority="medium">
-                                        <span class="priorating priority-text">Medium</span>
-                                        <span class="priority-icon" id="prioMediumIcon"></span>
-                                    </button>
-                                    <button type="button" class="priority-btn" data-priority="low">
-                                        <span class="priorating priority-text">Low</span>
-                                        <span class="priority-icon" id="prioLowIcon"></span>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="form-group assigned-to-wrapper">
-                                <label for="assigned-to-input">Assigned To</label>
-                                <div class="dropdown">
-
-                                    <div class="dropdown-input-wrapper no-focus">
-                                        <input id="assigned-to-input" type="text" placeholder="Select contacts"
-                                            autocomplete="off" />
-                                        <button id="assigned-to-toggle-btn" type="button" class="dropdown-toggle"
-                                            aria-label="Toggle assigned">
-                                            <svg class="dropdown-arrow" width="24" height="24" viewBox="0 0 25 24"
-                                                fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M11.55 14.3L8.95 11.7C8.63 11.38 8.56 11.02 8.74 10.61C8.91 10.2 9.22 10 9.67 10H14.82C15.27 10 15.59 10.2 15.76 10.61C15.94 11.02 15.87 11.38 15.55 11.7L12.95 14.3C12.85 14.4 12.74 14.48 12.62 14.53C12.51 14.58 12.38 14.6 12.25 14.6C12.12 14.6 11.99 14.58 11.87 14.53C11.76 14.48 11.65 14.4 11.55 14.3Z"
-                                                    fill="#2A3647" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                    <ul id="assigned-to-options" class="dropdown-panel"></ul>
-                                </div>
-                                <div id="selected-assignees" class="assigned-to-chips display-none"></div>
-                            </div>
-
-
-
-                            <div class="form-group">
-                                <label for="category-input">Category<span class="required-asterisk">*</span></label>
-                                <div class="field-wrapper">
-                                    <div class="dropdown category-selector">
-                                        <div class="dropdown-input-wrapper category-dropdown no-focus">
-                                            <input id="category-input" type="text" placeholder="Select task category" autocomplete="off" />
-                                            <button id="category-toggle-btn" type="button" class="dropdown-toggle"
-                                                aria-label="Toggle category">
-                                                <svg class="dropdown-arrow" width="24" height="24" viewBox="0 0 25 24"
-                                                    fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path
-                                                        d="M11.55 14.3L8.95 11.7C8.63 11.38 8.56 11.02 8.74 10.61C8.91 10.2 9.22 10 9.67 10H14.82C15.27 10 15.59 10.2 15.76 10.61C15.94 11.02 15.87 11.38 15.55 11.7L12.95 14.3C12.85 14.4 12.74 14.48 12.62 14.53C12.51 14.58 12.38 14.6 12.25 14.6C12.12 14.6 11.99 14.58 11.87 14.53C11.76 14.48 11.65 14.4 11.55 14.3Z"
-                                                        fill="#2A3647" />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                        <ul id="category-options" class="dropdown-options"></ul>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="subtasks">Subtasks</label>
-                                <div class="subtask-input-container">
-                                    <div class="input-add-cancel-wrapper" id="inputBox">
-                                        <div class="flexR">
-                                            <input id="subtasks" type="text" placeholder="Add new subtask"
-                                                autocomplete="off" />
-                                            <div class="add-cancel-btns flexR gap-8" id="addCancelBtns"
-                                                style="display: none;">
-                                                <button class="cancel-subtask-button overlay-button" type="button"
-                                                    aria-label="Cancel Subtask"></button>
-                                                <span class="icon-divider" id="subtask-divider"></span>
-                                                <button class="add-subtask-button overlay-button" type="button"
-                                                    aria-label="Confirm Subtask"></button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <ul id="subtask-list" class="subtask-list flexC width-100"></ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="form-footer flexR width-100">
-                        <div class="footer-left flexR">
-                            <small class="validation-hint"><span class="required-asterisk">*</span>This field is
-                                required</small>
-                        </div>
-
-                        <div class="footer-right form-buttons flexR">
-                            <button type="reset" class="clear-button">Clear ✖</button>
-                            <button type="submit" class="create-button">Create Task ✔</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
+        <div class="backgroundColor flexC width-100" id="addTaskSeite">
         </div>
-        </div>
-        <template id="boardSvgTemplate">
-            <svg width="31" height="26" viewBox="0 0 31 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path
-                    d="M23.4544 2.77273L23.4545 23.2271C23.4538 23.8296 23.2142 24.4074 22.7881 24.8334C22.362 25.2595 21.7843 25.4992 21.1817 25.4998L16.6363 25.4998C16.0338 25.4992 15.456 25.2595 15.03 24.8334C14.6039 24.4074 14.3642 23.8296 14.3636 23.2271L14.3636 2.77273C14.3642 2.17015 14.6039 1.59243 15.03 1.16635C15.456 0.740262 16.0338 0.500623 16.6363 0.50002L21.1817 0.50002C21.7843 0.500623 22.362 0.740262 22.7881 1.16635C23.2142 1.59243 23.4538 2.17015 23.4544 2.77273ZM16.6363 23.2271L21.1817 23.2271L21.1817 2.77273L16.6363 2.77273L16.6363 23.2271ZM16.6363 2.77273L16.6363 23.2271C16.6357 23.8296 16.3961 24.4073 15.97 24.8334C15.5439 25.2595 14.9662 25.4991 14.3636 25.4997L9.81823 25.4997C9.21566 25.4991 8.63794 25.2595 8.21185 24.8334C7.78577 24.4073 7.54613 23.8296 7.54553 23.227L7.54553 2.7727C7.54613 2.17013 7.78577 1.59241 8.21185 1.16632C8.63793 0.740238 9.21566 0.500602 9.81823 0.5L14.3636 0.499999C14.9662 0.500602 15.5439 0.740238 15.97 1.16632C16.3961 1.59241 16.6357 2.17015 16.6363 2.77273ZM9.81823 23.227L14.3636 23.2271L14.3636 2.77273L9.81823 2.7727L9.81823 23.227ZM9.81823 2.7727L9.81823 23.227C9.81763 23.8296 9.57799 24.4073 9.15191 24.8334C8.72582 25.2595 8.1481 25.4991 7.54553 25.4997L3.00012 25.4997C2.39755 25.4991 1.81983 25.2595 1.39374 24.8334C0.967657 24.4073 0.728019 23.8296 0.727417 23.227L0.727416 2.7727C0.728018 2.17013 0.967656 1.59241 1.39374 1.16632C1.81982 0.740238 2.39755 0.500603 3.00012 0.5L7.54553 0.5C8.1481 0.500602 8.72582 0.740238 9.1519 1.16632C9.57799 1.59241 9.81763 2.17013 9.81823 2.7727ZM3.00012 23.227L7.54553 23.227L7.54553 2.7727L3.00012 2.7727L3.00012 23.227Z"
-                    fill="white" />
-            </svg>
-        </template>
-
     </main>
-    <script src="../../main.js"></script>
-    <script src="../../js/remoteStorage.js"></script>
+
+    <!-- scripts -->
+     
+    <script src="../../main.js" defer></script>
     <script src="../../js/templates/templates.js"></script>
-    <script src="../../js/subtasks.js"></script>
-    <script src="../../js/contactService.js"></script>
-    <script src="../../js/dropdown.js"></script>
-    <script src="../../js/addTask.core.js"></script>
-    <script src="../../js/addTask.ui.js"></script>
-    <script src="../../js/addTask.assignees.js"></script>
-    <script src="../../js/category.dropdown.js"></script>
+    <script src="../../js/boardUtils.js" defer></script>
+    <script src="../../js/boardOverlay.js" defer></script>
+    <script src="../../js/tasksApi.js" defer></script>
+    <script src="../../js/templates/addTaskOverlayTemplates.js" defer></script>
+    <script src="../../js/board.js" defer></script>
+    <script src="../../js/addTaskOverlay.js" defer></script>
 </body>
 
 </html>

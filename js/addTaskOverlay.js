@@ -35,7 +35,6 @@ function handleSubtaskInputOutsideClick(event) {
   const HINT_MESSAGE_DIV = document.getElementById("subtaskHintMessage");
 
   if (inputFeld && !inputFeld.contains(event.target)) {
-    plusBtn.classList.remove("display-none");
     addCancelBtns.classList.add("display-none");
     HINT_MESSAGE_DIV.classList.add("display-none");
     inputFeld.classList.remove("correct-me");
@@ -199,21 +198,17 @@ function markPreselectedAssignees() {
 
 /** Returns the names of currently selected assignees in the overlay. */
 function getCurrentTaskAssignees() {
-  const taskOverlayContent = document.getElementById("taskOverlayContent");
-  if (taskOverlayContent) {
-    const assigneeContainer = document.querySelector(
-      ".assignee-container .flexC"
-    );
-    if (assigneeContainer) {
-      const memberElements =
-        assigneeContainer.querySelectorAll(".member-name-text");
-      return Array.from(memberElements)
-        .map((el) => el.textContent.trim())
-        .filter((name) => name);
-    }
+  const containers = document.querySelectorAll('#selectedAssignee,#editedAssignee,#selected-assignees,#selectedAssignees,.assignee-container .flexC,.assigned-to-wrapper .selected-assignees');
+  for (const c of containers) {
+    const m = Array.from(c.querySelectorAll('.member-name-text')).map(e=>e.textContent.trim()).filter(Boolean);
+    if (m.length) return m;
+    const i = Array.from(c.querySelectorAll('.contact-icon[data-name]')).map(e=>e.dataset.name?.trim()).filter(Boolean);
+    if (i.length) return i;
+    const n = Array.from(c.querySelectorAll('.contact-name')).map(e=>e.textContent.trim()).filter(Boolean);
+    if (n.length) return n;
   }
-
-  return [];
+  const boxes = document.querySelectorAll('#assigneeOptions input[type="checkbox"]:checked,#assigned-to-options input[type="checkbox"]:checked');
+  return boxes.length?Array.from(boxes).map(cb=>{const r=cb.closest('li')||cb.parentElement;const nm=r?.querySelector('.contact-name')?.textContent.trim();return (nm||cb.dataset?.email||cb.value||'').trim();}).filter(Boolean):[];
 }
 
 /** Toggles selected styling and checkbox icons for an assignee row. */
@@ -326,7 +321,6 @@ function showAddCancelBtns() {
   const plusBtn = document.getElementById("subtaskPlusBtn");
   const addCancelBtns = document.getElementById("addCancelBtns");
 
-  plusBtn.classList.add("display-none");
   addCancelBtns.classList.remove("display-none");
 }
 
@@ -431,3 +425,14 @@ function finalEditditSubtask(subtask) {
 
 // Add event listener for outside clicks to close dropdowns
 document.addEventListener('click', handleOutsideClick);
+
+
+function addTaskForm() {
+  const form = document.getElementById("addTaskSeite");
+  form.innerHTML = addTaskOverlayForm("todoColumn", 'Clear');
+
+  const closeBtn = document.getElementById("closeOverlayBtn");
+  if (closeBtn) closeBtn.classList.add("display-none");
+  loadAndRenderContacts();
+}
+

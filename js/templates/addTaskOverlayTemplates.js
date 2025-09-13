@@ -1,9 +1,9 @@
 
-function addTaskOverlayForm(columnId) {
+function addTaskOverlayForm(columnId, cancelLabel = 'Cancel') {
     return `
             <div class="overlay-header flexR width-100 space-between">
             <h2>Add Task</h2>
-            <button class="overlay-button" onclick="closeOverlay()">
+            <button class="overlay-button" id="closeOverlayBtn" onclick="closeOverlay()">
             ${CLOSE_CANCEL_SVG}
 
             </button>
@@ -28,7 +28,11 @@ function addTaskOverlayForm(columnId) {
                             <span class="required-span width-100 display-none">This field is required</span>
                         </div>
                     </div>
-                    <span class="middle-vector"></span>
+
+                    <svg class="middle-vector" width="2" height="426" viewBox="0 0 2 426" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1.24805 1L1.24854 425" stroke="#D1D1D1" stroke-linecap="round"/>
+                    </svg>
+
                     <div class="flexC task-form-column">
                         <div class="gap-8 width-100 flexC">
                             <span class="width-100 prio-style">Priority</span>
@@ -52,7 +56,7 @@ function addTaskOverlayForm(columnId) {
                             <label class="width-100" for="taskAssignee">Assigned To</label>
                             <div class="input-svg-wrapper width-100 flexC">
                                 <input  class="inputs change-onfoucus" type="text" id="taskAssignee" placeholder="Select Contacts to assign" oninput="searchAssignee(this.value)"
-                                        onclick="toggleAssigneeOptions(); event.stopPropagation(); ">
+                                        onfocus="toggleAssigneeOptions(); event.stopPropagation(); ">
                                 <div id="assigneeOptions" oninput="toggleAssigneeOptions()" class="assignee-options width-100 display-none">
                                     <!-- Contacts will be loaded dynamically -->
                                 </div>
@@ -64,7 +68,7 @@ function addTaskOverlayForm(columnId) {
                         <div class="gap-8 width-100 flexC">
                             <label class="width-100" for="taskCategory">Category<span class="highlight">*</span></label>
                             <div class="width-100">
-                                <button class="change-onfoucus category-options-btn inputs requierd-input" type="button" id="taskCategory" onclick="toggleCategoryOptions(); event.stopPropagation(); hideValidationErrors()">Select task category</button>
+                                <button class="change-onfocus category-options-btn inputs requierd-input" type="button" id="taskCategory" onclick="toggleCategoryOptions(); event.stopPropagation(); hideValidationErrors()">Select task category</button>
                                 <div class="category-options-list width-100 display-none flexC" id="categoryOptions">
                                     <span onclick="selectCategory('User Story');" class="category-option width-100" value="userStory">User Story</span>
                                     <span onclick="selectCategory('Technical Task');" class="category-option width-100" value="technicalTask">Technical Task</span>
@@ -76,9 +80,6 @@ function addTaskOverlayForm(columnId) {
                             <label class="width-100" for="subtasks">Subtasks</label>
                             <div class="inputs change-onfoucus space-between flexR" id="inputBox">
                                 <input type="text" id="subtasks" placeholder="add new subtask" oninput="checkSubtask(this.value.length)" onfocus="showAddCancelBtns()" onkeydown="onEnterAddSubTask(event, 'subtasks')">
-                                <button class="plus-button overlay-button" id="subtaskPlusBtn" type="button" onclick="showAddCancelBtns()">
-                                        ${PLUS_SVG}
-                                </button>
                                 <div class="add-cancel-btns flexR display-none gap-8" id="addCancelBtns">
                                     <button class="cancel-subtask-button overlay-button" type="button" onclick="cancelSubtask()">
                                         ${CLOSE_CANCEL_SVG}
@@ -96,12 +97,12 @@ function addTaskOverlayForm(columnId) {
                     </div>
                 </div>
                 <div class="flexR width-100 space-between submit-section">
-                    <span>
+                    <span class="flexR">
                         <span class="highlight">*</span>
                         This field is required</span>
                     <div class="flexR gap-16">
                         <button class="btn-shadow" type="button" id="closeOverlayButton" onclick="closeOverlay()">
-                            Cancel ${CLOSE_CANCEL_SVG}
+                            ${cancelLabel} ${CLOSE_CANCEL_SVG}
                         </button>
                         <button class="btn-shadow" type="submit" id="addTaskButton">
                             Creat Task ${SUBMIT_SVG}
@@ -139,7 +140,7 @@ function addSubTaskTemplate(subtaskInput, index = 0){
             </div>
         </div>
         <div class="edit-subtask-input-wrapper space-between width-100 flexR display-none" id="${editUniqueId}">
-            <input type="text" id="${editInputId}" class="width-100" onkeydown="onEnterEditSubTask(event, this)">
+            <input type="text" id="${editInputId}" class="edit-subtask-input width-100" onkeydown="onEnterEditSubTask(event, this)">
             <div class="gap-8 flexR">
             <button class="delete-subtask-button overlay-button" type="button" onclick="deleteSubtask(this)">
                 <svg width="16" height="18" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">

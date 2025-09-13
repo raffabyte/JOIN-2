@@ -159,6 +159,11 @@ function generateColumnData(tasksByColumn) {
 function renderColumns(columnData) {
     columnData.forEach(({ col, dragAreaId, tasksHTML }) => {
         const column = document.getElementById(col);
+        if (!column) {
+            // Page may be a standalone add-task page without board columns; skip safely
+            console.debug && console.debug(`renderColumns: missing element ${col}, skipping`);
+            return;
+        }
         column.innerHTML = tasksHTML + dragAreaTemplate(dragAreaId);
         setupColumnEventHandlers(column, col, dragAreaId);
     });
@@ -207,36 +212,11 @@ async function updateBoard() {
     try {
         const tasks = await fetchBoardData();
         await updateColumns(tasks);
-        checkEmptyColumn();
+    if (typeof checkEmptyColumn === 'function') checkEmptyColumn();
     } catch (error) {
         console.error('Error updating board:', error);
     }
 }
-
-/**
- * Adds a new task to the specified column
- * @param {Event|null} event - The event object (if triggered by form submission)
- * @param {string} columnId - The ID of the target column
- * @returns {void}
- */
-function addTask(event, columnId) {
-    if (event) event.preventDefault();
-    const taskData = validateAndSaveTaskData(columnId);
-
-    if (!taskData) {
-        return;
-    }
-
-    pushTaskToDatabase(columnId)
-        .then(() => {
-            updateBoard();
-            showAddedTaskNotification();
-            setTimeout(() => {
-                closeOverlay();
-            }, 900);
-        });
-}
-
 
 /* Tasks-Design in Board functions */
 
