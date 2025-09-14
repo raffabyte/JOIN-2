@@ -20,7 +20,7 @@
   <link rel="icon" href="../img/Logo.png" type="image/x-icon" />
 </head>
 
-<body>
+<body style="visibility:hidden">
   <nav>
     <div id="linkesNavMenu" class="navContent">
 
@@ -66,7 +66,7 @@
                     </svg>
                   </div>
                   <div class="d-colum">
-                    <h2 id="ToDo" class="nummber">1</h2>
+                    <h2 id="ToDo" class="nummber"></h2>
                     <p class="To-do">To-do</p>
                   </div>
                 </a>
@@ -83,7 +83,7 @@
                     </svg>
                   </div>
                   <div class="d-colum">
-                    <h2 id="Done" class="nummber">1</h2>
+                    <h2 id="Done" class="nummber"></h2>
                     <p class="To-do">Done</p>
                   </div>
                 </a>
@@ -95,13 +95,13 @@
                   <div class="d-flex">
                     <img class="img1" src="../img/summeryIcons/Frame 59 (2).png" alt="" />
                     <div class="d-colum">
-                      <h2 id="highPriorityCount" class="nummber">1</h2>
+                      <h2 id="highPriorityCount" class="nummber"></h2>
                       <p class="To-do">Urgent</p>
                     </div>
                   </div>
                   <div class="separator2"></div>
                   <div class="deadline">
-                    <p id="nextDeadlineDate" class="p-strong">October 16, 2022</p>
+                    <p id="nextDeadlineDate" class="p-strong"></p>
                     <p class="p-normal">Upcoming Deadline</p>
                   </div>
                 </a>
@@ -110,24 +110,24 @@
               <!-- Reihe 3 – 3 Elemente -->
               <div class="row">
                 <a href="board.html" class="item3">
-                  <h2 id="tasksinBoard" class="nummber">5</h2>
+                  <h2 id="tasksinBoard" class="nummber"></h2>
                   <p class="To-do">Tasks in Board</p>
                 </a>
                 <a href="board.html" class="item3">
-                  <h2 id="tasksInProgress" class="nummber">2</h2>
+                  <h2 id="tasksInProgress" class="nummber"></h2>
                   <p class="To-do">Tasks In Progress</p>
                 </a>
                 <a href="board.html" class="item3">
-                  <h2 id="awaitingFeedback" class="nummber">2</h2>
+                  <h2 id="awaitingFeedback" class="nummber"></h2>
                   <p class="To-do">Awaiting Feedback</p>
                 </a>
               </div>
             </div>
             <div class="greetings">
               <h3 class="greeting">
-                <span id="greetingText">Good morning</span><span id="comma">,</span>
+                <span id="greetingText"></span><span id="comma">,</span>
               </h3>
-              <h2 class="name" id="userName">Sofia Müller</h2>
+              <h2 class="name" id="userName"></h2>
             </div>
           </div>
         </div>
@@ -140,12 +140,13 @@
       <h3 class="greeting">
         <span id="greetingTextMobile">Good morning</span><span id="commaMobile">,</span>
       </h3>
-      <h2 class="name" id="userNameMobile">Sofia Müller</h2>
+      <h2 class="name" id="userNameMobile"></h2>
     </div>
   </div>
   <!-- scripts  -->
   <script src="../../main.js"></script>
   <script src="../../js/templates/templates.js"></script>
+  <script src="../../js/tasksApi.js"></script>
   <script src="../../js/summery.js"></script>
 </body>
 

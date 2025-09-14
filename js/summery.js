@@ -18,13 +18,22 @@ const userKey = window.USERKEY || localStorage.getItem("loggedInUserKey");
 })();
 
 window.addEventListener("DOMContentLoaded", async () => {
-  mobileOverlayFadeOut();
-  addHeader();
-  linkesNavMenuVersion();
-  showHideHelpAndUser();
-  await setUserInitials();
-  await loadAndRenderTaskCounts();
-  await init();
+  try {
+    mobileOverlayFadeOut();
+    addHeader();
+    linkesNavMenuVersion();
+    showHideHelpAndUser();
+    // Ensure user name/initials are set immediately before any long-running task fetches
+    await setUserInitials();
+    await init();
+    // Load task counts only after the user name is displayed and seeding is ensured
+    await loadAndRenderTaskCounts();
+  } catch (err) {
+    console.error('Initialization error:', err);
+  } finally {
+    // Make the page visible once we've attempted to populate all fields
+    try { document.body.style.visibility = 'visible'; } catch (e) { /* ignore */ }
+  }
 });
 
 /**
@@ -101,6 +110,9 @@ function formatName(name) {
  */
 async function loadAndRenderTaskCounts() {
   try {
+    // Stelle sicher, dass für neue Benutzer Starter‑Tasks vom Remote kopiert wurden
+    if (typeof seedUserTasksIfEmpty === 'function') await seedUserTasksIfEmpty();
+
     const tasks = await fetchTasks();
     const { countByColumn, highPriorityCount, upcomingUrgentDates } = analyzeTasks(tasks);
     renderTaskCounts(countByColumn, tasks.length, highPriorityCount);
