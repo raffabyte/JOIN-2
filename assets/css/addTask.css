@@ -3,7 +3,6 @@ header {
 }
 
 main {
-  background: #F4F7FD;
   max-height: none;
 }
 
@@ -11,7 +10,7 @@ main {
   padding: 110px 96px 24px 96px;
   flex: 1;
   max-height: 800px;
-
+  max-width: 1920px;
 }
 
 .added-to-board-message {

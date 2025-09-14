@@ -39,11 +39,6 @@ function init() {
             if (event.propertyName === "opacity" && logo.classList.contains("visible")) {
                 // moved setzen
                 logo.classList.add("moved");
-
-                // 4K Anpassung: left korrekt für Content-Bereich
-                if (window.innerWidth >= 2560) {
-                    logo.style.left = `calc((100vw - 1920px)/2 + 40px)`;
-                }
             }
 
             if (event.propertyName === "top" && logo.classList.contains("moved")) {

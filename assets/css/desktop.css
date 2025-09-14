@@ -25,20 +25,26 @@
 /* Body full-screen */
 html, body {
     width: 100%;
+    max-width: 1920px;
     height: 100%;
+    max-height: 1024px;
     margin: 0;
     padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     background: white;
-    overflow-x: hidden;
+}
+
+body {
+    position: relative;
 }
 
 /* Logos: Basiszustand */
 .join-logo-desktop,
 .join-logo-mobile {
-    position: fixed; /* immer am Bildschirm */
+    /* moved from fixed to absolute: Variant B expects the logo to live inside a centered wrapper */
+    position: absolute; /* innerhalb des Wrappers positionieren */
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) scale(2);
@@ -47,6 +53,16 @@ html, body {
     visibility: hidden;
     transition: opacity 0.5s ease, transform 0.5s ease, top 0.5s ease, left 0.5s ease;
     transform-origin: center center;
+}
+
+/* Wrapper für Variant B: füge diese Klasse dem zentrierten Container / main wrapper in deinem HTML hinzu */
+.site-wrapper {
+    position: relative; /* macht absolute Positionen innerhalb dieses Containers relevant */
+    max-width: 1920px;
+    max-height: 1024px;
+    margin: 0 auto; /* zentriert den Wrapper */
+    width: 100%;
+    height: 100%;
 }
 
 /* Sichtbar gemachtes Logo */
@@ -62,7 +78,7 @@ html, body {
 .join-logo-desktop.moved,
 .join-logo-mobile.moved {
     top: 40px;
-    left: 40px;
+    left: 40px; /* jetzt 40px vom linken Rand des Wrappers */
     transform: translate(0,0) scale(1);
 }
 
@@ -82,17 +98,4 @@ html, body {
     }
 }
 
-/* Große Screens / 4K: Logo positioniert sich relativ zum max-width Content */
-@media (min-width: 2560px) {
-    .join-logo-desktop.moved,
-    .join-logo-mobile.moved {
-        left: calc((100vw - 1920px)/2 + 40px);
-    }
-}
 
-@media (min-width: 3840px) {
-    .join-logo-desktop.moved,
-    .join-logo-mobile.moved {
-        left: calc((100vw - 1920px)/2 + 40px);
-    }
-}

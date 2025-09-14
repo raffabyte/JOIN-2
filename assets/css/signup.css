@@ -1,30 +1,43 @@
-
 .displayF {
   display: flex;
 }
 
-.input-field, 
+.input-field,
 .password-field {
   width: 100%;
   justify-content: center;
 }
 
-.is-invalid{ border:2px solid #FF3B30 !important; border-radius:8px; outline:none; }
-
-.error-text{
-  display:block;
-  height:16px;         
-  line-height:16px;
-  margin-top:6px;
-  font-size:16px;
-  color:#ff0d00;
-  visibility:hidden;     
+.is-invalid {
+  border: 2px solid #FF3B30 !important;
+  border-radius: 8px;
+  outline: none;
 }
-.input-error{ border:2px solid #FF3B30 !important; } 
+.success-box {
+  max-width: 1920px;
+  max-height: 1024px;
+  width: 100%;
+  height: 100%;
+}
 
-html, body {
-    min-height: 100vh;
-    max-height: 1024px;
+.error-text {
+  display: block;
+  height: 16px;
+  line-height: 16px;
+  margin-top: 6px;
+  font-size: 16px;
+  color: #ff0d00;
+  visibility: hidden;
+}
+
+.input-error {
+  border: 2px solid #FF3B30 !important;
+}
+
+html,
+body {
+  max-width: 1920px;
+  max-height: 1024px;
 }
 
 body {
@@ -34,16 +47,16 @@ body {
 }
 
 header {
-    display: flex; 
-    justify-content: center;
-    width: 100%;
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
 .headerContent {
-    display: flex;
-    justify-content: space-between; 
-    max-width: 1920px;
-    width: 100%;
+  display: flex;
+  justify-content: space-between;
+  max-width: 1920px;
+  width: 100%;
 }
 
 .visibleNo {
@@ -58,25 +71,25 @@ header img {
 
 main {
   display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 0;
-    padding-left: 0;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center !important;
+  min-height: 0;
+  padding-left: 0;
 }
 
 .login-container {
-    position: relative;
-    background: white;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 32px;
-    padding: 48px 32px;
-    max-width: 598px;
-    width: 100%;
-    max-height: 630px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  position: relative;
+  background: white;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 32px;
+  padding: 48px 32px;
+  max-width: 598px;
+  width: 100%;
+  max-height: 630px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 form#signUpForm {
@@ -124,21 +137,6 @@ button {
   width: 100%;
   max-width: 422px;
 }
-
-/* .password-field input {
-  padding: 12px 21px;
-  font-size: 20px;
-  color: black;
-  background-color: white;
-} */
-/* 
-
-/* .password-wrapper input {
-  color: black;
-  padding: 12px 21px;
-  font-size: 20px;
-  line-height: 1;
-} */
 
 .password-field .hidden-input {
   font-family: monospace !important;
@@ -254,15 +252,15 @@ h2 {
 }
 
 .login-btn {
-    padding: 15px 24px;
-    font-weight: 700;
-    font-size: 21px;
-    background-color: #2a3647;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    margin: 0;
+  padding: 15px 24px;
+  font-weight: 700;
+  font-size: 21px;
+  background-color: #2a3647;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 0;
 }
 
 .login-btn:hover {
@@ -295,7 +293,8 @@ h2 {
 #msgBox {
   margin-top: 6px;
   font-size: 14px;
-  min-height: 20px;   /* Platz immer da, auch wenn leer */
+  min-height: 20px;
+  /* Platz immer da, auch wenn leer */
   color: red;
   font-family: "Inter", sans-serif;
   padding-left: 4px;
@@ -364,7 +363,7 @@ footer a:hover {
   z-index: 1000;
   display: flex;
   justify-content: center;
-  align-items: flex-end;
+  align-items: flex-start;
   padding-bottom: 80px;
 }
 
@@ -399,6 +398,7 @@ header img,
     margin-top: 36px;
     width: 80%;
   }
+
   .arrow-left-line {
     position: absolute;
     top: 42px;
@@ -410,16 +410,19 @@ header img,
     line-height: 120%;
   }
 }
+
 @media (max-width: 560px) {
   header img {
     height: 77px;
     width: 64px;
   }
+
   .login-container {
     margin: 0 8px;
     /* width: 100%;
     max-width: 80%; */
   }
+
   .input {
     width: 100%;
   }
@@ -456,6 +459,7 @@ header img,
     width: 50%;
     box-sizing: border-box;
   }
+
   .inputs {
     width: 100%;
     gap: 8px;

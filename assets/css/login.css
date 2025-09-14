@@ -1,14 +1,9 @@
-html, body {
-    min-height: 100vh;
-    max-height: 1024px;
-}
-
 body{
     padding: 0;
-    background: #F6F7F8;
-    margin: 0 auto;
     display: flex;
     flex-direction: column;
+    max-width: 1920px;
+    max-height: 1024px;
 }
 
 header {
@@ -71,11 +66,11 @@ header img {
 
 main {
     display: flex;
-    flex: 1; 
     flex-direction: column;
     justify-content: center;
     align-items: center;
     padding-left: 0;
+    max-height: calc(100vh - 200px);
 }
 
 .login-container {
