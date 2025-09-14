@@ -22,6 +22,10 @@ header img {
     margin: 40px 0 0 40px;
 }
 
+.header-mobile{
+    width: 100%;
+}
+
 .header-desktop a,
 .header-mobile a {
     border: 2px solid transparent;
