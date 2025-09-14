@@ -100,8 +100,8 @@ if (!window.hardNavigate) {
 function linkesNav(activePage) {
   const isGuest = localStorage.getItem("guestMode") === "true";
 
-  const privacyHref = isGuest ? "../index/privacy-login.html" : "../index/privacy.html";
-  const legalHref = isGuest ? "../index/legal-notice-login.html" : "../index/legal-notice.html";
+  const privacyHref = "../index/privacy.html";
+  const legalHref = "../index/legal-notice.html";
 
   return `
     <div class="flexC nav-menu-top">

@@ -10,7 +10,7 @@ main {
   padding: 110px 96px 24px 96px;
   flex: 1;
   max-height: 800px;
-  max-width: 1920px;
+  max-width: calc(1920px - 232px);
 }
 
 .added-to-board-message {

@@ -1,14 +1,11 @@
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
 
-.contentBackground {
+
+.content-background {
   display: flex;
   background-color: #f6f7f8;
   width: 100%;
   height: 100vh;
+  max-height: calc(1024px - 215px);
 }
 
 .content {
@@ -41,6 +38,9 @@
   padding-left: 5vw;
   padding-right: 5vw;
   box-sizing: border-box;
+  max-height: 800px;
+    overflow: auto;
+    margin-top: 32px;
 }
 
 .legal-heading {
