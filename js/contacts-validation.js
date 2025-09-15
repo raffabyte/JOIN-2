@@ -85,13 +85,11 @@
   function validatePhone(el) {
     const v = el.value.trim();
     if (!v) return "Please enter a phone number.";
-    if (!/^\+?[0-9().\-\s]+$/.test(v))
-      return "Only digits, spaces, (), -, . and one leading + are allowed.";
-    if ((v.match(/\+/g) || []).length > 1)
-      return "Only one '+' allowed and it must be at the start.";
+    if (!/^\+?[0-9]+$/.test(v))
+      return "Only numbers and an optional leading '+' are allowed.";
     const digits = v.replace(/\D/g,'');
     if (digits.length < 6 || digits.length > 15)
-      return "Phone should be 6–15 digits (e.g., +49 171 2345678).";
+      return "Phone should be 6–15 digits (e.g., +491712345678).";
     return "";
   }
 
@@ -174,10 +172,10 @@ function addActiveBorderInteractions() {
 /** Cleans invalid characters from phone input values. */
 function cleanPhoneInput(el) {
   const old = el.value;
-  let s = old.replace(/[^\d()\-\s+\.]/g, '');
+  let s = old.replace(/[^\d+]/g, ''); // Allow only digits and +
   const leadPlus = s.startsWith('+');
-  s = s.replace(/\+/g, '');
-  if (leadPlus) s = '+' + s;
+  s = s.replace(/\+/g, ''); // Remove all +
+  if (leadPlus) s = '+' + s; // Add back one + if it was at the start
   if (s !== old) { el.value = s; }
 }
 

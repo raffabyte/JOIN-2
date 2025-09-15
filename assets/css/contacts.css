@@ -11,7 +11,7 @@ input {
 }
 
 .is-invalid {
-  border: 2px solid #ff3b30 !important;
+  border: 2px solid #D90429 !important;
   border-radius: 8px;
   outline: none;
 }
@@ -23,13 +23,13 @@ input {
   line-height: 16px;
   margin-top: 6px;
   font-size: 16px;
-  color: #ff3b30;
+  color: #D90429;
   visibility: hidden;
   /* unsichtbar, aber reserviert Platz */
 }
 
 .input-field .is-invalid {
-  border-color: #ff3b30 !important;
+  border-color: #D90429 !important;
 }
 
 .contacsList {
@@ -1175,7 +1175,7 @@ form {
 
   .create-btn,
   .cancel-button {
-    padding: 10px 17px;
+    padding: 8px;
     font-size: 16px;
     height: 39px;
   }
@@ -1332,11 +1332,6 @@ form {
     gap: 8px;
   }
 
-  .create-btn,
-  .cancel-button {
-    padding: 11px 6px;
-  }
-
   .contactsDetails {
     padding-top: 16px;
   }
@@ -1463,7 +1458,7 @@ form {
   }
 
   .flexCC {
-    max-width: 248px;
+    max-width: 266px;
     padding-top: 60px;
   }
 
