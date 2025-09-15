@@ -4,64 +4,17 @@
 // --- Helpers ---------------------------------------------------------
 const $$ = (id) => document.getElementById(id);
 const getRealPw = (el) => (el?.getRealPassword?.() ?? el?.value ?? "");
-function installErrorSlots(){
-  const plan = [
-    { sel: '#name',       into: null },                
-    { sel: '#email',      into: null },
-    { sel: '#password',   into: '.password-field' },  
-    { sel: '#password2',  into: '.password-field' },
-    { sel: '#accept',     into: '.accept_div' },       
-  ];
-  plan.forEach(({sel, into}) => {
-    const input = document.querySelector(sel);
-    if(!input) return;
-    const container = into ? input.closest(into) : input;
-   
-    let slot = into
-      ? container.querySelector(':scope > .error-text')
-      : input.nextElementSibling?.classList?.contains('error-text') ? input.nextElementSibling : null;
-    if(!slot){
-      slot = document.createElement('div');
-      slot.className = 'error-text';
-      if(into) container.appendChild(slot);
-      else input.insertAdjacentElement('afterend', slot);
-    }
-   
-    slot.style.visibility = 'hidden';
-    slot.textContent = '';
-  });
-}
 
-document.addEventListener('DOMContentLoaded', installErrorSlots);
-  function getErrorSlot(inputEl){
-  const pwdField = inputEl.closest('.password-field');
-  if(pwdField) return pwdField.querySelector(':scope > .error-text');
-  const accept = inputEl.closest('.accept_div');
-  if(accept) return accept.querySelector(':scope > .error-text');
-  const sib = inputEl.nextElementSibling;
-  return (sib && sib.classList?.contains('error-text')) ? sib : null;
-}
-
-function showError(inputEl, message){
+function showError(inputEl){
   if(!inputEl) return;
   inputEl.classList.add('is-invalid');
   inputEl.setAttribute('aria-invalid','true');
-  const slot = getErrorSlot(inputEl);
-  if(slot){
-    slot.textContent = message || '';
-    slot.style.visibility = 'visible';
-  }
 }
 
 function clearError(inputEl){
   if(!inputEl) return;
   inputEl.classList.remove('is-invalid');
   inputEl.removeAttribute('aria-invalid');
-  const slot = getErrorSlot(inputEl);
-  if(slot){
-    slot.textContent = '';
-    slot.style.visibility = 'hidden'; 
-  }
 }
 
 // --- Field rules ------------------------------------------------------
@@ -106,9 +59,9 @@ function validateEmail(el){
 function validatePassword(el) {
   const v = getRealPw(el);
   if (!v) return "Please enter a password.";
-  const strong = v.length >= 8 && /[a-z]/.test(v) && /[A-Z]/.test(v) && /\d/.test(v);
-  if (!strong) return;
-  return "";
+  if (v.includes(' ')) return "Password cannot contain spaces.";
+  if (v.length < 3) return "Password must be at least 3 characters.";
+  return ""; // Alles ok
 }
 function validatePasswordRepeat(pwEl, pw2El) {
   const pw1 = getRealPw(pwEl);
@@ -128,31 +81,33 @@ function validateForm() {
   const emailEl = $$("email");
   const pwEl = $$("password");
   const pw2El = $$("password2");
-  const acceptEl = $$("accept");      
-  const msgBox = $$("msgBox");       
+  const acceptEl = $$("accept");
+  const globalError = $$("globalError");
 
-  const errors = [];
+  const checks = [
+  { el: nameEl, msg: validateName(nameEl) },
+  { el: emailEl, msg: validateEmail(emailEl) },
+  { el: pwEl, msg: validatePassword(pwEl) },
+  { el: pw2El, msg: validatePasswordRepeat(pwEl, pw2El) },
+  { el: acceptEl, msg: validateAccept(acceptEl) }
+  ];
 
-  const nMsg = validateName(nameEl);
-  if (nMsg) { showError(nameEl, nMsg); errors.push(nameEl); } else { clearError(nameEl); }
+  let firstError = null;
+  checks.forEach(({el,msg}) => {
+  if (msg) { showError(el); if(!firstError) firstError = {el,msg}; }
+    else clearError(el);
+  });
 
-  const eMsg = validateEmail(emailEl);
-  if (eMsg) { showError(emailEl, eMsg); errors.push(emailEl); } else { clearError(emailEl); }
-
-  const pMsg = validatePassword(pwEl);
-  if (pMsg) { showError(pwEl, pMsg); errors.push(pwEl); } else { clearError(pwEl); }
-
-  const p2Msg = validatePasswordRepeat(pwEl, pw2El);
-  if (p2Msg) { showError(pw2El, p2Msg); errors.push(pw2El); if (msgBox) msgBox.textContent = p2Msg; }
-  else { clearError(pw2El); if (msgBox) msgBox.textContent = ""; }
-
-  const aMsg = validateAccept(acceptEl);
-  if (aMsg && acceptEl) { showError(acceptEl, aMsg); errors.push(acceptEl); } 
-  else if (acceptEl) { clearError(acceptEl); }
-
-  if (errors.length) {
-    errors[0].focus?.();
+  if (firstError) {
+    if (globalError){
+      globalError.textContent = firstError.msg;
+      globalError.classList.remove('is-hidden');
+    }
+    firstError.el?.focus?.();
     return false;
+  } else if (globalError){
+    globalError.textContent = '';
+    globalError.classList.add('is-hidden');
   }
   return true;
 }
@@ -164,31 +119,26 @@ function bindLiveValidation() {
   const pwEl = $$("password");
   const pw2El = $$("password2");
   const acceptEl = $$("accept");
-  const msgBox = $$("msgBox");
-
-  nameEl?.addEventListener("input", () => {
-    if (!validateName(nameEl)) clearError(nameEl);
+  const globalError = $$("globalError");
+  const refreshGlobal = () => {
+    // Re-run the ordered rules, show first error only
+    const rules = [
+      { el: nameEl, msg: validateName(nameEl) },
+      { el: emailEl, msg: validateEmail(emailEl) },
+      { el: pwEl, msg: validatePassword(pwEl) },
+      { el: pw2El, msg: validatePasswordRepeat(pwEl, pw2El) },
+      { el: acceptEl, msg: validateAccept(acceptEl) }
+    ];
+    let first = rules.find(r => r.msg);
+  rules.forEach(r => r.msg ? showError(r.el) : clearError(r.el));
+    if (first) { globalError.textContent = first.msg; globalError.classList.remove('is-hidden'); }
+    else { globalError.textContent=''; globalError.classList.add('is-hidden'); }
+  };
+  [nameEl,emailEl,pwEl,pw2El].forEach(el => {
+    el?.addEventListener('input', refreshGlobal);
+    el?.addEventListener('blur', refreshGlobal);
   });
-  emailEl?.addEventListener("input", () => {
-    if (!validateEmail(emailEl)) clearError(emailEl);
-  });
-
-  ["beforeinput","input"].forEach(evt => {
-    pwEl?.addEventListener(evt, () => {
-      if (!validatePassword(pwEl)) clearError(pwEl);
-      const m = validatePasswordRepeat(pwEl, pw2El);
-      if (!m) { clearError(pw2El); if (msgBox) msgBox.textContent = ""; }
-    });
-    pw2El?.addEventListener(evt, () => {
-      const m = validatePasswordRepeat(pwEl, pw2El);
-      if (!m) { clearError(pw2El); if (msgBox) msgBox.textContent = ""; }
-      else if (msgBox) msgBox.textContent = m;
-    });
-  });
-
-  acceptEl?.addEventListener("change", () => {
-    if (!validateAccept(acceptEl)) clearError(acceptEl);
-  });
+  acceptEl?.addEventListener('change', refreshGlobal);
 }
 
 document.addEventListener("DOMContentLoaded", () => {

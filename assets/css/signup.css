@@ -13,6 +13,7 @@
   border-radius: 8px;
   outline: none;
 }
+
 .success-box {
   max-width: 1920px;
   max-height: 1024px;
@@ -20,11 +21,26 @@
   height: 100%;
 }
 
+.global-error {
+  color: #e03131;
+  font-size: 16px;
+  font-weight: 500;
+  width: 100%;
+  text-align: center;
+  margin: 8px;
+  min-height: 20px;
+}
+
+.global-error.is-hidden {
+  visibility: hidden;
+}
+
+
 .error-text {
   display: block;
   height: 16px;
   line-height: 16px;
-  margin-top: 6px;
+  margin: 6px 0;
   font-size: 16px;
   color: #ff0d00;
   visibility: hidden;
@@ -90,9 +106,8 @@ main {
 }
 
 form#signUpForm {
-  padding-top: 32px;
-  max-width: 422px;
-  gap: 16px;
+  padding-top: 48px;
+  max-width: 700px;
 }
 
 .login-container input:focus:not(.input-error) {
@@ -110,9 +125,9 @@ button {
 .inputs {
   display: flex;
   flex-direction: column;
-  gap: 8px;
   width: 100%;
   max-width: 422px;
+  gap: 16px;
 }
 
 .inputs input,
@@ -122,11 +137,11 @@ button {
   height: 42px;
   padding: 0 16px;
   font-size: 16px;
-  box-sizing: border-box;
   color: black;
   background-color: white;
   border: 1px solid #ccc;
   border-radius: 8px;
+
 }
 
 .password-wrapper {
@@ -244,19 +259,16 @@ h2 {
 .login-buttons {
   display: flex;
   justify-content: center;
-  width: auto;
-  max-width: 422px;
+  max-width: 272px;
 }
 
 .login-btn {
   padding: 15px 24px;
   font-weight: 700;
   font-size: 21px;
-  background-color: #2a3647;
+  background: #2a3647;
   color: white;
-  border: none;
   border-radius: 8px;
-  cursor: pointer;
   margin: 0;
 }
 
@@ -391,9 +403,19 @@ header img,
 
 @media (max-width: 768px) {
   .login-container {
-    padding: 32px 16px;
-    margin-top: 36px;
-    width: 80%;
+    padding: 32px 0;
+    width: 90%;
+  }
+
+  .login-btn {
+    padding: 8px;
+    font-size: 16px;
+    width: 72%;
+  }
+
+  form#signUpForm {
+    padding-top: 16px;
+    max-width: 300px;
   }
 
   .arrow-left-line {
@@ -410,32 +432,50 @@ header img,
 
 @media (max-width: 560px) {
   header img {
-    height: 77px;
-    width: 64px;
+    object-fit: contain;
+    height: 56px;
+    width: 35px;
     margin: 24px 0 0 24px;
-  }
-
-  .login-container {
-    margin: 0 8px;
-    /* width: 100%;
-    max-width: 80%; */
   }
 
   .input {
     width: 100%;
   }
 
+  input#name,
+  input#email {
+    background-size: 16px !important;
+  }
+
+  svg {
+    width: 19px !important;
+  }
+
+  input {
+    padding: 8px !important;
+  }
+
+  input::placeholder {
+    font-size: 16px;
+    text-align: left;
+  }
+
+  .login-btn {
+    padding: 8px;
+    font-size: 16px;
+    width: 72%;
+  }
+
+  label {
+    font-size: 16px;
+  }
+
 }
 
 @media (max-width: 430px) {
 
-  .login-container {
-    width: 90%;
-    margin-top: 16px;
-  }
-
   h2 {
-    font-size: 44px;
+    font-size: 40px;
     font-weight: 700;
     line-height: 120%;
   }
@@ -448,36 +488,25 @@ header img,
 
   .login-buttons {
     width: 100%;
-    padding: 0 16px;
-    box-sizing: border-box;
-  }
-
-  .login-btn {
-    display: block;
-    width: 50%;
-    box-sizing: border-box;
   }
 
   .inputs {
     width: 100%;
+    max-width: 280px;
     gap: 8px;
   }
 
   .inputs input,
   .password-wrapper input {
     width: 100%;
-    box-sizing: border-box;
   }
 
   .password-field {
-    width: 100%;
     max-width: 100%;
   }
 
   .password-wrapper {
-    width: 100%;
     max-width: 100%;
-    box-sizing: border-box;
   }
 
   .password-wrapper input,
@@ -485,7 +514,6 @@ header img,
     width: 100%;
     max-width: 100%;
     padding: 12px 21px;
-    box-sizing: border-box;
     font-size: 16px;
   }
 
@@ -499,7 +527,6 @@ header img,
   footer {
     width: 100%;
     padding: 32px 16px;
-    box-sizing: border-box;
     text-align: center;
   }
 
