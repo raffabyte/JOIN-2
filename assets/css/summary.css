@@ -289,6 +289,280 @@ font-weight: 400;
   display: none;
 }
 
+@media (max-width: 1399px) {
+  .content {
+    padding: 88px 77px;
+    gap: 45px;
+    height: calc(820px - 77px);
+    max-width: calc(1536px - 186px);
+  }
+
+  .into {
+    max-height: 61px;
+    gap: 24px;
+  }
+
+  h1 {
+    font-size: 49px;
+  }
+
+  h2 {
+    font-size: 22px;
+  }
+
+  .separater {
+    width: 3px;
+  }
+
+  .nameAndToDo {
+    gap: 64px;
+  }
+
+  .row-grid {
+    gap: 22px;
+    max-width: 448px;
+  }
+
+  .row {
+    gap: 26px;
+    max-height: 134px;
+  }
+
+  .item1 {
+    max-width: 211px;
+    gap: 14px;
+  }
+
+  .img1 {
+    width: 55px;
+  }
+
+  .nummber {
+    font-size: 51px;
+  }
+
+  .To-do {
+    font-size: 16px;
+    width: 64px;
+  }
+
+  .item2 {
+    max-width: 448px;
+    gap: 14px;
+    padding: 0 38px;
+  }
+
+  .deadline {
+    gap: 10px;
+  }
+
+  .p-strong {
+    font-size: 17px;
+  }
+
+  .p-normal {
+    font-size: 16px;
+  }
+
+  .item3 {
+    max-width: 134px;
+    gap: 10px;
+  }
+
+  .greetings {
+    gap: 2px;
+  }
+
+  #greetingText,
+  #comma {
+    font-size: 38px;
+  }
+
+  .name {
+    font-size: 51px;
+  }
+
+  .circle {
+    width: 55px;
+    height: 55px;
+  }
+}
+
+@media (max-width: 1099px) {
+  .content {
+    padding: 54px 48px;
+    gap: 40px;
+    height: calc(700px - 56px);
+    max-width: calc(1345px - 164px);
+  }
+
+  .into {
+    align-items: flex-start;
+    flex-direction: column;
+    max-height: 54px;
+    gap: 16px;
+    max-height: none;
+  }
+
+  .separaterM {
+  display: flex;
+  height: 2px;
+  width: 90px;
+}
+
+  h1 {
+    font-size: 40px;
+  }
+
+  h2 {
+    font-size: 16px;
+  }
+
+  .separater {
+    width: 2.5px;
+  }
+
+  .nameAndToDo {
+    gap: 54px;
+  }
+
+  .row-grid {
+    gap: 19px;
+    max-width: 395px;
+  }
+
+  .row {
+    /* gap: 10px; */
+    max-height: 118px;
+  }
+
+  .item1 {
+    gap: 12px;
+  }
+
+  .img1 {
+    width: 48px;
+  }
+
+  .nummber {
+    font-size: 40px;
+  }
+
+  .To-do {
+    font-size: 16px;
+    width: 56px;
+  }
+
+  .item2 {
+    max-width: 395px;
+    gap: 12px;
+    padding: 0 30px;
+  }
+
+  .deadline {
+    gap: 8px;
+  }
+
+  .p-strong {
+    font-size: 16px;
+  }
+
+  .p-normal {
+    font-size: 16px;
+  }
+
+  .item3 {
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .item3 .To-do {
+    gap: 8px;
+    width: 70px;
+  }
+
+  .greetings {
+    gap: 1.5px;
+  }
+
+  #greetingText,
+  #comma {
+    font-size: 33px;
+  }
+
+  .name {
+    font-size: 45px;
+  }
+
+  .circle {
+    width: 48px;
+    height: 48px;
+  }
+  
+.separater {
+  display: none;
+}
+}
+
+@media (max-width: 799px) {
+  .MobileGreeting {
+    z-index: 100;
+    display: grid;             
+    place-items: center;         
+    position: fixed;
+    inset: 80px 0 80px 0;        
+    background-color: #F6F7F8;
+    opacity: 1;
+    transition: opacity 1s ease;
+  }
+  .MobileGreeting.fade-out { opacity: 0; }
+.greetingsMobile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;                   
+    width: min(90vw, 560px);     
+    text-align: center;
+    padding: 0 16px;            
+  }
+  .greetingsMobile .greeting {
+    display: flex;
+    align-items: baseline;      
+    gap: 4px;                   
+    white-space: nowrap;         
+    margin: 0;
+  }
+  .content {
+    padding: 36px 17px 29px 17px;
+    height: calc(100vh - 160px);
+    }
+    .greetings {
+      display: none;
+    }
+    .hidden {
+      display: none;
+    }
+    .nameAndToDo {
+      justify-content: center;
+    }
+}
+
+@media (max-width: 400px) {
+  .row {
+    gap: 8px;
+  }
+  .item2 {
+    gap: 10px;
+  }
+      .row-grid {
+        gap: 12px;
+    }
+        .content {
+        padding: 24px 8px 24px 8px;
+    }
+}
+
 #greetingTextMobile,
 #commaMobile {
   display: inline;              
