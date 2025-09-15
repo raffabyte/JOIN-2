@@ -88,12 +88,33 @@ async function toggleSubtask(taskId, subtaskValue) {
             subtask.value === subtaskValue ? { ...subtask, checked: !subtask.checked } : subtask
         );
 
-    await updateSubtaskInFirebase(firebaseKey, updatedSubtasks);
-        showTaskOverlay({ ...task, subtasks: updatedSubtasks, id: firebaseKey });
+        await updateSubtaskInFirebase(firebaseKey, updatedSubtasks);
+        toggleSubtaskDisplayOnly(subtaskValue);
         updateBoard();
     } catch (error) {
         console.error('Error toggling subtask:', error);
     }
+}
+
+/**
+ * Toggles only the visual display of a subtask without reloading the overlay.
+ * @param {string} subtaskValue
+ */
+function toggleSubtaskDisplayOnly(subtaskValue) {
+    const subtaskItems = document.querySelectorAll('.subtask-item-overlay');
+    subtaskItems.forEach(item => {
+        const spanElement = item.querySelector('span');
+        if (spanElement && spanElement.textContent.trim() === subtaskValue) {
+            const checkboxButton = item.querySelector('.checkbox');
+            const currentSvg = checkboxButton.innerHTML;
+            
+            if (currentSvg.includes('stroke-linejoin')) {
+                checkboxButton.innerHTML = `<svg class="checkbox" width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4.68213" y="4.39673" width="16" height="16" rx="3" stroke="#2A3647" stroke-width="2"/></svg>`;
+            } else {
+                checkboxButton.innerHTML = `<svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20.6821 11.3967V17.3967C20.6821 19.0536 19.339 20.3967 17.6821 20.3967H7.68213C6.02527 20.3967 4.68213 19.0536 4.68213 17.3967V7.39673C4.68213 5.73987 6.02527 4.39673 7.68213 4.39673H15.6821" stroke="#2A3647" stroke-width="2" stroke-linecap="round"/><path d="M8.68213 12.3967L12.6821 16.3967L20.6821 4.89673" stroke="#2A3647" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+            }
+        }
+    });
 }
 
 /**
