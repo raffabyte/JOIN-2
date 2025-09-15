@@ -79,7 +79,7 @@ function addTaskOverlayForm(columnId, cancelLabel = 'Cancel') {
                         <div class="gap-8 width-100 flexC">
                             <label class="width-100" for="subtasks">Subtasks</label>
                             <div class="inputs change-onfoucus flexR" id="inputBox">
-                                <input class="width-100" type="text" id="subtasks" placeholder="add new subtask" oninput="checkSubtask(this.value.length, this.value, document.getElementById('subtasksList'))" onfocus="showAddCancelBtns()" onkeydown="onEnterAddSubTask(event, 'subtasks')">
+                                <input class="width-100" type="text" id="subtasks" placeholder="add new subtask" oninput="handleSubtaskInputChange(this)" onkeydown="onEnterAddSubTask(event, 'subtasks')">
                                 <div class="add-cancel-btns flexR display-none gap-8" id="addCancelBtns">
                                     <button class="cancel-subtask-button overlay-button" type="button" onclick="cancelSubtask()">
                                         ${CLOSE_CANCEL_SVG}

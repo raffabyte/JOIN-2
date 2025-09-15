@@ -20,11 +20,11 @@
     transform: translateX(0%);
     opacity: 1;
     top: 11%;
-    max-height: 720px;
+    max-height: 800px;
     position: absolute;
 }
 
-.submit-section{
+.submit-section {
     margin-top: 16px;
 }
 
@@ -76,7 +76,6 @@ h2 {
 .task-form-top {
     align-items: flex-start;
     flex: 1;
-    max-height: 408px;
     overflow: scroll;
     scrollbar-width: none;
 }
@@ -359,14 +358,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 
 .edit-validation-hint {
-  color: #FF4444;
-  font-size: 16px;
-  margin-top: 5px;
-  display: block;
+    color: #FF4444;
+    font-size: 16px;
+    margin-top: 5px;
+    display: block;
 }
 
 .edit-validation-error {
-  border-bottom: 1px solid #FF4444;
+    border-bottom: 1px solid #FF4444;
 }
 
 .overlay-button {
@@ -439,10 +438,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     }
 
     .contact-icon {
-        width: 24px;
-        height: 24px;
+        width: 40px;
+        height: 40px;
         padding: 14px;
     }
+
     .submit-span {
         width: 54%;
     }
@@ -495,16 +495,22 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         width: 16px !important;
         height: 16px !important;
     }
+
     .submit-span {
         width: 100%;
     }
 }
 
-@media (max-width: 539px) {
-
-    .priority-button span,
-    .edit-priority-button span {
-        display: none;
+@media (max-width: 480px) {
+    .overlay-content.active {
+        height: 100vh;
+        max-height: none;
+        width: 100%;
+        top: 0;
+        border-radius: 0;
+        padding: 40px 12px;
     }
-    
+    .task-overlay-content {
+        padding: 40px 16px;
+    }
 }

@@ -1280,7 +1280,6 @@ form {
     transform: translateY(100vh);
     max-height: 760px;
     max-width: 356px;
-    border-radius: 16px;
   }
 
   .flexCC {
@@ -1316,7 +1315,8 @@ form {
     padding: 0 0 16px 0;
   }
 
-  #overlay.show .pb, .BigContactCircle{
+  #overlay.show .pb,
+  .BigContactCircle {
     width: 120px;
     height: 120px;
     position: absolute;
@@ -1328,9 +1328,6 @@ form {
 }
 
 @media (max-width: 799px) {
-  form {
-    gap: 8px;
-  }
 
   .contactsDetails {
     padding-top: 16px;
@@ -1411,7 +1408,8 @@ form {
     padding: 8px;
   }
 
-  .mobileEditContainer:hover, .mobileDeleteContainer:hover {
+  .mobileEditContainer:hover,
+  .mobileDeleteContainer:hover {
     cursor: pointer;
   }
 
@@ -1595,3 +1593,39 @@ form {
     height: 39px;
   }
 }
+
+@media (max-width: 480px) {
+  .overlayContent {
+    width: 100vh;
+    max-width: none;
+    max-height: none;
+    height: 100vh;
+    border-radius: 0;
+  }
+
+  .leftSide {
+    border-radius: 0;
+    height: 50%;
+  }
+
+  .rightSide {
+    border-radius: 0;
+    height: 50%;
+  }
+  .input{
+    padding: 4px;
+  }
+  #overlay.show .pb , .BigContactCircle, #overlay.show .BigContactCircle{
+        width: 100px;
+        height: 100px;
+    }
+        .pbContainer {
+        padding-bottom: 0;
+    }
+        form {
+        gap: 16px;
+    }
+    .flexCC {
+        padding-top: 72px;
+    }
+  }

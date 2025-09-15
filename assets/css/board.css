@@ -462,6 +462,10 @@ h1 {
 }
 }
 @media (max-width: 800px) {
+  .no-task-item {
+    margin-right: 16px;
+    
+  }
   .background {
     max-height: calc(100vh - 160px);
   }

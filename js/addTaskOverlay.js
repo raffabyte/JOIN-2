@@ -233,9 +233,10 @@ function selectAssignee(assignee) {
 
 /** Toggles the presence of an assignee icon in the selection area. */
 function toggleAssigneeIcon(assigneeName) {
+  // Bevorzuge im Edit-Modus #editedAssignee (Reihenfolge invertiert)
   let SELECTEDASSIGNEE =
-    document.getElementById("selectedAssignee") ||
-    document.getElementById("editedAssignee");
+    document.getElementById("editedAssignee") ||
+    document.getElementById("selectedAssignee");
   let iconSpans = SELECTEDASSIGNEE.querySelectorAll(
     ".contact-icon:not(.extra-count)"
   );
@@ -253,9 +254,10 @@ function toggleAssigneeIcon(assigneeName) {
 
 /** Adds or removes an assignee icon and updates the display overflow. */
 function addToSelectedAssignee(assigneeName, found) {
+  // Bevorzuge im Edit-Modus #editedAssignee (Reihenfolge invertiert)
   let SELECTEDASSIGNEE =
-    document.getElementById("selectedAssignee") ||
-    document.getElementById("editedAssignee");
+    document.getElementById("editedAssignee") ||
+    document.getElementById("selectedAssignee");
   if (found) {
     SELECTEDASSIGNEE.classList.remove("display-none");
     SELECTEDASSIGNEE.innerHTML += contactIconSpanTemplate(assigneeName);
@@ -358,6 +360,27 @@ function showHideAlertMessage() {
 
   HINT_MESSAGE_DIV.classList.toggle("display-none");
   INPUT_FELD.classList.toggle("correct-me");
+}
+
+/**
+ * Handles live changes in the subtask input (board overlay variant without plus icon).
+ * Zeigt bei Eingabe sofort die X / ✓ Buttons und führt Validierung aus.
+ */
+function handleSubtaskInputChange(inputEl){
+  if(!inputEl) return;
+  const wrapper=document.getElementById('addCancelBtns');
+  const list=document.getElementById('subtasksList');
+  if(wrapper && wrapper.classList.contains('display-none')) wrapper.classList.remove('display-none');
+  const val=inputEl.value;
+  // Validation (re-uses bestehende Logik)
+  checkSubtask(val.length, val, list);
+  // Falls Feld geleert -> Buttons wieder ausblenden & Fehler zurücksetzen
+  if(!val.trim()){
+    wrapper?.classList.add('display-none');
+    const hint=document.getElementById('subtaskHintMessage');
+    hint && hint.classList.add('display-none');
+    document.getElementById('inputBox')?.classList.remove('correct-me');
+  }
 }
 
 /**

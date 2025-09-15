@@ -150,7 +150,15 @@ function showEditTaskOverlay(task) {
     window.currentEditingTask = task;
     TASK_EDIT_FORM.classList.remove('display-none');
     TASK_INFOS.classList.add('display-none');
-    loadAndRenderContacts();
+    loadAndRenderContacts().then(()=>{
+        // vorhandene Assignees des Tasks in den Container rendern
+        const container = document.getElementById('editedAssignee');
+        if (container && Array.isArray(task.assignee)) {
+            container.innerHTML = '';
+            task.assignee.forEach(name=>{ container.innerHTML += contactIconSpanTemplate(name); });
+            if (typeof updateAssigneeDisplay === 'function') updateAssigneeDisplay(container);
+        }
+    });
 }
 
 /**

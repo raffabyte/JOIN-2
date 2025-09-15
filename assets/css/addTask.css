@@ -207,6 +207,10 @@ label,
   background: white url('data:image/svg+xml;utf8,<svg width="8" height="5" viewBox="0 0 8 5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.24854 0.7C4.38187 0.7 4.50687 0.725 4.62354 0.775C4.7402 0.825 4.84854 0.9 4.94854 1L7.54853 3.6C7.8652 3.91667 7.93604 4.27917 7.76103 4.6875C7.58603 5.09583 7.27354 5.3 6.82354 5.3H1.67354C1.22354 5.3 0.911035 5.09583 0.736035 4.6875C0.561035 4.27917 0.631868 3.91667 0.948535 3.6L3.54854 1C3.64854 0.9 3.75687 0.825 3.87354 0.775C3.9902 0.725 4.1152 0.7 4.24854 0.7Z" fill=\"%232A3647\"/></svg>') no-repeat right 16px center/16px 10px;
 }
 
+.extra-count {
+      background: blueviolet;
+}
+
 #taskDueDate,
 #editedTaskDueDate,
 input[type="date"] {
