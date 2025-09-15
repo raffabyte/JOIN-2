@@ -76,7 +76,7 @@
   function validateEmail(el) {
     const v = el.value.trim();
     if (!v) return "Please enter an email.";
-    if (!isPlausibleEmail(v)) return "Please enter a valid email (e.g., name@example.com).";
+    if (!isPlausibleEmail(v)) return "Please enter a valid email";
     return "";
   }
 
