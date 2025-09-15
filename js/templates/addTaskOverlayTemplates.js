@@ -41,7 +41,7 @@ function addTaskOverlayForm(columnId, cancelLabel = 'Cancel') {
                                     <span class="priority-text">Urgent</span>
                                     ${HIGH_PRIORITY_SVG}
                                 </button>
-                                <button type="button" class="priority-button gap-8 width-100 flexR MidPriority" onclick="PriorityHandler('medium'); event.stopPropagation();">
+                                <button type="button" class="priority-button active gap-8 width-100 flexR MidPriority" onclick="PriorityHandler('medium'); event.stopPropagation();">
                                     <span class="priority-text">Medium</span>
                                     ${MID_PRIORITY_SVG}
                                 </button>

@@ -4,6 +4,7 @@
  */
 
 let currentDraggedElement;
+let originalColumn;
 
 
 /**
@@ -61,7 +62,9 @@ function allowDrop(ev) {
  */
 function startDragging(event, id) {
     const taskCard = document.getElementById(id);
-
+    const parentColumn = taskCard.closest('.board-column-bottom');
+   
+    originalColumn = parentColumn ? parentColumn.id : null;
     event.dataTransfer.setDragImage(new Image(), 0, 0);
     currentDraggedElement = id;
     taskCard.classList.add('dragging');
@@ -74,7 +77,11 @@ function startDragging(event, id) {
  */
 function stopDragging() {
     const element = document.getElementById(currentDraggedElement);
-    element.classList.remove('dragging');
+    if (element) {
+        element.classList.remove('dragging');
+    }
+    currentDraggedElement = null;
+    originalColumn = null;
 }
 
 
@@ -90,15 +97,10 @@ function moveTo(column) {
     element.classList.remove('dragging');
     ['toDoDragArea', 'inProgressDragArea', 'awaitingFeedbackDragArea', 'doneDragArea'].forEach(removeHighlight);
 
-    // update task in the current user's tasks collection
-    fetch(getUserTaskItemUrl(currentDraggedElement), {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ column, movedAt: Date.now() })
-    }).then(() => { 
-        updateBoard(); 
-        currentDraggedElement = null; 
-    });
+    if (column === originalColumn) { currentDraggedElement = null; originalColumn = null; return; }
+
+    fetch(getUserTaskItemUrl(currentDraggedElement), { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ column, movedAt: Date.now() }) })
+        .then(() => { updateBoard(); currentDraggedElement = null; originalColumn = null; });
 }
 
 

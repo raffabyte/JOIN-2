@@ -15,15 +15,19 @@ input {
   border-radius: 8px;
   outline: none;
 }
+
 .error-text {
   display: block;
-  min-height: 16px; /* Platz reservieren -> kein Springen */
+  min-height: 16px;
+  /* Platz reservieren -> kein Springen */
   line-height: 16px;
   margin-top: 6px;
   font-size: 12px;
   color: #ff3b30;
-  visibility: hidden; /* unsichtbar, aber reserviert Platz */
+  visibility: hidden;
+  /* unsichtbar, aber reserviert Platz */
 }
+
 .input-field .is-invalid {
   border-color: #ff3b30 !important;
 }
@@ -38,6 +42,7 @@ input {
   height: calc(100vh - 96px);
   box-shadow: 4px 0 6px rgba(0, 0, 0, 0.2);
 }
+
 .contactCard {
   max-width: 352px;
   height: 78px;
@@ -48,25 +53,30 @@ input {
   padding-left: 24px;
   flex-shrink: 0;
 }
+
 .contactCard:hover:not(.activeCard) {
   background: linear-gradient(to bottom, #f0f0f0, #e4e2e2);
   border-radius: 16px;
   cursor: pointer;
 }
+
 .contactName {
   font-weight: 400;
   font-size: 20px;
   color: black;
 }
+
 .contactMail {
   font-weight: 400;
   font-size: 16px;
   color: #007cee;
 }
+
 .contactImg {
   height: 42px;
   width: 42px;
 }
+
 .AddNew {
   display: flex;
   align-items: center;
@@ -76,6 +86,7 @@ input {
   background-color: white;
   flex-shrink: 0;
 }
+
 .AddNewButton {
   display: flex;
   align-items: center;
@@ -86,24 +97,29 @@ input {
   border-radius: 10px;
   background-color: #2a3647;
 }
+
 .AddNewButton:hover {
   background-color: rgb(26, 175, 224);
 }
+
 .AddNewText {
   font-weight: 700;
   font-size: 21px;
   color: white;
 }
+
 .AddNewImg {
   width: 32px;
   height: 32px;
 }
+
 .contactsContainer {
   display: flex;
   flex-direction: column;
   padding-left: 550px;
   padding-top: 110px;
 }
+
 .into {
   max-height: 76px;
   display: flex;
@@ -111,21 +127,25 @@ input {
   gap: 30px;
   align-items: center;
 }
+
 .separater {
   height: 75%;
   width: 4px;
   background-color: #29abe2;
   border-radius: 8px;
 }
+
 h1 {
   font-weight: 700;
   font-size: 61px;
 }
+
 h2 {
   font-weight: 400;
   font-size: 27px;
   color: #2a3647;
 }
+
 .overlay {
   position: absolute;
   top: 0;
@@ -137,17 +157,21 @@ h2 {
   align-items: center;
   background-color: rgba(0, 0, 0, 0.2);
 }
+
 .d_none {
   display: none !important;
 }
+
 .overlayContent {
   display: flex;
   transform: translateX(100vw);
   transition: transform 0.4s ease;
 }
+
 .overlay.show .overlayContent {
   transform: translateX(0);
 }
+
 .leftSide {
   display: flex;
   flex-direction: column;
@@ -167,29 +191,35 @@ h2 {
   width: 100%;
   justify-content: flex-start;
 }
+
 .textFlex {
   display: flex;
   flex-direction: column;
   width: 100%;
 }
+
 .joinSmall {
   height: 66px;
   object-fit: contain;
 }
+
 .leftSide h1 {
   color: white;
   font-size: 61px;
   font-weight: 700;
 }
+
 .leftSide p {
   color: white;
   font-size: 27px;
   font-weight: 400;
 }
+
 .vektorFlex {
   display: flex;
   width: 100%;
 }
+
 .vektor {
   display: flex;
   height: 3px;
@@ -197,6 +227,7 @@ h2 {
   background-color: #29abe2;
   border-radius: 6px;
 }
+
 .rightSide {
   display: flex;
   width: 745px;
@@ -206,16 +237,19 @@ h2 {
   border-top-right-radius: 30px;
   border-bottom-right-radius: 30px;
 }
+
 .pbContainer {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 250px;
 }
+
 .pb {
   width: 120px;
   height: 120px;
 }
+
 .flexCC {
   display: flex;
   flex-direction: column;
@@ -223,6 +257,7 @@ h2 {
   width: 100%;
   gap: 54px;
 }
+
 .closeWrapper {
   display: flex;
   width: 100%;
@@ -233,21 +268,25 @@ h2 {
   width: 32px;
   height: 32px;
 }
+
 .closeContact:hover {
   background-color: lightgray;
   border-radius: 30px;
 }
+
 .inputs_div {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
+
 .input {
   padding: 12px;
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 20px;
 }
+
 .name_icon {
   background-image: url(../img/contacts/person.png);
   background-repeat: no-repeat;
@@ -271,6 +310,7 @@ h2 {
   background-position-x: 380px;
   background-position-y: 12px;
 }
+
 .login-buttons {
   display: flex;
   flex-direction: row;
@@ -290,10 +330,12 @@ h2 {
   gap: 4px;
   height: 56px;
 }
+
 .create-btn:hover {
   background-color: rgb(26, 175, 224);
   box-shadow: 0 12px 12px -8px #a8a8a8;
 }
+
 .cancel-button {
   display: flex;
   align-items: center;
@@ -307,29 +349,37 @@ h2 {
   height: 56px;
   padding: 15px 15px;
 }
+
 .cancel-button:hover {
   background-color: white;
   box-shadow: 0 12px 12px -8px #a8a8a8;
+  border-color: #29ABE2;
 }
+
 .cancel-button:hover .cancelText {
   color: rgb(26, 175, 224);
 }
+
 .cancel-button:hover .close2 path {
   stroke: rgb(26, 175, 224);
 }
+
 form {
   display: flex;
   flex-direction: column;
   gap: 42px;
 }
+
 .check {
   width: 24px;
   height: 24px;
 }
+
 .createText {
   font-weight: 700;
   font-size: 21px;
 }
+
 .cancelText {
   font-weight: 400;
   font-size: 20px;
@@ -339,6 +389,7 @@ form {
 .contactsDetailsContainer {
   position: absolute;
 }
+
 .contactsDetails {
   display: flex;
   flex-direction: column;
@@ -347,105 +398,129 @@ form {
   transform: translateX(100%);
   transition: transform 0.4s ease;
 }
+
 .showDetails {
   transform: translateX(0);
 }
+
 .displayColumn {
   display: flex;
   flex-direction: column;
 }
+
 .displayFlex {
   display: flex;
   display: flex;
   align-items: center;
   gap: 54px;
 }
+
 .BigPB {
   height: 120px;
   width: 120px;
 }
+
 .contectName {
   font-weight: 500;
   font-size: 47px;
   color: black;
 }
+
 .displayFlex1 {
   display: flex;
   gap: 16px;
 }
+
 .editContainer {
   display: flex;
   align-items: center;
   gap: 8px;
 }
+
 .editContainer:hover {
   color: rgb(26, 175, 224);
   cursor: pointer;
 }
+
 .editContainer:hover svg path {
   fill: rgb(26, 175, 224);
 }
+
 .DeleteContainer {
   display: flex;
   align-items: center;
   gap: 8px;
 }
+
 .DeleteContainer:hover {
   color: rgb(26, 175, 224);
   cursor: pointer;
 }
+
 .DeleteContainer:hover svg path {
   fill: rgb(26, 175, 224);
 }
+
 .pSmall {
   font-weight: 400;
   font-size: 16px;
 }
+
 .contactInformation {
   font-weight: 400;
   font-size: 20px;
   color: black;
   padding: 25px 0;
 }
+
 .displayColumn1 {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
+
 .strong {
   font-weight: 700;
   font-size: 16px;
   color: black;
 }
+
 .mailInfoSmall {
   font-weight: 400;
   font-size: 16px;
   color: #007cee;
 }
+
 .phoneInfoSmall {
   font-weight: 400;
   font-size: 16px;
 }
+
 .activeCard {
   background-color: #2a3647;
   border-radius: 16px;
 }
+
 .activeCard:hover {
   background-color: #2a3647;
   border-radius: 16px;
 }
+
 .activeCard .contactName {
   color: white;
 }
+
 .activeCard:hover .contactName {
   color: white;
 }
+
 .contactCardsContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-height: calc(100vh - 197px); /* passt sich dem Viewport an */
+  max-height: calc(100vh - 197px);
+  /* passt sich dem Viewport an */
   overflow-y: auto;
   padding-bottom: 20px;
 }
@@ -487,6 +562,7 @@ form {
   font-weight: 400;
   font-size: 14px;
 }
+
 .ownContactCircle {
   width: 42px;
   height: 42px;
@@ -505,7 +581,8 @@ form {
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  background-color: #29abe2; /* wird vom JS überschrieben */
+  background-color: #29abe2;
+  /* wird vom JS überschrieben */
   color: white;
   display: flex;
   align-items: center;
@@ -517,11 +594,13 @@ form {
   font-size: 47px;
   flex-shrink: 0;
 }
+
 .ownBigContactCircle {
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  background-color: white; /* wird vom JS überschrieben */
+  background-color: white;
+  /* wird vom JS überschrieben */
   color: #29abe2;
   display: flex;
   align-items: center;
@@ -554,6 +633,7 @@ form {
   border-bottom: solid 2px #7a6e6e;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
 .OwnContactCard {
   max-width: 352px;
   width: 100%;
@@ -564,11 +644,13 @@ form {
   height: 100%;
   justify-content: space-between;
 }
+
 .OwnContactCard:hover {
   background-color: lightgray;
   border-radius: 16px;
   cursor: pointer;
 }
+
 .ownContactCircleWrapper {
   position: relative;
   width: 42px;
@@ -591,13 +673,17 @@ form {
   font-size: 16px;
   line-height: 1;
   text-align: center;
-  width: 100%; /* optional */
-  height: 100%; /* optional */
-  display: flex; /* 🆕 für perfektes Zentrieren */
+  width: 100%;
+  /* optional */
+  height: 100%;
+  /* optional */
+  display: flex;
+  /* 🆕 für perfektes Zentrieren */
   align-items: center;
   justify-content: center;
   pointer-events: none;
 }
+
 .separatorList1 {
   width: 400px;
   background-color: #201f1f;
@@ -613,20 +699,25 @@ form {
   width: 100vw;
   height: 100vh;
   z-index: 9999;
-  pointer-events: none; /* optional: damit es nichts blockiert */
+  pointer-events: none;
+  /* optional: damit es nichts blockiert */
 
-  transform: translateY(100vh); /* Start außerhalb des Bildschirms */
+  transform: translateY(100vh);
+  /* Start außerhalb des Bildschirms */
   transition: transform 0.4s ease;
 }
 
 .success-overlay.show {
-  transform: translateY(0); /* Fährt rein */
+  transform: translateY(0);
+  /* Fährt rein */
 }
 
 .succesDiv {
   position: relative;
-  left: 750px; /* leicht nach unten */
-  top: 700px; /* leicht nach rechts */
+  left: 750px;
+  /* leicht nach unten */
+  top: 700px;
+  /* leicht nach rechts */
   background-color: #2a3647;
   height: 74px;
   width: 326px;
@@ -664,10 +755,12 @@ form {
 .separaterMobile {
   display: none;
 }
+
 .intoWrapper {
   display: flex;
   justify-content: space-between;
 }
+
 .intoWrapper img {
   display: none;
   height: 32px;
@@ -681,7 +774,8 @@ form {
 /* Blaues Border beim aktiven Input */
 .input.active-border {
   border: 2px solid #29abe2 !important;
-  background-color: inherit !important; /* Standardhintergrund */
+  background-color: inherit !important;
+  /* Standardhintergrund */
   transition: border-color 0.2s ease-in-out;
 }
 
@@ -1165,30 +1259,104 @@ form {
   }
 }
 
-@media (max-width: 799px) {
-  .overlay {
-    align-items: normal;
+@media (max-width: 870px) {
+  .closeOverlayMobile {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    display: block;
   }
+
+  .closeOverlayMobile:hover {
+    cursor: pointer;
+    background-color: #29ABE2;
+    border-radius: 30px;
+  }
+
+  .overlayContent {
+    flex-direction: column;
+    width: 88%;
+    height: 88%;
+    transform: translateY(100vh);
+    max-height: 760px;
+    max-width: 356px;
+    border-radius: 16px;
+  }
+
+  .flexCC {
+    padding-top: 60px;
+  }
+
+  .closeWrapper {
+    display: none;
+  }
+
+  .closeOverlayMobile img {
+    display: flex;
+    width: 24px;
+    height: 24px;
+  }
+
+  .imgFlex {
+    display: none;
+  }
+
+  .leftSide {
+    width: 100%;
+    border-radius: 16px 16px 0 0;
+    padding: 66px 24px;
+    position: relative;
+  }
+
+  .rightSide {
+    flex-direction: column;
+    align-items: center;
+    border-radius: 0 0 16px 16px;
+    width: 100%;
+    padding: 0 0 16px 0;
+  }
+
+  #overlay.show .pb, .BigContactCircle{
+    width: 120px;
+    height: 120px;
+    position: absolute;
+  }
+
+  .pbContainer {
+    padding-bottom: 30px;
+  }
+}
+
+@media (max-width: 799px) {
   form {
-    gap: 16px;
+    gap: 8px;
+  }
+
+  .create-btn,
+  .cancel-button {
+    padding: 11px 6px;
   }
 
   .contactsDetails {
     padding-top: 16px;
   }
+
   .displayFlex1 {
     display: none;
   }
+
   .separater {
     width: 2.8px;
     display: none;
   }
+
   .into {
     flex-direction: column;
     gap: 16px;
     align-items: flex-start;
     max-height: 100%;
   }
+
   .contactsContainer {
     display: none;
     position: absolute;
@@ -1199,24 +1367,29 @@ form {
     padding: 32px 16px;
     gap: 32px;
   }
+
   .contacsList {
     width: 100%;
     height: calc(100vh - 160px);
   }
+
   .AddNew {
     display: none;
   }
+
   .mobileMenuWrapper {
     display: flex;
     position: fixed;
     bottom: 100px;
     right: 40px;
   }
+
   .mobileAddNew {
     display: flex;
     bottom: 100px;
     right: 40px;
   }
+
   .mobileMenu {
     position: absolute;
     bottom: 100px;
@@ -1242,6 +1415,11 @@ form {
     flex: 1;
     padding: 8px;
   }
+
+  .mobileEditContainer:hover, .mobileDeleteContainer:hover {
+    cursor: pointer;
+  }
+
   .mobileEditContainer img {
     height: 24px;
     width: 24px;
@@ -1254,6 +1432,7 @@ form {
     flex: 1;
     padding: 8px;
   }
+
   .mobileDeleteContainer img {
     height: 24px;
     width: 24px;
@@ -1262,60 +1441,54 @@ form {
   .menuOverlay.open {
     transform: translateX(0);
   }
-  .overlayContent {
-    flex-direction: column;
-    width: 100%;
-    transform: translateY(100vh);
-  }
-  .leftSide {
-    width: 100%;
-    border-radius: 0;
-  }
-  .rightSide {
-    flex-direction: column;
-    align-items: center;
-    border-radius: 0;
-    width: 100%;
-    padding: 0 0 16px 0;
-  }
+
   .imgFlex {
     display: none;
   }
+
   .closeWrapper {
     display: none;
   }
+
   .cancel-button {
     display: flex;
   }
+
   .pbContainer {
     position: relative;
   }
+
   .pb {
     position: absolute;
   }
+
   .flexCC {
+    max-width: 248px;
     padding-top: 60px;
   }
+
   .login-buttons {
     align-self: center;
   }
+
   .vektorFlex {
     display: flex;
     width: 100%;
-    margin-bottom: 100px;
   }
+
   .closeOverlayMobile {
-    display: flex;
-    width: 100%;
-    height: 100%;
-    margin-top: 16px;
-    justify-content: flex-end;
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    display: block;
   }
+
   .closeOverlayMobile img {
     display: flex;
     width: 24px;
     height: 24px;
   }
+
   .separaterMobile {
     display: flex;
     height: 3px;
@@ -1323,86 +1496,107 @@ form {
     width: 100px;
     border-radius: 8px;
   }
+
   .contactsDetailsContainer {
     position: static;
   }
+
   .intoWrapper img {
     display: flex;
     height: 32px;
     width: 32px;
   }
+
   .BigContactCircle {
     position: absolute;
   }
+
   .ownBigContactCircle {
     width: 84px;
     height: 84px;
     font-size: 33px;
     border: solid 3px black;
   }
+
   .contectName {
     padding-left: 120px;
     font-weight: 700;
     font-size: 36px;
   }
+
   .ownBigContactCircle {
     position: absolute;
   }
+
   .pbContainer {
     padding-bottom: 30px;
   }
+
   .succesDiv {
     left: 0;
     top: 0;
   }
+
   .contactInformation {
     font-size: 20px;
     font-weight: 400;
     padding: 26px 0 0 0;
   }
+
   .contactsDetails {
     gap: 21px;
   }
+
   .strong {
     font-weight: 700;
     font-size: 16px;
     color: black;
   }
+
   .mailInfoSmall {
     font-weight: 400;
     font-size: 16px;
     color: #007cee;
   }
+
   .phoneInfoSmall {
     font-weight: 400;
     font-size: 16px;
   }
+
   #overlay.show .ownBigContactCircle {
     width: 120px;
     height: 120px;
   }
+
   #overlay.show .BigContactCircle {
     width: 120px;
     height: 120px;
   }
+
   #overlay.show .pb {
     width: 120px;
     height: 120px;
   }
+
   .menuOverlay {
-    position: fixed; /* statt absolute */
-    inset: 0; /* top:0; right:0; bottom:0; left:0; */
-    transform: translateX(100%); /* initial verborgen (rechts raus) */
+    position: fixed;
+    /* statt absolute */
+    inset: 0;
+    /* top:0; right:0; bottom:0; left:0; */
+    transform: translateX(100%);
+    /* initial verborgen (rechts raus) */
     transition: transform 0.3s ease-in-out;
     z-index: 999;
   }
+
   .success-overlay {
     display: flex;
     align-items: center;
     justify-content: center;
   }
+
   .create-btn:hover {
-    padding: 10px 17px;
     height: 39px;
   }
 }

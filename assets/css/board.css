@@ -501,5 +501,6 @@ h1 {
     overflow-x: auto;
     overflow-y: hidden;
     scrollbar-width: none;
+    touch-action: pan-x;
   }
 }
