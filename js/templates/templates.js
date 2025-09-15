@@ -137,7 +137,10 @@ function linkesNavLogin(activePage) {
     <div class="login-menu flexC">
         <img class="join" src="../img/fav-icon.png" alt="">
         <a onclick="logout()" href="../index/login.html" class="login-link flexR">
-            <img class="icon" src="../img/LogIn/login-arrow.png" alt="login">
+            <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8.86686 16.3274C8.62131 16.3274 8.41547 16.2443 8.24936 16.0782C8.08325 15.9121 8.0002 15.7062 8.0002 15.4607C8.0002 15.2151 8.08325 15.0093 8.24936 14.8432C8.41547 14.6771 8.62131 14.594 8.86686 14.594H14.0669V2.46069H8.86686C8.62131 2.46069 8.41547 2.37763 8.24936 2.21152C8.08325 2.04541 8.0002 1.83958 8.0002 1.59402C8.0002 1.34847 8.08325 1.14263 8.24936 0.976523C8.41547 0.810412 8.62131 0.727356 8.86686 0.727356H14.0669C14.5435 0.727356 14.9516 0.897078 15.291 1.23652C15.6305 1.57597 15.8002 1.98402 15.8002 2.46069V14.594C15.8002 15.0707 15.6305 15.4787 15.291 15.8182C14.9516 16.1576 14.5435 16.3274 14.0669 16.3274H8.86686ZM7.28519 9.39402H1.06686C0.821306 9.39402 0.615473 9.31097 0.449362 9.14486C0.283251 8.97874 0.200195 8.77291 0.200195 8.52736C0.200195 8.2818 0.283251 8.07597 0.449362 7.90986C0.615473 7.74374 0.821306 7.66069 1.06686 7.66069H7.28519L5.6602 6.03569C5.50131 5.8768 5.42186 5.6818 5.42186 5.45069C5.42186 5.21958 5.50131 5.01736 5.6602 4.84402C5.81908 4.67069 6.02131 4.58041 6.26686 4.57319C6.51242 4.56597 6.72186 4.64902 6.8952 4.82236L9.99353 7.92069C10.1669 8.09402 10.2535 8.29624 10.2535 8.52736C10.2535 8.75847 10.1669 8.96069 9.99353 9.13402L6.8952 12.2324C6.72186 12.4057 6.51603 12.4887 6.2777 12.4815C6.03936 12.4743 5.83353 12.384 5.6602 12.2107C5.50131 12.0374 5.42547 11.8315 5.43269 11.5932C5.43992 11.3549 5.52297 11.1562 5.68186 10.9974L7.28519 9.39402Z" fill="#CDCDCD"/>
+            </svg>
+
             <p>Log in</p>
         </a>
 
@@ -336,7 +339,7 @@ function taskEditTemplate(task) {
             <div class="gap-8 width-100 flexC">
                 <label class="width-100" for="editedSubtasks">Subtasks</label>
                 <div class="inputs change-onfoucus space-between flexR" id="inputBox">
-                    <input type="text" id="editedSubtasks" placeholder="add new subtask" oninput="checkSubtask(this.value.length)" onfocus="showAddCancelBtns()" onkeydown="onEnterAddSubTask(event, 'editedSubtasks')">
+                    <input type="text" id="editedSubtasks" placeholder="add new subtask" oninput="checkSubtask(this.value.length, this.value, document.getElementById('editedSubtasksList'))" onfocus="showAddCancelBtns()" onkeydown="onEnterAddSubTask(event, 'editedSubtasks')">
                     <button class="plus-button overlay-button" id="subtaskPlusBtn" type="button" onclick="showAddCancelBtns()">
                             ${PLUS_SVG}
                     </button>

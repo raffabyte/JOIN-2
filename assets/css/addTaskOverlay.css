@@ -154,7 +154,7 @@ textarea.inputs {
 
 .required-span {
     text-align: left;
-    font-size: 14px;
+    font-size: 16px;
     color: #FF8190;
 }
 
@@ -360,7 +360,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 .edit-validation-hint {
   color: #FF4444;
-  font-size: 12px;
+  font-size: 16px;
   margin-top: 5px;
   display: block;
 }
@@ -414,7 +414,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     height: 42px;
     border-radius: 45px;
     border: 2px solid white;
-    font-size: 12px !important;
+    font-size: 16px !important;
     color: white;
     justify-content: center;
 }

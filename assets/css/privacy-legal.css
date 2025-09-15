@@ -119,7 +119,6 @@ h6.subsection-heading {
 
   body.is-logged-out .login-menu .login-link {
     flex-direction: column; 
-    align-items: flex-start; 
     gap: 4px;
     padding: 0;
   }
@@ -127,7 +126,7 @@ h6.subsection-heading {
   body.is-logged-out .login-menu .login-link p {
     margin: 0;
     text-align: center;
-    font-size: 14px;
+    font-size: 16px;
   }
 
   body.is-logged-out .legalLinks {

@@ -22,7 +22,7 @@ input {
   /* Platz reservieren -> kein Springen */
   line-height: 16px;
   margin-top: 6px;
-  font-size: 12px;
+  font-size: 16px;
   color: #ff3b30;
   visibility: hidden;
   /* unsichtbar, aber reserviert Platz */
@@ -560,7 +560,7 @@ form {
   font-size: 16px;
   border: solid 2px white;
   font-weight: 400;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .ownContactCircle {
@@ -574,7 +574,7 @@ form {
   font-size: 16px;
   border: solid 2px black;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .BigContactCircle {
@@ -981,7 +981,7 @@ form {
   .mailInfoSmall,
   .phoneInfoSmall,
   .strong {
-    font-size: 13px;
+    font-size: 16px;
   }
 
   .contactInformation {
@@ -1005,7 +1005,7 @@ form {
   }
 
   .initialsOnImage {
-    font-size: 13px;
+    font-size: 16px;
   }
 
   .separatorList1 {
@@ -1069,7 +1069,7 @@ form {
   }
 
   .AddNewText {
-    font-size: 15px;
+    font-size: 16px;
   }
 
   .AddNewImg {
@@ -1158,7 +1158,7 @@ form {
 
   .input {
     padding: 9px;
-    font-size: 14px;
+    font-size: 16px;
   }
 
   .name_icon,
@@ -1176,7 +1176,7 @@ form {
   .create-btn,
   .cancel-button {
     padding: 10px 17px;
-    font-size: 15px;
+    font-size: 16px;
     height: 39px;
   }
 
@@ -1190,11 +1190,11 @@ form {
   }
 
   .createText {
-    font-size: 15px;
+    font-size: 16px;
   }
 
   .cancelText {
-    font-size: 14px;
+    font-size: 16px;
   }
 
   .contactsDetails {
@@ -1223,11 +1223,11 @@ form {
   .mailInfoSmall,
   .phoneInfoSmall,
   .strong {
-    font-size: 11px;
+    font-size: 16px;
   }
 
   .contactInformation {
-    font-size: 14px;
+    font-size: 16px;
     padding: 18px 0;
   }
 
@@ -1255,7 +1255,7 @@ form {
   }
 
   .succesText {
-    font-size: 14px;
+    font-size: 16px;
   }
 }
 

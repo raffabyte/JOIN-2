@@ -34,16 +34,13 @@
   border: 2px solid #FF3B30 !important;
 }
 
-html,
-body {
-  max-width: 1920px;
-  max-height: 1024px;
-}
 
 body {
   margin: 0 auto;
   background-color: #f6f7f8;
   justify-content: center;
+  max-width: 1920px;
+  max-height: 1024px;
 }
 
 header {
@@ -292,7 +289,7 @@ h2 {
 
 #msgBox {
   margin-top: 6px;
-  font-size: 14px;
+  font-size: 16px;
   min-height: 20px;
   /* Platz immer da, auch wenn leer */
   color: red;
@@ -415,6 +412,7 @@ header img,
   header img {
     height: 77px;
     width: 64px;
+    margin: 24px 0 0 24px;
   }
 
   .login-container {

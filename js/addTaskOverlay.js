@@ -339,26 +339,16 @@ function cancelSubtask() {
 }
 
 /** Adds a subtask to the list with basic validation. */
-function addSubtask(subtaskInputId) {
-  const inputElement = document.getElementById(subtaskInputId);
-  const inputValue = inputElement.value;
-  const hintDiv = document.getElementById("subtaskHintMessage");
-  const subtasksList = document.getElementById(
-    subtaskInputId === "editedSubtasks" ? "editedSubtasksList" : "subtasksList"
-  );
-
-  checkSubtask(inputValue.length, inputValue, subtasksList);
-
-  hintDiv.classList.contains("display-none")
-    ? addSubtaskToList(subtasksList, inputValue, inputElement)
-    : "";
-}
-
-/** Appends a new subtask item to the visible list. */
-function addSubtaskToList(subtasksList, inputValue, inputElement) {
-  subtasksList.classList.remove("display-none");
-  subtasksList.innerHTML += addSubTaskTemplate(inputValue);
-  inputElement.value = "";
+function addSubtask(inputId) { // <=14 Zeilen
+  const el = document.getElementById(inputId);
+  if (!el) return;
+  const list = document.getElementById(inputId === 'editedSubtasks' ? 'editedSubtasksList' : 'subtasksList');
+  const val = el.value.trim();
+  if (!checkSubtask(val.length, val, list)) return; // invalid -> abort
+  if (!list) return;
+  list.classList.remove('display-none');
+  list.innerHTML += addSubTaskTemplate(val);
+  el.value = '';
 }
 
 /** Toggles the subtask alert message and input highlight. */
@@ -370,25 +360,24 @@ function showHideAlertMessage() {
   INPUT_FELD.classList.toggle("correct-me");
 }
 
-/** Validates subtask input and shows contextual errors. */
-function checkSubtask(subtaskLength, inputValue, subtasksList) {
-  const HINT_MESSAGE_DIV = document.getElementById("subtaskHintMessage");
-  const INPUT_FELD = document.getElementById("inputBox");
-  const valueExists = subtasksList
-    ?.querySelectorAll(".subtask-text")
-    .values()
-    .find((st) => st.textContent.trim() === inputValue.trim());
-
-  const errorMessages = {
-    length:
-      subtaskLength <= 2 ? "Subtask must be at least 3 characters long" : null,
-    exists: valueExists ? "Subtask already exists" : null,
-  };
-
-  const error = errorMessages.length || errorMessages.exists;
-  HINT_MESSAGE_DIV.textContent = error || "";
-  HINT_MESSAGE_DIV.classList.toggle("display-none", !error);
-  INPUT_FELD.classList.toggle("correct-me", !!error);
+/**
+ * Validates subtask input and shows contextual errors.
+ * Backwards compatible with old inline usage: oninput="checkSubtask(this.value.length)".
+ * New (preferred) programmatic usage passes all params.
+ */
+function checkSubtask(_, inputValue, subtasksList) { // returns true if valid
+  const hint = document.getElementById('subtaskHintMessage');
+  const box = document.getElementById('inputBox');
+  const active = document.activeElement?.id;
+  if (!subtasksList) subtasksList = document.getElementById(active==='editedSubtasks'?'editedSubtasksList':'subtasksList');
+  const val = (typeof inputValue==='string'?inputValue:document.activeElement?.value||'').trim();
+  let error = '';
+  if (!val) error = 'Subtask required';
+  else if (val.length < 3) error = 'Subtask must be at least 3 characters';
+  else if (subtasksList && Array.from(subtasksList.querySelectorAll('.subtask-text')).some(st=>st.textContent?.trim()===val)) error = 'Subtask already exists';
+  if (hint) {hint.textContent = error; hint.classList.toggle('display-none', !error);} 
+  if (box) box.classList.toggle('correct-me', !!error);
+  return !error;
 }
 
 /** Removes a subtask item from the list. */
