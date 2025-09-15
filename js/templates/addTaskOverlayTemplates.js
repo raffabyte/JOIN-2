@@ -140,7 +140,7 @@ function addSubTaskTemplate(subtaskInput, index = 0){
             </div>
         </div>
         <div class="edit-subtask-input-wrapper space-between width-100 flexR display-none" id="${editUniqueId}">
-            <input type="text" id="${editInputId}" class="edit-subtask-input width-100" onkeydown="onEnterEditSubTask(event, this)">
+            <input type="text" id="${editInputId}" class="edit-subtask-input width-100" onkeydown="onEnterEditSubTask(event, this)" oninput="clearEditValidation(this.closest('.subtask-item'))">
             <div class="gap-8 flexR">
             <button class="delete-subtask-button overlay-button" type="button" onclick="deleteSubtask(this)">
                 <svg width="16" height="18" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">

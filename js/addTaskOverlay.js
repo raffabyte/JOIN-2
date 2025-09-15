@@ -411,17 +411,66 @@ function editSubtask(btn) {
   onEnterEditSubTask(editInput);
 }
 
-/** Finalizes an edited subtask and restores display mode. */
 function finalEditditSubtask(subtask) {
   let subtaskItem = subtask.closest(".subtask-item");
   let editDiv = subtaskItem.querySelector(".edit-subtask-input-wrapper");
   let subtaskDisplay = subtaskItem.querySelector(".subtask");
   let input = editDiv.querySelector(".edit-subtask-input");
-  let newText = input.value;
+  let newText = input.value.trim();
+  
+  if (!validateEditedSubtask(subtaskItem, newText)) {
+    return;
+  }
 
   subtaskItem.querySelector(".subtask-text").textContent = newText;
   editDiv.classList.add("display-none");
   subtaskDisplay.classList.remove("display-none");
+  clearEditValidation(subtaskItem);
+}
+
+function validateEditedSubtask(subtaskItem, text) {
+  if (text.length < 3) {
+    showEditValidationError(subtaskItem, "Subtask must be at least 3 characters");
+    return false;
+  }
+  
+  if (subtaskAlreadyExists(subtaskItem, text)) {
+    showEditValidationError(subtaskItem, "Subtask already exists");
+    return false;
+  }
+  return true;
+}
+
+function subtaskAlreadyExists(currentItem, text) {
+  let existingSubtasks = [];
+  document.querySelectorAll(".subtask-item").forEach(item => {
+    if (item !== currentItem && item.querySelector(".subtask-text")?.textContent?.trim()) {
+      existingSubtasks.push(item.querySelector(".subtask-text").textContent.trim().toLowerCase());
+    }
+  });
+  return existingSubtasks.includes(text.toLowerCase());
+}
+
+function showEditValidationError(subtaskItem, message) {
+  let editWrapper = subtaskItem.querySelector(".edit-subtask-input-wrapper");
+  editWrapper.classList.add("edit-validation-error");
+  
+  let existingHint = subtaskItem.querySelector(".hint");
+  if (existingHint) existingHint.remove();
+  
+  let hint = document.createElement("span");
+  hint.className = "hint edit-validation-hint";
+  hint.textContent = message;
+  
+  editWrapper.parentNode.insertBefore(hint, editWrapper.nextSibling);
+}
+
+function clearEditValidation(subtaskItem) {
+  let editWrapper = subtaskItem.querySelector(".edit-subtask-input-wrapper");
+  editWrapper.classList.remove("edit-validation-error");
+  
+  let hint = subtaskItem.querySelector(".hint");
+  if (hint) hint.remove();
 }
 
 // Add event listener for outside clicks to close dropdowns
