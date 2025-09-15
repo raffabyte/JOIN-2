@@ -19,6 +19,7 @@ function closeOverlay() {
             page.querySelectorAll('.selected-assignee .contact-icon').forEach(n=>n.remove());
             page.querySelectorAll('#subtasksList,#editedSubtasksList').forEach(l=>l.innerHTML='');
             page.querySelectorAll('.priority-button.active, .edit-priority-button.active').forEach(b=>b.classList.remove('active'));
+            page.querySelector('.priority-button.MidPriority, .edit-priority-button.MidPriority').classList.add('active');
         }
         return;
     }
