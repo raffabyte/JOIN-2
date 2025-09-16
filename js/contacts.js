@@ -440,6 +440,7 @@ async function deleteContact(key, closeOverlay = false) {
   if (closeOverlay) {
     toggleOverlay();
   }
+  closeMobileDetails()
   showSuccessOverlay("Contact deleted!");
 }
 

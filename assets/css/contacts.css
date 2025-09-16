@@ -280,7 +280,7 @@ h2 {
 
 .input {
   padding: 12px;
-  border: 1px solid #ccc;
+  border: 2px solid #ccc;
   border-radius: 8px;
   font-size: 20px;
 }
@@ -767,4 +767,3 @@ form {
   border-color: #29abe2 !important;
   box-shadow: none !important;
 }
-

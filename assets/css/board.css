@@ -107,7 +107,7 @@ h1 {
 }
 
 .board-title {
-  padding: 0 24px;
+  padding: 0 0px;
 }
 
 .board-title p {
@@ -428,7 +428,7 @@ h1 {
 }
 
 .board-title {
-  padding: 0 8px;
+  padding: 0 0px;
 }
 
 .board-title p {
@@ -462,6 +462,9 @@ h1 {
 }
 }
 @media (max-width: 800px) {
+  .board-title {
+    padding: 0 16px;
+  }
   .no-task-item {
     margin-right: 16px;
     

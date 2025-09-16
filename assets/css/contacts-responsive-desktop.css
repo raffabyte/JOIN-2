@@ -343,14 +343,6 @@
     width: 175px;
   }
 
-  .pb,
-  .BigPB,
-  .BigContactCircle {
-    width: 84px;
-    height: 84px;
-    font-size: 33px;
-  }
-
   .flexCC {
     max-width: 295px;
     gap: 37px;
