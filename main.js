@@ -3,12 +3,30 @@ const BASE_URL = window.BASE_URL;
 const USERKEY = window.USERKEY;
 */
 
+/**
+ * Base URL for Firebase Realtime Database.
+ * Stored both on the `window` (for global access) and as a module-level constant.
+ * Must end with a trailing slash.
+ * @type {string}
+ */
 window.BASE_URL = "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/";
+
+/**
+ * Currently logged-in user's key. Pulled from localStorage at boot.
+ * Exposed both on `window` and as a module-level constant.
+ * @type {string|null}
+ */
 window.USERKEY = localStorage.getItem("loggedInUserKey");
+
+/** @type {string} */
 const BASE_URL = "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/";
+/** @type {string|null} */
 const USERKEY = localStorage.getItem("loggedInUserKey");
 
-
+/**
+ * Palette of predefined colors used for contact avatars or tags.
+ * @type {string[]}
+ */
 const predefinedColors = [
   "#FF7A00",
   "#9327FF",
@@ -21,6 +39,13 @@ const predefinedColors = [
   "#00BEE8",
 ];
 
+/**
+ * Simple demo login that validates against hard-coded credentials.
+ * Displays a message in the element with id "msgBox".
+ * NOTE: For production, replace with real authentication.
+ *
+ * @returns {void}
+ */
 function login() {
             const EMAIL = document.getElementById('email').value;
             const PASSWORD = document.getElementById('password').value;
@@ -37,15 +62,25 @@ function login() {
             console.log('Login attempt with:', EMAIL, PASSWORD);
         }
 
-// Placeholder for a logout function if needed later
+/**
+ * Placeholder logout (early definition).
+ * NOTE: This function is later redefined by another `logout` implementation below,
+ * which will override this one because of function hoisting.
+ *
+ * @returns {void}
+ */
 function logout() {
     alert('Du wurdest abgemeldet!');
 }
 
-
-
-//Profil menu Toggle function
-const toggleMenu = () => {
+/**
+ * Toggles the visibility of the profile menu and wires a body click handler
+ * to close the menu when clicking outside of it.
+ * Expects elements with IDs "menu" and "userProfile".
+ *
+ * @returns {void}
+ */
+function toggleMenu() {
     const menu = document.getElementById('menu');
     menu.classList.toggle('not-visible');
     
@@ -54,7 +89,13 @@ const toggleMenu = () => {
         : null;
 }
 
-
+/**
+ * Renders the left navigation menu variant depending on the current page.
+ * Uses `linkesNavLogin(page)` for login-related legal pages, otherwise `linkesNav(page)`.
+ * Expects an element with ID "linkesNavMenu" and the templating functions to exist.
+ *
+ * @returns {void}
+ */
 function linkesNavMenuVersion(){
     // This function determines which navigation menu to display based on the current page
 
@@ -64,7 +105,6 @@ function linkesNavMenuVersion(){
     // Get the elements by their IDs
     const LINKES_NAV_MENU = document.getElementById('linkesNavMenu');
 
-
     if (page === 'legal-notice-login' || page === 'privacy-login') {
         LINKES_NAV_MENU.innerHTML = linkesNavLogin(page);
     }else {
@@ -72,6 +112,13 @@ function linkesNavMenuVersion(){
     }
 }
 
+/**
+ * Shows/hides the help link and user profile icon depending on the current page.
+ * Expects elements with IDs "helpLink" and "userProfile".
+ * Uses the "displayNone" class to hide elements.
+ *
+ * @returns {void}
+ */
 function showHideHelpAndUser() {
     // Get the current page name from the URL
     let page = window.location.pathname.split('/').pop().split('.')[0];
@@ -92,6 +139,12 @@ function showHideHelpAndUser() {
     }
 }
 
+/**
+ * Injects the header markup into the element with ID "header".
+ * Relies on a global `header()` template function.
+ *
+ * @returns {void}
+ */
 function addHeader() {
     // This function adds the header to the page
    
@@ -100,6 +153,12 @@ function addHeader() {
     HEADER.innerHTML = header();
 }
   
+/**
+ * Initializes common page chrome: header, left nav, visibility of help/user controls,
+ * and the user's initials bubble.
+ *
+ * @returns {Promise<void>}
+ */
 async function init(){
     // Initialize the header and navigation menu based on the current page
     // This function is called when the page loads
@@ -110,6 +169,12 @@ async function init(){
     await setUserInitials();
 }
 
+/**
+ * Loads the current user from Firebase and sets the text content of the element
+ * with ID "userInitials" to the user's initials. Falls back to "?" on failure.
+ *
+ * @returns {Promise<void>}
+ */
 async function setUserInitials() {
   const initialsEl = document.getElementById("userInitials");
   const response = await fetch(`${BASE_URL}users/${USERKEY}.json`);
@@ -130,6 +195,17 @@ async function setUserInitials() {
   }
 }
 
+/**
+ * Computes initials from a given full name.
+ * Returns the first letter of the 1st and 3rd words if 3+ words,
+ * otherwise the first letters of the first two words, or one letter for single names.
+ *
+ * NOTE: This function uses an undeclared variable `splitedName`, which becomes a global.
+ * For robustness, consider declaring it with `const` or `let`.
+ *
+ * @param {string} name - Full name.
+ * @returns {string} Initials in uppercase.
+ */
 function contactIconSpan(name){
     splitedName = name.split(" ");
     if (splitedName.length >= 3) {
@@ -141,6 +217,15 @@ function contactIconSpan(name){
     }
 }
 
+/**
+ * Logs out the current user and returns to the login page.
+ * If the user is in guest mode, their user node is deleted from Firebase before logout.
+ * Clears all localStorage keys and redirects to "../../index.html".
+ *
+ * NOTE: This definition overrides the earlier placeholder `logout()` above.
+ *
+ * @returns {Promise<void>}
+ */
 async function logout() {
   const isGuest = localStorage.getItem("guestMode") === "true";
 
@@ -154,12 +239,20 @@ async function logout() {
   window.location.href = "../../index.html";
 }
 
-
+/**
+ * Returns a random color from the `predefinedColors` palette.
+ * @returns {string} A hex color string.
+ */
 function getRandomColor() {
   const index = Math.floor(Math.random() * predefinedColors.length);
   return predefinedColors[index];
 }
 
+/**
+ * Generates up to two initials from a name.
+ * @param {string} name - Full name
+ * @returns {string} 1–2 uppercase letters (empty string if name is falsy)
+ */
 function getInitials(name) {
   if (!name) return "";
   return name
@@ -169,14 +262,29 @@ function getInitials(name) {
     .substring(0, 2);
 }
 
-
-
+/**
+ * Performs a GET request to `${BASE_URL}${path}.json` and returns parsed JSON.
+ * NOTE: Assigns to `responseToJson` (implicit global) to mirror existing logic.
+ *
+ * @template T
+ * @param {string} [path=""] - Path relative to BASE_URL (without leading slash).
+ * @returns {Promise<T>} Parsed JSON response.
+ */
 async function loadData(path = "") {
   let response = await fetch(BASE_URL + path + ".json");
   return (responseToJson = await response.json());
 }
 
-
+/**
+ * Performs a POST request to `${BASE_URL}${path}.json` with a JSON body.
+ * Typically returns `{ name: "<generated-key>" }` from Firebase.
+ * NOTE: Assigns to `responseToJson` (implicit global) to mirror existing logic.
+ *
+ * @template T
+ * @param {string} [path=""] - Path relative to BASE_URL (without leading slash).
+ * @param {any} [data={}] - Data to serialize and send as JSON.
+ * @returns {Promise<T>} Parsed JSON response.
+ */
 async function postData(path = "", data = {}) {
   let response = await fetch(BASE_URL + path + ".json", {
     method: "POST",
@@ -188,7 +296,15 @@ async function postData(path = "", data = {}) {
   return (responseToJson = await response.json());
 }
 
-
+/**
+ * Performs a PUT request to `${BASE_URL}${path}.json` with a JSON body.
+ * Overwrites the value at the path.
+ *
+ * @template T
+ * @param {string} [path=""] - Path relative to BASE_URL (without leading slash).
+ * @param {any} [data={}] - Data to serialize and send as JSON.
+ * @returns {Promise<T>} Parsed JSON response.
+ */
 async function putData(path = "", data = {}) {
   let response = await fetch(BASE_URL + path + ".json", {
     method: "PUT",
@@ -200,7 +316,15 @@ async function putData(path = "", data = {}) {
   return await response.json();
 }
 
-
+/**
+ * Performs a DELETE request to `${BASE_URL}${path}.json`.
+ * Deletes the node at the specified path.
+ * NOTE: Assigns to `responseToJson` (implicit global) to mirror existing logic.
+ *
+ * @template T
+ * @param {string} [path=""] - Path relative to BASE_URL (without leading slash).
+ * @returns {Promise<T>} Parsed JSON response (Firebase typically returns `null`).
+ */
 async function deleteData(path = "") {
   let response = await fetch(BASE_URL + path + ".json", {
     method: "DELETE",
