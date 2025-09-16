@@ -2,10 +2,39 @@
  * Dashboard / Summary page script
  * Uses global constants from main.js (window.BASE_URL & window.USERKEY).
  * Handles user greeting, task statistics, and overlay animation.
+ *
+ * Globals expected:
+ * - window.BASE_URL (string): Firebase base URL ending with a trailing slash.
+ * - window.USERKEY (string): Current user's key; alternatively taken from localStorage.
+ */
+
+/**
+ * @typedef {Object} Task
+ * @property {"todoColumn"|"inProgressColumn"|"awaitFeedbackColumn"|"doneColumn"} column
+ * @property {"HighPriority"|"MediumPriority"|"LowPriority"} [priority]
+ * @property {string} [dueDate] ISO date string (e.g., "2025-09-16")
+ * @property {any} [id]
+ * @property {any} [title]
+ * @property {any} [description]
+ */
+
+/**
+ * @typedef {Object} TaskCounts
+ * @property {number} todo
+ * @property {number} inProgress
+ * @property {number} awaitFeedback
+ * @property {number} done
  */
 
 const userKey = window.USERKEY || localStorage.getItem("loggedInUserKey");
 
+/**
+ * Guards the page from unauthorized access.
+ * If `window.protectPageAccess` exists, delegates to it; otherwise falls back
+ * to redirecting to the login page when no userKey is present.
+ *
+ * @returns {void}
+ */
 (function guard() {
   if (typeof window.protectPageAccess === "function") {
     if (!window.protectPageAccess("../../index.html")) return;
@@ -23,9 +52,11 @@ window.addEventListener("DOMContentLoaded", async () => {
     addHeader();
     linkesNavMenuVersion();
     showHideHelpAndUser();
-    // Ensure user name/initials are set immediately before any long-running task fetches
+
+    // Ensure user name/initials are set before potentially longer task fetches
     await setUserInitials();
     await init();
+
     // Load task counts only after the user name is displayed and seeding is ensured
     await loadAndRenderTaskCounts();
   } catch (err) {
@@ -37,8 +68,8 @@ window.addEventListener("DOMContentLoaded", async () => {
 });
 
 /**
- * Loads user data from Firebase.
- * @returns {Promise<Object>} User object from Firebase
+ * Loads the current user's data from Firebase.
+ * @returns {Promise<Object>} User object (empty object if not found)
  */
 async function loadUserData() {
   const response = await fetch(`${window.BASE_URL}users/${userKey}.json`);
@@ -47,7 +78,7 @@ async function loadUserData() {
 }
 
 /**
- * Initializes dashboard with username and greeting.
+ * Initializes the dashboard with the user's formatted name and greeting.
  * @returns {Promise<void>}
  */
 async function init() {
@@ -69,6 +100,14 @@ async function init() {
   await showCurrentTime();
 }
 
+/**
+ * Sets the same text content for multiple element IDs.
+ * Useful for keeping desktop and mobile UIs in sync.
+ *
+ * @param {string[]} ids - Element IDs
+ * @param {string} text  - Text to set
+ * @returns {void}
+ */
 function setTextByIds(ids, text) {
   ids.forEach(id => {
     const el = document.getElementById(id);
@@ -77,7 +116,7 @@ function setTextByIds(ids, text) {
 }
 
 /**
- * Displays the current greeting based on time of day.
+ * Displays a greeting based on the current time of day.
  * @returns {Promise<void>}
  */
 async function showCurrentTime() {
@@ -88,14 +127,14 @@ async function showCurrentTime() {
     hour >= 17 && hour < 22 ? "Good evening" :
     "Good night";
 
-  // Desktop + Mobile aktualisieren
+  // Update desktop + mobile
   setTextByIds(["greetingText", "greetingTextMobile"], text);
 }
 
 /**
- * Formats a user's full name into proper case.
- * @param {string} name - The user's name
- * @returns {string} Formatted name
+ * Formats a user's full name to Proper Case.
+ * @param {string} name - User's name
+ * @returns {string} Proper-cased name
  */
 function formatName(name) {
   return name
@@ -105,12 +144,13 @@ function formatName(name) {
 }
 
 /**
- * Loads tasks and renders the dashboard statistics.
+ * Loads tasks and renders dashboard statistics (counts + next deadline).
+ * Ensures seeding for new users if a seeding function is available.
  * @returns {Promise<void>}
  */
 async function loadAndRenderTaskCounts() {
   try {
-    // Stelle sicher, dass für neue Benutzer Starter‑Tasks vom Remote kopiert wurden
+    // Ensure starter tasks are seeded for new users if available
     if (typeof seedUserTasksIfEmpty === 'function') await seedUserTasksIfEmpty();
 
     const tasks = await fetchTasks();
@@ -123,8 +163,8 @@ async function loadAndRenderTaskCounts() {
 }
 
 /**
- * Fetches all tasks from Firebase.
- * @returns {Promise<Object[]>} Array of task objects
+ * Fetches all tasks for the current user from Firebase.
+ * @returns {Promise<Task[]>} Array of tasks (empty array if none)
  */
 async function fetchTasks() {
   const response = await fetch(`${window.BASE_URL}users/${userKey}/tasks.json`);
@@ -133,17 +173,21 @@ async function fetchTasks() {
 }
 
 /**
- * Analyzes task statistics by column and priority.
- * @param {Object[]} tasks - Array of task objects
+ * Computes task statistics (counts by column, number of high-priority tasks,
+ * and a list of upcoming high-priority due dates).
+ *
+ * @param {Task[]} tasks - Task array
  * @returns {{
- *   countByColumn: {todo: number, inProgress: number, awaitFeedback: number, done: number},
+ *   countByColumn: TaskCounts,
  *   highPriorityCount: number,
  *   upcomingUrgentDates: Date[]
  * }}
  */
 function analyzeTasks(tasks) {
+  /** @type {TaskCounts} */
   const countByColumn = { todo: 0, inProgress: 0, awaitFeedback: 0, done: 0 };
   const highPriority = { count: 0 };
+  /** @type {Date[]} */
   const upcomingUrgentDates = [];
   const today = new Date();
 
@@ -156,9 +200,10 @@ function analyzeTasks(tasks) {
 }
 
 /**
- * Increments task counters based on column type.
- * @param {Object} task - Task object
- * @param {{todo: number, inProgress: number, awaitFeedback: number, done: number}} countByColumn
+ * Increments counters based on the task's column.
+ * @param {Task} task - Task to count
+ * @param {TaskCounts} countByColumn - Accumulator for per-column counts
+ * @returns {void}
  */
 function countColumns(task, countByColumn) {
   switch (task.column) {
@@ -170,11 +215,14 @@ function countColumns(task, countByColumn) {
 }
 
 /**
- * Processes high-priority tasks and upcoming deadlines.
- * @param {Object} task - Task object
- * @param {{count: number}} highPriorityRef
- * @param {Date[]} datesArr - Array of upcoming urgent dates
- * @param {Date} today - Current date
+ * Tracks high-priority tasks and collects upcoming due dates.
+ * Only dates that are valid and on/after today are considered "upcoming".
+ *
+ * @param {Task} task - Task to inspect
+ * @param {{count: number}} highPriorityRef - Mutable counter reference
+ * @param {Date[]} datesArr - Collector for upcoming high-priority due dates
+ * @param {Date} today - Current date used for comparison
+ * @returns {void}
  */
 function processPriority(task, highPriorityRef, datesArr, today) {
   if (task.priority === "HighPriority") {
@@ -189,10 +237,15 @@ function processPriority(task, highPriorityRef, datesArr, today) {
 }
 
 /**
- * Renders the task statistics into the dashboard UI.
- * @param {{todo: number, inProgress: number, awaitFeedback: number, done: number}} counts
+ * Renders the task statistics into the dashboard elements.
+ * Expects the following element IDs to exist:
+ *   "ToDo", "tasksInProgress", "awaitingFeedback", "Done",
+ *   "tasksinBoard", "highPriorityCount"
+ *
+ * @param {TaskCounts} counts - Counts per board column
  * @param {number} total - Total number of tasks
- * @param {number} highPriority - Total number of high-priority tasks
+ * @param {number} highPriority - Number of high-priority tasks
+ * @returns {void}
  */
 function renderTaskCounts(counts, total, highPriority) {
   document.getElementById("ToDo").innerText = counts.todo;
@@ -204,8 +257,12 @@ function renderTaskCounts(counts, total, highPriority) {
 }
 
 /**
- * Displays the next upcoming deadline in the dashboard.
- * @param {Date[]} dates - Array of urgent deadlines
+ * Displays the next upcoming high-priority deadline, if any.
+ * Writes "No urgent deadlines" if the list is empty.
+ * Expects an element with ID "nextDeadlineDate".
+ *
+ * @param {Date[]} dates - Upcoming urgent deadlines
+ * @returns {void}
  */
 function renderNextDeadline(dates) {
   const elem = document.getElementById("nextDeadlineDate");
@@ -227,7 +284,13 @@ function renderNextDeadline(dates) {
 }
 
 /**
- * Handles the fade-out animation of the mobile greeting overlay.
+ * Fades out the mobile greeting overlay after a short delay.
+ * Requires an element with ID "MobileGreeting" and CSS classes "hidden" and "fade-out".
+ *
+ * Controlled by `sessionStorage.showMobileGreeting === "1"`.
+ * Clears the storage flag after hiding the overlay.
+ *
+ * @returns {void}
  */
 function mobileOverlayFadeOut() {
   const overlay = document.getElementById("MobileGreeting");
