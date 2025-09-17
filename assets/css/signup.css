@@ -402,3 +402,137 @@ header img,
   transition: all 100ms ease-in-out;
 }
 
+@media (max-width: 768px) {
+  .login-container {
+    padding: 32px 0;
+    width: 90%;
+  }
+
+  .login-btn {
+    padding: 8px;
+    font-size: 16px;
+    width: 72%;
+  }
+
+  form#signUpForm {
+    padding-top: 16px;
+    max-width: 300px;
+  }
+
+  .arrow-left-line {
+    position: absolute;
+    top: 42px;
+  }
+
+  h2 {
+    font-size: 54px;
+    font-weight: 700;
+    line-height: 120%;
+  }
+}
+
+@media (max-width: 560px) {
+  header img {
+    object-fit: contain;
+    height: 56px;
+    width: 35px;
+    margin: 24px 0 0 24px;
+  }
+
+  .input {
+    width: 100%;
+  }
+
+  input#name,
+  input#email {
+    background-size: 16px !important;
+  }
+
+  svg {
+    width: 19px !important;
+  }
+
+  input {
+    padding: 8px !important;
+  }
+
+  input::placeholder {
+    font-size: 16px;
+    text-align: left;
+  }
+
+  .login-btn {
+    padding: 8px;
+    font-size: 16px;
+    width: 72%;
+  }
+
+  label {
+    font-size: 16px;
+  }
+
+}
+
+@media (max-width: 430px) {
+
+  h2 {
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 120%;
+  }
+
+  .arrow-left-line {
+    position: absolute;
+    top: 42px;
+    left: 24px;
+  }
+
+  .login-buttons {
+    width: 100%;
+  }
+
+  .inputs {
+    width: 100%;
+    max-width: 280px;
+    gap: 8px;
+  }
+
+  .inputs input,
+  .password-wrapper input {
+    width: 100%;
+  }
+
+  .password-field {
+    max-width: 100%;
+  }
+
+  .password-wrapper {
+    max-width: 100%;
+  }
+
+  .password-wrapper input,
+  .password-field input {
+    width: 100%;
+    max-width: 100%;
+    padding: 12px 21px;
+    font-size: 16px;
+  }
+
+  .toggle-password {
+    right: 10px;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+  }
+
+  footer {
+    width: 100%;
+    padding: 32px 16px;
+    text-align: center;
+  }
+
+  footer a {
+    display: inline-block;
+    padding: 0 12px;
+  }
+}

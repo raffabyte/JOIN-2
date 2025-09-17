@@ -1,0 +1,769 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: #f6f7f8;
+  flex: 1;
+}
+
+input {
+  width: 100%;
+}
+
+.is-invalid {
+  border: 2px solid #D90429 !important;
+  border-radius: 8px;
+  outline: none;
+}
+
+.error-text {
+  display: block;
+  min-height: 16px;
+  line-height: 16px;
+  margin-top: 6px;
+  font-size: 16px;
+  color: #D90429;
+  visibility: hidden;
+}
+
+.input-field .is-invalid {
+  border-color: #D90429 !important;
+}
+
+.contacsList {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+  width: 456px;
+  position: fixed;
+  height: calc(100vh - 96px);
+  box-shadow: 4px 0 6px rgba(0, 0, 0, 0.2);
+}
+
+.contactCard {
+  max-width: 352px;
+  height: 78px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 35px;
+  padding-left: 24px;
+  flex-shrink: 0;
+}
+
+.contactCard:hover:not(.activeCard) {
+  background: linear-gradient(to bottom, #f0f0f0, #e4e2e2);
+  border-radius: 16px;
+  cursor: pointer;
+}
+
+.contactName {
+  font-weight: 400;
+  font-size: 20px;
+  color: black;
+}
+
+.contactMail {
+  font-weight: 400;
+  font-size: 16px;
+  color: #007cee;
+}
+
+.contactImg {
+  height: 42px;
+  width: 42px;
+}
+
+.AddNew {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 101px;
+  background-color: white;
+  flex-shrink: 0;
+}
+
+.AddNewButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  height: 56px;
+  width: 352px;
+  border-radius: 10px;
+  background-color: #2a3647;
+}
+
+.AddNewButton:hover {
+  background-color: rgb(26, 175, 224);
+}
+
+.AddNewText {
+  font-weight: 700;
+  font-size: 21px;
+  color: white;
+}
+
+.AddNewImg {
+  width: 32px;
+  height: 32px;
+}
+
+.contactsContainer {
+  display: flex;
+  flex-direction: column;
+  padding-left: 550px;
+  padding-top: 110px;
+}
+
+.into {
+  max-height: 76px;
+  display: flex;
+  width: 100%;
+  gap: 30px;
+  align-items: center;
+}
+
+.separater {
+  height: 75%;
+  width: 4px;
+  background-color: #29abe2;
+  border-radius: 8px;
+}
+
+h1 {
+  font-weight: 700;
+  font-size: 61px;
+}
+
+h2 {
+  font-weight: 400;
+  font-size: 27px;
+  color: #2a3647;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.d_none {
+  display: none !important;
+}
+
+.overlayContent {
+  display: flex;
+  transform: translateX(100vw);
+  transition: transform 0.4s ease;
+}
+
+.overlay.show .overlayContent {
+  transform: translateX(0);
+}
+
+.leftSide {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #2a3647;
+  height: 592px;
+  width: 467px;
+  border-top-left-radius: 30px;
+  border-bottom-left-radius: 30px;
+  padding: 0 48px;
+  gap: 12px;
+}
+
+.imgFlex {
+  display: flex;
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.textFlex {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.joinSmall {
+  height: 66px;
+  object-fit: contain;
+}
+
+.leftSide h1 {
+  color: white;
+  font-size: 61px;
+  font-weight: 700;
+}
+
+.leftSide p {
+  color: white;
+  font-size: 27px;
+  font-weight: 400;
+}
+
+.vektorFlex {
+  display: flex;
+  width: 100%;
+}
+
+.vektor {
+  display: flex;
+  height: 3px;
+  width: 30%;
+  background-color: #29abe2;
+  border-radius: 6px;
+}
+
+.rightSide {
+  display: flex;
+  width: 745px;
+  height: 592px;
+  background-color: #ffffff;
+  padding: 66px 0;
+  border-top-right-radius: 30px;
+  border-bottom-right-radius: 30px;
+}
+
+.pbContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 250px;
+}
+
+.pb {
+  width: 120px;
+  height: 120px;
+}
+
+.flexCC {
+  display: flex;
+  flex-direction: column;
+  max-width: 422px;
+  width: 100%;
+  gap: 54px;
+}
+
+.closeWrapper {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+}
+
+.closeContact {
+  width: 32px;
+  height: 32px;
+}
+
+.closeContact:hover {
+  background-color: lightgray;
+  border-radius: 30px;
+}
+
+.inputs_div {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.input {
+  padding: 12px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  font-size: 20px;
+}
+
+.name_icon {
+  background-image: url(../img/contacts/person.png);
+  background-repeat: no-repeat;
+  background-size: 25px;
+  background-position-x: 380px;
+  background-position-y: 12px;
+}
+
+.mail_icon {
+  background-image: url(../img/contacts/mail.png);
+  background-repeat: no-repeat;
+  background-size: 25px;
+  background-position-x: 380px;
+  background-position-y: 12px;
+}
+
+.phone_icon {
+  background-image: url(../img/contacts/call.png);
+  background-repeat: no-repeat;
+  background-size: 25px;
+  background-position-x: 380px;
+  background-position-y: 12px;
+}
+
+.login-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 24px;
+}
+
+.create-btn {
+  display: flex;
+  background-color: #2a3647;
+  color: white;
+  padding: 15px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 21px;
+  gap: 4px;
+  height: 56px;
+}
+
+.create-btn:hover {
+  background-color: rgb(26, 175, 224);
+  box-shadow: 0 12px 12px -8px #a8a8a8;
+}
+
+.cancel-button {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  color: #2a3647;
+  border: solid 2px #2a3647;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 21px;
+  gap: 4px;
+  height: 56px;
+  padding: 15px 15px;
+}
+
+.cancel-button:hover {
+  background-color: white;
+  box-shadow: 0 12px 12px -8px #a8a8a8;
+  border-color: #29ABE2;
+}
+
+.cancel-button:hover .cancelText {
+  color: rgb(26, 175, 224);
+}
+
+.cancel-button:hover .close2 path {
+  stroke: rgb(26, 175, 224);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 42px;
+}
+
+.check {
+  width: 24px;
+  height: 24px;
+}
+
+.createText {
+  font-weight: 700;
+  font-size: 21px;
+}
+
+.cancelText {
+  font-weight: 400;
+  font-size: 20px;
+  color: #2a3647;
+}
+
+.contactsDetailsContainer {
+  position: absolute;
+}
+
+.contactsDetails {
+  display: flex;
+  flex-direction: column;
+  padding-top: 90px;
+  gap: 21px;
+  transform: translateX(100%);
+  transition: transform 0.4s ease;
+}
+
+.showDetails {
+  transform: translateX(0);
+}
+
+.displayColumn {
+  display: flex;
+  flex-direction: column;
+}
+
+.displayFlex {
+  display: flex;
+  display: flex;
+  align-items: center;
+  gap: 54px;
+}
+
+.BigPB {
+  height: 120px;
+  width: 120px;
+}
+
+.contectName {
+  font-weight: 500;
+  font-size: 47px;
+  color: black;
+}
+
+.displayFlex1 {
+  display: flex;
+  gap: 16px;
+}
+
+.editContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.editContainer:hover {
+  color: rgb(26, 175, 224);
+  cursor: pointer;
+}
+
+.editContainer:hover svg path {
+  fill: rgb(26, 175, 224);
+}
+
+.DeleteContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.DeleteContainer:hover {
+  color: rgb(26, 175, 224);
+  cursor: pointer;
+}
+
+.DeleteContainer:hover svg path {
+  fill: rgb(26, 175, 224);
+}
+
+.pSmall {
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.contactInformation {
+  font-weight: 400;
+  font-size: 20px;
+  color: black;
+  padding: 25px 0;
+}
+
+.displayColumn1 {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.strong {
+  font-weight: 700;
+  font-size: 16px;
+  color: black;
+}
+
+.mailInfoSmall {
+  font-weight: 400;
+  font-size: 16px;
+  color: #007cee;
+}
+
+.phoneInfoSmall {
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.activeCard {
+  background-color: #2a3647;
+  border-radius: 16px;
+}
+
+.activeCard:hover {
+  background-color: #2a3647;
+  border-radius: 16px;
+}
+
+.activeCard .contactName {
+  color: white;
+}
+
+.activeCard:hover .contactName {
+  color: white;
+}
+
+.contactCardsContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-height: calc(100vh - 197px);
+  overflow-y: auto;
+  padding-bottom: 20px;
+}
+
+.letterHeader {
+  display: flex;
+  align-items: center;
+  max-width: 352px;
+  width: 100%;
+  padding-left: 36px;
+  font-size: 20px;
+  font-weight: 400;
+  height: 58px;
+  flex-shrink: 0;
+  color: black;
+}
+
+.separatorList {
+  width: 100%;
+  max-width: 352px;
+  background-color: #d1d1d1;
+  border-radius: 8px;
+  height: 2px;
+  margin-bottom: 8px;
+  flex-shrink: 0;
+}
+
+.contactCircle {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 16px;
+  border: solid 2px white;
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.ownContactCircle {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  color: #29abe2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  border: solid 2px black;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.BigContactCircle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background-color: #29abe2;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 32px;
+  border: solid 2px white;
+  font-weight: 500;
+  font-size: 47px;
+  flex-shrink: 0;
+}
+
+.ownBigContactCircle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background-color: white;
+  color: #29abe2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 32px;
+  border: solid 4px black;
+  font-weight: 700;
+  font-size: 47px;
+  flex-shrink: 0;
+}
+
+.ownContactCard {
+  max-width: 352px;
+  height: 78px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding-left: 24px;
+  flex-shrink: 0;
+}
+
+.ownContactArea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  border-top: solid 2px #7a6e6e;
+  border-bottom: solid 2px #7a6e6e;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.OwnContactCard {
+  max-width: 352px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 16px;
+  height: 100%;
+  justify-content: space-between;
+}
+
+.OwnContactCard:hover {
+  background-color: lightgray;
+  border-radius: 16px;
+  cursor: pointer;
+}
+
+.ownContactCircleWrapper {
+  position: relative;
+  width: 42px;
+  height: 42px;
+}
+
+.ownContactCircleWrapper img {
+  width: 42px;
+  height: 42px;
+  display: block;
+}
+
+.initialsOnImage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #29abe2;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 1;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.separatorList1 {
+  width: 400px;
+  background-color: #201f1f;
+  border-radius: 16px;
+  height: 2px;
+  flex-shrink: 0;
+}
+
+.success-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  pointer-events: none;
+  transform: translateY(100vh);
+  transition: transform 0.4s ease;
+}
+
+.success-overlay.show {
+  transform: translateY(0);
+}
+
+.succesDiv {
+  position: relative;
+  left: 750px;
+  top: 700px;
+  background-color: #2a3647;
+  height: 74px;
+  width: 326px;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+.succesText {
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.mobileAddNew {
+  display: none;
+  background-color: transparent;
+}
+
+.mobileCircle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 56px;
+  width: 56px;
+  border-radius: 50px;
+  background-color: #2a3647;
+}
+
+.closeOverlayMobile {
+  display: none;
+}
+
+.separaterMobile {
+  display: none;
+}
+
+.intoWrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.intoWrapper img {
+  display: none;
+  height: 32px;
+  width: 32px;
+}
+
+.mobileMenuWrapper {
+  display: none;
+}
+
+.input.active-border {
+  border: 2px solid #29abe2 !important;
+  background-color: inherit !important;
+  transition: border-color 0.2s ease-in-out;
+}
+
+.input.active-border.is-invalid {
+  border-color: #29abe2 !important;
+  box-shadow: none !important;
+}
