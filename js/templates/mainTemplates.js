@@ -18,11 +18,23 @@ const BOARD_SVG =`<svg width="31" height="26" viewBox="0 0 31 26" fill="none" xm
  * @param {string} dragAreaId - Die ID der Drag-Area
  * @returns {string} HTML-Template für die Drag-Area
  */
+/**
+ * Template for a drag placeholder area inside a board column.
+ *
+ * @param {string} dragAreaId - The unique ID of the drag area element.
+ * @returns {string} HTML string for the drag area container.
+ */
 function dragAreaTemplate(dragAreaId) {
     return `<div class="drag-area display-none" id="${dragAreaId}"></div>`;
 }
 
 
+/**
+ * Renders the top header/navigation bar HTML depending on the current page.
+ * Decides visibility of help/user menu elements per route.
+ *
+ * @returns {string} HTML string for the header content.
+ */
 function header() {
     const pagesToHideUserInfo = [
         'legal-notice.html',
@@ -64,7 +76,12 @@ function header() {
         </div>
     `;
 }
+
+
 // === Header Helpers (nur 1x deklarieren) ===
+/**
+ * Toggles the visibility of the profile menu in the header (global singleton).
+ */
 if (!window.toggleMenu) {
   window.toggleMenu = function () {
     const menu = document.getElementById('menu');
@@ -73,6 +90,10 @@ if (!window.toggleMenu) {
   };
 }
 
+
+/**
+ * Closes the profile menu in the header (global singleton).
+ */
 if (!window.closeMenu) {
   window.closeMenu = function () {
     const menu = document.getElementById('menu');
@@ -81,9 +102,17 @@ if (!window.closeMenu) {
   };
 }
 
+
 /**
  * Erzwinge Navigation, selbst wenn andere Click-Handler preventDefault() aufrufen.
  * Lässt das href trotzdem stehen (Accessibility, Kontextmenü, Mittelklick etc.).
+ */
+/**
+ * Forces navigation to a given href, even if other handlers preventDefault.
+ * Keeps native anchor behavior for accessibility and middle-click.
+ *
+ * @param {Event} ev - Click event to optionally prevent.
+ * @param {string} href - Destination URL.
  */
 if (!window.hardNavigate) {
   window.hardNavigate = function (ev, href) {
@@ -97,6 +126,12 @@ if (!window.hardNavigate) {
 }
 
 
+/**
+ * Renders the left navigation for authenticated pages, marking the active link.
+ *
+ * @param {string} activePage - One of 'summary'|'addTask'|'board'|'contacts'|'privacy'|'legal-notice'.
+ * @returns {string} HTML for the left navigation area.
+ */
 function linkesNav(activePage) {
   const isGuest = localStorage.getItem("guestMode") === "true";
 
@@ -132,6 +167,13 @@ function linkesNav(activePage) {
   `;
 }
 
+
+/**
+ * Renders the left navigation for login pages with privacy/legal links.
+ *
+ * @param {string} activePage - One of 'privacy'|'privacy-login'|'legal-notice'|'legal-notice-login'.
+ * @returns {string} HTML for the login left navigation.
+ */
 function linkesNavLogin(activePage) {
     return `
     <div class="login-menu flexC">
@@ -151,6 +193,13 @@ function linkesNavLogin(activePage) {
     </div>`
 }
 
+
+/**
+ * Generates the task card markup for the board grid including DnD/mobile handlers.
+ *
+ * @param {Object} task - Task object with fields id,title,description,category,priority,assignee,subtasks.
+ * @returns {string} HTML string representing the task card.
+ */
 function taskCardTemplate(task) {
     return `
         <div class="task-card width-100 flexC" id="${task.id}"
@@ -180,6 +229,13 @@ function taskCardTemplate(task) {
         </div>`;
 }
 
+
+/**
+ * Template for the empty state card of a column.
+ *
+ * @param {string} columnName - Display name of the column (e.g., 'to do').
+ * @returns {string} HTML indicating no tasks.
+ */
 function noTaskCardTemplate(columnName) {
     return `
         <div class="no-task-item flexR width-100">
@@ -187,6 +243,11 @@ function noTaskCardTemplate(columnName) {
         </div>`;
 }
 
+
+/**
+ * Template for the assignee search dropdown when no matches found.
+ * @returns {string} HTML for the no-results row.
+ */
 function noSearchResultsTemplate() {
     return `
             <div class="no-results assignee-option width-100 flexR space-between" style="opacity: 0.6; cursor: default;">
@@ -198,10 +259,23 @@ function noSearchResultsTemplate() {
 }
 
 
+/**
+ * Small avatar-like span displaying overflow count (e.g., +3).
+ *
+ * @param {number} count - Number of additional items not rendered.
+ * @returns {string} HTML for the count badge.
+ */
 function extraCountSpanTemplate(count) {
     return `<span class="contact-icon extra-count flexR">+${count}</span>`;
 }
 
+
+/**
+ * Avatar circle span for an assignee, filled with contact color.
+ *
+ * @param {string} name - Full name of the contact.
+ * @returns {string} HTML for the contact icon span.
+ */
 function contactIconSpanTemplate(name) {
     const color = getContactColor(name);
     return `
@@ -209,7 +283,14 @@ function contactIconSpanTemplate(name) {
 }
 
 
-
+/**
+ * Subtasks progress bar and count template for task cards.
+ *
+ * @param {number} progress - Percentage progress (0-100).
+ * @param {number} done - Completed subtask count.
+ * @param {number} total - Total subtasks.
+ * @returns {string} HTML for the progress row.
+ */
 function handleSubtasksTemplate(progress, done, total) {
   return `
         <div class="width-100 space-between flexR">
@@ -221,10 +302,22 @@ function handleSubtasksTemplate(progress, done, total) {
     `
 }
 
+
+/**
+ * Renders the assignee display name span.
+ * @param {string} name - Member full name.
+ * @returns {string} HTML for member name.
+ */
 function memberNameTemplate(name) {
     return `<span class="member-name-text">${name}</span>`;
 }
 
+
+/**
+ * Renders a row with avatar and member name for overlays.
+ * @param {string} name - Member full name.
+ * @returns {string} HTML row combining avatar + name.
+ */
 function memberWithNameTemplate(name){
     return `
         <div class="member-with-name width-100 flexR gap-16">
@@ -233,154 +326,13 @@ function memberWithNameTemplate(name){
         </div>`;
 }
 
-function taskOverlayTemplate(task){
-    return `
-        <div class="flexC gap-24 task-overlay-content width-100" id="taskOverlayContent" data-task-id="${task.id}">
-            <div class="space-between flexR">
-                <span class="task-category" id="${convertToCamelCase(task.category)}">${task.category}</span>
-                <button class="overlay-button" onclick="closeOverlay()">
-                    ${CLOSE_CANCEL_SVG}
-                </button>
-            </div>
-            <div class="task-overlay-header gap-24 flexC">
-                <h2>${task.title}</h2>
-                <p class="${getVisibilityClass(task.description)}" id="taskOverlayDescription">${task.description || ''}</p>
-                <div class="gap-25 flexR">
-                    <p class="task-overlay-headdings">Due Date:</p>
-                    ${formatDate(task.dueDate)}
-                </div>
-                <div class="flexR gap-25 ${getVisibilityClass(task.priority)}">
-                    <p class="task-overlay-headdings">Priority:</p>
-                    <div class="flexR overlay-priority">
-                        ${handlePriority(task.priority)} 
-                        ${getPrioritySvg(task.priority)}
-                    </div>
-                </div>
-                <div class="assignee-container gap-8 flexC ${getVisibilityClass(task.assignee)}">
-                    <p class="task-overlay-headdings">Assignees:</p>
-                    <div class="flexC width-100">
-                    ${renderMembersWithName(task)}
-                    </div>
-                </div>
-                <div class="gap-8 flexC subtasks-overlay ${getVisibilityClass(task.subtasks)}">   
-                    <p class="task-overlay-headdings">Subtasks:</p>
-                    <div class="subtasks-overlay-list flexC width-100">
-                        ${task.subtasks && task.subtasks.length > 0 ? task.subtasks.map(subtask => `
-                            <div class="subtask-item-overlay gap-16 flexR">
-                                <button class="checkbox" onclick="toggleSubtask('${task.id}', '${subtask.value}')">
-                                    ${subtask.checked ? CHECKBOX_FILLED_DARK_SVG : CHECKBOX_SVG}
-                                </button>
-                                <span>${subtask.value}</span>
-                            </div>
-                        `).join('') : '<p>No subtasks available</p>'}
-                    </div>
-                </div>
-            </div>
-            <div class="task-overlay-footer gap-8 flexR">
-                <button class="task-footer-btn gap-8 flexR" onclick="deleteTask('${task.id}')">${DELETE_SVG} Delete</button>
-                ${SEPARATOR_SVG}
-                <button class="task-footer-btn gap-8 flexR" onclick="editTask('${task.id}')">${EDIT_SVG} Edit</button>
-            </div>
-        </div>
-        ${editTaskOverlayTemplate(task)}
-        `;
-}
 
-function taskEditTemplate(task) {
-    return `
-        <div class="flexC width-100 gap-24">
-            <div class="gap-8 width-100 flexC">
-                <label class="width-100" for="editedTaskTitle">Title</label>
-                <input class="inputs change-onfoucus requierd-input" oninput="hideValidationErrors()" type="text" id="editedTaskTitle" value="${task.title}" placeholder="Enter a title" >
-                <span class="required-span width-100 display-none">This field is required</span>
-            </div>
-            <div class="gap-8 width-100 flexC">
-                <label class="width-100" for="editedTaskDescription">Description</label>
-                <textarea class="inputs change-onfoucus" id="editedTaskDescription" name="taskDescription" placeholder="Enter Task description">${task.description || ''}</textarea>
-            </div>
-            <div class="gap-8 width-100 flexC">
-                <label class="width-100" for="editedTaskDueDate">Due date<span class="highlight">*</span></label>
-                <input class="inputs change-onfoucus requierd-input" value="${task.dueDate ? task.dueDate.split('T')[0] : ''}" type="date" id="editedTaskDueDate" name="taskDueDate" min="" onfocus="this.min=new Date().toISOString().split('T')[0]">
-                <span class="required-span width-100 display-none">This field is required</span>
-            </div>
-            <div class="gap-8 width-100 flexC">
-                <span class="width-100 prio-style">Priority</span>
-                <div class="flexR priority-select width-100 gap-16">
-                    <button type="button" class="edit-priority-button gap-8 width-100 flexR HighPriority ${task.priority === 'HighPriority' ? 'active' : ''}" 
-                            onclick="PriorityHandler('high'); event.stopPropagation();">
-                        <span class="priority-text">Urgent</span>
-                        ${HIGH_PRIORITY_SVG}
-                    </button>
-                    <button type="button" class="edit-priority-button gap-8 width-100 flexR MidPriority ${task.priority === 'MidPriority' ? 'active' : ''}" 
-                            onclick="PriorityHandler('medium'); event.stopPropagation();">
-                        <span class="priority-text">Medium</span>
-                        ${MID_PRIORITY_SVG}
-                    </button>
-                    <button type="button" class="edit-priority-button gap-8 width-100 flexR LowPriority ${task.priority === 'LowPriority' ? 'active' : ''}" 
-                            onclick="PriorityHandler('low'); event.stopPropagation();">
-                        <span class="priority-text">Low</span>
-                        ${LOW_PRIORITY_SVG}
-                    </button>
-                </div>
-            </div>
-            <div class="flexC gap-8 width-100">
-                <label class="width-100" for="editedTaskAssignee">Assigned To</label>
-                <div class="input-svg-wrapper width-100 flexC">
-                    <input  class="inputs change-onfoucus" oninput="toggleAssigneeOptions()" type="text" id="editedTaskAssignee" placeholder="Select Contacts to assign"
-                            onclick="toggleAssigneeOptions(); event.stopPropagation(); ">
-                    <div id="assigneeOptions" class="assignee-options width-100 display-none">
-                        <!-- Dynamically generated assignee options will be inserted here -->
-                    </div>
-                </div>
-                <div class="selected-assignee width-100 gap-8 flexR ${task.assignee && task.assignee.length > 0 ? '' : 'display-none'}" id="editedAssignee">
-                    ${task.assignee && task.assignee.length > 0 ? task.assignee.map(name => contactIconSpanTemplate(name)).join('') : ''}
-                </div>
-            </div>
-            <div class="gap-8 width-100 flexC">
-                <label class="width-100" for="editedSubtasks">Subtasks</label>
-                <div class="inputs change-onfoucus space-between flexR" id="inputBox">
-                    <input type="text" id="editedSubtasks" placeholder="add new subtask" oninput="checkSubtask(this.value.length, this.value, document.getElementById('editedSubtasksList'))" onfocus="showAddCancelBtns()" onkeydown="onEnterAddSubTask(event, 'editedSubtasks')">
-                    <button class="plus-button overlay-button" id="subtaskPlusBtn" type="button" onclick="showAddCancelBtns()">
-                            ${PLUS_SVG}
-                    </button>
-                    <div class="add-cancel-btns flexR display-none gap-8" id="addCancelBtns">
-                        <button class="cancel-subtask-button overlay-button" type="button" onclick="cancelSubtask()">
-                            ${CLOSE_CANCEL_SVG}
-                        </button>
-                        ${SEPARATOR_SVG}
-                        <button class="add-subtask-button overlay-button" type="button" onclick="addSubtask('editedSubtasks')">
-                            ${SUBMIT_SVG}
-                        </button>
-                    </div>
-                </div>
-                <span id="subtaskHintMessage" class="width-100 display-none">Please type a clear subtask</span>
-                <ul class="flexC width-100 ${task.subtasks && task.subtasks.length > 0 ? '' : 'display-none'}" id="editedSubtasksList">
-                    ${task.subtasks && Array.isArray(task.subtasks) ? task.subtasks.map((subtask, index) => addSubTaskTemplate(subtask.value, index)).join('') : ''}
-                </ul>
-            </div>
-        </div>`;
-}
-
-function editTaskOverlayTemplate(task) {
-    return `
-    <div class="display-none flexC gap-24 width-100" id="taskEditForm">
-        <div class="flexR width-100 flex-end">
-            <button class="overlay-button" onclick="closeOverlay()">
-                    ${CLOSE_CANCEL_SVG}
-            </button>
-        </div>
-        <div class="flexC edit-task-div width-100 gap-24">
-            ${taskEditTemplate(task)}
-        </div>
-        <div class="flexR width-100 flex-end">
-            <button class="submit-edit btn-shadow" onclick="submitEdit()">
-                Ok
-                ${SUBMIT_LIGHT_SVG}
-            </button>
-        </div>
-    </div>`;
-}
-
+/**
+ * Template for a selectable assignee option in the dropdown.
+ *
+ * @param {{name: string}} contact - Contact object with at least a name.
+ * @returns {string} HTML for the assignee option row.
+ */
 function assigneeOptionTemplate(contact) {
     const color = getContactColor(contact.name);
     return`
@@ -393,115 +345,4 @@ function assigneeOptionTemplate(contact) {
                         ${CHECKBOX_FILLED_LIGHT_SVG}
                     </div>
                 `
-}
-
-// ------------------ contacts --------------------
-
-function getOwnContactCardHtml(contact, initials) {
-    return `
-    <div class="ownContactCircle" border: 2px solid black;">
-      ${initials}
-    </div>
-    <div>
-      <p class="contactName">${contact.name}</p>
-    </div>
-  `;
-}
-
-function getOwnContactCardDetailsHtml(contact) {
-    return `
-    <div class="displayFlex">
-      <div class="ownBigContactCircle">
-        ${contact.name.split(" ").map(w => w[0].toUpperCase()).join("").substring(0, 2)}
-      </div>
-      <div class="displayColumn">
-        <h2 class="contectName">${contact.name}</h2>
-        <div class="displayFlex1">
-          <div class="editContainer" id="ownEditButton">
-            <svg width="24" height="24" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-<mask id="mask0_334068_6285" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="33" height="32">
-<rect x="0.5" width="32" height="32" fill="#D9D9D9"/>
-</mask>
-<g mask="url(#mask0_334068_6285)">
-<path d="M7.16667 25.3332H9.03333L20.5333 13.8332L18.6667 11.9665L7.16667 23.4665V25.3332ZM26.2333 11.8998L20.5667 6.29984L22.4333 4.43317C22.9444 3.92206 23.5722 3.6665 24.3167 3.6665C25.0611 3.6665 25.6889 3.92206 26.2 4.43317L28.0667 6.29984C28.5778 6.81095 28.8444 7.42761 28.8667 8.14984C28.8889 8.87206 28.6444 9.48873 28.1333 9.99984L26.2333 11.8998ZM24.3 13.8665L10.1667 27.9998H4.5V22.3332L18.6333 8.19984L24.3 13.8665Z" fill="#2A3647"/>
-</g>
-</svg>
-            <p class="pSmall">Edit</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <p class="contactInformation">Contact Information</p>
-    <div class="displayColumn1">
-      <p class="strong">Email</p>
-      <p class="mailInfoSmall">${contact.email}</p>
-    </div>
-    <div class="displayColumn1">
-      <p class="strong">Phone</p>
-      <p class="phoneInfoSmall">${contact.phone}</p>
-    </div>
-  `;
-}
-
-function getContendCardHtml(contact, initials, color) {
-    return `
-      <div class="contactCircle" style="background-color: ${color};">${initials}</div>
-      <div>
-        <p class="contactName">${contact.name}</p>
-        <p class="contactMail">${contact.email}</p>
-      </div>
-    `;
-}
-
-function getContentCardDetailsHtml(contact, key) {
-    return `
-  <div class="displayFlex">
-  <div class="BigContactCircle" <div class="BigContactCircle" style="background-color: ${
-    contact.color
-  };">
-  ${contact.name
-    .split(" ")
-    .map((w) => w[0].toUpperCase())
-    .join("")
-    .substring(0, 2)}
-
-</div>
-  <div class="displayColumn">
-    <h2 class="contectName">${contact.name}</h2>
-    <div onclick="editContact('${key}')" class="displayFlex1">
-      <div class="editContainer">
-        <svg width="24" height="24" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-<mask id="mask0_334068_6285" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="33" height="32">
-<rect x="0.5" width="32" height="32" fill="#D9D9D9"/>
-</mask>
-<g mask="url(#mask0_334068_6285)">
-<path d="M7.16667 25.3332H9.03333L20.5333 13.8332L18.6667 11.9665L7.16667 23.4665V25.3332ZM26.2333 11.8998L20.5667 6.29984L22.4333 4.43317C22.9444 3.92206 23.5722 3.6665 24.3167 3.6665C25.0611 3.6665 25.6889 3.92206 26.2 4.43317L28.0667 6.29984C28.5778 6.81095 28.8444 7.42761 28.8667 8.14984C28.8889 8.87206 28.6444 9.48873 28.1333 9.99984L26.2333 11.8998ZM24.3 13.8665L10.1667 27.9998H4.5V22.3332L18.6333 8.19984L24.3 13.8665Z" fill="#2A3647"/>
-</g>
-</svg>
-        <p class="pSmall">Edit</p>
-      </div>
-      <div onclick="event.stopPropagation(); deleteContact('${key}')" class="DeleteContainer">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<mask id="mask0_336135_3940" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
-<rect width="24" height="24" fill="#D9D9D9"/>
-</mask>
-<g mask="url(#mask0_336135_3940)">
-<path d="M7 21C6.45 21 5.97917 20.8042 5.5875 20.4125C5.19583 20.0208 5 19.55 5 19V6C4.71667 6 4.47917 5.90417 4.2875 5.7125C4.09583 5.52083 4 5.28333 4 5C4 4.71667 4.09583 4.47917 4.2875 4.2875C4.47917 4.09583 4.71667 4 5 4H9C9 3.71667 9.09583 3.47917 9.2875 3.2875C9.47917 3.09583 9.71667 3 10 3H14C14.2833 3 14.5208 3.09583 14.7125 3.2875C14.9042 3.47917 15 3.71667 15 4H19C19.2833 4 19.5208 4.09583 19.7125 4.2875C19.9042 4.47917 20 4.71667 20 5C20 5.28333 19.9042 5.52083 19.7125 5.7125C19.5208 5.90417 19.2833 6 19 6V19C19 19.55 18.8042 20.0208 18.4125 20.4125C18.0208 20.8042 17.55 21 17 21H7ZM7 6V19H17V6H7ZM9 16C9 16.2833 9.09583 16.5208 9.2875 16.7125C9.47917 16.9042 9.71667 17 10 17C10.2833 17 10.5208 16.9042 10.7125 16.7125C10.9042 16.5208 11 16.2833 11 16V9C11 8.71667 10.9042 8.47917 10.7125 8.2875C10.5208 8.09583 10.2833 8 10 8C9.71667 8 9.47917 8.09583 9.2875 8.2875C9.09583 8.47917 9 8.71667 9 9V16ZM13 16C13 16.2833 13.0958 16.5208 13.2875 16.7125C13.4792 16.9042 13.7167 17 14 17C14.2833 17 14.5208 16.9042 14.7125 16.7125C14.9042 16.5208 15 16.2833 15 16V9C15 8.71667 14.9042 8.47917 14.7125 8.2875C14.5208 8.09583 14.2833 8 14 8C13.7167 8 13.4792 8.09583 13.2875 8.2875C13.0958 8.47917 13 8.71667 13 9V16Z" fill="#2A3647"/>
-</g>
-</svg>
-        <p class="pSmall">Delete</p>
-      </div>
-    </div>
-  </div>
-</div>
-<p class="contactInformation">Contact Information</p>
-<div class="displayColumn1">
-<p class="strong">Email</p>
-<p class="mailInfoSmall">${contact.email}</p>
-</div>
-<div class="displayColumn1">
-<p class="strong">Phone</p>
-<p class="phoneInfoSmall"> ${contact.phone}</p>
-</div>
-  `;
 }

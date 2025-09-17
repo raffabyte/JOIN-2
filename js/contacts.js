@@ -1,3 +1,4 @@
+// Redirect unauthenticated users to index page
 if (!USERKEY) {
   window.location.href = "../../index.html";
 }
@@ -9,7 +10,10 @@ let currentMode = "create";
 let currentEditKey = null;
 let activeContactKey = null;
 
-/** Loads contacts and own contact, then renders the UI. */
+/**
+ * Loads contacts and the signed-in user's own contact, then renders UI.
+ * Initializes global `contactsData` and triggers initial render.
+ */
 document.addEventListener("DOMContentLoaded", async () => {
   const contacts = await loadData(`users/${USERKEY}/contacts`);
   const ownContact = await loadData(`users/${USERKEY}`);
@@ -18,57 +22,31 @@ document.addEventListener("DOMContentLoaded", async () => {
   renderOwnContact(ownContact);
 });
 
-
-/** Opens the contact form in “create new contact” mode. */
-function openNewContactForm() {
-  document.getElementById("contactForm").reset();
-  document.getElementById("contactKey").value = "";
-  clearFormValidationState();
-  const avatarContainer = document.getElementById("editAvatarContainer");
-  avatarContainer.innerHTML = `<img class="pb" src="../img/Group 13.png" alt="" />`;
-  setupFormButtons("create");
-  toggleOverlay();
+/**
+ * Reads current form fields and returns trimmed values.
+ * @returns {{name:string,email:string,phone:string,contactKey:string}}
+ */
+function getFormData() {
+  return {
+    name: document.getElementById("name").value.trim(),
+    email: document.getElementById("email").value.trim(),
+    phone: document.getElementById("phone").value.trim(),
+    contactKey: document.getElementById("contactKey").value.trim()
+  };
 }
 
-
-/** Configures form buttons for create or edit mode. */
-function setupFormButtons(mode, contactKey = null) {
-  currentMode = mode;
-  currentEditKey = contactKey;
-  if (mode === "edit") {
-    setupEditButtons(contactKey);
-  } else {
-    setupCreateButtons();
-  }
-}
-
-
-/** Sets up the form for editing an existing contact. */
-function setupEditButtons(contactKey) {
-  document.getElementById("cancelText").textContent = "Delete";
-  document.getElementById("submitText").textContent = "Save";
-  document.getElementById("cancelIcon").style.display = "none";
-  document.getElementById("cancelBtn").onclick = () => deleteContact(contactKey, true);
-}
-
-
-/** Sets up the form for creating a new contact. */
-function setupCreateButtons() {
-  document.getElementById("cancelText").textContent = "Cancel";
-  document.getElementById("submitText").textContent = "Create contact";
-  document.getElementById("submitIcon").src = "../img/check.png";
-  document.getElementById("cancelBtn").onclick = toggleOverlay;
-}
-
-
-/** Toggles the visibility of the overlay. */
+/**
+ * Toggles the contacts overlay open/closed with transition.
+ */
 function toggleOverlay() {
   const overlay = document.getElementById("overlay");
   overlay.classList.contains("show") ? hideOverlay(overlay) : showOverlay(overlay);
 }
 
-
-/** Hides the overlay. */
+/**
+ * Hides the contacts overlay with a small delay.
+ * @param {HTMLElement} overlay
+ */
 function hideOverlay(overlay) {
   setTimeout(() => {
     overlay.classList.remove("show");
@@ -77,15 +55,36 @@ function hideOverlay(overlay) {
   editingOwnContact = false;
 }
 
-
-/** Shows the overlay. */
+/**
+ * Shows the contacts overlay.
+ * @param {HTMLElement} overlay
+ */
 function showOverlay(overlay) {
   overlay.classList.remove("d_none");
   setTimeout(() => overlay.classList.add("show"), 100);
 }
 
+/**
+ * Visual success toast overlay.
+ * @param {string} [message="Contact saved successfully!"]
+ */
+function showSuccessOverlay(message = "Contact saved successfully!") {
+  const successOverlay = document.getElementById("successOverlay");
+  const text = successOverlay.querySelector(".succesText");
+  text.textContent = message;
+  successOverlay.classList.remove("d_none");
+  setTimeout(() => { successOverlay.classList.add("show"); }, 10);
+  setTimeout(() => {
+    successOverlay.classList.remove("show");
+    setTimeout(() => { successOverlay.classList.add("d_none"); }, 400);
+  }, 1500);
+}
 
-/** Submits the contact form to create or update a contact. */
+
+/**
+ * Submits the contact form: updates own contact or saves/updates regular contact.
+ * @param {SubmitEvent} event - Form submit event.
+ */
 async function submitContact(event) {
   event.preventDefault();
   const formData = getFormData();
@@ -99,18 +98,10 @@ async function submitContact(event) {
 }
 
 
-/** Retrieves data from the contact form. */
-function getFormData() {
-  return {
-    name: document.getElementById("name").value.trim(),
-    email: document.getElementById("email").value.trim(),
-    phone: document.getElementById("phone").value.trim(),
-    contactKey: document.getElementById("contactKey").value.trim()
-  };
-}
-
-
-/** Updates the signed-in user’s own contact information. */
+/**
+ * Updates the signed-in user's own contact information in storage and UI.
+ * @param {{name:string,email:string,phone:string}} formData - Form payload.
+ */
 async function updateOwnUserContact(formData) {
   const { name, email, phone } = formData;
   const existingUserData = await loadData(`users/${USERKEY}`);
@@ -124,7 +115,10 @@ async function updateOwnUserContact(formData) {
 }
 
 
-/** Creates a new contact or updates an existing one. */
+/**
+ * Creates a new contact or updates an existing one depending on form state.
+ * @param {{name:string,email:string,phone:string,contactKey?:string}} formData - Form data.
+ */
 async function saveOrUpdateContact(formData) {
   const { name, email, phone, contactKey } = formData;
   if (contactKey) {
@@ -135,7 +129,14 @@ async function saveOrUpdateContact(formData) {
 }
 
 
-/** Updates an existing contact in Firebase. */
+/**
+ * Updates an existing contact in Firebase and refreshes UI.
+ * Also updates tasks that reference the old contact name.
+ * @param {string} name
+ * @param {string} email
+ * @param {string} phone
+ * @param {string} contactKey
+ */
 async function updateContact(name, email, phone, contactKey) {
   const existingContact = contactsData[contactKey] || {};
   const updatedContact = { ...existingContact, name, email, phone };
@@ -169,7 +170,12 @@ async function updateTasksAssigneeOnContactChange(oldName, newName) {
 }
 
 
-/** Creates a new contact in Firebase. */
+/**
+ * Creates a new contact in Firebase and activates its details view.
+ * @param {string} name
+ * @param {string} email
+ * @param {string} phone
+ */
 async function createNewContact(name, email, phone) {
   const color = getRandomColor();
   const newContact = { name, email, phone, color };
@@ -182,54 +188,25 @@ async function createNewContact(name, email, phone) {
 }
 
 
-/** Displays a temporary success overlay message. */
-function showSuccessOverlay(message = "Contact saved successfully!") {
-  const successOverlay = document.getElementById("successOverlay");
-  const text = successOverlay.querySelector(".succesText");
-  text.textContent = message;
-  successOverlay.classList.remove("d_none");
-  setTimeout(() => { successOverlay.classList.add("show"); }, 10);
-  setTimeout(() => {
-    successOverlay.classList.remove("show");
-    setTimeout(() => { successOverlay.classList.add("d_none"); }, 400);
-  }, 1500);
-}
-
-
-/** Renders the signed-in user’s own contact card. */
+/**
+ * Renders the own-contact card into the dedicated container.
+ * @param {{name:string,email?:string,phone?:string,color?:string}} ownContact
+ */
 function renderOwnContact(ownContact) {
   const container = document.getElementById("ownContactArea");
   container.innerHTML = "";
-  const contactCard = createOwnContactCard(ownContact);
-  attachClickHandler(contactCard, ownContact);
-  container.appendChild(contactCard);
+  const { card } = buildOwnContactCardElement(ownContact);
+  wireOwnCardClick(card, ownContact);
+  container.appendChild(card);
 }
 
 
-/** Creates the card element for the own contact. */
-function createOwnContactCard(contact) {
-  const initials = getInitials(contact.name);
-  const card = document.createElement("div");
-  card.className = "contactCard";
-  card.setAttribute("data-key", "ownContact");
-  card.innerHTML = getOwnContactCardHtml(contact, initials);
-  return card;
-}
 
 
-/** Attaches the click handler to a contact card. */
-function attachClickHandler(card, contact) {
-  card.addEventListener("click", () => {
-    editingOwnContact = true;
-    deactivateAllContactCards();
-    activateContactCard(card);
-    document.getElementById("contactsDetails").classList.add("showDetails");
-    showOwnContactCardDetails(contact);
-  });
-}
-
-
-/** Displays details for the own contact in the details panel. */
+/**
+ * Displays details for the own contact in the details panel.
+ * @param {{name:string,email?:string,phone?:string}} contact
+ */
 function showOwnContactCardDetails(contact) {
   const detailsContainer = document.getElementById("contactsDetails");
   detailsContainer.innerHTML = getOwnContactCardDetailsHtml(contact);
@@ -241,18 +218,10 @@ function showOwnContactCardDetails(contact) {
   }
 }
 
-
-/** Shows the own contact details in mobile layout. */
-function showOwnContactDetailsMobile() {
-  const container = document.querySelector(".contactsContainer");
-  container.style.display = "flex";
-  const btn = document.getElementById("mobileAddBtn");
-  btn.setAttribute("onclick", "toggleMobileMenu()");
-  document.getElementById("mobileBtnIcon").src = "../img/more_vert.png";
-}
-
-
-/** Renders all contacts grouped and listed in the UI. */
+/**
+ * Renders all contacts grouped alphabetically with letter headers.
+ * @param {Record<string, {name:string,email?:string,phone?:string,color?:string}>} data
+ */
 function renderContacts(data) {
   const container = document.getElementById("contactCardsContainer");
   container.innerHTML = "";
@@ -269,14 +238,20 @@ function renderContacts(data) {
   }
 }
 
-
-/** Sorts contacts alphabetically by name. */
+/**
+ * Sorts contacts alphabetically by name.
+ * @param {Record<string, {name:string}>} data
+ * @returns {[string, any][]}
+ */
 function sortContactsByName(data) {
   return Object.entries(data).sort((a, b) => a[1].name.localeCompare(b[1].name));
 }
 
-
-/** Appends a letter header to the contact list. */
+/**
+ * Appends a letter header and separator.
+ * @param {HTMLElement} container
+ * @param {string} letter
+ */
 function appendLetterHeader(container, letter) {
   const letterHeader = document.createElement("div");
   letterHeader.className = "letterHeader";
@@ -288,74 +263,37 @@ function appendLetterHeader(container, letter) {
 }
 
 
-/** Creates a single contact card element. */
-function createContactCard(key, contact) {
-  const initials = getInitials(contact.name);
-  const card = document.createElement("div");
-  card.className = "contactCard";
-  card.setAttribute("data-key", key);
-  card.innerHTML = getContendCardHtml(contact, initials, contact.color);
-  card.addEventListener("click", () => {
-    activeContactKey = key;
-    deactivateAllContactCards();
-    activateContactCard(card);
-    if (window.innerWidth < 799) {
-      showContactDetailsMobile(key);
-    } else {
-      showcontactCardDetails(key);
-    }
-  });
-  return card;
-}
-
-
-/** Shows the contact details in mobile layout. */
-function showContactDetailsMobile(key) {
-  const container = document.querySelector(".contactsContainer");
-  container.style.display = "flex";
-  showcontactCardDetails(key);
-  const btn = document.getElementById("mobileAddBtn");
-  btn.setAttribute("onclick", "toggleMobileMenu()");
-  document.getElementById("mobileBtnIcon").src = "../img/more_vert.png";
-}
-
-
-/** Toggles the mobile menu overlay. */
-function toggleMobileMenu() {
-  const menu = document.getElementById("menuOverlay");
-  menu.classList.toggle("open");
-}
-
 
 document.getElementById("menuOverlay").addEventListener("click", () => {
   document.getElementById("menuOverlay").classList.remove("open");
 });
 
 
-/** Closes the mobile details panel and resets UI. */
-function closeMobileDetails() {
-  const container = document.querySelector(".contactsContainer");
-  container.style.display = "none";
-  deactivateAllContactCards();
-  const btn = document.getElementById("mobileAddBtn");
-  btn.setAttribute("onclick", "openNewContactForm()");
-  document.getElementById("mobileBtnIcon").src = "../img/person_add.png";
+/**
+ * Displays the details for a selected contact in the details panel.
+ * @param {string} key - Contact key
+ */
+function showcontactCardDetails(key) {
+  const contact = contactsData[key];
+  const detailsContainer = document.getElementById("contactsDetails");
+  detailsContainer.innerHTML = getContentCardDetailsHtml(contact, key);
 }
 
-
-/** Deactivates all contact cards. */
+/**
+ * Remove active state from all contact cards.
+ */
 function deactivateAllContactCards() {
   document.querySelectorAll(".contactCard").forEach((card) => {
     card.classList.remove("activeCard");
     const circle = card.querySelector(".ownContactCircle");
-    if (circle) {
-      circle.style.borderColor = "black";
-    }
+    if (circle) circle.style.borderColor = "black";
   });
 }
 
-
-/** Activates a contact card by key or element. */
+/**
+ * Activate a contact card by key or element.
+ * @param {string|HTMLElement} keyOrElement
+ */
 function activateContactCard(keyOrElement) {
   let card = keyOrElement;
   if (typeof card === "string") {
@@ -364,22 +302,60 @@ function activateContactCard(keyOrElement) {
   }
   card.classList.add("activeCard");
   const circle = card.querySelector(".contactCircle") || card.querySelector(".ownContactCircle");
-  if (circle) {
-    circle.style.borderColor = "white";
-  }
+  if (circle) circle.style.borderColor = "white";
   document.getElementById("contactsDetails").classList.add("showDetails");
 }
 
-
-/** Displays the details for a selected contact. */
-function showcontactCardDetails(key) {
-  const contact = contactsData[key];
-  const detailsContainer = document.getElementById("contactsDetails");
-  detailsContainer.innerHTML = getContentCardDetailsHtml(contact, key);
+/**
+ * Open the form in create mode and reset.
+ */
+function openNewContactForm() {
+  document.getElementById("contactForm").reset();
+  document.getElementById("contactKey").value = "";
+  clearFormValidationState();
+  const avatarContainer = document.getElementById("editAvatarContainer");
+  avatarContainer.innerHTML = `<img class="pb" src="../img/Group 13.png" alt="" />`;
+  setupFormButtons("create");
+  toggleOverlay();
 }
 
+/**
+ * Configure form buttons for mode.
+ * @param {"create"|"edit"} mode
+ * @param {string|null} [contactKey=null]
+ */
+function setupFormButtons(mode, contactKey = null) {
+  currentMode = mode;
+  currentEditKey = contactKey;
+  if (mode === "edit") setupEditButtons(contactKey);
+  else setupCreateButtons();
+}
 
-/** Opens the overlay to edit the own contact. */
+/**
+ * Set edit-mode button labels/handlers.
+ * @param {string} contactKey
+ */
+function setupEditButtons(contactKey) {
+  document.getElementById("cancelText").textContent = "Delete";
+  document.getElementById("submitText").textContent = "Save";
+  document.getElementById("cancelIcon").style.display = "none";
+  document.getElementById("cancelBtn").onclick = () => deleteContact(contactKey, true);
+}
+
+/**
+ * Set create-mode button labels/handlers.
+ */
+function setupCreateButtons() {
+  document.getElementById("cancelText").textContent = "Cancel";
+  document.getElementById("submitText").textContent = "Create contact";
+  document.getElementById("submitIcon").src = "../img/check.png";
+  document.getElementById("cancelBtn").onclick = toggleOverlay;
+}
+
+/**
+ * Open overlay to edit own contact.
+ * @param {{name:string,email?:string,phone?:string}} contact
+ */
 function editOwnContact(contact) {
   editingOwnContact = true;
   document.getElementById("name").value = contact.name;
@@ -397,8 +373,10 @@ function editOwnContact(contact) {
   toggleOverlay();
 }
 
-
-/** Opens the overlay to edit another contact. */
+/**
+ * Open overlay to edit a contact by key.
+ * @param {string} key
+ */
 function editContact(key) {
   const contact = contactsData[key];
   prefillFormWithContactData(contact, key);
@@ -406,74 +384,4 @@ function editContact(key) {
   clearFormValidationState();
   setupFormButtons("edit", key);
   toggleOverlay();
-}
-
-
-/** Prefills the form fields with an existing contact’s data. */
-function prefillFormWithContactData(contact, key) {
-  document.getElementById("contactKey").value = key;
-  document.getElementById("name").value = contact.name;
-  document.getElementById("email").value = contact.email;
-  document.getElementById("phone").value = contact.phone;
-}
-
-
-/** Renders the avatar circle for the edited contact. */
-function renderEditAvatar(contact) {
-  const initials = getInitials(contact.name);
-  const color = contact.color;
-  const avatarContainer = document.getElementById("editAvatarContainer");
-  avatarContainer.innerHTML = `
-    <div class="BigContactCircle" style="background-color: ${color};">
-      ${initials}
-    </div>
-  `;
-}
-
-
-/** Deletes a contact from Firebase. */
-async function deleteContact(key, closeOverlay = false) {
-  await deleteData(`users/${USERKEY}/contacts/${key}`);
-  document.getElementById("contactsDetails").innerHTML = "";
-  document.getElementById("contactsDetails").classList.remove("showDetails");
-  await loadDataAfterSave();
-  if (closeOverlay) {
-    toggleOverlay();
-  }
-  closeMobileDetails()
-  showSuccessOverlay("Contact deleted!");
-}
-
-
-/** Reloads contacts from Firebase and re-renders the list. */
-async function loadDataAfterSave() {
-  const newContacts = await loadData(`users/${USERKEY}/contacts`);
-  contactsData = newContacts;
-  renderContacts(newContacts);
-}
-
-
-/** Handles the mobile edit action for current selection. */
-function handleEditMobile() {
-  if (editingOwnContact === true) {
-    loadData(`users/${USERKEY}`).then((ownContact) => {
-      editOwnContact(ownContact);
-    });
-    toggleMobileMenu();
-    return;
-  }
-  if (activeContactKey) {
-    editContact(activeContactKey);
-    toggleMobileMenu();
-  }
-}
-
-
-/** Handles the mobile delete action for current selection. */
-function handleDeleteMobile() {
-  if (activeContactKey) {
-    deleteContact(activeContactKey);
-    toggleMobileMenu();
-  }
-  closeMobileDetails();
 }

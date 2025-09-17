@@ -1,7 +1,7 @@
 /**
  * Returns the priority label based on a given priority class.
- * @param {string} priority 
- * @returns {string} 
+ * @param {string} priority - CSS class for priority (HighPriority/MidPriority/LowPriority).
+ * @returns {string} Human-readable priority.
  */
 function handlePriority(priority) {
     switch (priority) {
@@ -14,7 +14,7 @@ function handlePriority(priority) {
 
 /**
  * Fetches tasks from Firebase and displays a specific task in an overlay.
- * @param {string} taskId
+ * @param {string} taskId - Firebase key of the task.
  */
 function taskOverlay(taskId) {
     fetch(getUserTasksUrl())
@@ -35,7 +35,7 @@ function taskOverlay(taskId) {
 
 /**
  * Renders the overlay for a specific task.
- * @param {Object} task
+ * @param {Object} task - Task object.
  */
 function showTaskOverlay(task) {
     OVERLAY_CONTENT.innerHTML = taskOverlayTemplate(task);
@@ -49,8 +49,8 @@ function showTaskOverlay(task) {
 
 /**
  * Formats a date string from YYYY-MM-DD to DD/MM/YYYY.
- * @param {string} dateString 
- * @returns {string}
+ * @param {string} dateString - A date formatted like 2025-09-16.
+ * @returns {string} Formatted date like 16/09/2025.
  */
 function formatDate(dateString) {
     const [year, month, day] = dateString.split('-');
@@ -59,9 +59,9 @@ function formatDate(dateString) {
 
 /**
  * Updates the subtasks of a given task in Firebase.
- * @param {string} firebaseKey 
- * @param {Array} updatedSubtasks 
- * @returns {Promise<void>}
+ * @param {string} firebaseKey - Task key in Firebase.
+ * @param {Array<{value:string,checked:boolean}>} updatedSubtasks - New subtasks array.
+ * @returns {Promise<void>} Resolves when patched.
  */
 async function updateSubtaskInFirebase(firebaseKey, updatedSubtasks) {
     await fetch(getUserTaskItemUrl(firebaseKey), {
@@ -73,32 +73,39 @@ async function updateSubtaskInFirebase(firebaseKey, updatedSubtasks) {
 
 /**
  * Toggles the completion state of a subtask and updates Firebase.
- * @param {string} taskId 
- * @param {string} subtaskValue
- * @returns {Promise<void>}
+ * @param {string} taskId - Task key.
+ * @param {string} subtaskValue - Subtask label.
+ * @returns {Promise<void>} Resolves when done.
  */
 async function toggleSubtask(taskId, subtaskValue) {
     try {
-        const data = await (await fetch(getUserTasksUrl())).json();
-        const taskEntry = Object.entries(data || {}).find(([key]) => key === taskId);
+        const data = await fetchUserTasks();
+        const entry = findTaskEntry(data, taskId); if (!entry) return;
+        const [firebaseKey, task] = entry;
+        const updated = computeToggledSubtasks(task, subtaskValue);
+        await updateSubtaskInFirebase(firebaseKey, updated);
+        toggleSubtaskDisplayOnly(subtaskValue); updateBoard();
+    } catch (error) { console.error('Error toggling subtask:', error); }
+}
 
-        if (!taskEntry) return;
-        const [firebaseKey, task] = taskEntry;
-        const updatedSubtasks = task.subtasks.map(subtask =>
-            subtask.value === subtaskValue ? { ...subtask, checked: !subtask.checked } : subtask
-        );
+/** Fetches all tasks JSON for the current user. */
+async function fetchUserTasks(){
+    const res = await fetch(getUserTasksUrl()); return res.json();
+}
 
-        await updateSubtaskInFirebase(firebaseKey, updatedSubtasks);
-        toggleSubtaskDisplayOnly(subtaskValue);
-        updateBoard();
-    } catch (error) {
-        console.error('Error toggling subtask:', error);
-    }
+/** Finds the [key,task] pair for a given id in tasks JSON. */
+function findTaskEntry(data, taskId){
+    return Object.entries(data || {}).find(([key]) => key === taskId);
+}
+
+/** Returns a new subtasks array with target subtask toggled. */
+function computeToggledSubtasks(task, subtaskValue){
+    return task.subtasks.map(s => s.value === subtaskValue ? { ...s, checked: !s.checked } : s);
 }
 
 /**
  * Toggles only the visual display of a subtask without reloading the overlay.
- * @param {string} subtaskValue
+ * @param {string} subtaskValue - Text value of the subtask.
  */
 function toggleSubtaskDisplayOnly(subtaskValue) {
     const subtaskItems = document.querySelectorAll('.subtask-item-overlay');
@@ -119,7 +126,7 @@ function toggleSubtaskDisplayOnly(subtaskValue) {
 
 /**
  * Deletes a task from Firebase and updates the board.
- * @param {string} taskId 
+ * @param {string} taskId - Task key to delete.
  */
 function deleteTask(taskId) {
     fetch(getUserTasksUrl())
@@ -142,7 +149,7 @@ function deleteTask(taskId) {
 
 /**
  * Displays the edit task overlay and loads contact data.
- * @param {Object} task 
+ * @param {Object} task - Task to edit.
  */
 function showEditTaskOverlay(task) {
     const TASK_EDIT_FORM = document.getElementById('taskEditForm');
@@ -163,7 +170,7 @@ function showEditTaskOverlay(task) {
 
 /**
  * Fetches the task data and opens the edit overlay.
- * @param {string} taskId 
+ * @param {string} taskId - Task key to edit.
  */
 function editTask(taskId) {
     fetch(getUserTasksUrl())
@@ -183,7 +190,7 @@ function editTask(taskId) {
 
 /**
  * Collects and returns the edited task data from the form.
- * @returns {Object} 
+ * @returns {{title:string,description:string,dueDate:string,assignee:string[],priority:string,subtasks:Array<{value:string,checked:boolean}>}}
  */
 function editedTask() {
     const PRIORITY_BTN = document.querySelector('.edit-priority-button.active');
@@ -202,9 +209,9 @@ function editedTask() {
 
 /**
  * Updates an existing task in Firebase.
- * @param {string} taskId 
- * @param {Object} updatedTaskData
- * @returns {Promise<Object>} 
+ * @param {string} taskId - Firebase key.
+ * @param {Object} updatedTaskData - Partial task data.
+ * @returns {Promise<Object>} The patched Firebase object.
  */
 async function updateTaskInFirebase(taskId, updatedTaskData) {
     try {
@@ -221,9 +228,7 @@ async function updateTaskInFirebase(taskId, updatedTaskData) {
     }
 }
 
-/**
- * Submits the edited task to Firebase and updates the board.
- */
+/** Submits the edited task to Firebase and updates the board. */
 function submitEdit() {
     const editedTaskData = editedTask();
     const taskId = window.currentEditingTask.id;

@@ -53,6 +53,13 @@
     width: 100%;
     padding: 0 0 16px 0;
   }
+  #overlay.show .pb,
+  .BigContactCircle {
+    width: 120px;
+    height: 120px;
+    position: absolute;
+  }
+
   .pbContainer {
     padding-bottom: 30px;
   }
@@ -340,9 +347,12 @@
     border-radius: 0;
     height: 50%;
   }
+  .input{
+    padding: 4px;
+  }
   #overlay.show .pb , .BigContactCircle, #overlay.show .BigContactCircle{
-        width: 100px;
-        height: 100px;
+        width: 80px;
+        height: 80px;
     }
         .pbContainer {
         padding-bottom: 0;

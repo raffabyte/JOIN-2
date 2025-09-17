@@ -1,21 +1,38 @@
 // contacts-validation.js
 (() => {
+  /**
+   * Shorthand for `document.getElementById`.
+   * @param {string} id - Element id.
+   * @returns {HTMLElement|null}
+   */
   const $ = (id) => document.getElementById(id);
 
 
-  /** Gets the container element for the input field. */
+  /**
+   * Gets the input's container element (wrapper) used for styling and errors.
+   * @param {HTMLElement} inputEl - Input element.
+   * @returns {HTMLElement|null}
+   */
   function getContainer(inputEl) {
     return inputEl.closest('.input-field') || inputEl.parentElement;
   }
 
 
-  /** Gets the error message slot for a given input container. */
+  /**
+   * Resolves the error text node for a given container.
+   * @param {HTMLElement|null} container - Input container element.
+   * @returns {HTMLElement|null}
+   */
   function getErrorSlot(container) {
     return container?.querySelector(':scope > .error-text') || null;
   }
 
 
-  /** Displays an error message for the specified input. */
+  /**
+   * Displays an error message and invalid state for an input.
+   * @param {HTMLElement} inputEl - The input element.
+   * @param {string} msg - Error message to show.
+   */
   function showError(inputEl, msg) {
     const box = getContainer(inputEl), slot = getErrorSlot(box);
     inputEl.classList.add('is-invalid');
@@ -24,7 +41,10 @@
   }
 
 
-  /** Clears any displayed error message for the specified input. */
+  /**
+   * Clears error message and removes invalid state from an input.
+   * @param {HTMLElement} inputEl - The input element.
+   */
   function clearError(inputEl) {
     const box = getContainer(inputEl), slot = getErrorSlot(box);
     inputEl.classList.remove('is-invalid');
@@ -33,7 +53,11 @@
   }
 
 
-  /** Validates the name field value. */
+  /**
+   * Validates the name input value.
+   * @param {HTMLInputElement} el - Name input.
+   * @returns {string} Empty if valid, otherwise message.
+   */
   function validateName(el) {
     const v = el.value.trim();
     if (!v) return "Please enter a name.";
@@ -42,7 +66,11 @@
   }
 
 
-  /** Splits an email string into local and domain parts. */
+  /**
+   * Splits an email string into local and domain parts.
+   * @param {string} str - Email string.
+   * @returns {{local:string,domain:string}|null}
+   */
   function splitEmail(str) {
     const v = String(str||'').trim();
     if (!v) return null;
@@ -51,7 +79,11 @@
   }
 
 
-  /** Checks if the email domain is valid. */
+  /**
+   * Checks email domain for basic structural validity.
+   * @param {string} domain - Domain portion of email.
+   * @returns {boolean}
+   */
   function hasValidDomain(domain) {
     if (domain.includes('..')) return false;
     const parts = domain.split('.');
@@ -64,7 +96,11 @@
   }
 
 
-  /** Validates if an email string has a plausible format. */
+  /**
+   * Validates if an email has a plausible format.
+   * @param {string} str - Email string.
+   * @returns {boolean}
+   */
   function isPlausibleEmail(str) {
     const parts = splitEmail(str);
     if (!parts) return false;
@@ -72,7 +108,11 @@
   }
 
 
-  /** Validates the email field value. */
+  /**
+   * Validates the email input value.
+   * @param {HTMLInputElement} el - Email input.
+   * @returns {string} Empty if valid, otherwise message.
+   */
   function validateEmail(el) {
     const v = el.value.trim();
     if (!v) return "Please enter an email.";
@@ -81,7 +121,11 @@
   }
 
 
-  /** Validates the phone number field value. */
+  /**
+   * Validates the phone input value.
+   * @param {HTMLInputElement} el - Phone input.
+   * @returns {string} Empty if valid, otherwise message.
+   */
   function validatePhone(el) {
     const v = el.value.trim();
     if (!v) return "Please enter a phone number.";
@@ -94,7 +138,10 @@
   }
 
 
-  /** Validates the contact form fields and handles error display. */
+  /**
+   * Validates name/email/phone fields and shows inline errors.
+   * @returns {boolean} True when all fields are valid.
+   */
   function validateContactForm() {
     const triplets = [
       [$('name'),  validateName],
@@ -111,7 +158,10 @@
   }
 
 
-  /** Adds live input validation to the contact form fields. */
+  /**
+   * Binds input/blur events to show/hide validation errors live.
+   * @returns {void}
+   */
   function bindLiveValidation() {
     const nameEl=$('name'), emailEl=$('email'), phoneEl=$('phone');
     nameEl?.addEventListener('input', () => { if(!validateName(nameEl))  clearError(nameEl); });
@@ -122,7 +172,10 @@
   }
 
 
-  /** Binds form submission and validates before submitting. */
+  /**
+   * Binds native form submit with validation gate.
+   * @returns {void}
+   */
   function bindSubmitA() {
     const form = $('contactForm');
     if (!form) return;
@@ -135,7 +188,10 @@
   }
 
 
-  /** Patches the default form submit handler to include validation. */
+  /**
+   * Wraps an existing global submit handler to enforce validation.
+   * @returns {void}
+   */
   function patchSubmitB() {
     if (typeof window.submitContact !== 'function') return;
     const orig = window.submitContact;
@@ -157,7 +213,10 @@
 })();
 
 
-/** Adds dynamic active border effects on the name field. */
+/**
+ * Adds dynamic active border effects on the name field.
+ * @returns {void}
+ */
 function addActiveBorderInteractions() {
   const nameEl = document.getElementById('name'); if(!nameEl) return;
   const on = () => nameEl.classList.add('active-border');
@@ -169,7 +228,11 @@ function addActiveBorderInteractions() {
 }
 
 
-/** Cleans invalid characters from phone input values. */
+/**
+ * Cleans invalid characters from phone input values (allow + and digits).
+ * @param {HTMLInputElement} el - Phone input element.
+ * @returns {void}
+ */
 function cleanPhoneInput(el) {
   const old = el.value;
   let s = old.replace(/[^\d+]/g, ''); // Allow only digits and +
@@ -180,14 +243,21 @@ function cleanPhoneInput(el) {
 }
 
 
-/** Binds phone input to automatically sanitize its content. */
+/**
+ * Binds phone input to automatically sanitize its content on input.
+ * @returns {void}
+ */
 function bindPhoneSanitizer() {
   const phoneEl = document.getElementById('phone'); if(!phoneEl) return;
   phoneEl.addEventListener('input', () => cleanPhoneInput(phoneEl));
 }
 
 
-/** Entfernt alle Fehlzustände & Meldungen im Formular. */
+/**
+ * Entfernt alle Fehlzustände & Meldungen im Formular.
+ * @param {string} [formId="contactForm"] - Ziel-Formular-ID.
+ * @returns {void}
+ */
 function clearFormValidationState(formId = "contactForm") {
   const form = document.getElementById(formId);
   if (!form) return;

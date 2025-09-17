@@ -1,4 +1,11 @@
 
+/**
+ * Renders the Add Task overlay form markup for a given column.
+ *
+ * @param {string} columnId - Target column ID where the task will be added.
+ * @param {string} [cancelLabel='Cancel'] - Label for the cancel/close button.
+ * @returns {string} HTML string for the overlay form content.
+ */
 function addTaskOverlayForm(columnId, cancelLabel = 'Cancel') {
     return `
             <div class="overlay-header flexR width-100 space-between">
@@ -37,15 +44,15 @@ function addTaskOverlayForm(columnId, cancelLabel = 'Cancel') {
                         <div class="gap-8 width-100 flexC">
                             <span class="width-100 prio-style">Priority</span>
                             <div class="flexR priority-select gap-16 width-100">
-                                <button type="button" class="priority-button gap-8 width-100 flexR HighPriority" onclick="PriorityHandler('high'); event.stopPropagation();">
+                                <button type="button" class="priority-button gap-8 width-100 flexR HighPriority" onclick="priorityHandler('high'); event.stopPropagation();">
                                     <span class="priority-text">Urgent</span>
                                     ${HIGH_PRIORITY_SVG}
                                 </button>
-                                <button type="button" class="priority-button active gap-8 width-100 flexR MidPriority" onclick="PriorityHandler('medium'); event.stopPropagation();">
+                                <button type="button" class="priority-button active gap-8 width-100 flexR MidPriority" onclick="priorityHandler('medium'); event.stopPropagation();">
                                     <span class="priority-text">Medium</span>
                                     ${MID_PRIORITY_SVG}
                                 </button>
-                                <button type="button" class="priority-button gap-8 width-100 flexR LowPriority" onclick="PriorityHandler('low'); event.stopPropagation();">
+                                <button type="button" class="priority-button gap-8 width-100 flexR LowPriority" onclick="priorityHandler('low'); event.stopPropagation();">
                                     <span class="priority-text">Low</span>
                                     ${LOW_PRIORITY_SVG}
                                 </button>
@@ -117,6 +124,13 @@ function addTaskOverlayForm(columnId, cancelLabel = 'Cancel') {
 }
 
 
+/**
+ * Generates the HTML for a single subtask list item (view + edit inputs).
+ *
+ * @param {string} subtaskInput - The subtask text/value.
+ * @param {number} [index=0] - Optional index used to compose unique element IDs.
+ * @returns {string} HTML string for the subtask list item.
+ */
 function addSubTaskTemplate(subtaskInput, index = 0){
     const uniqueId = `subtaskInfos_${index}_${Date.now()}`;
     const editUniqueId = `editSubtask_${index}_${Date.now()}`;
@@ -161,6 +175,12 @@ function addSubTaskTemplate(subtaskInput, index = 0){
     `
 }
 
+/**
+ * Generates the inner HTML for an edited subtask (compact variant in edit list).
+ *
+ * @param {string} subtaskInput - The updated subtask text/value.
+ * @returns {string} HTML string for the edited subtask content.
+ */
 function editedSubTask(subtaskInput){
     return`<div class="subtask-headdinfg flexR gap-8">
                 •

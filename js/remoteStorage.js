@@ -1,12 +1,3 @@
-function onloadFunc() {}
-
-/**
- * Firebase Realtime Database REST helpers.
- * Expects a global `BASE_URL` that ends with a trailing slash, e.g.:
- *   https://<project-id>.firebaseio.com/
- */
-// const BASE_URL = "https://join-475-370cd-default-rtdb.europe-west1.firebasedatabase.app/";
-
 /**
  * Performs a GET request to `${BASE_URL}${path}.json` and returns parsed JSON.
  *
@@ -40,7 +31,6 @@ async function postData(path = "", data = {}) {
     body: JSON.stringify(data),
   });
   return (responseToJson = await response.json());
-  /* return await response.json();*/
 }
 
 /**
@@ -78,5 +68,4 @@ async function deleteData(path = "") {
     method: "DELETE",
   });
   return (responseToJson = await response.json());
-  /*return await response.json();*/
 }

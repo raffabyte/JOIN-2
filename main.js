@@ -331,3 +331,22 @@ async function deleteData(path = "") {
   });
   return (responseToJson = await response.json());
 }
+
+
+
+/**
+ * Predefined demo contacts for guest users.
+ * @type {Array<{ name: string, email: string, phone: string }>}
+ */
+const demoContacts = [
+  { name: "Anna Becker", email: "anna@example.com", phone: "123456789", color: "#FF7A00" },
+  { name: "Tom Meier", email: "tom@example.com", phone: "987654321", color: "#FF5EB3" },
+  { name: "Lisa Schmidt", email: "lisa@example.com", phone: "555123456", color: "#6E52FF" },
+  { name: "Peter Braun", email: "peter@example.com", phone: "333222111", color: "#9327FF" },
+  { name: "Nina Keller", email: "nina@example.com", phone: "444555666", color: "#00BEE8" },
+  { name: "Max Fischer", email: "max@example.com", phone: "666777888", color: "#00BEE8" },
+  { name: "Julia König", email: "julia@example.com", phone: "777888999", color: "#FF745E" },
+  { name: "Leon Wagner", email: "leon@example.com", phone: "111222333", color: "#FFA35E" },
+  { name: "Emma Roth", email: "emma@example.com", phone: "222333444", color: "#FC71FF" },
+  { name: "Paul Weber", email: "paul@example.com", phone: "999000111", color: "#FC71FF" }
+];

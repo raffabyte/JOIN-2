@@ -62,6 +62,7 @@ h2 {
 .nameAndToDo {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 80px;
     height: 100%;
     width: 100%;

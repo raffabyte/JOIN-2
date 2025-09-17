@@ -47,5 +47,3 @@ async function seedUserTasksIfEmpty() {
 	}
 }
 
-// functions are intentionally global for other scripts to use
-
