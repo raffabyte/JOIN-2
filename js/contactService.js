@@ -324,7 +324,9 @@ function toggleMobileMenu() {
  */
 function closeMobileDetails() {
   const container = document.querySelector(".contactsContainer");
+  if (window.matchMedia("(max-width: 899px)").matches && container) {
   container.style.display = "none";
+}
   deactivateAllContactCards();
   const btn = document.getElementById("mobileAddBtn");
   btn.setAttribute("onclick", "openNewContactForm()");
