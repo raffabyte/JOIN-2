@@ -1,0 +1,87 @@
+/* Visuelle Details, Farben, Icons für Add Task */
+
+.added-to-board-message {
+  background: #2A3647;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 16px 32px;
+  justify-content: space-between;
+  border-radius: 20px;
+  width: 326px;
+}
+
+.added-to-board-message span {
+  color: white;
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.highlight {
+  color: #FF8190;
+  width: 8px;
+}
+
+#closeOverlayButton {
+  border: 1px solid #2A3647;
+  color: #2A3647;
+  gap: 4px;
+  padding: 16px;
+  border-radius: 10px;
+}
+
+#closeOverlayButton:hover {
+  color: #29ABE2;
+}
+
+#addTaskButton:hover {
+  background: #29ABE2;
+}
+
+#closeOverlayButton:hover svg path {
+  stroke: #29ABE2;
+}
+
+#addTaskButton {
+  border: 1px solid #2A3647;
+  color: white;
+  background: #2A3647;
+  padding: 16px;
+  border-radius: 10px;
+}
+
+#addTaskButton svg path {
+  fill: white;
+}
+
+.correct-me,
+.correct-me:focus-within,
+.correct-me:focus {
+  border: 1px solid #FF8190 !important;
+}
+
+.delete-edit-btns {
+  visibility: hidden;
+  transition: all 0.1s ease-out;
+  opacity: 0;
+}
+
+.subtask:hover .delete-edit-btns {
+  visibility: visible;
+  opacity: 1;
+}
+
+.contact-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 45px;
+  border: 2px solid white;
+  font-size: 16px !important;
+  color: white;
+  justify-content: center;
+}
+
+span {
+  width: fit-content;
+}

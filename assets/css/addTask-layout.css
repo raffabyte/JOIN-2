@@ -1,0 +1,92 @@
+/* Layout und Struktur für Add Task */
+
+header {
+  background: white;
+}
+
+main {
+  max-height: none;
+}
+
+.backgroundColor {
+  padding: 110px 96px 24px 96px;
+  flex: 1;
+  max-height: 800px;
+  max-width: calc(1920px - 232px);
+}
+
+.task-form-bottom span {
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.task-form-column {
+  gap: 24px;
+  width: 45%;
+}
+
+.task-form-top {
+  align-items: flex-start;
+  flex: 1;
+  max-height: 572px;
+  overflow-y: scroll;
+  scrollbar-width: none;
+}
+
+.submit-section {
+  margin: 16px 0 16px 0;
+}
+
+.overlay-bottom {
+  flex: 1;
+}
+
+@media (max-height: 700px) or (max-width: 1300px) {
+  .backgroundColor {
+    padding: 64px 48px 24px 48px;
+  }
+  .task-form-column {
+    gap: 16px
+  }
+  .overlay-bottom {
+    max-height: calc(100vh - 256px);
+  }
+  .submit-section {
+    margin: 8px 0 8px 0;
+  }
+}
+
+@media (max-width: 1000px) {
+  .task-form-top {
+    flex-direction: column;
+    align-items: center;
+  }
+  .task-form-column {
+    margin-bottom: 16px;
+    width: 100%;
+  }
+  .middle.vector {
+    display: none;
+  }
+}
+
+@media (max-width: 800px) {
+  .overlay-bottom {
+    max-height: calc(100vh - 288px);
+  }
+  .backgroundColor {
+    max-height: calc(100vh - 160px);
+    padding: 48px 8px;
+  }
+  .submit-section {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .submit-span {
+    width: 100%;
+  }
+  .submit-section div {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
